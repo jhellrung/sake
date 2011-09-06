@@ -157,18 +157,24 @@ elapsed() const
    || defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_MONOTONIC ) \
    || defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_PROCESS   ) \
    || defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_THREAD    )
-    return (current_time.tv_sec - m_start_time.tv_sec) + 1.0e-9 * (current_time.tv_nsec - m_start_time.tv_nsec);
+    return (current_time.tv_sec - m_start_time.tv_sec)
+         + 1.0e-9 * (current_time.tv_nsec - m_start_time.tv_nsec);
 #elif defined( SAKE_TIMER_USE_POSIX_GETTIMEOFDAY            )
-    return (current_time.tv_sec - m_start_time.tv_sec) + 1.0e-6 * (current_time.tv_usec - m_start_time.tv_usec);
+    return (current_time.tv_sec - m_start_time.tv_sec)
+         + 1.0e-6 * (current_time.tv_usec - m_start_time.tv_usec);
 #elif defined( SAKE_TIMER_USE_WINDOWS_QUERY_PERFORMANCE     )
     static const double frequency = get_frequency();
 #ifdef BOOST_HAS_MS_INT64
     return (current_time.QuadPart - m_start_time.QuadPart) / frequency;
 #else // #ifdef BOOST_HAS_MS_INT64
-    static const double double_0x100000000 = static_cast< double >(1UL << 16) * static_cast< double >(1UL << 16);
+    static const double double_0x100000000 = static_cast< double >(1UL << 16)
+                                           * static_cast< double >(1UL << 16);
     return (current_time.LowPart >= m_start_time.LowPart ?
-            double_0x100000000 * (current_time.HighPart - m_start_time.HighPart) + (current_time.LowPart - m_start_time.LowPart) :
-            double_0x100000000 * (current_time.HighPart - m_start_time.HighPart) - (m_start_time.LowPart - current_time.LowPart)) / frequency;
+                double_0x100000000 * (current_time.HighPart - m_start_time.HighPart)
+              + (current_time.LowPart - m_start_time.LowPart) :
+                double_0x100000000 * (current_time.HighPart - m_start_time.HighPart)
+              - (m_start_time.LowPart - current_time.LowPart)
+           ) / frequency;
 #endif // #ifdef BOOST_HAS_MS_INT64
 #elif defined( SAKE_TIMER_USE_CTIME                         )
     return static_cast< double >(current_time - m_start_time) / CLOCKS_PER_SEC;
@@ -233,7 +239,8 @@ get_frequency()
 #ifdef BOOST_HAS_MS_INT64
     return static_cast< double >(queried_frequency.QuadPart);
 #else // #ifdef BOOST_HAS_MS_INT64
-    const double double_0x100000000 = static_cast< double >(1UL << 16) * static_cast< double >(1UL << 16);
+    const double double_0x100000000 = static_cast< double >(1UL << 16)
+                                    * static_cast< double >(1UL << 16);
     return double_0x100000000 * queried_frequency.HighPart + queried_frequency.LowPart;
 #endif // #ifdef BOOST_HAS_MS_INT64
 }

@@ -28,17 +28,17 @@ namespace boost_ext
 namespace mpl
 {
 
-namespace detail_at_c
+namespace at_c_private
 {
 
 struct dummy;
 
-} // namespace detail_at_c
+} // namespace at_c_private
 
-template< class Sequence, long N, class Default = detail_at_c::dummy >
+template< class Sequence, long N, class Default = at_c_private::dummy >
 struct at_c;
 
-namespace detail_at_c
+namespace at_c_private
 {
 
 template<
@@ -60,11 +60,11 @@ template< class Sequence, long N >
 struct at_c_dispatch< Sequence, N, dummy, false >
 { };
 
-} // namespace detail_at_c
+} // namespace at_c_private
 
 template< class Sequence, long N, class Default >
 struct at_c
-    : detail_at_c::at_c_dispatch< Sequence, N, Default >
+    : at_c_private::at_c_dispatch< Sequence, N, Default >
 { };
 
 } // namespace mpl

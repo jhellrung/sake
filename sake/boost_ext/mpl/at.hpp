@@ -31,7 +31,7 @@ namespace mpl
 template< class Sequence, class Key, class Default = boost::mpl::void_ >
 struct at;
 
-namespace detail_at
+namespace at_private
 {
 
 template< class T, class Default >
@@ -42,11 +42,11 @@ template< class Default >
 struct select< boost::mpl::void_, Default >
 { typedef Default type; };
 
-} // namespace detail_at
+} // namespace at_private
 
 template< class Sequence, class Key, class Default >
 struct at
-    : detail_at::select<
+    : at_private::select<
           typename boost::mpl::at< Sequence, Key >::type,
           Default
       >

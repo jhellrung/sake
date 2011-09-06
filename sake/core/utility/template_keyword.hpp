@@ -20,10 +20,10 @@
  *
  * namespace X_keyword
  * {
- *     SAKE_TEMPLATE_KEYWORD( x )
- *     SAKE_TEMPLATE_KEYWORD( y )
- *     typedef ... default_x_type;
- *     typedef ... default_y_type;
+ * SAKE_TEMPLATE_KEYWORD( x )
+ * SAKE_TEMPLATE_KEYWORD( y )
+ * typedef ... default_x_type;
+ * typedef ... default_y_type;
  * } // namespace X_keyword
  *
  * template< class TemplateParameters >

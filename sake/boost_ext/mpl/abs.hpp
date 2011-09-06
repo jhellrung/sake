@@ -7,8 +7,9 @@
  *
  * struct boost_ext::mpl::abs<N>
  *
- * boost_ext::mpl::abs is a Boost.MPL Metafunction which operators on Boost.MPL
- * Integral Constants.  abs computes the absolute value of its argument.
+ * boost_ext::mpl::abs is a Boost.MPL metafunction which operators on a
+ * Boost.MPL integral constants.  abs computes the absolute value of its
+ * argument.
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_MPL_ABS_HPP

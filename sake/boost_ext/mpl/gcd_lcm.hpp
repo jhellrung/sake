@@ -8,10 +8,10 @@
  * struct boost_ext::mpl::gcd< N0, N1 >
  * struct boost_ext::mpl::lcm< N0, N1 >
  *
- * boost_ext::mpl::gcd and boost_ext::mpl::lcm are a Boost.MPL Metafunctions
- * which operator on Boost.MPL Integral Constants.  gcd computes the greatest
- * common divisor of its arguments; lcm computes the least common multiple of
- * its arguments.
+ * boost_ext::mpl::gcd and boost_ext::mpl::lcm are Boost.MPL metafunctions which
+ * operator on Boost.MPL integral constants.  gcd computes the greatest common
+ * divisor of its arguments; lcm computes the least common multiple of its
+ * arguments.
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_MPL_GCD_LCM_HPP
@@ -38,7 +38,7 @@ namespace mpl
 template< class N0, class N1 > struct gcd;
 template< class N0, class N1 > struct lcm;
 
-namespace detail_gcd_lcm
+namespace gcd_private
 {
 
 template<
@@ -46,49 +46,54 @@ template<
     bool = boost::mpl::less< N0, N1 >::value,
     bool = boost::mpl::equal_to< N1, boost::mpl:int_<0> >::value
 >
-struct gcd_dispatch;
+struct dispatch;
 
 template< class N0, class N1 >
-struct gcd_dispatch< N0, N1, true, false >
-    : gcd_dispatch< N1, N0, false >
+struct dispatch< N0, N1, true, false >
+    : dispatch< N1, N0, false >
 { };
 
 template< class N0, class N1 >
-struct gcd_dispatch< N0, N1, false, false >
-    : gcd_dispatch< N1, typename boost::mpl::modulus< N0, N1 >::type, false >
+struct dispatch< N0, N1, false, false >
+    : dispatch< N1, typename boost::mpl::modulus< N0, N1 >::type, false >
 { };
 
 template< class N0, class N1 >
-struct gcd_dispatch< N0, N1, false, true >
+struct dispatch< N0, N1, false, true >
 {
     BOOST_MPL_ASSERT_NOT((boost::mpl::equal_to< N0, boost::mpl::int_<0> >));
     typedef N0 type;
 };
 
-template< class N0, class N1 >
-struct lcm_impl
-    : boost::mpl::times<
-          typename boost::mpl::divides<
-              N0,
-              typename detail_gcd_lcm::gcd_dispatch< N0, N1 >::type
-          >::type,
-          N1
-      >
-{ };
-
-} // namespace detail_gcd_lcm
+} // namespace gcd_private
 
 template< class N0, class N1 >
 struct gcd
-    : detail_gcd_lcm::gcd_dispatch<
+    : gcd_private::dispatch<
           typename boost_ext::mpl::abs< N0 >::type,
           typename boost_ext::mpl::abs< N1 >::type
       >
 { };
 
+namespace lcm_private
+{
+
+template< class N0, class N1 >
+struct impl
+    : boost::mpl::times<
+          typename boost::mpl::divides<
+              N0,
+              typename gcd_private::dispatch< N0, N1 >::type
+          >::type,
+          N1
+      >
+{ };
+
+} // namespace lcm_private
+
 template< class N0, class N1 >
 struct lcm
-    : detail_lcm::lcm_impl<
+    : lcm_private::impl<
           typename boost_ext::mpl::abs< N0 >::type,
           typename boost_ext::mpl::abs< N1 >::type
       >
