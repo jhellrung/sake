@@ -12,10 +12,12 @@
 
 #include <sake/core/utility/swap.hpp>
 
+#include <sake/test/environment.hpp>
+
 namespace sake_unit_test
 {
 
-void swap_test()
+void swap_test(sake::test::environment& env)
 {
     {
         int x = 0, y = 1;

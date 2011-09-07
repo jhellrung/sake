@@ -6,14 +6,16 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
+#include <sake/test/environment.hpp>
+
 namespace sake_unit_test
 {
 
-void utility_test();
+void utility_test(sake::test::environment& env);
 
-void core_test()
+void core_test(sake::test::environment& env)
 {
-    utility_test();
+    env("utility", &utility_test);
 }
 
 } // namespace sake_unit_test
