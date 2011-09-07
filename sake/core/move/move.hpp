@@ -36,8 +36,8 @@
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/expr_traits/type_tag_of.hpp>
-#include <sake/core/functional/result_from_metafunction.hpp>
 #include <sake/core/utility/bisfo.hpp>
+#include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
 #ifndef BOOST_NO_RVALUE_REFERENCES

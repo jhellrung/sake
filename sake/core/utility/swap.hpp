@@ -18,6 +18,7 @@
 #include <cstddef>
 
 #include <boost/mpl/assert.hpp>
+#include <boost/mpl/identity.hpp>
 
 #include <sake/core/move/move.hpp>
 #include <sake/core/utility/bisfo.hpp>
@@ -28,6 +29,8 @@ namespace sake
 namespace swap_no_adl
 {
 
+// We use this wrapper template to make the following swap overload less
+// preferable to std::swap and boost::swap.
 template< class T >
 struct wrapper
 {
@@ -35,12 +38,12 @@ struct wrapper
     wrapper(T& x_) : x(x_) { }
 };
 
-template< class T0, class T1 >
+template< class T >
 inline void
-swap(wrapper<T0> w0, wrapper<T1> w1)
+swap(T& x0, typename boost::mpl::identity< wrapper<T> >::type const w1)
 {
-    T0 temp(sake::move(w0.x));
-    w0.x = sake::move(x1.x);
+    T temp(sake::move(x0));
+    x0 = sake::move(w1.x);
     w1.x = sake::move(temp);
 }
 

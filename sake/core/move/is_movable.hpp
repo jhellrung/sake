@@ -23,8 +23,9 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_class.hpp>
 
-#include <sake/boost_ext/move/rv.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
+
+#include <sake/core/move/rv.hpp>
 
 namespace sake
 {
