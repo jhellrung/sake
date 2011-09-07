@@ -1,0 +1,8 @@
+# MSVC aux files
+*.ncb
+*.suo
+*.user
+
+# MSVC build directories
+Debug
+Release
