@@ -16,6 +16,6 @@
 #ifndef SAKE_CORE_UTILITY_BISFO_HPP
 #define SAKE_CORE_UTILITY_BISFO_HPP
 
-#define SAKE_BISFO( Name ) const functional:: Name Name = { };
+#define SAKE_BISFO( Name ) functional:: Name const Name = { };
 
 #endif // #ifndef SAKE_CORE_UTILITY_BISFO_HPP
