@@ -31,15 +31,27 @@ struct environment
 
     void parse_command_line(int argc, char* argv[]);
 
-    void operator()(char const* p_scope_name, void (*p_f)( environment& ));
-    void operator()(char const* p_scope_name, void (*p_f)( environment&, void* ), void* p);
+    void operator()(char const* p_local_scope, void (*p_f)( environment& ));
+    void operator()(char const* p_local_scope, void (*p_f)( environment&, void* ), void* p);
 
     int main_return_value() const;
 
 private:
     struct impl;
     impl* mp_impl;
+
+    static void apply(environment& this_, void* p_f)
+    { (*static_cast< void (*)( environment& ) >(p_f))(this_); }
 };
+
+/*******************************************************************************
+ * environment (inline) member function implementations
+ ******************************************************************************/
+
+inline void
+environment::
+operator()(char const * p_local_scope, void (*p_f)( environment& ))
+{ operator()(p_local_scope, &apply, static_cast< void* >(p_f)); }
 
 } // namespace test
 
