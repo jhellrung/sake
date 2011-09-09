@@ -5,8 +5,8 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_TEMPLATE_KEYWORD( Keyword )
- * SAKE_TEMPLATE_KEYWORD_DEFAULT( Keyword, Default )
+ * SAKE_TEMPLATE_KEYWORD( keyword )
+ * SAKE_TEMPLATE_KEYWORD_DEFAULT( keyword, default )
  *
  * struct insert_keyword_value_if_c< Cond, Sequence, Keyword, Value >
  * struct insert_keyword_value_if< Cond, Sequence, Keyword, Value >
@@ -57,16 +57,16 @@
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/pair.hpp>
 
-#define SAKE_TEMPLATE_KEYWORD( Keyword ) \
-namespace tag { struct Keyword; } \
-template< class Value > struct Keyword \
-    : ::boost::mpl::pair< tag::Keyword, Value > \
+#define SAKE_TEMPLATE_KEYWORD( keyword ) \
+namespace tag { struct keyword; } \
+template< class Value > struct keyword \
+    : ::boost::mpl::pair< tag::keyword, Value > \
 { };
 
-#define SAKE_TEMPLATE_KEYWORD_DEFAULT( Keyword, Default ) \
-namespace tag { struct Keyword; } \
-template< class Value = Default > struct Keyword \
-    : ::boost::mpl::pair< tag::Keyword, Value >\
+#define SAKE_TEMPLATE_KEYWORD_DEFAULT( keyword, default ) \
+namespace tag { struct keyword; } \
+template< class Value = default > struct keyword \
+    : ::boost::mpl::pair< tag::keyword, Value >\
 { };
 
 namespace sake

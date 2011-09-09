@@ -173,7 +173,7 @@ operator()(
         {
             if(this_.p_current_scope == p_outer_scope)
                 return;
-            if(this_.p_log && this_.p_current_scope->second.log_level >= log_level_cross_scope)
+            if(this_.p_log && this_.p_current_scope->second.log_level <= log_level_cross_scope)
                 try {
                     *this_.p_log << std::setw(this_.p_current_scope->second.depth) << ""
                                  << "Exiting local scope \"" << local_scope_name << "\"..."
@@ -209,7 +209,7 @@ operator()(
     it->second.depth = p_current_scope ? p_current_scope->second.depth + 1 : 0;
     p_current_scope = &*it;
 
-    if(p_log && p_current_scope->second.log_level >= log_level_cross_scope)
+    if(p_log && p_current_scope->second.log_level <= log_level_cross_scope)
         *p_log << std::setw(p_current_scope->second.depth) << ""
                << "Entering local scope \"" << local_scope_name << "\"..."
                << std::endl;
@@ -221,7 +221,7 @@ operator()(
         catch(boost::exception& e) {
             if(p_current_scope->second.rethrow_exception)
                 throw;
-            if(p_log && p_current_scope->second.log_level >= log_level_exception)
+            if(p_log && p_current_scope->second.log_level <= log_level_exception)
                 *p_log << std::setw(p_current_scope->second.depth) << ""
                        << "*** boost::exception thrown ***\n"
                        << boost::diagnostic_information(e)
@@ -230,7 +230,7 @@ operator()(
         catch(std::exception& e) {
             if(p_current_scope->second.rethrow_exception)
                 throw;
-            if(p_log && p_current_scope->second.log_level >= log_level_exception)
+            if(p_log && p_current_scope->second.log_level <= log_level_exception)
                 *p_log << std::setw(p_current_scope->second.depth) << ""
                        << "*** std::exception thrown ***\n"
                        << boost::diagnostic_information(e)
@@ -239,7 +239,7 @@ operator()(
         catch(...) {
             if(p_current_scope->second.rethrow_exception)
                 throw;
-            if(p_log && p_current_scope->second.log_level >= log_level_exception)
+            if(p_log && p_current_scope->second.log_level <= log_level_exception)
                 *p_log << std::setw(p_current_scope->second.depth) << ""
                        << "*** boost::exception thrown ***\n"
                        << "(boost::diagnostic_information unavailable)"
@@ -285,7 +285,7 @@ fail(
         log_level_fail = log_level_require;
         break;
     }
-    if(p_log && data.log_level >= log_level_fail)
+    if(p_log && data.log_level <= log_level_fail)
         *p_log << std::setw(p_current_scope->second.depth) << ""
                << macro << " failure: " << message
                << " [" << filename << ':' << function << ':' << line_number << ']'

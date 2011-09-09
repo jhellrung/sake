@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_RESULT_FROM_VARIADIC_METAFUNCTION[_D,_Z,_DZ]( [d,] [z,] NLower, NUpper, Metafunction )
+ * SAKE_RESULT_FROM_VARIADIC_METAFUNCTION[_D,_Z,_DZ]( [d,] [z,] n_lower, n_upper, metafunction )
  *
  * This expands into a result struct definition (compatible with Boost.ResultOf)
  * in terms of a specified variadic metafunction.
@@ -47,25 +47,25 @@
 
 #include <sake/core/utility/result_from_metafunction.hpp>
 
-#define SAKE_RESULT_FROM_VARIADIC_METAFUNCTION( NLower, NUpper, Metafunction ) \
+#define SAKE_RESULT_FROM_VARIADIC_METAFUNCTION( n_lower, n_upper, metafunction ) \
     SAKE_RESULT_FROM_VARIADIC_METAFUNCTION_DZ( \
-        BOOST_PP_DEDUCE_D(), BOOST_PP_DEDUCE_Z(), NLower, NUpper, Metafunction \
+        BOOST_PP_DEDUCE_D(), BOOST_PP_DEDUCE_Z(), n_lower, n_upper, metafunction \
     )
-#define SAKE_RESULT_FROM_VARIADIC_METAFUNCTION_D( d, NLower, NUpper, Metafunction ) \
+#define SAKE_RESULT_FROM_VARIADIC_METAFUNCTION_D( d, n_lower, n_upper, metafunction ) \
     SAKE_RESULT_FROM_VARIADIC_METAFUNCTION_DZ( \
-        d, BOOST_PP_DEDUCE_Z(), NLower, NUpper, Metafunction \
+        d, BOOST_PP_DEDUCE_Z(), n_lower, n_upper, metafunction \
     )
-#define SAKE_RESULT_FROM_VARIADIC_METAFUNCTION_Z( z, NLower, NUpper, Metafunction ) \
+#define SAKE_RESULT_FROM_VARIADIC_METAFUNCTION_Z( z, n_lower, n_upper, metafunction ) \
     SAKE_RESULT_FROM_VARIADIC_METAFUNCTION_DZ( \
-        BOOST_PP_DEDUCE_D(), z, NLower, NUpper, Metafunction \
+        BOOST_PP_DEDUCE_D(), z, n_lower, n_upper, metafunction \
     )
-#define SAKE_RESULT_FROM_VARIADIC_METAFUNCTION_DZ( d, z, NLower, NUpper, Metafunction ) \
+#define SAKE_RESULT_FROM_VARIADIC_METAFUNCTION_DZ( d, z, n_lower, n_upper, metafunction ) \
     BOOST_PP_CAT( BOOST_PP_REPEAT_FROM_TO_D_, z ) ( \
         d, \
-        NLower, \
-        BOOST_PP_INC( NUpper ), \
+        n_lower, \
+        BOOST_PP_INC( n_upper ), \
         SAKE_RESULT_FROM_METAFUNCTION_Z, \
-        Metafunction \
+        metafunction \
     )
 
 #endif // #ifndef SAKE_CORE_UTILITY_RESULT_FROM_VARIADIC_METAFUNCTION_HPP

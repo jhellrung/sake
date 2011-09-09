@@ -22,8 +22,8 @@ void swap_test(sake::test::environment& env)
     {
         int x = 0, y = 1;
         sake::swap(x, y);
-        assert(x == 1);
-        assert(y == 0);
+        SAKE_TEST_CHECK_RELATION( env, x, ==, 1 );
+        SAKE_TEST_CHECK_RELATION( env, y, ==, 0 );
     }
 }
 

@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_RESULT_FROM_METAFUNCTION[_Z]( [z,] N, Metafunction)
+ * SAKE_RESULT_FROM_METAFUNCTION[_Z]( [z,] N, metafunction)
  *
  * This expands into a result struct definition (compatible with Boost.ResultOf)
  * in terms of a specified metafunction.
@@ -38,13 +38,13 @@
 #include <boost/preprocessor/repetition/deduce_z.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 
-#define SAKE_RESULT_FROM_METAFUNCTION( N, Metafunction ) \
-    SAKE_RESULT_FROM_METAFUNCTION_Z( BOOST_PP_DEDUCE_Z(), N, Metafunction )
-#define SAKE_RESULT_FROM_METAFUNCTION_Z( z, N, Metafunction ) \
+#define SAKE_RESULT_FROM_METAFUNCTION( n, metafunction ) \
+    SAKE_RESULT_FROM_METAFUNCTION_Z( BOOST_PP_DEDUCE_Z(), n, metafunction )
+#define SAKE_RESULT_FROM_METAFUNCTION_Z( z, n, metafunction ) \
     template<class> struct result; \
-    template< class This, BOOST_PP_ENUM_PARAMS_Z( z, N, class T ) > \
-    struct result< This ( BOOST_PP_ENUM_PARAMS_Z( z, N, T ) ) > \
-        : Metafunction< BOOST_PP_ENUM_PARAMS_Z( z, N, T ) > \
+    template< class This, BOOST_PP_ENUM_PARAMS_Z( z, n, class T ) > \
+    struct result< This ( BOOST_PP_ENUM_PARAMS_Z( z, n, T ) ) > \
+        : metafunction< BOOST_PP_ENUM_PARAMS_Z( z, n, T ) > \
     { };
 
 #endif // #ifndef SAKE_CORE_UTILITY_RESULT_FROM_METAFUNCTION_HPP
