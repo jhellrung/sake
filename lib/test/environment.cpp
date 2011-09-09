@@ -34,15 +34,14 @@ namespace test
 
 struct environment::impl
 {
-    struct scope_data;
-
-    std::ostream* p_out;
+    std::ostream* p_log;
     bool default_enable;
-    std::map< std::string, scope_data > data_of_scope;
+    unsigned int default_log_level;
 
-    std::string current_scope;
-    unsigned int current_scope_depth;
-    scope_data* p_current_scope_data;
+    struct scope_data;
+    std::map< std::string, scope_data > data_of_scope_name;
+
+    std::pair< std::string const, scope_data >* p_current_scope;
 
     impl();
     ~impl();
@@ -51,9 +50,15 @@ struct environment::impl
 
     void operator()(
         environment& env,
-        char const * p_local_scope,
+        char const * const local_scope_name,
         void (*p_f)( environment&, void* ),
-        void* p);
+        void* const p);
+
+    void fail(
+        e_fail_level const fail_level,
+        char const * const macro, char const * const expression,
+        char const * const filename, char const * const function, unsigned int const line_number,
+        char const * const message);
 
     int main_return_value() const;
 };
@@ -64,29 +69,28 @@ struct environment::impl
 
 struct environment::impl::scope_data
 {
-    struct config_type
-    {
-        bool enable;
-        bool rethrow_exception;
-        std::string params;
-        config_type()
-            : enable(true),
-              rethrow_exception(false)
-        { }
-    } config;
-    struct result_type
-    {
-        bool n_exception;
-        unsigned int n_fail_warn;
-        unsigned int n_fail_check;
-        unsigned int n_fail_require;
-        result_type()
-            : n_exception(false),
-              n_fail_warn(0),
-              n_fail_check(0),
-              n_fail_require(0)
-        { }
-    } result;
+    bool enable;
+    unsigned int log_level;
+    bool rethrow_exception;
+    std::string aux_arg;
+
+    unsigned int depth;
+
+    bool n_exception;
+    unsigned int n_fail_warn;
+    unsigned int n_fail_check;
+    unsigned int n_fail_require;
+
+    scope_data()
+        : enable(true),
+          log_level(0),
+          rethrow_exception(false),
+          depth(0),
+          n_exception(false),
+          n_fail_warn(0),
+          n_fail_check(0),
+          n_fail_require(0)
+    { }
 };
 
 /*******************************************************************************
@@ -100,10 +104,10 @@ environment()
 inline
 environment::impl::
 impl()
-    : p_out(&std::cout),
+    : p_log(&std::cout),
       default_enable(true),
-      current_scope_depth(0),
-      p_current_scope_data(0)
+      default_log_level(0),
+      p_current_scope(0)
 { }
 
 environment::
@@ -117,11 +121,7 @@ environment::
 inline
 environment::impl::
 ~impl()
-{
-    assert(current_scope.empty());
-    assert(current_scope_depth == 0);
-    assert(p_current_scope_data == 0);
-}
+{ assert(p_current_scope == 0); }
 
 environment&
 environment::
@@ -150,121 +150,149 @@ parse_command_line(int argc, char* argv[])
 
 void
 environment::
-operator()(char const * p_local_scope, void (*p_f)( environment&, void* ), void* p)
-{ mp_impl->operator()(*this, p_local_scope, p_f, p); }
+operator()(char const * local_scope_name, void (*p_f)( environment&, void* ), void* p)
+{ mp_impl->operator()(*this, local_scope_name, p_f, p); }
 inline void
 environment::impl::
 operator()(
     environment& this_,
-    char const * p_local_scope,
+    char const * const local_scope_name,
     void (*p_f)( environment&, void* ),
-    void* p)
+    void* const p)
 {
-    assert(p_local_scope);
-    assert(*p_local_scope);
+    assert(local_scope_name);
+    assert(*local_scope_name);
     assert(p_f);
-
-    std::string saved_current_scope;
-    current_scope.swap(saved_current_scope);
-    scope_data* const saved_p_current_scope_data = p_current_scope_data;
 
     struct raii_type
     {
         impl& this_;
-        std::string& saved_current_scope;
-        scope_data* const saved_p_current_scope_data;
-        char const * const p_local_scope;
-        bool restore_scope_depth;
+        std::pair< std::string const, scope_data >* const p_outer_scope;
+        char const * const local_scope_name;
         ~raii_type()
         {
-            this_.current_scope.swap(saved_current_scope);
-            this_.p_current_scope_data = saved_p_current_scope_data;
-            if(restore_scope_depth) {
-                assert(this_.current_scope_depth > 0);
-                --this_.current_scope_depth;
-                if(this_.p_out)
-                    try {
-                        *this_.p_out << std::setw(this_.current_scope_depth) << ""
-                                     << "Exiting local scope \"" << p_local_scope << "\"..."
-                                     << std::endl;
-                    }
-                    catch(...)
-                    { }
-            }
+            if(this_.p_current_scope == p_outer_scope)
+                return;
+            if(this_.p_log && this_.p_current_scope->second.log_level >= log_level_cross_scope)
+                try {
+                    *this_.p_log << std::setw(this_.p_current_scope->second.depth) << ""
+                                 << "Exiting local scope \"" << local_scope_name << "\"..."
+                                 << std::endl;
+                }
+                catch(...)
+                { }
+            this_.p_current_scope = p_outer_scope;
         }
-    } raii = {
-        *this,
-        saved_current_scope,
-        saved_p_current_scope_data,
-        p_local_scope,
-        false
-    };
+    } raii = { *this, p_current_scope, local_scope_name };
 
-    // Update current_scope.
-    if(saved_current_scope.empty())
-        current_scope = p_local_scope;
-    else {
-        current_scope.reserve(saved_current_scope.size() + 1 + std::strlen(p_local_scope));
-        current_scope = saved_current_scope + '.' + p_local_scope;
+    // Construct scope_name.
+    std::string scope_name;
+    if(p_current_scope) {
+        scope_name.reserve(p_current_scope->first.size() + 1 + std::strlen(local_scope_name));
+        scope_name += p_current_scope->first;
+        scope_name += '.';
+        scope_name += local_scope_name;
     }
+    else
+        scope_name = local_scope_name;
 
-    // If scope is disabled, return.
-    std::map< std::string, scope_data >::iterator it = data_of_scope.find(current_scope);
-    if(!(it == data_of_scope.end() ? default_enable : it->second.config.enable))
+    // Return if this scope is not enabled.
+    std::map< std::string, scope_data >::iterator it = data_of_scope_name.find(scope_name);
+    if(!(it == data_of_scope_name.end() ? default_enable : it->second.enable))
         return;
 
-    // Enter local scope.
-    if(p_out)
-        *p_out << std::setw(current_scope_depth) << ""
-               << "Entering local scope \"" << p_local_scope << "\"..."
-               << std::endl;
-    ++current_scope_depth;
-    raii.restore_scope_depth = true;
+    // If necessary, construct a scope_data object for this scope.
+    if(it == data_of_scope_name.end()) {
+        it = data_of_scope_name.insert(std::make_pair(scope_name, scope_data())).first;
+        it->second.log_level = p_current_scope ? p_current_scope->second.log_level : default_log_level;
+    }
+    it->second.depth = p_current_scope ? p_current_scope->second.depth + 1 : 0;
+    p_current_scope = &*it;
 
-    // If necessary, construct scope_data object for the current scope.
-    if(it == data_of_scope.end())
-        it = data_of_scope.insert(std::make_pair(current_scope, scope_data())).first;
-    p_current_scope_data = &it->second;
+    if(p_log && p_current_scope->second.log_level >= log_level_cross_scope)
+        *p_log << std::setw(p_current_scope->second.depth) << ""
+               << "Entering local scope \"" << local_scope_name << "\"..."
+               << std::endl;
 
     try {
         try {
             (*p_f)(this_, p);
         }
         catch(boost::exception& e) {
-            if(p_current_scope_data->config.rethrow_exception)
+            if(p_current_scope->second.rethrow_exception)
                 throw;
-            if(p_out) {
-                *p_out << std::setw(current_scope_depth) << ""
-                       << "*** boost::exception thrown ***"
+            if(p_log && p_current_scope->second.log_level >= log_level_exception)
+                *p_log << std::setw(p_current_scope->second.depth) << ""
+                       << "*** boost::exception thrown ***\n"
+                       << boost::diagnostic_information(e)
                        << std::endl;
-                *p_out << boost::diagnostic_information(e) << std::endl;
-            }
         }
         catch(std::exception& e) {
-            if(p_current_scope_data->config.rethrow_exception)
+            if(p_current_scope->second.rethrow_exception)
                 throw;
-            if(p_out) {
-                *p_out << std::setw(current_scope_depth) << ""
-                       << "*** std::exception thrown ***"
+            if(p_log && p_current_scope->second.log_level >= log_level_exception)
+                *p_log << std::setw(p_current_scope->second.depth) << ""
+                       << "*** std::exception thrown ***\n"
+                       << boost::diagnostic_information(e)
                        << std::endl;
-                *p_out << boost::diagnostic_information(e) << std::endl;
-            }
         }
         catch(...) {
-            if(p_current_scope_data->config.rethrow_exception)
+            if(p_current_scope->second.rethrow_exception)
                 throw;
-            if(p_out) {
-                *p_out << std::setw(current_scope_depth) << ""
-                       << "*** Unknown exception thrown ***"
+            if(p_log && p_current_scope->second.log_level >= log_level_exception)
+                *p_log << std::setw(p_current_scope->second.depth) << ""
+                       << "*** boost::exception thrown ***\n"
+                       << "(boost::diagnostic_information unavailable)"
                        << std::endl;
-                *p_out << "[boost::diagnostic_information unavailable]" << std::endl;
-            }
         }
     }
     catch(...) {
-        p_current_scope_data->result.n_exception = true;
-        if(p_current_scope_data->config.rethrow_exception)
+        p_current_scope->second.n_exception = true;
+        if(p_current_scope->second.rethrow_exception)
             throw;
+    }
+}
+
+void
+environment::
+fail(
+    e_fail_level fail_level,
+    char const * macro, char const * expression,
+    char const * filename, char const * function, unsigned int line_number,
+    char const * message)
+{ mp_impl->fail(fail_level, macro, expression, filename, function, line_number, message); }
+inline void
+environment::impl::
+fail(
+    e_fail_level const fail_level,
+    char const * const macro, char const * const expression,
+    char const * const filename, char const * const function, unsigned int const line_number,
+    char const * const message)
+{
+    scope_data& data = p_current_scope->second;
+    unsigned int log_level_fail = 0;
+    switch(fail_level) {
+    case fail_level_warn:
+        ++data.n_fail_warn;
+        log_level_fail = log_level_warn;
+        break;
+    case fail_level_check:
+        ++data.n_fail_check;
+        log_level_fail = log_level_check;
+        break;
+    case fail_level_require:
+        ++data.n_fail_require;
+        log_level_fail = log_level_require;
+        break;
+    }
+    if(p_log && data.log_level >= log_level_fail)
+        *p_log << std::setw(p_current_scope->second.depth) << ""
+               << macro << " failure: " << message
+               << " [" << filename << ':' << function << ':' << line_number << ']'
+               << std::endl;
+    if(fail_level == fail_level_require) {
+        // TODO: throw a custom exception to force the scope to exit early
+        return;
     }
 }
 
@@ -276,10 +304,10 @@ inline int
 environment::impl::
 main_return_value() const
 {
-    std::map< std::string, scope_data >::const_iterator it = data_of_scope.begin();
-    for(; it != data_of_scope.end(); ++it) {
-        scope_data::result_type const & result = it->second.result;
-        if(result.n_exception || result.n_fail_check != 0 || result.n_fail_require != 0)
+    std::map< std::string, scope_data >::const_iterator it = data_of_scope_name.begin();
+    for(; it != data_of_scope_name.end(); ++it) {
+        scope_data const & data = it->second;
+        if(data.n_exception || data.n_fail_check != 0 || data.n_fail_require != 0)
             return 1;
     }
     return 0;
