@@ -20,5 +20,6 @@ int main(int argc, char* argv[])
     sake::test::environment env;
     env.parse_command_line(argc, argv);
     env("core", &sake_unit_test::core_test);
+    env.report();
     return env.main_return_value();
 }
