@@ -20,6 +20,8 @@
 #include <boost/exception/diagnostic_information.hpp>
 #include <boost/exception/exception.hpp>
 
+#include <sake/core/utility/timer.hpp>
+
 #include <sake/test/environment.hpp>
 
 namespace sake
@@ -34,6 +36,8 @@ namespace test
 
 struct environment::impl
 {
+    struct fail_require_exception { };
+
     std::ostream* p_log;
     bool default_enable;
     unsigned int default_log_level;
@@ -54,13 +58,14 @@ struct environment::impl
         void (*p_f)( environment&, void* ),
         void* const p);
 
+    void report() const;
+    int main_return_value() const;
+
     void fail(
         e_fail_level const fail_level,
         char const * const macro, char const * const expression,
         char const * const filename, char const * const function, unsigned int const line_number,
         char const * const message);
-
-    int main_return_value() const;
 };
 
 /*******************************************************************************
@@ -75,21 +80,23 @@ struct environment::impl::scope_data
     std::string aux_arg;
 
     unsigned int depth;
+    double elapsed_time;
 
-    bool n_exception;
     unsigned int n_fail_warn;
     unsigned int n_fail_check;
     unsigned int n_fail_require;
+    unsigned int n_throw_exception;
 
     scope_data()
         : enable(true),
           log_level(0),
           rethrow_exception(false),
           depth(0),
-          n_exception(false),
+          elapsed_time(0),
           n_fail_warn(0),
           n_fail_check(0),
-          n_fail_require(0)
+          n_fail_require(0),
+          n_throw_exception(0)
     { }
 };
 
@@ -164,26 +171,26 @@ operator()(
     assert(*local_scope_name);
     assert(p_f);
 
-    struct raii_type
+    struct exit_scope
     {
         impl& this_;
         std::pair< std::string const, scope_data >* const p_outer_scope;
         char const * const local_scope_name;
-        ~raii_type()
+        ~exit_scope()
         {
             if(this_.p_current_scope == p_outer_scope)
                 return;
             if(this_.p_log && this_.p_current_scope->second.log_level <= log_level_cross_scope)
                 try {
                     *this_.p_log << std::setw(this_.p_current_scope->second.depth) << ""
-                                 << "Exiting local scope \"" << local_scope_name << "\"..."
+                                 << "Exiting local scope " << local_scope_name << "..."
                                  << std::endl;
                 }
                 catch(...)
                 { }
             this_.p_current_scope = p_outer_scope;
         }
-    } raii = { *this, p_current_scope, local_scope_name };
+    } _exit_scope = { *this, p_current_scope, local_scope_name };
 
     // Construct scope_name.
     std::string scope_name;
@@ -206,51 +213,119 @@ operator()(
         it = data_of_scope_name.insert(std::make_pair(scope_name, scope_data())).first;
         it->second.log_level = p_current_scope ? p_current_scope->second.log_level : default_log_level;
     }
-    it->second.depth = p_current_scope ? p_current_scope->second.depth + 1 : 0;
+    unsigned int const depth = p_current_scope ? p_current_scope->second.depth + 1 : 0;
+    assert(it->second.depth == 0 || it->second.depth == depth);
+    it->second.depth = depth;
     p_current_scope = &*it;
+    unsigned int const log_level = p_current_scope->second.log_level;
+    bool const rethrow_exception = p_current_scope->second.rethrow_exception;
+    assert(p_current_scope->second.depth == depth);
 
-    if(p_log && p_current_scope->second.log_level <= log_level_cross_scope)
-        *p_log << std::setw(p_current_scope->second.depth) << ""
-               << "Entering local scope \"" << local_scope_name << "\"..."
+    if(p_log && log_level <= log_level_cross_scope)
+        *p_log << std::setw(depth) << ""
+               << "Entering local scope " << local_scope_name << "..."
                << std::endl;
 
     try {
         try {
+            sake::timer timer;
+            struct update_elapsed_time
+            {
+                sake::timer const & timer;
+                double& elapsed_time;
+                ~update_elapsed_time()
+                { elapsed_time += timer.elapsed(); }
+            } _update_elapsed_time = { timer, p_current_scope->second.elapsed_time };
             (*p_f)(this_, p);
         }
+        catch(fail_require_exception) { }
         catch(boost::exception& e) {
-            if(p_current_scope->second.rethrow_exception)
+            if(rethrow_exception)
                 throw;
-            if(p_log && p_current_scope->second.log_level <= log_level_exception)
-                *p_log << std::setw(p_current_scope->second.depth) << ""
-                       << "*** boost::exception thrown ***\n"
-                       << boost::diagnostic_information(e)
+            if(p_log && log_level <= log_level_exception)
+                *p_log << std::setw(depth) << "" << "*** boost::exception thrown ***\n"
+                       << std::setw(depth) << "" << boost::diagnostic_information(e)
                        << std::endl;
         }
         catch(std::exception& e) {
-            if(p_current_scope->second.rethrow_exception)
+            if(rethrow_exception)
                 throw;
-            if(p_log && p_current_scope->second.log_level <= log_level_exception)
-                *p_log << std::setw(p_current_scope->second.depth) << ""
-                       << "*** std::exception thrown ***\n"
-                       << boost::diagnostic_information(e)
+            if(p_log && log_level <= log_level_exception)
+                *p_log << std::setw(depth) << "" << "*** std::exception thrown ***\n"
+                       << std::setw(depth) << "" << boost::diagnostic_information(e)
                        << std::endl;
         }
         catch(...) {
-            if(p_current_scope->second.rethrow_exception)
+            if(rethrow_exception)
                 throw;
-            if(p_log && p_current_scope->second.log_level <= log_level_exception)
-                *p_log << std::setw(p_current_scope->second.depth) << ""
-                       << "*** boost::exception thrown ***\n"
-                       << "(boost::diagnostic_information unavailable)"
+            if(p_log && log_level <= log_level_exception)
+                *p_log << std::setw(depth) << "" << "*** unknown exception thrown ***\n"
+                       << std::setw(depth) << "" << "(boost::diagnostic_information unavailable)"
                        << std::endl;
         }
     }
     catch(...) {
-        p_current_scope->second.n_exception = true;
-        if(p_current_scope->second.rethrow_exception)
+        ++p_current_scope->second.n_throw_exception;
+        if(rethrow_exception)
             throw;
     }
+}
+
+void
+environment::
+report() const
+{ mp_impl->report(); }
+inline void
+environment::impl::
+report() const
+{
+    assert(p_current_scope == 0);
+    if(!p_log)
+        return;
+    std::map< std::string, scope_data >::const_iterator it = data_of_scope_name.begin();
+    double elapsed_time = 0;
+    unsigned int n_fail_warn = 0;
+    unsigned int n_fail_check = 0;
+    unsigned int n_fail_require = 0;
+    unsigned int n_throw_exception = 0;
+    for(; it != data_of_scope_name.end(); ++it) {
+        scope_data const & data = it->second;
+        elapsed_time += data.elapsed_time;
+        n_fail_warn += data.n_fail_warn;
+        n_fail_check += data.n_fail_check;
+        n_fail_require += data.n_fail_require;
+        n_throw_exception += data.n_throw_exception;
+        *p_log << it->first << " (" << data.elapsed_time << " s) : "
+               << data.n_fail_warn << " failed warn(s), "
+               << data.n_fail_check << " failed check(s), "
+               << data.n_fail_require << " failed require(s), "
+               << data.n_throw_exception << " thrown exception(s)"
+               << std::endl;
+    }
+    *p_log << "CUMULATIVE (" << elapsed_time << " s) : "
+           << n_fail_warn << " failed warn(s), "
+           << n_fail_check << " failed check(s), "
+           << n_fail_require << " failed require(s), "
+           << n_throw_exception << " thrown exception(s)"
+           << std::endl;
+}
+
+int
+environment::
+main_return_value() const
+{ return mp_impl->main_return_value(); }
+inline int
+environment::impl::
+main_return_value() const
+{
+    assert(p_current_scope == 0);
+    std::map< std::string, scope_data >::const_iterator it = data_of_scope_name.begin();
+    for(; it != data_of_scope_name.end(); ++it) {
+        scope_data const & data = it->second;
+        if(data.n_fail_check != 0 || data.n_fail_require != 0 || data.n_throw_exception != 0)
+            return 1;
+    }
+    return 0;
 }
 
 void
@@ -286,31 +361,12 @@ fail(
         break;
     }
     if(p_log && data.log_level <= log_level_fail)
-        *p_log << std::setw(p_current_scope->second.depth) << ""
+        *p_log << std::setw(data.depth) << ""
                << macro << " failure: " << message
                << " [" << filename << ':' << function << ':' << line_number << ']'
                << std::endl;
-    if(fail_level == fail_level_require) {
-        // TODO: throw a custom exception to force the scope to exit early
-        return;
-    }
-}
-
-int
-environment::
-main_return_value() const
-{ return mp_impl->main_return_value(); }
-inline int
-environment::impl::
-main_return_value() const
-{
-    std::map< std::string, scope_data >::const_iterator it = data_of_scope_name.begin();
-    for(; it != data_of_scope_name.end(); ++it) {
-        scope_data const & data = it->second;
-        if(data.n_exception || data.n_fail_check != 0 || data.n_fail_require != 0)
-            return 1;
-    }
-    return 0;
+    if(fail_level == fail_level_require)
+        throw fail_require_exception();
 }
 
 } // namespace test
