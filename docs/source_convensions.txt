@@ -1,0 +1,148 @@
+/*******************************************************************************
+ * docs/source_conventions.txt
+ *
+ * Copyright 2011, Jeffrey Hellrung.
+ * Distributed under the Boost Software License, Version 1.0.  (See accompanying
+ * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ ******************************************************************************/
+
+================================
+Sake Code Conventions
+================================
+
+This document describes some of Sake's convention concerning the style of source
+code.
+
+--------------------------------
+File Extensions
+--------------------------------
+Sake primarily uses 3 different file extensions.
+- cpp: compiled source files
+- hpp: single-inclusion header files
+- ipp: multiple-inclusion header files
+cpp files should reside in the libs directory; hpp and ipp files should
+generally reside in the sake directory.
+
+--------------------------------
+File and Directory Names
+--------------------------------
+The vast majority of file and directory names should be in "lower_case", similar
+to the STL and Boost conventions.  The exception is file names defining concept
+checking classes, which should be in "CamelCase".
+
+--------------------------------
+Include Guards
+--------------------------------
+All hpp (single-inclusion header) files should have unique preprocessor include
+guards following the comment-header (see below).  To minimize the risk of
+include guard collision, include guards should take the form
+SAKE_[PATH]_[FILENAME]_[EXT], where [PATH], [FILENAME], and [EXT] should be
+replaced with the file's path, filename, and extension (hpp), respectively.
+
+For example:
+
+%%%%%%%%%%%%%%%% BEGIN EXAMPLE %%%%%%%%%%%%%%%%
+
+#ifndef SAKE_DOCS_SOURCE_CONVENTIONS_TXT
+#define SAKE_DOCS_SOURCE_CONVENTIONS_TXT
+
+...file contents...
+
+#endif // #ifndef SAKE_DOCS_SOURCE_CONVENTIONS_TXT
+
+%%%%%%%%%%%%%%%%% END EXAMPLE %%%%%%%%%%%%%%%%%
+
+--------------------------------
+Comment-Header
+--------------------------------
+All files should have a comment-header (like the one at the top of this
+document) giving the file's path, a copyright year, author(s), and the Boost
+Software License note (copied verbatim).  Additional information should give the
+public definitions provided, describe the purpose of said definitions, and maybe
+provide some brief usage documentation and an example.  More elaborate
+documentation should be provided in the docs directory.
+
+For example:
+
+%%%%%%%%%%%%%%%% BEGIN EXAMPLE %%%%%%%%%%%%%%%%
+
+/*******************************************************************************
+ * path/to/file.ext
+ *
+ * Copyright 2011, Jeffrey Hellrung.
+ * Distributed under the Boost Software License, Version 1.0.  (See accompanying
+ * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * function_e() -> function_e_result_type
+ * template_function_d(T0 x0) -> template_function_d_result< T0 >::type
+ *
+ * struct struct_a
+ * class class_b
+ * struct template_struct_c< T0 >
+ * class template_class_d< T0, T1 >
+ *
+ * #define OBJECT_LIKE_MACRO
+ * #define FUNCTION_LIKE_MACRO( T0 )
+ *
+ * This is an example comment-header.
+ ******************************************************************************/
+
+%%%%%%%%%%%%%%%%% END EXAMPLE %%%%%%%%%%%%%%%%%
+
+--------------------------------
+Identifiers
+--------------------------------
+Most of identifiers should be in "lower_case", similar to the STL and Boost
+conventions.  This includes namespaces, functions, variables (global and local),
+and the vast majority of structs, classes, and typedefs.  Exceptions include:
+- Persistent macros (whether object-like or function-like) should be in
+  "UPPER_CASE".
+- Template parameters should be in "CamelCase".
+- Concept check classes should be in "CamelCase".
+All C++ constructs defined in Sake reside (directly or indirectly) in the sake
+namespace.  Since preprocessor macros always have global scope, persistent
+macros should be prefixed with "SAKE_" to minimize the risk of macro identifier
+collision.  Temporary macros (i.e., "local" macros that are #undef'ed within the
+same file they are #define'ed) are typically in "lower_case" unless there is a
+need to make them unique.
+
+--------------------------------
+Vertical Spacing
+--------------------------------
+Sake generally uses only at most double spacing to separate components or major
+blocks of code within a single file.  Comment blocks typically separate
+components at higher levels beyond what double spacing might be appropriate for.
+
+--------------------------------
+Horizontal Spacing
+--------------------------------
+Sake generally makes liberal use of horizontal white space and newlines.  Sake
+uses an informal line length limit of 80 characters unless this detracts from
+readability, in which cases the "revised" informal line length limit is 120
+characters.
+
+--------------------------------
+Identation
+--------------------------------
+The only mandatory rules regarding indentation are as follows:
+- No tab characters; this is the same policy adopted by Boost.
+- Use indentation to aid in the readability and maintainability of the source
+  code.
+The following are only suggested guidelines, and may be modified to the style
+preferences of the primary author of a particular component or module, as long
+as it is kept reasonably consistent within said component or module.
+- Block indentation is at multiples of 4 spaces.
+- Indent class member declarations, function definitions, and macro definitions.
+- Do not indent namespace-level declarations and definitions.
+
+--------------------------------
+Braces
+--------------------------------
+The following are only suggested guidelines, and may be modified to the style
+preferences of the primary author of a particular component or module, as long
+as it is kept reasonably consistent within said component or module.
+- Braces enclosing namespace-level, class-level, or function-level declarations
+  and definitions should generally appear on their own lines.
+- The opening brace of a control block (if, else, for, while, do-while, try,
+  catch) should trail the closing parenthese of the block declaration; the
+  closing brace should appear on its own line.
