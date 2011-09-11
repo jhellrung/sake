@@ -17,18 +17,14 @@
 
 #include <iosfwd>
 
-// TODO
-//#include <sake/core/introspection/is_left_shiftable.hpp>
-#include <boost/type_traits/integral_constant.hpp>
+#include <sake/core/introspection/has_operator_shift_left.hpp>
 
 namespace sake
 {
 
 template< class T >
 struct is_ostreamable
-// TODO
-//    : sake::is_left_shiftable< std::ostream&, T, std::ostream& >
-    : boost::false_type
+    : sake::has_operator_shift_left< std::ostream&, T, std::ostream& >
 { };
 
 } // namespace sake
