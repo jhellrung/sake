@@ -7,7 +7,7 @@
  *
  * move(T&& x) -> result_of::move<T>::type
  * struct functional::move
- * SAKE_MOVE( Expr )
+ * #define SAKE_MOVE( Expr )
  *
  * SAKE_MOVE( Expr ) is intended to be a replacement for boost::move and/or
  * sake::move that also works for rvalues in the absence of rvalue references.
