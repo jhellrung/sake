@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_BOOST_EXT_DEFINE_EXCEPTION( scope, name )
+ * #define SAKE_BOOST_EXT_DEFINE_EXCEPTION( scope, name )
  *
  * This macro reduces the boilerplate necessary to define exception classes
  * compatible with Boost.Exception and with a (minimally) informative what().
