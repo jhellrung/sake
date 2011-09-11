@@ -10,12 +10,20 @@
 #error SAKE_INTROSPECTION_TRAIT_NAME not defined.
 #endif // #ifndef SAKE_INTROSPECTION_TRAIT_NAME
 
+#if !defined( SAKE_INTROSPECTION_OPERATOR_NAME ) \
+&& (!defined( SAKE_INTROSPECTION_OPERATOR_DECLARE ) \
+ && !defined( SAKE_INTROSPECTION_OPERATOR_APPLY ))
+#error SAKE_INTROSPECTION_OPERATOR_NAME not defined.
+#endif // #if !defined( ... ) && ...
+
 #ifndef SAKE_INTROSPECTION_OPERATOR_DECLARE
-#error SAKE_INTROSPECTION_OPERATOR_DECLARE( Result, T, U ) not defined.
+#define SAKE_INTROSPECTION_OPERATOR_DECLARE( Result, T, U ) \
+    Result operator SAKE_INTROSPECTION_OPERATOR_NAME ( T, U );
 #endif // #ifndef SAKE_INTROSPECTION_OPERATOR_DECLARE
 
 #ifndef SAKE_INTROSPECTION_OPERATOR_APPLY
-#error SAKE_INTROSPECTION_OPERATOR_APPLY( x, y ) not defined.
+#define SAKE_INTROSPECTION_OPERATOR_APPLY( x, y ) \
+    x SAKE_INTROSPECTION_OPERATOR_NAME y
 #endif // #ifndef SAKE_INTROSPECTION_OPERATOR_APPLY
 
 #ifndef SAKE_INTROSPECTION_DEFAULT_RESULT
@@ -28,18 +36,7 @@
 
 
 
-#define trait_name_private        BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
-#define operator_apply_expression SAKE_INTROSPECTION_OPERATOR_APPLY( ::sake::declval<T>(), ::sake::declval<U>() )
-
-
-
-template<
-    class T, class U,
-    class Result = SAKE_INTROSPECTION_DEFAULT_RESULT( T, U ),
-    class ResultMetafunction = ::boost::mpl::always< ::boost::true_type >
-> struct SAKE_INTROSPECTION_TRAIT_NAME;
-
-
+#define trait_name_private BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
 
 namespace no_ext
 {
@@ -47,11 +44,8 @@ namespace no_ext
 namespace trait_name_private
 {
 
-SAKE_INTROSPECTION_OPERATOR_DECLARE(
-    ::sake::introspection_private::dummy,
-    ::sake::convertible_from_any,
-    ::sake::convertible_from_any
-)
+template< class Signature, class ResultMetafunction >
+struct impl;
 
 template<
     class T, class U, class Result, class ResultMetafunction,
@@ -69,38 +63,9 @@ struct dispatch< T, U, Result, ResultMetafunction, true >
     : SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultMetafunction )
 { };
 
-template< class T, class U >
-struct has_void_result
-{
-    static const bool value = SAKE_EXPR_IS_VOID( operator_apply_expression );
-    typedef has_void_result type;
-};
-
-template< class T, class U, class Result, class ResultMetafunction >
-struct non_void_result_helper
-{
-    static const bool value =
-       !SAKE_EXPR_IS_CONVERTIBLE( operator_apply_expression, ::sake::introspection_private::dummy )
-     && SAKE_EXPR_IS_CONVERTIBLE( operator_apply_expression, Result )
-     && SAKE_EXPR_APPLY( ResultMetafunction, operator_apply_expression );
-    typedef non_void_result_helper type;
-};
-
 template< class T, class U, class Result, class ResultMetafunction >
 struct dispatch< T, U, Result, ResultMetafunction, false >
-    : ::boost::mpl::and_<
-          ::boost::mpl::not_< trait_name_private::has_void_result<T,U> >,
-          trait_name_private::non_void_result_helper< T, U, Result, ResultMetafunction >
-      >
-{ };
-
-template< class T, class U, class ResultMetafunction >
-struct dispatch< T, U, void, ResultMetafunction, false >
-    : ::boost::mpl::eval_if<
-          trait_name_private::has_void_result<T,U>,
-          ::boost::mpl::apply1< ResultMetafunction, void >,
-          trait_name_private::non_void_result_helper< T, U, void, ResultMetafunction >
-      >
+    : impl< Result ( T, U ), ResultMetafunction >
 { };
 
 } // namespace trait_name_private
@@ -112,23 +77,46 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 
 } // namespace no_ext
 
-
-
 SAKE_EXTENSION_CLASS_N( SAKE_INTROSPECTION_TRAIT_NAME, 4, 2 )
 
-template< class T, class U, class Result, class ResultMetafunction >
+template<
+    class T, class U,
+    class Result = SAKE_INTROSPECTION_DEFAULT_RESULT( T, U ),
+    class ResultMetafunction = ::boost::mpl::always< ::boost::true_type >
+>
 struct SAKE_INTROSPECTION_TRAIT_NAME
     : ext:: BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 ) < T, U, Result, ResultMetafunction >
 { };
 
+namespace no_ext
+{
 
+namespace trait_name_private
+{
+
+#undef SAKE_INTROSPECTION_TRAIT_NAME
+#define SAKE_INTROSPECTION_TRAIT_NAME impl
+#define SAKE_INTROSPECTION_FUNCTION_DECLARE( Result, T_tuple ) \
+    SAKE_INTROSPECTION_OPERATOR_DECLARE( \
+        Result, \
+        BOOST_PP_TUPLE_ELEM( 2, 0, T_tuple ), \
+        BOOST_PP_TUPLE_ELEM( 2, 1, T_tuple ) \
+    )
+#define SAKE_INTROSPECTION_FUNCTION_APPLY( x_tuple ) \
+    SAKE_INTROSPECTION_OPERATOR_APPLY x_tuple
+#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
+#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
+
+} // namespace trait_name_private
+
+} // namespace no_ext
 
 #undef trait_name_private
-#undef operator_apply_expression
 
 
 
 #undef SAKE_INTROSPECTION_TRAIT_NAME
+#undef SAKE_INTROSPECTION_OPERATOR_NAME
 #undef SAKE_INTROSPECTION_OPERATOR_DECLARE
 #undef SAKE_INTROSPECTION_OPERATOR_APPLY
 #undef SAKE_INTROSPECTION_DEFAULT_RESULT

@@ -7,8 +7,8 @@
  *
  * #define SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_BINARY()
  *
- * This defines an interface to allow one to easily define has_operator_op
- * metafunctions for a binary operator op.  One defines certain predetermined
+ * This defines an interface to allow one to easily define a has_operator_op
+ * metafunction for a binary operator op.  One defines certain predetermined
  * macros to specify the desired operator, then #include's
  * SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_BINARY().  This generates a
  * metafunction with signature
@@ -23,12 +23,16 @@
  * The macros to define to specify the desired operator are as follows:
  *
  * SAKE_INTROSPECTION_TRAIT_NAME
- *     Expands to the name of the trait to be defined (e.g., "has_operator_op"
- *     above).
+ *     Expands to the name of the trait to be defined (e.g., "has_operator_op").
+ * SAKE_INTROSPECTION_OPERATOR_NAME
+ *     [ optional ]
+ *     Expands to the name of the operator (e.g., "op").
  * SAKE_INTROSPECTION_OPERATOR_DECLARE( Result, T, U )
+ *     [ defaults to "Result operator SAKE_INTROSPECTION_OPERATOR_NAME (T, U);" ]
  *     Expands to a declaration of the operator with result type Result and
- *     parameter types T and U (e.g., "Result operator op( T, U );").
+ *     parameter types T and U (e.g., "Result operator op(T, U);").
  * SAKE_INTROSPECTION_OPERATOR_APPLY( x, y )
+ *     [ defaults to "x SAKE_INTROSPECTION_OPERATOR_NAME y" ]
  *     Expands to an application of the operator with parameters x and y (e.g.,
  *     "x op y").
  * SAKE_INTROSPECTION_DEFAULT_RESULT( T, U )
@@ -46,22 +50,14 @@
 #define SAKE_CORE_INTROSPECTION_HAS_OPERATOR_BINARY_HPP
 
 #include <boost/mpl/always.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/not.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/type_traits/is_builtin_object.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
-#include <sake/core/expr_traits/apply.hpp>
-#include <sake/core/expr_traits/is_convertible.hpp>
-#include <sake/core/expr_traits/is_void.hpp>
-#include <sake/core/introspection/private/dummy.hpp>
-#include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/convertible_from_any.hpp>
+#include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/utility/extension.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_BINARY() \
