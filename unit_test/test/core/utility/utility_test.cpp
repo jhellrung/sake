@@ -1,5 +1,5 @@
 /*******************************************************************************
- * unit_test/core/utility/utility_test.cpp
+ * unit_test/test/core/utility/utility_test.cpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -11,10 +11,12 @@
 namespace sake_unit_test
 {
 
+void address_of_test(sake::test::environment& env);
 void swap_test(sake::test::environment& env);
 
 void utility_test(sake::test::environment& env)
 {
+    env("address_of", &address_of_test);
     env("swap", &swap_test);
 }
 

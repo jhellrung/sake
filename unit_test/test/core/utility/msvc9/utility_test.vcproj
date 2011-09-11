@@ -141,6 +141,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\address_of_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\swap_test.cpp"
 			>
 		</File>
