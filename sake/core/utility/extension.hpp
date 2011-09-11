@@ -5,11 +5,11 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_EXTENSION_UNARY_CLASS( Class )
- * SAKE_EXTENSION_CLASS( Class, Arity )
- * SAKE_EXTENSION_CLASS_N( Class, Arity, N )
- * SAKE_EXTENSION_FUNCTION( Function, TmplFnPrototype, CallForward, NamespaceSeq )
- * SAKE_EXTENSION_FUNCTION_N( Function, TmplFnPrototype, CallForward, NamespaceSeq, N )
+ * #define SAKE_EXTENSION_UNARY_CLASS( Class )
+ * #define SAKE_EXTENSION_CLASS( Class, Arity )
+ * #define SAKE_EXTENSION_CLASS_N( Class, Arity, N )
+ * #define SAKE_EXTENSION_FUNCTION( Function, TmplFnPrototype, CallForward, NamespaceSeq )
+ * #define SAKE_EXTENSION_FUNCTION_N( Function, TmplFnPrototype, CallForward, NamespaceSeq, N )
  *
  * TODO: Documentation.
  ******************************************************************************/

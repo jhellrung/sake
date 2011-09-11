@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_RESULT_FROM_METAFUNCTION[_Z]( [z,] N, metafunction)
+ * #define SAKE_RESULT_FROM_METAFUNCTION[_Z]( [z,] n, metafunction)
  *
  * This expands into a result struct definition (compatible with Boost.ResultOf)
  * in terms of a specified metafunction.

@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_UNIQUE_NAME( prefix )
+ * #define SAKE_UNIQUE_NAME( prefix )
  *
  * Expands to generate an identifier with the given prefix which is at least
  * unique to the line on which it expands.

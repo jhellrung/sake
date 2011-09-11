@@ -5,15 +5,18 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_USING_NULLPTR
+ * #define SAKE_USING_NULLPTR
+ *
  * struct nullptr_t
  * nullptr_t const nullptr
+ *
  * operator==(nullptr_t, nullptr_t) -> bool
  * operator!=(nullptr_t, nullptr_t) -> bool
  * operator==(nullptr_t, T* p) -> bool
  * operator!=(nullptr_t, T* p) -> bool
  * operator==(T* p, nullptr_t) -> bool
  * operator!=(T* p, nullptr_t) -> bool
+ *
  * operator<<(std::ostream& out, nullptr_t) -> std::ostream&
  *
  * See
@@ -28,7 +31,7 @@
 #define SAKE_CORE_UTILITY_NULLPTR_HPP
 
 #include <boost/config.hpp>
-#include <boost/mpl/assert.hpp>
+#include <boost/static_assert.hpp>
 
 #ifndef BOOST_NO_NULLPTR
 
@@ -72,7 +75,7 @@ private:
     void operator&() const;
 };
 
-BOOST_MPL_ASSERT_RELATION( sizeof( sake::nullptr_t ), ==, sizeof( void* ) );
+BOOST_STATIC_ASSERT( sizeof( sake::nullptr_t ) == sizeof( void* ) );
 
 sake::nullptr_t const nullptr = { };
 
@@ -87,6 +90,16 @@ template< class T > inline bool operator!=(T* const p, sake::nullptr_t) { return
 inline std::ostream&
 operator<<(std::ostream& out, sake::nullptr_t)
 { return out << static_cast< void* >(0); }
+
+namespace nullptr_private
+{
+
+template< class T > int test(T);
+BOOST_STATIC_ASSERT( sizeof( test< void* >(nullptr) ) );
+BOOST_STATIC_ASSERT( sizeof( test< int* >(nullptr) ) );
+BOOST_STATIC_ASSERT( sizeof( test< bool >(nullptr) ) );
+
+} // namespace nullptr_private
 
 } // namespace sake
 

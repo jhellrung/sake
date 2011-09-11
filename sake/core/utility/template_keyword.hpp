@@ -5,8 +5,8 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_TEMPLATE_KEYWORD( keyword )
- * SAKE_TEMPLATE_KEYWORD_DEFAULT( keyword, default )
+ * #define SAKE_TEMPLATE_KEYWORD( keyword )
+ * #define SAKE_TEMPLATE_KEYWORD_DEFAULT( keyword, default )
  *
  * struct insert_keyword_value_if_c< Cond, Sequence, Keyword, Value >
  * struct insert_keyword_value_if< Cond, Sequence, Keyword, Value >

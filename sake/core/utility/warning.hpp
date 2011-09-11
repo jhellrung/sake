@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_WARNING()
+ * #define SAKE_WARNING()
  *
  * This attempts to facilitate compiler warning messages in a portable way,
  * although it is currently quite limited.  The motivating application is to

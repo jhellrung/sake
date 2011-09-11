@@ -6,7 +6,8 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct ostreamable<T>
- * make_ostreamable(const T& x) -> ostreamable<T>
+ * make_ostreamable(T const & x) -> ostreamable<T>
+ * operator<<(std::ostream& o, ostreamable<T> x) -> std::ostream&
  *
  * ostreamable<T> wraps a reference to T.  Its operator<< overload to a
  * std::ostream is defined such that if T ostreamable, then the wrapped
@@ -30,6 +31,10 @@
 namespace sake
 {
 
+/*******************************************************************************
+ * struct ostreamable<T>
+ ******************************************************************************/
+
 template< class T >
 struct ostreamable
 {
@@ -39,32 +44,54 @@ struct ostreamable
     { }
 };
 
-template< class T >
-typename boost::enable_if_c<
-    sake::is_ostreamable< T const & >::value,
-    std::ostream&
->::type
-operator<<(std::ostream& out, ostreamable<T> x)
-{ return out << x.value; }
-
-template< class T >
-typename boost::disable_if_c<
-    sake::is_ostreamable< T const & >::value,
-    std::ostream&
->::type
-operator<<(std::ostream& out, ostreamable<T> x)
-{
-    return out << '{'
-               << typeid(T).name()
-               << " @ "
-               << static_cast< void const * >(sake::address_of(x.value))
-               << '}';
-}
+/*******************************************************************************
+ * make_ostreamable(T const & x) -> ostreamable<T>
+ ******************************************************************************/
 
 template< class T >
 inline ostreamable<T>
 make_ostreamable(T const & x)
 { return ostreamable<T>(x); }
+
+/*******************************************************************************
+ * operator<<(std::ostream& o, ostreamable<T> x) -> std::ostream&
+ ******************************************************************************/
+
+namespace ostreamable_private
+{
+
+template< class T, bool = sake::is_ostreamable< T const & >::value >
+struct operator_ostream_dispatch;
+
+} // namespace ostreamable_private
+
+template< class T >
+inline std::ostream&
+operator<<(std::ostream& o, ostreamable<T> x)
+{ return ostreamable_private::operator_ostream_dispatch<T>::apply(o, x); }
+
+namespace ostreamable_private
+{
+
+template< class T >
+struct operator_ostream_dispatch< T, true >
+{
+    static std::ostream& apply(std::ostream& o, ostreamable<T> x)
+    { return o << x.value; }
+};
+
+template< class T >
+struct operator_ostream_dispatch< T, false >
+{
+    
+    static std::ostream& apply(std::ostream& o, ostreamable<T> x)
+    {
+        void const * const address = static_cast< void const * >(sake::address_of(x.value));
+        return o << '{' << typeid(T).name() << "@" << address << '}';
+    }
+};
+
+} // namespace ostreamable_private
 
 } // namespace sake
 

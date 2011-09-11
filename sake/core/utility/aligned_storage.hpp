@@ -8,8 +8,8 @@
  * struct aligned_storage< std::size_t size, std::size_t alignment >
  *
  * aligned_storage is similar to boost::aligned_storage.
- * aligned_storage< size, alignment >::type is a union with character array _,
- * which may be used to access the underlying bytes.
+ * aligned_storage< size, alignment >::type is a union with a character array
+ * member _, which may be used to access the underlying bytes.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_ALIGNED_STORAGE_HPP

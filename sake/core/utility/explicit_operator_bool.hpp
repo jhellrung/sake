@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_EXPLICIT_OPERATOR_BOOL()
+ * #define SAKE_EXPLICIT_OPERATOR_BOOL()
  *
  * This macro should be used in place of the declaration "explicit operator
  * bool()" when defining an explicit bool conversion operator to maintain
