@@ -25,7 +25,7 @@
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 
-#include <sake/core/rv.hpp>
+#include <sake/core/move/rv.hpp>
 
 namespace sake
 {
