@@ -16,9 +16,10 @@
 #include <boost/type_traits/is_object.hpp>
 #include <boost/type_traits/is_function.hpp>
 
-#include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+
+#include <sake/core/utility/workaround.hpp>
 
 #include <boost/mpl/placeholders.hpp>
 #include <boost/static_assert.hpp>
@@ -33,26 +34,47 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_dereference_impl
-    : boost::false_type
-{ };
+template<
+    class T, class Result, class ResultMetafunction,
+    bool = boost::is_function<T>::value
+>
+struct builtin_has_operator_dereference_dispatch_on_function;
 
 template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_dereference_impl< T*, Result, ResultMetafunction >
+struct builtin_has_operator_dereference_dispatch_on_function< T, Result, ResultMetafunction, false >
     : boost::mpl::and_<
-          boost::mpl::or_<
-              boost::is_object<T>,
-              boost::is_function<T>
-          >,
-          boost_ext::is_convertible< typename boost_ext::add_reference<T>::type, Result >,
-          boost::mpl::apply1< ResultMetafunction, typename boost_ext::add_reference<T>::type >
+          boost::is_object<T>,
+          boost_ext::is_convertible< T&, Result >,
+          boost::mpl::apply1< ResultMetafunction, T& >
       >
 { };
 
 template< class T, class Result, class ResultMetafunction >
+struct builtin_has_operator_dereference_dispatch_on_function< T, Result, ResultMetafunction, true >
+    : boost::mpl::and_<
+#if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+          boost_ext::is_convertible< T*, Result >,
+          boost::mpl::apply1< ResultMetafunction, T* >
+#else // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+          boost_ext::is_convertible< T&, Result >,
+          boost::mpl::apply1< ResultMetafunction, T& >
+#endif // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+      >
+{ };
+
+template< class T, class Result, class ResultMetafunction >
+struct builtin_has_operator_dereference_dispatch_on_pointer
+    : boost::false_type
+{ };
+
+template< class T, class Result, class ResultMetafunction >
+struct builtin_has_operator_dereference_dispatch_on_pointer< T*, Result, ResultMetafunction >
+    : builtin_has_operator_dereference_dispatch_on_function< T, Result, ResultMetafunction >
+{ };
+
+template< class T, class Result, class ResultMetafunction >
 struct builtin_has_operator_dereference
-    : builtin_has_operator_dereference_impl<
+    : builtin_has_operator_dereference_dispatch_on_pointer<
           typename boost_ext::remove_qualifiers<T>::type,
           Result,
           ResultMetafunction
@@ -66,7 +88,11 @@ struct builtin_has_operator_dereference
     ) );
 test( int*, int& )
 test( int const *, int const & )
+#if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+test( void (*)( ), void (*)( ) )
+#else // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
 test( void (*)( ), void (&)( ) )
+#endif // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
 #undef test
 
 } // namespace introspection_private

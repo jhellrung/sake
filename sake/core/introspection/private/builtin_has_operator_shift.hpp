@@ -66,7 +66,7 @@ struct builtin_has_operator_shift
 
 #ifdef _MSC_VER
 #pragma warning ( push )
-#pragma warning ( disable : 4804 ) // warning C4804: '<<' : unsafe use of type 'bool' in operation
+#pragma warning ( disable : 4804 ) // warning C4804: '<<'/'>>' : unsafe use of type 'bool' in operation
 #endif // #ifdef _MSC_VER
 
 #define test( T, op, U, Result ) \
@@ -85,6 +85,17 @@ test( int, <<, short, int )
 test( int, <<, int, int )
 test( long, <<, int, long )
 test( int, <<, long, int )
+test( bool, >>, bool, int )
+test( bool, >>, short, int )
+test( bool, >>, int, int )
+test( short, >>, bool, int )
+test( short, >>, short, int )
+test( short, >>, int, int )
+test( int, >>, bool, int )
+test( int, >>, short, int )
+test( int, >>, int, int )
+test( long, >>, int, long )
+test( int, >>, long, int )
 #undef test
 
 #ifdef _MSC_VER

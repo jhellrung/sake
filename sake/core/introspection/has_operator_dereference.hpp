@@ -25,7 +25,7 @@ namespace sake
 #define SAKE_INTROSPECTION_OPERATOR_NAME *
 #define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultMetafunction ) \
     ::sake::introspection_private::builtin_has_operator_dereference< T, Result, ResultMetafunction >
-#include SAKE_INTROSPECTION_DEFINE_HAS_UNARY_OPERATOR()
+#include SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_UNARY()
 
 } // namespace sake
 

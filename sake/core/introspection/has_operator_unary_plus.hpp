@@ -7,13 +7,17 @@
  *
  * struct has_operator_unary_plus<
  *     T,
- *     Result = void,
+ *     Result = typename boost::integral_promotion<
+ *                  typename boost_ext::remove_qualifiers<T>::type
+ *              >::type,
  *     ResultMetafunction = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_UNARY_PLUS_HPP
 #define SAKE_CORE_INTROSPECTION_HAS_OPERATOR_UNARY_PLUS_HPP
+
+#include <boost/type_traits/integral_promotion.hpp>
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -26,10 +30,12 @@ namespace sake
 #define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_unary_plus
 #define SAKE_INTROSPECTION_OPERATOR_NAME +
 #define SAKE_INTROSPECTION_DEFAULT_RESULT( T ) \
-    typename ::sake::boost_ext::remove_qualifiers<T>::type
+    typename boost::integral_promotion< \
+        typename ::sake::boost_ext::remove_qualifiers<T>::type \
+    >::type
 #define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultMetafunction ) \
     ::sake::introspection_private::builtin_has_operator_unary_sign< T, Result, ResultMetafunction >
-#include SAKE_INTROSPECTION_DEFINE_HAS_UNARY_OPERATOR()
+#include SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_UNARY()
 
 } // namespace sake
 

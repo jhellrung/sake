@@ -19,6 +19,7 @@
 #include <sake/core/expr_traits/apply.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/identity_type.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -51,27 +52,35 @@ struct builtin_has_operator_crement< T& >
     : builtin_has_operator_crement_helper<T>
 { };
 
-#define test( op, T, Result ) \
+#define test( op, T ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, Result > )), \
-        op sake::declval<T>() \
+        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, T& > )), \
+        op sake::declval< T& >() \
     ) );
-test( ++, bool&, bool& )
-test( ++, int&, int& )
-test( ++, int*&, int*& )
-test( --, int&, int& )
-test( --, int*&, int*& )
+test( ++, bool )
+test( ++, int )
+test( ++, int* )
+test( --, int )
+test( --, int* )
 #undef test
-#define test( T, op, Result ) \
+#define test( T, op ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, Result > )), \
-        sake::declval<T>() op \
+        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, T > )), \
+        sake::declval< T& >() op \
     ) );
-test( bool&, ++, bool )
-test( int&, ++, int )
-test( int*&, ++, int* )
-test( int&, --, int )
-test( int*&, --, int* )
+// For some reason, the type of declval< bool& >()++ is bool& on MSVC9.
+#if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
+    SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, bool& > )),
+    sake::declval< bool& >()++
+) );
+#else // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+test( bool, ++ )
+#endif // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+test( int, ++ )
+test( int*, ++ )
+test( int, -- )
+test( int*, -- )
 #undef test
 
 } // namespace introspection_private

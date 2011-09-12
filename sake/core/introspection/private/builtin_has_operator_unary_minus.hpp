@@ -36,7 +36,7 @@ struct builtin_has_operator_unary_minus
     : builtin_has_operator_unary_minus_impl<
           typename boost_ext::remove_qualifiers<T>::type,
           Result,
-          Metafunction
+          ResultMetafunction
       >
 { };
 
