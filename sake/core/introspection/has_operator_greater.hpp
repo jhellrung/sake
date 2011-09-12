@@ -21,9 +21,9 @@
 namespace sake
 {
 
-#define SAKE_INTROSPECTION_TRAIT_NAME             has_operator_greater
-#define SAKE_INTROSPECTION_OPERATOR_NAME          >
-#define SAKE_INTROSPECTION_DEFAULT_RESULT( T, U ) bool
+#define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_greater
+#define SAKE_INTROSPECTION_OPERATOR_NAME >
+#define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ) bool
 #define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultMetafunction ) \
     ::sake::introspection_private::builtin_has_operator_compare< T, U, Result, ResultMetafunction >
 #include SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_BINARY()

@@ -35,7 +35,7 @@
  *     [ defaults to "x SAKE_INTROSPECTION_OPERATOR_NAME y" ]
  *     Expands to an application of the operator with parameters x and y (e.g.,
  *     "x op y").
- * SAKE_INTROSPECTION_DEFAULT_RESULT( T, U )
+ * SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U )
  *     [ defaults to "void" ]
  *     Expands to the default for the Result template parameter of the trait.
  * SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultMetafunction )

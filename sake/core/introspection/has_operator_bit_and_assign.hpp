@@ -26,7 +26,7 @@ namespace sake
 
 #define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_bit_and_assign
 #define SAKE_INTROSPECTION_OPERATOR_NAME &=
-#define SAKE_INTROSPECTION_DEFAULT_RESULT( T, U ) \
+#define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ) \
     typename ::sake::boost_ext::add_reference<T>::type
 #define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultMetafunction ) \
     ::sake::introspection_private::builtin_has_operator_op_assign< \

@@ -26,9 +26,9 @@
     SAKE_INTROSPECTION_OPERATOR_NAME x
 #endif // #ifndef SAKE_INTROSPECTION_OPERATOR_APPLY
 
-#ifndef SAKE_INTROSPECTION_DEFAULT_RESULT
-#define SAKE_INTROSPECTION_DEFAULT_RESULT( T ) void
-#endif // #ifndef SAKE_INTROSPECTION_DEFAULT_RESULT
+#ifndef SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT
+#define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T ) void
+#endif // #ifndef SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT
 
 #ifndef SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR
 #define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultMetafunction ) ::boost::false_type
@@ -50,8 +50,8 @@ struct impl;
 template<
     class T, class Result, class ResultMetafunction,
     bool = ::sake::boost_ext::is_builtin_object<
-               typename ::sake::boost_ext::remove_reference<T>::type
-           >::value
+        typename ::sake::boost_ext::remove_reference<T>::type
+    >::value
 >
 struct dispatch;
 
@@ -78,7 +78,7 @@ SAKE_EXTENSION_CLASS( SAKE_INTROSPECTION_TRAIT_NAME, 3 )
 
 template<
     class T,
-    class Result = SAKE_INTROSPECTION_DEFAULT_RESULT( T ),
+    class Result = SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T ),
     class ResultMetafunction = ::boost::mpl::always< ::boost::true_type >
 >
 struct SAKE_INTROSPECTION_TRAIT_NAME
@@ -112,5 +112,5 @@ namespace trait_name_private
 #undef SAKE_INTROSPECTION_OPERATOR_NAME
 #undef SAKE_INTROSPECTION_OPERATOR_DECLARE
 #undef SAKE_INTROSPECTION_OPERATOR_APPLY
-#undef SAKE_INTROSPECTION_DEFAULT_RESULT
+#undef SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT
 #undef SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR

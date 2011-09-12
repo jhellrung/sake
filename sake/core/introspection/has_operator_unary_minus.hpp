@@ -29,7 +29,7 @@ namespace sake
 
 #define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_unary_minus
 #define SAKE_INTROSPECTION_OPERATOR_NAME -
-#define SAKE_INTROSPECTION_DEFAULT_RESULT( T ) \
+#define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T ) \
     typename boost::integral_promotion< \
         typename ::sake::boost_ext::remove_qualifiers<T>::type \
     >::type

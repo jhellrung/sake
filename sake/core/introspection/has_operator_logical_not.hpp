@@ -21,9 +21,9 @@
 namespace sake
 {
 
-#define SAKE_INTROSPECTION_TRAIT_NAME          has_operator_logical_not
-#define SAKE_INTROSPECTION_OPERATOR_NAME       !
-#define SAKE_INTROSPECTION_DEFAULT_RESULT( T ) bool
+#define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_logical_not
+#define SAKE_INTROSPECTION_OPERATOR_NAME !
+#define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T ) bool
 #define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultMetafunction ) \
     ::sake::introspection_private::builtin_has_operator_logical_not< T, Result, ResultMetafunction >
 #include SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_UNARY()

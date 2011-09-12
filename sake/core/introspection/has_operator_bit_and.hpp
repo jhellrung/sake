@@ -29,7 +29,7 @@ namespace sake
 
 #define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_bit_and
 #define SAKE_INTROSPECTION_OPERATOR_NAME &
-#define SAKE_INTROSPECTION_DEFAULT_RESULT( T, U ) \
+#define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ) \
     typename boost_ext::common_type< \
         typename boost_ext::remove_qualifiers<T>::type, \
         typename boost_ext::remove_qualifiers<U>::type \

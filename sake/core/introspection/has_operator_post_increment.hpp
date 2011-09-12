@@ -26,7 +26,7 @@ namespace sake
 #define SAKE_INTROSPECTION_TRAIT_NAME                    has_operator_post_increment
 #define SAKE_INTROSPECTION_OPERATOR_DECLARE( Result, T ) Result operator++( T, int );
 #define SAKE_INTROSPECTION_OPERATOR_APPLY( x )           x++
-#define SAKE_INTROSPECTION_DEFAULT_RESULT( T ) \
+#define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T ) \
     typename ::sake::boost_ext::remove_qualifiers<T>::type
 #define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultMetafunction ) \
     ::sake::introspection_private::builtin_has_operator_post_crement< T, Result, ResultMetafunction >
