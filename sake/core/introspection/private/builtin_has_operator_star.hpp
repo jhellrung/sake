@@ -1,13 +1,13 @@
 /*******************************************************************************
- * core/introspection/private/builtin_has_operator_dereference.hpp
+ * core/introspection/private/builtin_has_operator_star.hpp
  *
  * Copyright 2010, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_DEREFERENCE_HPP
-#define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_DEREFERENCE_HPP
+#ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_STAR_HPP
+#define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_STAR_HPP
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
@@ -38,10 +38,10 @@ template<
     class T, class Result, class ResultMetafunction,
     bool = boost::is_function<T>::value
 >
-struct builtin_has_operator_dereference_dispatch_on_function;
+struct builtin_has_operator_star_dispatch_on_function;
 
 template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_dereference_dispatch_on_function< T, Result, ResultMetafunction, false >
+struct builtin_has_operator_star_dispatch_on_function< T, Result, ResultMetafunction, false >
     : boost::mpl::and_<
           boost::is_object<T>,
           boost_ext::is_convertible< T&, Result >,
@@ -50,7 +50,7 @@ struct builtin_has_operator_dereference_dispatch_on_function< T, Result, ResultM
 { };
 
 template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_dereference_dispatch_on_function< T, Result, ResultMetafunction, true >
+struct builtin_has_operator_star_dispatch_on_function< T, Result, ResultMetafunction, true >
     : boost::mpl::and_<
 #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
           boost_ext::is_convertible< T*, Result >,
@@ -63,18 +63,18 @@ struct builtin_has_operator_dereference_dispatch_on_function< T, Result, ResultM
 { };
 
 template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_dereference_dispatch_on_pointer
+struct builtin_has_operator_star_dispatch_on_pointer
     : boost::false_type
 { };
 
 template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_dereference_dispatch_on_pointer< T*, Result, ResultMetafunction >
-    : builtin_has_operator_dereference_dispatch_on_function< T, Result, ResultMetafunction >
+struct builtin_has_operator_star_dispatch_on_pointer< T*, Result, ResultMetafunction >
+    : builtin_has_operator_star_dispatch_on_function< T, Result, ResultMetafunction >
 { };
 
 template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_dereference
-    : builtin_has_operator_dereference_dispatch_on_pointer<
+struct builtin_has_operator_star
+    : builtin_has_operator_star_dispatch_on_pointer<
           typename boost_ext::remove_qualifiers<T>::type,
           Result,
           ResultMetafunction
@@ -99,4 +99,4 @@ test( void (*)( ), void (&)( ) )
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_DEREFERENCE_HPP
+#endif // #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_STAR_HPP
