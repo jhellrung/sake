@@ -11,10 +11,12 @@
 namespace sake_unit_test
 {
 
+void introspection_test(sake::test::environment& env);
 void utility_test(sake::test::environment& env);
 
 void core_test(sake::test::environment& env)
 {
+    env("introspection", &introspection_test);
     env("utility", &utility_test);
 }
 
