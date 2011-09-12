@@ -9,6 +9,8 @@
  *
  * Evaluates (at compile-time) to the index within the Boost.MPL sequence
  * candidate_types corresponding to the type of the given expression.
+ * If the type of the given expression is not among the types given by
+ * candidate_types, the result evaluates to the size of candidate_types.
  *
  * Note: expression must have non-void type.
  ******************************************************************************/

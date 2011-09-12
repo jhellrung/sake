@@ -10,10 +10,10 @@
  *
  * SAKE_EXPR_TYPEOF expands to the type within the Boost.MPL sequence
  * candidate_types matching the type of the given expression.
- * SAKE_EXPR_TYPEOF_TYPEDEF defines a typedef for this type as a workaround for
- * deficient compilers.
- * In either case, if the type of the given expression is not among the types
- * given by candidate_types, the result evaluates to void.
+ * SAKE_EXPR_TYPEOF_TYPEDEF defines a typedef for the result of SAKE_EXPR_TYPEOF
+ * as a workaround for deficient compilers.
+ * If the type of the given expression is not among the types given by
+ * candidate_types, the result evaluates to void.
  *
  * Note: expression must have non-void type.
  ******************************************************************************/
