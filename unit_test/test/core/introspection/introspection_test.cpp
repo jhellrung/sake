@@ -7,12 +7,19 @@
  ******************************************************************************/
 
 #include <sake/core/introspection/has_operator_ampersand.hpp>
+#include <sake/core/introspection/has_operator_bit_and.hpp>
+#include <sake/core/introspection/has_operator_bit_or.hpp>
+#include <sake/core/introspection/has_operator_bit_xor.hpp>
+#include <sake/core/introspection/has_operator_complement.hpp>
 #include <sake/core/introspection/has_operator_divides.hpp>
 #include <sake/core/introspection/has_operator_equal.hpp>
 #include <sake/core/introspection/has_operator_greater.hpp>
 #include <sake/core/introspection/has_operator_greater_equal.hpp>
 #include <sake/core/introspection/has_operator_less.hpp>
 #include <sake/core/introspection/has_operator_less_equal.hpp>
+#include <sake/core/introspection/has_operator_logical_and.hpp>
+#include <sake/core/introspection/has_operator_logical_not.hpp>
+#include <sake/core/introspection/has_operator_logical_or.hpp>
 #include <sake/core/introspection/has_operator_minus.hpp>
 #include <sake/core/introspection/has_operator_modulus.hpp>
 #include <sake/core/introspection/has_operator_multiplies.hpp>
