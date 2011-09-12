@@ -6,7 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#include <sake/core/introspection/has_operator_dereference.hpp>
+#include <sake/core/introspection/has_operator_ampersand.hpp>
 #include <sake/core/introspection/has_operator_divides.hpp>
 #include <sake/core/introspection/has_operator_equal.hpp>
 #include <sake/core/introspection/has_operator_greater.hpp>
@@ -24,6 +24,7 @@
 #include <sake/core/introspection/has_operator_pre_increment.hpp>
 #include <sake/core/introspection/has_operator_shift_left.hpp>
 #include <sake/core/introspection/has_operator_shift_right.hpp>
+#include <sake/core/introspection/has_operator_star.hpp>
 #include <sake/core/introspection/has_operator_unary_minus.hpp>
 #include <sake/core/introspection/has_operator_unary_plus.hpp>
 
