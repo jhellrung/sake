@@ -15,8 +15,8 @@
 #ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_SHIFT_LEFT_HPP
 #define SAKE_CORE_INTROSPECTION_HAS_OPERATOR_SHIFT_LEFT_HPP
 
-#include <sake/core/introspection/private/builtin_has_operator_shift.hpp>
 #include <sake/core/introspection/has_operator_binary.hpp>
+#include <sake/core/introspection/private/builtin_has_operator_shift.hpp>
 
 namespace sake
 {

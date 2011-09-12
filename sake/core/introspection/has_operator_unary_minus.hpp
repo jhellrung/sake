@@ -8,8 +8,8 @@
  * struct has_operator_unary_minus<
  *     T,
  *     Result = typename boost::integral_promotion<
- *                  typename boost_ext::remove_qualifiers<T>::type
- *              >::type,
+ *         typename boost_ext::remove_qualifiers<T>::type
+ *     >::type,
  *     ResultMetafunction = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
