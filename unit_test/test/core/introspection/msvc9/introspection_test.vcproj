@@ -141,6 +141,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\has_member_function_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\introspection_test.cpp"
 			>
 		</File>
