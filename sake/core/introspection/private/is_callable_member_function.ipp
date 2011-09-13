@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/introspection/private/is_callable_member.ipp
+ * core/introspection/private/is_callable_member_function.ipp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -12,24 +12,24 @@
 #error SAKE_INTROSPECTION_TRAIT_NAME not defined.
 #endif // #ifndef SAKE_INTROSPECTION_TRAIT_NAME
 
-#ifndef SAKE_INTROSPECTION_MEMBER_NAME
-#error SAKE_INTROSPECTION_MEMBER_NAME not defined.
-#endif // #ifndef SAKE_INTROSPECTION_MEMBER_NAME
+#ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
+#error SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME not defined.
+#endif // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
 
-#ifndef SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE
-#define SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE( T ) void
-#endif // #ifndef SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE
+#ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE
+#define SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T ) void
+#endif // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE
 
 #ifndef SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION
 #define SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION( T, Signature, ResultMetafunction ) ::boost::false_type
 #endif // #ifndef SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION
 
-#ifndef SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS
-#define SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS ( 0, SAKE_INTROSPECTION_MEMBER_DEFAULT_MAX_ARITY )
-#endif // #ifndef SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS
+#ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
+#define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_MAX_ARITY )
+#endif // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
 
-#define min_arity BOOST_PP_TUPLE_ELEM( 2, 0, SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS )
-#define max_arity BOOST_PP_TUPLE_ELEM( 2, 1, SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS )
+#define min_arity BOOST_PP_TUPLE_ELEM( 2, 0, SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS )
+#define max_arity BOOST_PP_TUPLE_ELEM( 2, 1, SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS )
 #if !(0 <= min_arity && min_arity <= max_arity)
 #error Invalid SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS.
 #endif // #if !(...)
@@ -42,7 +42,7 @@
 
 template<
     class T,
-    class Signature = SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE( T ),
+    class Signature = SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T ),
     class ResultMetafunction = ::boost::mpl::always< ::boost::true_type >
 >
 struct SAKE_INTROSPECTION_TRAIT_NAME;
@@ -74,7 +74,7 @@ struct dispatch< T, Signature, ResultMetafunction, true >
 
 struct member_detector_base
 {
-    void SAKE_INTROSPECTION_MEMBER_NAME
+    void SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
 #if min_arity == max_arity
         ( BOOST_PP_ENUM_PARAMS( min_arity, int BOOST_PP_INTERCEPT ) )
 #else // #if min_arity == max_arity
@@ -94,7 +94,7 @@ template<
 struct sfinae_member;
 
 template< class T >
-::sake::no_type test_member(sfinae_member< &T::SAKE_INTROSPECTION_MEMBER_NAME >*);
+::sake::no_type test_member(sfinae_member< &T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
 template< class T >
 ::sake::yes_type test_member(...);
 
@@ -107,38 +107,22 @@ public:
     typedef has_member type;
 };
 
+template< class > struct sfinae_member_type;
 template< class T >
-::sake::yes_type test_type(typename T::SAKE_INTROSPECTION_MEMBER_NAME*);
+::sake::yes_type test_member_type(sfinae_member_type< typename T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
 template< class T >
-::sake::no_type test_type(...);
+::sake::no_type test_member_type(...);
 
 template< class T >
 struct not_has_member_type
 {
-    static const bool value = sizeof( ::sake::no_type ) == sizeof( test_type<T>(0) );
+    static const bool value = sizeof( ::sake::no_type ) == sizeof( test_member_type<T>(0) );
     typedef not_has_member_type type;
-};
-
-template< int > struct sfinae_isc;
-template< class T >
-::sake::yes_type test_isc(sfinae_isc< T::SAKE_INTROSPECTION_MEMBER_NAME >*);
-template< class T >
-::sake::no_type test_isc(...);
-
-template< class T >
-struct not_has_member_isc
-{
-    static const bool value = sizeof( ::sake::no_type ) == sizeof( test_isc<T>(0) );
-    typedef not_has_member_isc type;
 };
 
 template< class T >
 struct dispatch< T, void, always_true, false >
-    : ::boost::mpl::and_<
-          has_member<T>,
-          not_has_member_type<T>,
-          not_has_member_isc<T>
-      >
+    : ::boost::mpl::and_< has_member<T>, not_has_member_type<T> >
 { };
 
 template< class T > struct dispatch< T const, void, always_true, false > : dispatch<T> { };
@@ -196,7 +180,7 @@ template< class T, class Nullary >
 class has_nullary_helper
 {
     template< Nullary > struct sfinae;
-    template< class U > static ::sake::yes_type test(sfinae< &U::SAKE_INTROSPECTION_MEMBER_NAME >*);
+    template< class U > static ::sake::yes_type test(sfinae< &U::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
     template< class U > static ::sake::no_type test(...);
 public:
     // A compiler error here concerning an inaccessible private member indicates
@@ -234,9 +218,9 @@ struct fallback : T
     // indicates that a member function overload of the given name is private.
     // In this case, the only resolution is to explicitly extend the trait for
     // this class.
-    using T::SAKE_INTROSPECTION_MEMBER_NAME;
+    using T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME;
     ::sake::introspection_private::dummy
-    SAKE_INTROSPECTION_MEMBER_NAME
+    SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
 #if min_arity == max_arity
         ( BOOST_PP_ENUM_PARAMS(
             min_arity,
@@ -257,7 +241,7 @@ class non_void_result_helper;
 
 #if max_arity > 0
 #define BOOST_PP_ITERATION_LIMITS ( (min_arity > 0 ? min_arity : 1), max_arity )
-#define BOOST_PP_FILENAME_1       <sake/core/introspection/private/is_callable_member.ipp>
+#define BOOST_PP_FILENAME_1       <sake/core/introspection/private/is_callable_member_function.ipp>
 #include BOOST_PP_ITERATE()
 #endif // #if max_arity > 0
 
@@ -286,9 +270,9 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 #undef trait_name_private
 
 #undef SAKE_INTROSPECTION_TRAIT_NAME
-#undef SAKE_INTROSPECTION_MEMBER_NAME
-#undef SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE
-#undef SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS
+#undef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
+#undef SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE
+#undef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
 #undef SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION
 
 #else // #ifndef BOOST_PP_IS_ITERATING
@@ -298,7 +282,7 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 #define class_T0N   BOOST_PP_ENUM_PARAMS( N, class T )
 #define T0N         BOOST_PP_ENUM_PARAMS( N, T )
 #define fallback_member_T0N \
-    ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_NAME ( \
+    ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( \
         BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< T, >() BOOST_PP_INTERCEPT ) \
     )
 
