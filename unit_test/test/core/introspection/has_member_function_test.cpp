@@ -27,8 +27,10 @@ BOOST_MPL_ASSERT_NOT((has_mem_fn_f< int >));
 struct no_f0 { };
 BOOST_MPL_ASSERT_NOT((has_mem_fn_f< no_f0 >));
 
-struct no_f1 { typedef void f; };
-//BOOST_MPL_ASSERT_NOT((has_mem_fn_f< no_f1 >));
+class no_f1 { struct f; };
+BOOST_MPL_ASSERT_NOT((has_mem_fn_f< no_f1 >));
+class no_f2 { static const int f = 0; };
+BOOST_MPL_ASSERT_NOT((has_mem_fn_f< no_f2 >));
 
 struct yes_f0 { void f(); };
 BOOST_MPL_ASSERT((has_mem_fn_f< yes_f0 >));
@@ -61,6 +63,12 @@ BOOST_MPL_ASSERT((has_mem_fn_f< yes_f3, long ( short ) >));
 BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f3 const, int ( int ) >));
 BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f3, void ( ) >));
 BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f3, void ( void* ) >));
+
+class yes_f4 { void f(); };
+BOOST_MPL_ASSERT((has_mem_fn_f< yes_f4 >));
+
+struct yes_f5 { struct f_ { void operator()(int); } f; };
+BOOST_MPL_ASSERT((has_mem_fn_f< yes_f5 >));
 
 } // namespace
 

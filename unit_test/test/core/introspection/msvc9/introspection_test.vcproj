@@ -148,6 +148,10 @@
 			RelativePath="..\introspection_test.cpp"
 			>
 		</File>
+		<File
+			RelativePath="..\sfinae.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
