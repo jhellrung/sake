@@ -22,7 +22,11 @@
 #include <sake/core/utility/identity_type.hpp>
 #include <sake/core/utility/workaround.hpp>
 
-#if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 4, 1 ) )
+#if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 4, 3 ) )
+#define SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
+#endif // SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 4, 3 ) )
+
+#ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 
 #define SAKE_EXPR_IS_VOID( expression ) \
     SAKE_EXPR_IS_CONVERTIBLE( \
@@ -34,7 +38,7 @@
         ::sake::expr_is_void_private::void_detector \
     )
 
-#else // #if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 4, 1 ) )
+#else // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 
 #define SAKE_EXPR_IS_VOID( expression ) \
     ( \
@@ -56,7 +60,7 @@
         ) \
     )
 
-#endif // #if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 4, 1 ) )
+#endif // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 
 namespace sake
 {
@@ -65,11 +69,17 @@ namespace expr_is_void_private
 {
 
 struct non_void;
+struct convertible_from_void_detector;
 
 struct void_detector
 {
     void_detector operator,(void_detector) const;
+#ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
+    operator void_detector* () const;
+    template< class T > friend non_void operator,(const T&, void_detector*);
+#else // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
     friend non_void operator,(sake::convertible_from_any, void_detector);
+#endif // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
     non_void operator,(sake::convertible_from_any) const;
 };
 
@@ -91,7 +101,9 @@ R operator,(dummy_tmpl<L,R>, T);
 test( int )
 test( dummy )
 test( SAKE_IDENTITY_TYPE(( dummy_tmpl< int, int > )) )
+#ifndef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 test( SAKE_IDENTITY_TYPE(( dummy_tmpl< int, void > )) )
+#endif // #ifndef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 test( SAKE_IDENTITY_TYPE(( dummy_tmpl< void, int > )) )
 //test( dummy_tmpl< void, void > )
 #undef test
