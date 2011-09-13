@@ -141,11 +141,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\has_member_function_test.cpp"
+			RelativePath="..\introspection_test.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\introspection_test.cpp"
+			RelativePath="..\is_callable_member_test.cpp"
 			>
 		</File>
 		<File

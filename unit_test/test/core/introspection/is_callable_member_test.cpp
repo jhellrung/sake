@@ -8,7 +8,7 @@
 
 #include <boost/mpl/assert.hpp>
 
-#include <sake/core/introspection/has_member_function.hpp>
+#include <sake/core/introspection/is_callable_member.hpp>
 
 #include <sake/test/environment.hpp>
 
@@ -18,57 +18,65 @@ namespace sake_unit_test
 namespace
 {
 
-#define SAKE_INTROSPECTION_TRAIT_NAME           has_mem_fn_f
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME f
-#include SAKE_INTROSPECTION_DEFINE_HAS_MEMBER_FUNCTION()
+#define SAKE_INTROSPECTION_TRAIT_NAME  is_callable_member_x
+#define SAKE_INTROSPECTION_MEMBER_NAME x
+#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER()
 
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< int >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< int >));
 
-struct no_f0 { };
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< no_f0 >));
+struct no_x0 { };
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< no_x0 >));
 
-class no_f1 { struct f; };
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< no_f1 >));
-class no_f2 { static const int f = 0; };
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< no_f2 >));
+class no_x1 { struct x; };
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< no_x1 >));
+class no_x2 { static const int x = 0; };
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< no_x2 >));
+class no_x3 { template< class > struct x; };
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< no_x3 >));
 
-struct yes_f0 { void f(); };
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f0 >));
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f0, void ( ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f0 const, void ( ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f0, int ( ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f0, void ( int ) >));
+struct yes_x0 { void x(); };
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x0 >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x0, void ( ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x0 const, void ( ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x0, int ( ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x0, void ( int ) >));
 
-struct yes_f1 { int const & f() const; };
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f1 >));
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f1 const, int const & ( ) >));
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f1, int ( ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f1, void ( ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f1, int const & ( int ) >));
+struct yes_x1 { int& x() const; };
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x1 >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x1 const, int& ( ) >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x1 const, int const & ( ) >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x1, int ( ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x1, void ( ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x1, int const & ( int ) >));
 
-struct yes_f2 { void f(int); };
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f2 >));
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f2, void ( int ) >));
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f2, void ( short ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f2 const, void ( int ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f2, void ( ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f2, void ( void* ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f2, int ( int ) >));
+struct yes_x2 { void x(int); };
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x2 >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x2, void ( int ) >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x2, void ( short ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x2 const, void ( int ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x2, void ( ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x2, void ( void* ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x2, int ( int ) >));
 
-struct yes_f3 { int f(int); };
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f3 >));
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f3, int ( int ) >));
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f3, void ( short ) >));
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f3, long ( short ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f3 const, int ( int ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f3, void ( ) >));
-BOOST_MPL_ASSERT_NOT((has_mem_fn_f< yes_f3, void ( void* ) >));
+struct yes_x3 { int x(int); };
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x3 >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x3, int ( int ) >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x3, void ( short ) >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x3, long ( short ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x3 const, int ( int ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x3, void ( ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x3, void ( void* ) >));
 
-class yes_f4 { void f(); };
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f4 >));
+class yes_x4 { void x(); };
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x4 >));
 
-struct yes_f5 { struct f_ { void operator()(int); } f; };
-BOOST_MPL_ASSERT((has_mem_fn_f< yes_f5 >));
+struct yes_x5 { struct x_ { void operator()(int); } x; };
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x5 >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x5, void ( int ) >));
+BOOST_MPL_ASSERT((is_callable_member_x< yes_x5, void ( short ) >));
+//BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x5 const, void ( int ) >));
+//BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x5, int ( void* ) >));
+BOOST_MPL_ASSERT_NOT((is_callable_member_x< yes_x5, int ( int ) >));
 
 } // namespace
 
