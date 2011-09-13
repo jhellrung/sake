@@ -97,10 +97,10 @@ test( int const *, unsigned int )
         SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, std::ptrdiff_t > )), \
         sake::declval< T* >() - sake::declval< U* >() \
     ) );
-test( int*, int* )
-test( int*, int const * )
-test( int const *, int* )
-test( int const *, int const * )
+test( int, int )
+test( int, int const )
+test( int const, int )
+test( int const, int const )
 #undef test
 
 } // namespace introspection_private
