@@ -7,33 +7,33 @@
  *
  * #define SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
  *
- * This defines an interface to allow one to easily define an is_callable_func
- * metafunction for a (free, unqualified) function func.  One defines certain
- * predetermined macros to specify the desired operator, then #include's
- * SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION().  This generates a
- * metafunction with signature
+ * This defines an interface to allow one to easily define a is_callable_xxx
+ * metafunction, which determines (up to certain language limitations) whether
+ * one can call a (free, unqualified) function xxx with a given signature.  One
+ * defines certain predetermined macros to specify the desired function, then
+ * #include's SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION().  This generates
+ * a metafunction with signature
  *
  * template<
  *     class Signature,
  *     class ResultMetafunction = boost::mpl::always< boost::true_type >
  * >
- * struct is_callable_func.
+ * struct is_callable_xxx.
  *
  * The macros to define to specify the desired function are as follows:
  *
  * SAKE_INTROSPECTION_TRAIT_NAME
- *     Expands to the name of the trait to be defined (e.g.,
- *     "is_callable_func").
+ *     Expands to the name of the trait to be defined (e.g., "is_callable_xxx").
  * SAKE_INTROSPECTION_FUNCTION_NAME
  *     [ optional ]
- *     If defined, expands to the name of the function (e.g., "func").
+ *     If defined, expands to the name of the function (e.g., "xxx").
  * SAKE_INTROSPECTION_FUNCTION_DECLARE( Result, T_tuple )
  *     [ defaults to "Result SAKE_INTROSPECTION_FUNCTION_NAME T_tuple ;" ]
  *     Expands to a declaration of the function with result type Result and
  *     parameter types given by the Boost.PP tuple T_tuple.
  * SAKE_INTROSPECTION_FUNCTION_APPLY( x_args )
  *     [ defaults to "SAKE_INTROSPECTION_FUNCTION_NAME x_args" ]
- *     Expands to an application of the operator with parameters given by the
+ *     Expands to an application of the function with parameters given by the
  *     parenthesized argument list x_args.
  * SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS
  *     [ defaults to "( 1, SAKE_INTROSPECTION_FUNCTION_DEFAULT_MAX_ARITY )" ]

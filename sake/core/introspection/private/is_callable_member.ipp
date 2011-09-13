@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/introspection/private/has_member_function.ipp
+ * core/introspection/private/is_callable_member.ipp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -12,24 +12,24 @@
 #error SAKE_INTROSPECTION_TRAIT_NAME not defined.
 #endif // #ifndef SAKE_INTROSPECTION_TRAIT_NAME
 
-#ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
-#error SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME not defined.
-#endif // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
+#ifndef SAKE_INTROSPECTION_MEMBER_NAME
+#error SAKE_INTROSPECTION_MEMBER_NAME not defined.
+#endif // #ifndef SAKE_INTROSPECTION_MEMBER_NAME
 
-#ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T ) void
-#endif // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE
+#ifndef SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE
+#define SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE( T ) void
+#endif // #ifndef SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE
 
 #ifndef SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION
-#define SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION( T, Signature, ResultMetafunction ) boost::false_type
+#define SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION( T, Signature, ResultMetafunction ) ::boost::false_type
 #endif // #ifndef SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION
 
-#ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_MAX_ARITY )
-#endif // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
+#ifndef SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS
+#define SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS ( 0, SAKE_INTROSPECTION_MEMBER_DEFAULT_MAX_ARITY )
+#endif // #ifndef SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS
 
-#define min_arity BOOST_PP_TUPLE_ELEM( 2, 0, SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS )
-#define max_arity BOOST_PP_TUPLE_ELEM( 2, 1, SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS )
+#define min_arity BOOST_PP_TUPLE_ELEM( 2, 0, SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS )
+#define max_arity BOOST_PP_TUPLE_ELEM( 2, 1, SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS )
 #if !(0 <= min_arity && min_arity <= max_arity)
 #error Invalid SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS.
 #endif // #if !(...)
@@ -42,7 +42,7 @@
 
 template<
     class T,
-    class Signature = SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T ),
+    class Signature = SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE( T ),
     class ResultMetafunction = ::boost::mpl::always< ::boost::true_type >
 >
 struct SAKE_INTROSPECTION_TRAIT_NAME;
@@ -55,10 +55,12 @@ namespace no_ext
 namespace trait_name_private
 {
 
+typedef ::boost::mpl::always< ::boost::true_type > always_true;
+
 template<
     class T,
     class Signature = void,
-    class ResultMetafunction = ::boost::mpl::always< ::boost::true_type >,
+    class ResultMetafunction = always_true,
     bool = ::sake::boost_ext::is_builtin_object<
         typename ::sake::boost_ext::remove_reference<T>::type
     >::value
@@ -71,21 +73,28 @@ struct dispatch< T, Signature, ResultMetafunction, true >
 { };
 
 struct member_detector_base
-#if min_arity == 1 && max_arity == 1
-{ void SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME (int) { } };
-#else // #if min_arity == 1 && max_arity == 1
-{ void SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( ) { } };
-#endif // #if min_arity == 1 && max_arity == 1
+{
+    void SAKE_INTROSPECTION_MEMBER_NAME
+#if min_arity == max_arity
+        ( BOOST_PP_ENUM_PARAMS( min_arity, int BOOST_PP_INTERCEPT ) )
+#else // #if min_arity == max_arity
+        ( )
+#endif // #if min_arity == max_arity
+    { }
+};
 
-#if min_arity == 1 && max_arity == 1
-template< void (member_detector_base::*)( int ) >
-#else // #if min_arity == 1 && max_arity == 1
-template< void (member_detector_base::*)( ) >
-#endif // #if min_arity == 1 && max_arity == 1
+template<
+    void (member_detector_base::*)
+#if min_arity == max_arity
+        ( BOOST_PP_ENUM_PARAMS( min_arity, int BOOST_PP_INTERCEPT ) )
+#else // #if min_arity == max_arity
+        ( )
+#endif // #if min_arity == max_arity
+>
 struct sfinae_member;
 
 template< class T >
-::sake::no_type test_member(sfinae_member< &T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
+::sake::no_type test_member(sfinae_member< &T::SAKE_INTROSPECTION_MEMBER_NAME >*);
 template< class T >
 ::sake::yes_type test_member(...);
 
@@ -94,40 +103,37 @@ class has_member
 {
     struct detector : T, member_detector_base { };
 public:
-    static const bool value =
-        sizeof( ::sake::yes_type ) == sizeof( trait_name_private::test_member< detector >(0) );
+    static const bool value = sizeof( ::sake::yes_type ) == sizeof( test_member< detector >(0) );
     typedef has_member type;
 };
 
 template< class T >
-::sake::yes_type test_type(typename T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME*);
+::sake::yes_type test_type(typename T::SAKE_INTROSPECTION_MEMBER_NAME*);
 template< class T >
 ::sake::no_type test_type(...);
 
 template< class T >
 struct not_has_member_type
 {
-    static const bool value =
-        sizeof( ::sake::no_type ) == sizeof( trait_name_private::test_type<T>(0) );
+    static const bool value = sizeof( ::sake::no_type ) == sizeof( test_type<T>(0) );
     typedef not_has_member_type type;
 };
 
-template< long > struct sfinae_isc;
+template< int > struct sfinae_isc;
 template< class T >
-::sake::yes_type test_isc(sfinae_isc< T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
+::sake::yes_type test_isc(sfinae_isc< T::SAKE_INTROSPECTION_MEMBER_NAME >*);
 template< class T >
 ::sake::no_type test_isc(...);
 
 template< class T >
 struct not_has_member_isc
 {
-    static const bool value =
-        sizeof( ::sake::no_type ) == sizeof( trait_name_private::test_isc<T>(0) );
+    static const bool value = sizeof( ::sake::no_type ) == sizeof( test_isc<T>(0) );
     typedef not_has_member_isc type;
 };
 
 template< class T >
-struct dispatch< T, void, ::boost::mpl::always< ::boost::true_type >, false >
+struct dispatch< T, void, always_true, false >
     : ::boost::mpl::and_<
           has_member<T>,
           not_has_member_type<T>,
@@ -135,21 +141,17 @@ struct dispatch< T, void, ::boost::mpl::always< ::boost::true_type >, false >
       >
 { };
 
-template< class T >
-struct dispatch< T const, void, ::boost::mpl::always< ::boost::true_type >, false >
-    : dispatch<T>
-{ };
-
-template< class T >
-struct dispatch< T&, void, ::boost::mpl::always< ::boost::true_type >, false >
-    : dispatch<T>
-{ };
+template< class T > struct dispatch< T const, void, always_true, false > : dispatch<T> { };
+template< class T > struct dispatch< T&, void, always_true, false > : dispatch<T> { };
 
 #if min_arity == 0
 
 template<
-    class T, class Result, class ResultMetafunction,
-    bool = ::boost::mpl::apply1< ResultMetafunction, Result >::type::value
+    class T, class Result, class ResultMetafunction, class LiteralResult,
+    bool = ::boost::mpl::and_<
+               ::sake::boost_ext::is_convertible< LiteralResult, Result >,
+               ::boost::mpl::apply1< ResultMetafunction, Result >
+           >::value
 >
 struct has_nullary;
 
@@ -166,19 +168,20 @@ struct dispatch< T, Result ( ), ResultMetafunction, false >
           dispatch<T>,
           ::boost::mpl::or_<
               has_nullary<
-                  T,
-                  Result,
-                  ResultMetafunction
+                  T, Result, ResultMetafunction,
+                  typename ::sake::boost_ext::remove_qualifiers< Result >::type
               >,
               has_nullary<
-                  T,
-                  typename ::sake::boost_ext::add_reference< Result >::type,
-                  ResultMetafunction
+                  T, Result, ResultMetafunction,
+                  typename ::sake::boost_ext::add_reference<
+                      typename ::sake::boost_ext::remove_qualifiers< Result >::type
+                  >::type
               >,
               has_nullary<
-                  T,
-                  typename ::sake::boost_ext::add_reference_add_const< Result >::type,
-                  ResultMetafunction
+                  T, Result, ResultMetafunction,
+                  typename ::sake::boost_ext::add_reference_add_const<
+                      typename ::sake::boost_ext::remove_qualifiers< Result >::type
+                  >::type
               >
           >
       >
@@ -189,21 +192,12 @@ struct dispatch< T&, Result ( ), ResultMetafunction, false >
     : dispatch< T, Result ( ), ResultMetafunction, false >
 { };
 
-template< class T, class Result >
+template< class T, class Nullary >
 class has_nullary_helper
 {
-    typedef typename ::boost::mpl::if_<
-        ::boost::is_const<T>,
-        Result (T::*)( ) const,
-        Result (T::*)( )
-    >::type mem_fn_ptr_type;
-    template< mem_fn_ptr_type > struct sfinae { typedef ::sake::yes_type type; };
-    template< class U >
-    static typename sfinae< &U::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >::type
-    test(int);
-    template< class U >
-    static ::sake::no_type
-    test(...);
+    template< Nullary > struct sfinae;
+    template< class U > static ::sake::yes_type test(sfinae< &U::SAKE_INTROSPECTION_MEMBER_NAME >*);
+    template< class U > static ::sake::no_type test(...);
 public:
     // A compiler error here concerning an inaccessible private member indicates
     // that a member function overload of the given name is private.  In this
@@ -213,22 +207,22 @@ public:
     typedef has_nullary_helper type;
 };
 
-template< class T, class Result, class ResultMetafunction >
-struct has_nullary< T, Result, ResultMetafunction, false >
+template< class T, class Result, class ResultMetafunction, class LiteralResult >
+struct has_nullary< T, Result, ResultMetafunction, LiteralResult, false >
     : ::boost::false_type
 { };
 
-template< class T, class Result, class ResultMetafunction >
-struct has_nullary< T, Result, ResultMetafunction, true >
+template< class T, class Result, class ResultMetafunction, class LiteralResult >
+struct has_nullary< T, Result, ResultMetafunction, LiteralResult, true >
     : ::boost::mpl::or_<
-          has_nullary_helper< T, Result >,
-          has_nullary_helper< T const, Result >
+          has_nullary_helper< T, LiteralResult (T::*)( ) >,
+          has_nullary_helper< T const, LiteralResult (T::*)( ) const >
       >
 { };
 
-template< class T, class Result, class ResultMetafunction >
-struct has_nullary< T const, Result, ResultMetafunction, true >
-    : has_nullary_helper< T const, Result >
+template< class T, class Result, class ResultMetafunction, class LiteralResult >
+struct has_nullary< T const, Result, ResultMetafunction, LiteralResult, true >
+    : has_nullary_helper< T const, LiteralResult (T::*)( ) const >
 { };
 
 #endif // #if min_arity == 0
@@ -240,13 +234,17 @@ struct fallback : T
     // indicates that a member function overload of the given name is private.
     // In this case, the only resolution is to explicitly extend the trait for
     // this class.
-    using T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME;
+    using T::SAKE_INTROSPECTION_MEMBER_NAME;
     ::sake::introspection_private::dummy
-#if min_arity == 1 && max_arity == 1
-    SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME (::sake::convertible_from_any) const;
-#else // #if min_arity == 1 && max_arity == 1
-    SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME (...) const;
-#endif // #if min_arity == 1 && max_arity == 1
+    SAKE_INTROSPECTION_MEMBER_NAME
+#if min_arity == max_arity
+        ( BOOST_PP_ENUM_PARAMS(
+            min_arity,
+            ::sake::convertible_from_any BOOST_PP_INTERCEPT
+        ) ) const;
+#else // #if min_arity == max_arity
+        (...) const;
+#endif // #if min_arity == max_arity
 };
 
 template< class T > struct fallback< T const > : fallback<T> { };
@@ -259,7 +257,7 @@ class non_void_result_helper;
 
 #if max_arity > 0
 #define BOOST_PP_ITERATION_LIMITS ( (min_arity > 0 ? min_arity : 1), max_arity )
-#define BOOST_PP_FILENAME_1       <sake/core/introspection/private/has_member_function.ipp>
+#define BOOST_PP_FILENAME_1       <sake/core/introspection/private/is_callable_member.ipp>
 #include BOOST_PP_ITERATE()
 #endif // #if max_arity > 0
 
@@ -288,9 +286,9 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 #undef trait_name_private
 
 #undef SAKE_INTROSPECTION_TRAIT_NAME
-#undef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
-#undef SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE
-#undef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
+#undef SAKE_INTROSPECTION_MEMBER_NAME
+#undef SAKE_INTROSPECTION_MEMBER_DEFAULT_SIGNATURE
+#undef SAKE_INTROSPECTION_MEMBER_ARITY_LIMITS
 #undef SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION
 
 #else // #ifndef BOOST_PP_IS_ITERATING
@@ -299,8 +297,8 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 
 #define class_T0N   BOOST_PP_ENUM_PARAMS( N, class T )
 #define T0N         BOOST_PP_ENUM_PARAMS( N, T )
-#define fallback_member_function_T0N \
-    ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( \
+#define fallback_member_T0N \
+    ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_NAME ( \
         BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< T, >() BOOST_PP_INTERCEPT ) \
     )
 
@@ -330,7 +328,7 @@ class has_void_result< T, void ( T0N ) >
 {
     typedef typename ::sake::boost_ext::propagate_qualifiers< T, fallback<T> >::type fallback_;
 public:
-    static const bool value = SAKE_EXPR_IS_VOID( fallback_member_function_T0N );
+    static const bool value = SAKE_EXPR_IS_VOID( fallback_member_T0N );
     typedef has_void_result type;
 };
 
@@ -340,15 +338,15 @@ class non_void_result_helper< T, Result ( T0N ), ResultMetafunction >
     typedef typename ::sake::boost_ext::propagate_qualifiers< T, fallback<T> >::type fallback_;
 public:
     static const bool value =
-       !SAKE_EXPR_IS_CONVERTIBLE( fallback_member_function_T0N, ::sake::introspection_private::dummy )
-     && SAKE_EXPR_IS_CONVERTIBLE( fallback_member_function_T0N, Result )
-     && SAKE_EXPR_APPLY( ResultMetafunction, fallback_member_function_T0N );
+       !SAKE_EXPR_IS_CONVERTIBLE( fallback_member_T0N, ::sake::introspection_private::dummy )
+     && SAKE_EXPR_IS_CONVERTIBLE( fallback_member_T0N, Result )
+     && SAKE_EXPR_APPLY( ResultMetafunction, fallback_member_T0N );
     typedef non_void_result_helper type;
 };
 
 #undef class_T0N
 #undef T0N
-#undef fallback_member_function_T0N
+#undef fallback_member_T0N
 
 #undef N
 
