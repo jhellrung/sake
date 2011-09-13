@@ -109,7 +109,7 @@ private:
     impl* mp_impl;
 
     static void apply(environment& this_, void* p_f)
-    { (*static_cast< void (*)( environment& ) >(p_f))(this_); }
+    { (**static_cast< void (**)( environment& ) >(p_f))(this_); }
 
     void fail(
         e_fail_level fail_level,
@@ -125,7 +125,7 @@ private:
 inline void
 environment::
 operator()(char const * local_scope_name, void (*p_f)( environment& ))
-{ operator()(local_scope_name, &apply, static_cast< void* >(p_f)); }
+{ operator()(local_scope_name, &apply, static_cast< void* >(&p_f)); }
 
 inline void
 environment::
