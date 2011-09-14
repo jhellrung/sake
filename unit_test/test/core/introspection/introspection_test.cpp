@@ -6,7 +6,6 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#include <sake/core/introspection/has_operator_ampersand.hpp>
 #include <sake/core/introspection/has_operator_bit_and.hpp>
 #include <sake/core/introspection/has_operator_bit_and_assign.hpp>
 #include <sake/core/introspection/has_operator_bit_or.hpp>
