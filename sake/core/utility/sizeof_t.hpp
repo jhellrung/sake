@@ -15,7 +15,7 @@
 
 #include <cstddef>
 
-#include <boost/mpl/assert.hpp>
+#include <boost/static_assert.hpp>
 
 namespace sake
 {
@@ -24,8 +24,8 @@ template< std::size_t N >
 struct sizeof_t
 { char _[N]; };
 
-BOOST_MPL_ASSERT_RELATION( sizeof( sizeof_t<1> ), ==, 1 );
-BOOST_MPL_ASSERT_RELATION( sizeof( sizeof_t<2> ), ==, 2 );
+BOOST_STATIC_ASSERT((sizeof( sizeof_t<1> ) == 1));
+BOOST_STATIC_ASSERT((sizeof( sizeof_t<2> ) == 2));
 
 } // namespace sake
 
