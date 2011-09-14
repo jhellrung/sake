@@ -79,6 +79,31 @@ struct is_compatible_signature
     : is_compatible_signature_private::dispatch< From, To >
 { };
 
+namespace is_compatible_signature_private
+{
+
+#define test( from, to ) \
+    BOOST_STATIC_ASSERT((is_compatible_signature< from, to >::value));
+test( int ( ), int ( ) )
+test( int ( ), void ( ) )
+test( int ( ), long ( ) )
+test( int* ( ), void* ( ) )
+test( int ( int ), int ( int ) )
+test( int ( int ), long ( short ) )
+test( int* ( void* ), void* ( int* ) )
+#undef test
+#define test( from, to ) \
+    BOOST_STATIC_ASSERT(!(is_compatible_signature< from, to >::value));
+test( void ( ), int ( ) )
+test( void* ( ), int* ( ) )
+test( void ( ), void ( int ) )
+test( void ( int ), void ( ) )
+test( void* ( int ), int* ( int ) )
+test( void ( int* ), void ( void* ) )
+#undef test
+
+} // namespace is_compatible_signature_private
+
 } // namespace sake
 
 #endif // #ifndef SAKE_CORE_UTILITY_IS_COMPATIBLE_SIGNATURE_HPP

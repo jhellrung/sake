@@ -20,6 +20,10 @@ namespace
 
 BOOST_MPL_ASSERT_NOT((sake::is_callable< int >));
 
+BOOST_MPL_ASSERT((sake::is_callable< void (*)( ) >));
+BOOST_MPL_ASSERT((sake::is_callable< void (*)( ), void ( ) >));
+BOOST_MPL_ASSERT((sake::is_callable< int (*)( int ), short ( long ) >));
+
 struct no_callable { };
 BOOST_MPL_ASSERT_NOT((sake::is_callable< no_callable >));
 
