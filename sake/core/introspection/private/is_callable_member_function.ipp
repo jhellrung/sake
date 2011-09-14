@@ -74,13 +74,13 @@ struct dispatch< T, Signature, ResultMetafunction, true >
 
 struct member_detector_base
 {
-    void SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
 #if min_arity == max_arity
+    void SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
         ( BOOST_PP_ENUM_PARAMS( min_arity, int BOOST_PP_INTERCEPT ) )
-#else // #if min_arity == max_arity
-        ( )
-#endif // #if min_arity == max_arity
     { }
+#else // #if min_arity == max_arity
+    void SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( ) { }
+#endif // #if min_arity == max_arity
 };
 
 template<

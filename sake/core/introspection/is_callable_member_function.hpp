@@ -12,7 +12,7 @@
  * limitations) whether one can call a member function xxx on a given object
  * type with a given signature.  One defines certain predetermined macros to
  * specify the desired function, then #include's
- * SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION().  This generates a
+ * SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION().  This generates a
  * metafunction with signature
  *
  * template<
