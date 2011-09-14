@@ -16,6 +16,7 @@
 #include <boost/type_traits/is_object.hpp>
 #include <boost/type_traits/is_function.hpp>
 
+#include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -44,8 +45,8 @@ template< class T, class Result, class ResultMetafunction >
 struct builtin_has_operator_star_dispatch_on_function< T, Result, ResultMetafunction, false >
     : boost::mpl::and_<
           boost::is_object<T>,
-          boost_ext::is_convertible< T&, Result >,
-          boost::mpl::apply1< ResultMetafunction, T& >
+          boost_ext::is_convertible< typename boost_ext::add_reference<T>::type, Result >,
+          boost::mpl::apply1< ResultMetafunction, typename boost_ext::add_reference<T>::type >
       >
 { };
 
