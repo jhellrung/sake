@@ -13,6 +13,7 @@
 #include <sake/core/introspection/has_operator_bit_or_assign.hpp>
 #include <sake/core/introspection/has_operator_bit_xor.hpp>
 #include <sake/core/introspection/has_operator_bit_xor_assign.hpp>
+#include <sake/core/introspection/has_operator_bracket.hpp>
 #include <sake/core/introspection/has_operator_complement.hpp>
 #include <sake/core/introspection/has_operator_divides.hpp>
 #include <sake/core/introspection/has_operator_divides_assign.hpp>

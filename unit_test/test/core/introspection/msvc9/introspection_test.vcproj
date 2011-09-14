@@ -149,6 +149,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\is_callable_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\sfinae.cpp"
 			>
 		</File>
