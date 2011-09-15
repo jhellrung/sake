@@ -86,7 +86,7 @@
 #include <sake/core/utility/convertible_from_any.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/extension.hpp>
-#include <sake/core/utility/yes_no_type.hpp>
+#include <sake/core/utility/yes_no_tag.hpp>
 
 #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_MAX_ARITY
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_MAX_ARITY 8

@@ -18,10 +18,10 @@
 #include <boost/static_assert.hpp>
 
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/yes_no_type.hpp>
+#include <sake/core/utility/yes_no_tag.hpp>
 
 #define SAKE_EXPR_IS_RVALUE( expression ) \
-    ( sizeof( ::sake::yes_type ) == sizeof( ::sake::expr_is_rvalue_private::test( expression ) ) )
+    ( sizeof( ::sake::yes_tag ) == sizeof( ::sake::expr_is_rvalue_private::test( expression ) ) )
 
 namespace sake
 {
@@ -30,8 +30,8 @@ namespace expr_is_rvalue_private
 {
 
 template< class T >
-sake::no_type test(T&);
-sake::yes_type test(...);
+sake::no_tag test(T&);
+sake::yes_tag test(...);
 
 struct dummy { };
 BOOST_STATIC_ASSERT(( !SAKE_EXPR_IS_RVALUE( sake::declval_ref < int >() ) ));

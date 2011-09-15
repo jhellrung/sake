@@ -19,11 +19,11 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/if.hpp>
 
-#include <sake/core/utility/yes_no_type.hpp>
+#include <sake/core/utility/yes_no_tag.hpp>
 
 #define SAKE_EXPR_APPLY( metafunction, expression ) \
     ( \
-        sizeof( ::sake::yes_type ) \
+        sizeof( ::sake::yes_tag ) \
      == sizeof( ::sake::expr_apply_private::helper< metafunction >( expression, expression ) ) \
     )
 
@@ -39,7 +39,7 @@ struct result
 // MSVC9 chokes if you use boost::mpl::apply1<...>::type::value as a boolean template parameter.
 // Hence, we have to be very explicit about what we want to do :/
     static const bool b = boost::mpl::apply1<F,T>::type::value;
-    typedef typename boost::mpl::if_c< b, sake::yes_type, sake::no_type >::type type;
+    typedef typename boost::mpl::if_c< b, sake::yes_tag, sake::no_tag >::type type;
 };
 
 template< class F, class T, class U >
