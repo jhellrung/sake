@@ -14,13 +14,11 @@
 #include <boost/type_traits/is_member_object_pointer.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
 
-#include <sake/core/utility/type_tag.hpp>
 #include <sake/core/utility/yes_no_tag.hpp>
 
 namespace
 {
 
-using sake::type_tag;
 using sake::yes_tag;
 using sake::no_tag;
 
@@ -117,7 +115,6 @@ struct has_mem_obj
 {
     template< int T::* > struct sfinae;
     template< class U > static yes_tag test(sfinae< &U::x >*);
-    //template< class U > static yes_tag test(type_tag<U>*, sfinae< &U::x >* = 0);
     template< class U > static no_tag test(...);
     static const bool value = sizeof( yes_tag ) == sizeof( test<T>(0) );
 };
