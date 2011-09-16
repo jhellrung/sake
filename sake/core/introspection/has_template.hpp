@@ -132,7 +132,7 @@ namespace has_template_private
 {
 
 #define BOOST_PP_FILENAME_1       <sake/core/introspection/has_template.hpp>
-#define BOOST_PP_ITERATION_LIMITS ( 0, SAKE_INTROSPECTION_HAS_TEMPLATE_MAX_ARITY )
+#define BOOST_PP_ITERATION_LIMITS ( 0, SAKE_INTROSPECTION_HAS_TEMPLATE_MAX_ARITY - 1 )
 #include BOOST_PP_ITERATE()
 
 } // namespace has_template_private
