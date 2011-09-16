@@ -7,6 +7,7 @@
  *
  * struct void_
  * struct is_void_<T>
+ * struct is_not_void_<T>
  *
  * void_ is simply an empty dummy struct.
  ******************************************************************************/
@@ -25,10 +26,18 @@ template< class T >
 struct is_void_
     : boost::false_type
 { };
-
 template<>
 struct is_void_< void_ >
     : boost::true_type
+{ };
+
+template< class T >
+struct is_not_void_
+    : boost::true_type
+{ };
+template<>
+struct is_not_void_< void_ >
+    : boost::false_type
 { };
 
 } // namespace sake
