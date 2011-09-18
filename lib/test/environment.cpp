@@ -13,6 +13,7 @@
 #include <exception>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <string>
 #include <utility>
@@ -20,6 +21,7 @@
 #include <boost/exception/diagnostic_information.hpp>
 #include <boost/exception/exception.hpp>
 
+#include <sake/core/utility/onstream.hpp>
 #include <sake/core/utility/timer.hpp>
 
 #include <sake/test/environment.hpp>
@@ -57,6 +59,10 @@ struct environment::impl
         char const * const local_scope_name,
         void (*p_f)( environment&, void* ),
         void* const p);
+
+    std::ostream& log() const;
+    unsigned int current_log_level() const;
+    unsigned int current_depth() const;
 
     void report() const;
     int main_return_value() const;
@@ -271,6 +277,41 @@ operator()(
     }
 }
 
+std::ostream&
+environment::
+log() const
+{ return mp_impl->log(); }
+inline std::ostream&
+environment::impl::
+log() const
+{ return p_log ? *p_log : sake::nout; }
+
+unsigned int
+environment::
+current_log_level() const
+{ return mp_impl->current_log_level(); }
+inline unsigned int
+environment::impl::
+current_log_level() const
+{
+    return p_current_scope ?
+           p_current_scope->second.log_level :
+           default_log_level;
+}
+
+unsigned int
+environment::
+current_depth() const
+{ return mp_impl->current_depth(); }
+inline unsigned int
+environment::impl::
+current_depth() const
+{
+    return p_current_scope ?
+           p_current_scope->second.depth :
+           std::numeric_limits< unsigned int >::max();
+}
+
 void
 environment::
 report() const
@@ -367,6 +408,41 @@ fail(
                << std::endl;
     if(fail_level == fail_level_require)
         throw fail_require_exception();
+}
+
+void
+environment::
+fail(
+    e_fail_level fail_level,
+    char const * macro, char const * expression,
+    char const * filename, char const * function, unsigned int line_number)
+{
+    std::string message;
+    message.reserve((2 + 2) + std::strlen(expression));
+    message.operator+=("{ ").operator+=(expression).operator+=(" }");
+    fail(
+        fail_level, macro, expression,
+        filename, function, line_number,
+        message.c_str()
+    );
+}
+
+void
+environment::
+fail(
+    e_fail_level fail_level,
+    char const * macro, char const * expression,
+    char const * filename, char const * function, unsigned int line_number,
+    unsigned int subexpression_index, char const * subexpression)
+{
+    std::ostringstream message(std::ostringstream::out);
+    message << "{ " << subexpression << " } "
+               "(subexpression " << subexpression_index << " within { " << expression << " })";
+    fail(
+        fail_level, macro, expression,
+        filename, function, line_number,
+        message.str().c_str()
+    );
 }
 
 } // namespace test
