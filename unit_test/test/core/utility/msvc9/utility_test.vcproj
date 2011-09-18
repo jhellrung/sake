@@ -41,6 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(BOOST_ROOT);../../../../.."
+				PreprocessorDefinitions="NOMINMAX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -103,6 +104,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="$(BOOST_ROOT);../../../../.."
+				PreprocessorDefinitions="NDEBUG;NOMINMAX"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -142,6 +144,14 @@
 	<Files>
 		<File
 			RelativePath="..\address_of_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\assert_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\declare_once_test.cpp"
 			>
 		</File>
 		<File
