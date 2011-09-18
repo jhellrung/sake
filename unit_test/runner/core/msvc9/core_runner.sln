@@ -4,12 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core_runner", "core_runner.vcproj", "{943FF0E6-7528-4014-8852-35F87F697F87}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602} = {D5E1510F-5BFD-41EA-BC88-845B8C9BF602}
+		{BA47FF42-F24B-43ED-9F0F-CF3A64568E52} = {BA47FF42-F24B-43ED-9F0F-CF3A64568E52}
 		{F416E947-9BFF-4345-858C-71A82D70CF2E} = {F416E947-9BFF-4345-858C-71A82D70CF2E}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core_test", "..\..\..\test\core\msvc9\core_test.vcproj", "{F416E947-9BFF-4345-858C-71A82D70CF2E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_test", "..\..\..\..\lib\test\msvc9\sake_test.vcproj", "{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_core", "..\..\..\..\lib\core\msvc9\sake_core.vcproj", "{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +32,10 @@ Global
 		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Debug|Win32.Build.0 = Debug|Win32
 		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Release|Win32.ActiveCfg = Release|Win32
 		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Release|Win32.Build.0 = Release|Win32
+		{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}.Debug|Win32.Build.0 = Debug|Win32
+		{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}.Release|Win32.ActiveCfg = Release|Win32
+		{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
