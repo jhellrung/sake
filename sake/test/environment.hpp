@@ -17,6 +17,7 @@
 
 #include <cstring>
 
+#include <iosfwd>
 #include <sstream>
 #include <string>
 
@@ -47,7 +48,8 @@ struct environment
     };
     enum e_log_level
     {
-        log_level_cross_scope = 0,
+        log_level_info = 0,
+        log_level_cross_scope,
         log_level_warn,
         log_level_check,
         log_level_require,
@@ -66,6 +68,10 @@ struct environment
     void operator()(char const* local_scope_name, void (*p_f)( environment& ));
     void operator()(char const* local_scope_name, void (*p_f)( environment&, void* ), void* p);
 
+    std::ostream& log() const;
+    unsigned int current_log_level() const;
+    unsigned int current_depth() const;
+
     void report() const;
     int main_return_value() const;
 
@@ -83,15 +89,8 @@ struct environment
         e_fail_level fail_level,
         char const * macro, char const * expression,
         char const * filename, char const * function, unsigned int line_number,
-        LHS const & lhs, char const * op, RHS const & rhs);
-    template< class LHS, class RHS >
-    void fail(
-        e_fail_level fail_level,
-        char const * macro, char const * expression,
-        char const * filename, char const * function, unsigned int line_number,
         unsigned int subexpression_index, char const * subexpression,
         LHS const & lhs, char const * op, RHS const & rhs);
-#if SAKE_TEST_ENVIRONMENT_MAX_ARITY >= 2
     // template< class LHS0, class RHS0, ... >
     // void fail(
     //     e_fail_level fail_level,
@@ -99,10 +98,9 @@ struct environment
     //     char const * filename, char const * function, unsigned int line_number,
     //     LHS0 const & lhs0, char const * op0, RHS0 const & rhs0,
     //     ...);
-#define BOOST_PP_ITERATION_LIMITS ( 2, SAKE_TEST_ENVIRONMENT_MAX_ARITY )
+#define BOOST_PP_ITERATION_LIMITS ( 1, SAKE_TEST_ENVIRONMENT_MAX_ARITY )
 #define BOOST_PP_FILENAME_1 <sake/test/environment.hpp>
 #include BOOST_PP_ITERATE()
-#endif // #if SAKE_TEST_ENVIRONMENT_MAX_ARITY >= 2
 
 private:
     struct impl;
@@ -127,62 +125,6 @@ environment::
 operator()(char const * local_scope_name, void (*p_f)( environment& ))
 { operator()(local_scope_name, &apply, static_cast< void* >(&p_f)); }
 
-inline void
-environment::
-fail(
-    e_fail_level fail_level,
-    char const * macro, char const * expression,
-    char const * filename, char const * function, unsigned int line_number)
-{
-    std::string message;
-    message.reserve(2 + std::strlen(expression) + 2);
-    message += "{ ";
-    message += expression;
-    message += " }";
-    fail(
-        fail_level, macro, expression,
-        filename, function, line_number,
-        message.c_str()
-    );
-}
-
-inline void
-environment::
-fail(
-    e_fail_level fail_level,
-    char const * macro, char const * expression,
-    char const * filename, char const * function, unsigned int line_number,
-    unsigned int subexpression_index, char const * subexpression)
-{
-    std::ostringstream o(std::ostringstream::out);
-    o << "{ " << subexpression << " } "
-         "(subexpression " << subexpression_index << " within { " << expression << " })";
-    fail(
-        fail_level, macro, expression,
-        filename, function, line_number,
-        o.str().c_str()
-    );
-}
-
-template< class LHS, class RHS >
-inline void
-environment::
-fail(
-    e_fail_level fail_level,
-    char const * macro, char const * expression,
-    char const * filename, char const * function, unsigned int line_number,
-    LHS const & lhs, char const * op, RHS const & rhs)
-{
-    std::ostringstream o(std::ostringstream::out);
-    o << "{ " << expression << " } == "
-         "{ " << sake::make_ostreamable(lhs) << ' ' << op << ' ' << sake::make_ostreamable(rhs) << " }";
-    fail(
-        fail_level, macro, expression,
-        filename, function, line_number,
-        o.str().c_str()
-    );
-}
-
 template< class LHS, class RHS >
 inline void
 environment::
@@ -193,14 +135,14 @@ fail(
     unsigned int subexpression_index, char const * subexpression,
     LHS const & lhs, char const * op, RHS const & rhs)
 {
-    std::ostringstream o(std::ostringstream::out);
-    o << "{ " << subexpression << " } == "
-         "{ " << sake::make_ostreamable(lhs) << ' ' << op << ' ' << sake::make_ostreamable(rhs) << " } "
-         "(subexpression " << subexpression_index << " within { " << expression << " })";
+    std::ostringstream message(std::ostringstream::out);
+    message << "{ " << subexpression << " } == "
+               "{ " << sake::make_ostreamable(lhs) << ' ' << op << ' ' << sake::make_ostreamable(rhs) << " } "
+               "(subexpression " << subexpression_index << " within { " << expression << " })";
     fail(
         fail_level, macro, expression,
         filename, function, line_number,
-        o.str().c_str()
+        message.str().c_str()
     );
 }
 
@@ -219,7 +161,7 @@ fail(
     LHS ## n const & lhs ## n, \
     char const * const op ## n, \
     RHS ## n const & rhs ## n
-#define or_if_stream_lhsn_opn_rhsn( z, n, data ) \
+#define or_stream_lhsn_opn_rhsn( z, n, data ) \
     << BOOST_PP_EXPR_IF( n, " || " << ) \
     sake::make_ostreamable( lhs ## n ) << ' ' << op ## n << ' ' << sake::make_ostreamable( rhs ## n )
 
@@ -230,19 +172,19 @@ fail(
         char const * filename, char const * function, unsigned int line_number,
         BOOST_PP_ENUM( N, LHSn_lhsn_opn_RHSn_rhsn, ~ ) )
     {
-        std::ostringstream o(std::ostringstream::out);
-        o << "{ " << expression << " } == "
-             "{ " BOOST_PP_REPEAT( N, or_if_stream_lhsn_opn_rhsn, ~ ) << " }";
+        std::ostringstream message(std::ostringstream::out);
+        message << "{ " << expression << " } == "
+                   "{ " BOOST_PP_REPEAT( N, or_stream_lhsn_opn_rhsn, ~ ) << " }";
         fail(
             fail_level, macro, expression,
             filename, function, line_number,
-            o.str().c_str()
+            message.str().c_str()
         );
     }
 
 #undef class_LHSn_class_RHSn
 #undef LHSn_lhsn_opn_RHSn_rhsn
-#undef or_if_stream_lhsn_opn_rhsn
+#undef or_stream_lhsn_opn_rhsn
 
 #undef N
 
