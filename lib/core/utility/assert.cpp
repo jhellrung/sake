@@ -8,12 +8,14 @@
 
 #ifndef BOOST_PP_IS_SELFISH
 
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
 #include <exception>
 #include <iostream>
-#include <sstream>
+#include <limits>
+//#include <sstream>
 #include <string>
 
 #include <boost/preprocessor/iteration/self.hpp>
@@ -53,7 +55,9 @@ operator()(
 {
     std::string message;
     message.reserve((2 + 2) + std::strlen(expression));
-    message.operator+=("{ ").operator+=(expression).operator+=(" }");
+    message.operator+=("{ ")
+           .operator+=(expression)
+           .operator+=(" }");
     operator()(o,
         macro, expression, filename, function, line_number,
         message.c_str()
@@ -68,6 +72,39 @@ operator()(
     char const * const filename, char const * const function, unsigned int const line_number,
     unsigned int const subexpression_index, char const * const subexpression) const
 {
+#if 1
+    static const int uint_digits10 = (std::numeric_limits< unsigned int >::digits + 2)/3;
+    std::string message;
+    message.reserve(
+        (2 + 18 + uint_digits10 + 10 + 3)
+      + std::strlen(subexpression)
+      + std::strlen(expression)
+    );
+    char subexpression_index_buffer[uint_digits10 + 1];
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 4996 ) // 'sprintf': This function or variable may
+                                  // be unsafe. Consider using sprintf_s
+                                  // instead. To disable deprecation, use
+                                  // _CRT_SECURE_NO_WARNINGS. See online help
+                                  // for details.
+#endif // #ifdef _MSC_VER
+    std::sprintf(subexpression_index_buffer, "%u", subexpression_index);
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif // #ifdef _MSC_VER
+    message.operator+=("{ ")
+           .operator+=(subexpression)
+           .operator+=(" } (subexpression ")
+           .operator+=(subexpression_index_buffer)
+           .operator+=(" within { ")
+           .operator+=(expression)
+           .operator+=(" })");
+    operator()(o,
+        macro, expression, filename, function, line_number,
+        message.c_str()
+    );
+#else // #if 1
     std::ostringstream message(std::ostringstream::out);
     message << "{ " << subexpression << " } "
                "(subexpression " << subexpression_index << " within { " << expression << " })";
@@ -75,6 +112,7 @@ operator()(
         macro, expression, filename, function, line_number,
         message.str().c_str()
     );
+#endif // #if 1
 }
 
 #define failure_action         abort
