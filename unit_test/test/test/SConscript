@@ -1,12 +1,10 @@
 ################################################################################
-## unit_test/runner/core/SConscript
+## unit_test/test/test/SConscript
 ##
 ## Copyright 2011, Jeffrey Hellrung.
 ## Distributed under the Boost Software License, Version 1.0.  (See accompanying
 ## file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ################################################################################
 
-Import('env', 'ProgramInstall')
-env_clone = env.Clone()
-env_clone.Prepend(LIBS=['sake_core_test', 'sake_test'])
-ProgramInstall(env_clone, target='core_runner', source=['main.cpp'])
+Import('env', 'LibraryInstall')
+LibraryInstall(env, target='sake_test_test', source=Glob('*.cpp'))
