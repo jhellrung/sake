@@ -338,16 +338,13 @@
  ******************************************************************************/
 
 #define SAKE_ASSERT_EXT( expression, failure_macro, data ) \
-    static_cast< void >( expression ? 0 : \
-        failure_macro( \
-            data, \
-            ( BOOST_PP_STRINGIZE( expression ) ) \
-            ( BOOST_PP_STRINGIZE( __FILE__ ) ) \
-            ( BOOST_CURRENT_FUNCTION ) \
-            ( __LINE__ ) \
-        ), \
-        0 \
-    )
+    static_cast< void >( expression ? 0 : ( failure_macro( \
+        data, \
+        ( BOOST_PP_STRINGIZE( expression ) ) \
+        ( BOOST_PP_STRINGIZE( __FILE__ ) ) \
+        ( BOOST_CURRENT_FUNCTION ) \
+        ( __LINE__ ) \
+    ), 0 ) )
 
 /*******************************************************************************
  * SAKE_ASSERT_EXT_ALL_R( r, subexpression_seq, failure_macro, data )
@@ -389,19 +386,16 @@
  ******************************************************************************/
 
 #define SAKE_ASSERT_EXT_RELATION( lhs, op, rhs, failure_macro, data ) \
-    static_cast< void >( lhs op rhs ? 0 : \
-        failure_macro( \
-            data, \
-            ( BOOST_PP_STRINGIZE( lhs op rhs ) ) \
-            ( BOOST_PP_STRINGIZE( __FILE__ ) ) \
-            ( BOOST_CURRENT_FUNCTION ) \
-            ( __LINE__ ) \
-            ( lhs ) \
-            ( BOOST_PP_STRINGIZE( op ) ) \
-            ( rhs ) \
-        ), \
-        0 \
-    )
+    static_cast< void >( lhs op rhs ? 0 : ( failure_macro( \
+        data, \
+        ( BOOST_PP_STRINGIZE( lhs op rhs ) ) \
+        ( BOOST_PP_STRINGIZE( __FILE__ ) ) \
+        ( BOOST_CURRENT_FUNCTION ) \
+        ( __LINE__ ) \
+        ( lhs ) \
+        ( BOOST_PP_STRINGIZE( op ) ) \
+        ( rhs ) \
+    ), 0 ) )
 
 /*******************************************************************************
  * SAKE_ASSERT_EXT_RELATION_ALL_R( r, relation_seq, failure_macro, data )
@@ -447,7 +441,7 @@
         BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_ASSERT_andor_lhs_op_rhs, ||, relation_seq ) \
     )
 #define SAKE_ASSERT_EXT_RELATION_ANY_R_impl( r, relation_seq, failure_macro, data, expression ) \
-    static_cast< void >( expression ? 0 : failure_macro( \
+    static_cast< void >( expression ? 0 : ( failure_macro( \
         data, \
         ( BOOST_PP_STRINGIZE( expression ) ) \
         ( BOOST_PP_STRINGIZE( __FILE__ ) ) \
@@ -458,7 +452,7 @@
             ~, \
             relation_seq \
         ) \
-    ) )
+    ), 0 ) )
 #define SAKE_ASSERT_RELATION_ANY_lhs_op_rhs( r, data, elem ) \
     ( BOOST_PP_TUPLE_ELEM( 3, 0, elem ) ) \
     ( BOOST_PP_STRINGIZE( BOOST_PP_TUPLE_ELEM( 3, 1, elem ) ) ) \
