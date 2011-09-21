@@ -71,6 +71,7 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
+#include <sake/boost_ext/preprocessor/keyword/operator.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/is_builtin_object.hpp>

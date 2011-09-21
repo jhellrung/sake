@@ -107,6 +107,15 @@ public:
     typedef has_member type;
 };
 
+#if SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_OPERATOR( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME )
+
+template< class T >
+struct dispatch< T, void, always_true, false >
+    : has_member<T>
+{ };
+
+#else // #if SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_OPERATOR( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME )
+
 template< class > struct sfinae_member_type;
 template< class T >
 ::sake::yes_tag test_member_type(sfinae_member_type< typename T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
@@ -124,6 +133,8 @@ template< class T >
 struct dispatch< T, void, always_true, false >
     : ::boost::mpl::and_< has_member<T>, not_has_member_type<T> >
 { };
+
+#endif // #if SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_OPERATOR( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME )
 
 template< class T > struct dispatch< T const, void, always_true, false > : dispatch<T> { };
 template< class T > struct dispatch< T&, void, always_true, false > : dispatch<T> { };
