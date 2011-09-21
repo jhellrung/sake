@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/introspection/private/has_operator_binary.ipp
+ * sake/core/introspection/private/has_operator_binary.ipp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

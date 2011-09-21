@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/introspection/private/is_callable_function.ipp
+ * sake/core/introspection/private/is_callable_function.ipp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

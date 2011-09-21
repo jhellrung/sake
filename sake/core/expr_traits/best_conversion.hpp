@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/expr_traits/best_conversion.hpp
+ * sake/core/expr_traits/best_conversion.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -50,6 +50,6 @@
         candidate_types, \
         BOOST_PP_CAT( _sake_expr_best_conversion_index_for_, type_ ), \
         void \
-    >::type type_;
+    >::type type_
 
 #endif // #ifndef SAKE_CORE_EXPR_TRAITS_BEST_CONVERSION_HPP

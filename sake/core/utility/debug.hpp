@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/utility/debug.hpp
+ * sake/core/utility/debug.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

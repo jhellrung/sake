@@ -1,5 +1,5 @@
 /*******************************************************************************
- * boost_ext/type_traits/remove_reference_add_const.hpp
+ * sake/boost_ext/type_traits/remove_reference_add_const.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

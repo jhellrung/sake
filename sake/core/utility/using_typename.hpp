@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/utility/using_typename.hpp
+ * sake/core/utility/using_typename.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

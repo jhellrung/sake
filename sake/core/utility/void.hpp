@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/utility/void.hpp
+ * sake/core/utility/void.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

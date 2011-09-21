@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/ref/ref_fwd.hpp
+ * sake/core/ref/ref_fwd.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/utility/is_by_value_optimal_fwd.hpp
+ * sake/core/utility/is_by_value_optimal_fwd.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

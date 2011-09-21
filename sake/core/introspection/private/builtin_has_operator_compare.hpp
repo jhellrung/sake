@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/introspection/private/builtin_has_operator_compare.hpp
+ * sake/core/introspection/private/builtin_has_operator_compare.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

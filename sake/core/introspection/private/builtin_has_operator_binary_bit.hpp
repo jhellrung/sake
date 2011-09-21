@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/introspection/private/builtin_has_operator_binary_bit.hpp
+ * sake/core/introspection/private/builtin_has_operator_binary_bit.hpp
  *
  * Copyright 2010, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

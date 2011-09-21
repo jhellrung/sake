@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/utility/uintptr_t.hpp
+ * sake/core/utility/uintptr_t.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/introspection/detail/builtin_has_operator_post_crement.hpp
+ * sake/core/introspection/detail/builtin_has_operator_post_crement.hpp
  *
  * Copyright 2010, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

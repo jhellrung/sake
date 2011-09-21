@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/utility/convertible_from_any.hpp
+ * sake/core/utility/convertible_from_any.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

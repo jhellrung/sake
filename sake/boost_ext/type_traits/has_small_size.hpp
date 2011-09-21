@@ -1,5 +1,5 @@
 /*******************************************************************************
- * boost_ext/type_traits/has_small_size.hpp
+ * sake/boost_ext/type_traits/has_small_size.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

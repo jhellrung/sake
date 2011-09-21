@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/utility/unique_name.hpp
+ * sake/core/utility/unique_name.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

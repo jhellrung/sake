@@ -1,5 +1,5 @@
 /*******************************************************************************
- * boost_ext/mpl/gcd_lcm.hpp
+ * sake/boost_ext/mpl/gcd_lcm.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

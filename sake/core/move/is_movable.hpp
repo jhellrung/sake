@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/move/is_movable.hpp
+ * sake/core/move/is_movable.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

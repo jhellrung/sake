@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/utility/template_keyword.hpp
+ * sake/core/utility/template_keyword.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

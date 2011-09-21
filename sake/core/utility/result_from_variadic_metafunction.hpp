@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/utility/result_from_variadic_metafunction.hpp
+ * sake/core/utility/result_from_variadic_metafunction.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

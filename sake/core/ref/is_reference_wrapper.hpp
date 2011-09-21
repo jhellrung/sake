@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/ref/is_reference_wrapper.hpp
+ * sake/core/ref/is_reference_wrapper.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
