@@ -10,8 +10,8 @@
 Sake Code Conventions
 ================================
 
-This document describes some of Sake's convention concerning the style of source
-code.
+This document describes some of Sake's convention concerning the style of C++
+source code.
 
 --------------------------------
 File Extensions
@@ -19,9 +19,11 @@ File Extensions
 Sake primarily uses 3 different file extensions.
 - cpp: compiled source files
 - hpp: single-inclusion header files
-- ipp: multiple-inclusion header files
-cpp files should reside in the libs directory; hpp and ipp files should
-generally reside in the sake directory.
+- ipp: multiple-inclusion header files (typically indirectly included by cpp,
+       hpp, or other ipp files)
+cpp files should reside in the libs directory; hpp files should generally reside
+in the sake directory; ipp files should reside wherever they are (primarily)
+included from.
 
 --------------------------------
 File and Directory Names
@@ -56,11 +58,12 @@ For example:
 Comment-Header
 --------------------------------
 All files should have a comment-header (like the one at the top of this
-document) giving the file's path, a copyright year, author(s), and the Boost
-Software License note (copied verbatim).  Additional information should give the
-public definitions provided, describe the purpose of said definitions, and maybe
-provide some brief usage documentation and an example.  More elaborate
-documentation should be provided in the docs directory.
+document) giving the file's path (relative to the Sake root directory), a
+copyright year, author(s), and the Boost Software License note (copied
+verbatim).  Additional information should give the public definitions provided,
+describe the purpose of said definitions, and maybe provide some brief usage
+documentation and an example.  More elaborate documentation should be provided
+in the docs directory.
 
 For example:
 
@@ -92,15 +95,15 @@ For example:
 --------------------------------
 Identifiers
 --------------------------------
-Most of identifiers should be in "lower_case", similar to the STL and Boost
+Most C++ identifiers should be in "lower_case", similar to the STL and Boost
 conventions.  This includes namespaces, functions, variables (global and local),
 and the vast majority of structs, classes, and typedefs.  Exceptions include:
 - Persistent macros (whether object-like or function-like) should be in
   "UPPER_CASE".
 - Template parameters should be in "CamelCase".
-- Concept check classes should be in "CamelCase".
-All C++ constructs defined in Sake reside (directly or indirectly) in the sake
-namespace.  Since preprocessor macros always have global scope, persistent
+- Concept checking classes should be in "CamelCase".
+All C++ constructs defined in Sake should reside (directly or indirectly) in the
+sake namespace.  Since preprocessor macros always have global scope, persistent
 macros should be prefixed with "SAKE_" to minimize the risk of macro identifier
 collision.  Temporary macros (i.e., "local" macros that are #undef'ed within the
 same file they are #define'ed) are typically in "lower_case" unless there is a
@@ -110,8 +113,9 @@ need to make them unique.
 Vertical Spacing
 --------------------------------
 Sake generally uses only at most double spacing to separate components or major
-blocks of code within a single file.  Comment blocks typically separate
-components at higher levels beyond what double spacing might be appropriate for.
+blocks of code within a single file, though one will find a few exceptions.
+Comment blocks typically separate components at higher levels beyond what double
+spacing might be appropriate for.
 
 --------------------------------
 Horizontal Spacing
@@ -143,6 +147,6 @@ preferences of the primary author of a particular component or module, as long
 as it is kept reasonably consistent within said component or module.
 - Braces enclosing namespace-level, class-level, or function-level declarations
   and definitions should generally appear on their own lines.
-- The opening brace of a control block (if, else, for, while, do-while, try,
-  catch) should trail the closing parenthese of the block declaration; the
+- The opening brace of a control block (if, else, for, while, do-while, switch,
+  try, catch) should trail the closing parenthesis of the block declaration; the
   closing brace should appear on its own line.
