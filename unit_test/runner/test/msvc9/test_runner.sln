@@ -10,9 +10,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_runner", "test_runner.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_test", "..\..\..\test\test\msvc9\test_test.vcproj", "{33EFC5B2-8885-4C15-AF0F-4B4781087BAB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_test", "..\..\..\..\lib\test\msvc9\sake_test.vcproj", "{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_core", "..\..\..\..\libs\core\msvc9\sake_core.vcproj", "{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_core", "..\..\..\..\lib\core\msvc9\sake_core.vcproj", "{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_test", "..\..\..\..\libs\test\msvc9\sake_test.vcproj", "{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,14 +28,14 @@ Global
 		{33EFC5B2-8885-4C15-AF0F-4B4781087BAB}.Debug|Win32.Build.0 = Debug|Win32
 		{33EFC5B2-8885-4C15-AF0F-4B4781087BAB}.Release|Win32.ActiveCfg = Release|Win32
 		{33EFC5B2-8885-4C15-AF0F-4B4781087BAB}.Release|Win32.Build.0 = Release|Win32
-		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Debug|Win32.Build.0 = Debug|Win32
-		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Release|Win32.ActiveCfg = Release|Win32
-		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Release|Win32.Build.0 = Release|Win32
 		{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}.Debug|Win32.Build.0 = Debug|Win32
 		{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}.Release|Win32.ActiveCfg = Release|Win32
 		{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}.Release|Win32.Build.0 = Release|Win32
+		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Debug|Win32.Build.0 = Debug|Win32
+		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Release|Win32.ActiveCfg = Release|Win32
+		{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

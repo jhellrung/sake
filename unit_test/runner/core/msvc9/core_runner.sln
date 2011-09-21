@@ -10,9 +10,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core_runner", "core_runner.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core_test", "..\..\..\test\core\msvc9\core_test.vcproj", "{F416E947-9BFF-4345-858C-71A82D70CF2E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_test", "..\..\..\..\lib\test\msvc9\sake_test.vcproj", "{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_test", "..\..\..\..\libs\test\msvc9\sake_test.vcproj", "{D5E1510F-5BFD-41EA-BC88-845B8C9BF602}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_core", "..\..\..\..\lib\core\msvc9\sake_core.vcproj", "{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sake_core", "..\..\..\..\libs\core\msvc9\sake_core.vcproj", "{BA47FF42-F24B-43ED-9F0F-CF3A64568E52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
