@@ -1,5 +1,5 @@
 /*******************************************************************************
- * lib/test/environment.cpp
+ * libs/test/environment.cpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -7,22 +7,21 @@
  ******************************************************************************/
 
 #include <cassert>
-#include <cstdio>
 #include <cstring>
 
 #include <algorithm>
 #include <exception>
 #include <iomanip>
 #include <iostream>
-#include <limits>
 #include <map>
-//#include <sstream>
+#include <sstream>
 #include <string>
 #include <utility>
 
 #include <boost/exception/diagnostic_information.hpp>
 #include <boost/exception/exception.hpp>
 
+#include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/onstream.hpp>
 #include <sake/core/utility/timer.hpp>
 
@@ -69,11 +68,7 @@ struct environment::impl
     void report() const;
     int main_return_value() const;
 
-    void fail(
-        e_fail_level const fail_level,
-        char const * const macro, char const * const expression,
-        char const * const filename, char const * const function, unsigned int const line_number,
-        char const * const message);
+    void fail(e_fail_level const fail_level, char const* const message);
 };
 
 /*******************************************************************************
@@ -375,19 +370,11 @@ main_return_value() const
 
 void
 environment::
-fail(
-    e_fail_level fail_level,
-    char const * macro, char const * expression,
-    char const * filename, char const * function, unsigned int line_number,
-    char const * message)
-{ mp_impl->fail(fail_level, macro, expression, filename, function, line_number, message); }
+fail(e_fail_level fail_level, char const * message)
+{ mp_impl->fail(fail_level, message); }
 inline void
 environment::impl::
-fail(
-    e_fail_level const fail_level,
-    char const * const macro, char const * const /*expression*/,
-    char const * const filename, char const * const function, unsigned int const line_number,
-    char const * const message)
+fail(e_fail_level const fail_level, char const* const message)
 {
     scope_data& data = p_current_scope->second;
     unsigned int log_level_fail = 0;
@@ -405,11 +392,10 @@ fail(
         log_level_fail = log_level_require;
         break;
     }
-    if(p_log && data.log_level <= log_level_fail)
-        *p_log << std::setw(data.depth) << ""
-               << macro << " failure: " << message
-               << " [" << filename << ':' << function << ':' << line_number << ']'
-               << std::endl;
+    if(p_log && data.log_level <= log_level_fail) {
+        *p_log << std::setw(data.depth) << message;
+        p_log->flush();
+    }
     if(fail_level == fail_level_require)
         throw fail_require_exception();
 }
@@ -421,16 +407,12 @@ fail(
     char const * macro, char const * expression,
     char const * filename, char const * function, unsigned int line_number)
 {
-    std::string message;
-    message.reserve((2 + 2) + std::strlen(expression));
-    message.operator+=("{ ")
-           .operator+=(expression)
-           .operator+=(" }");
-    fail(
-        fail_level, macro, expression,
-        filename, function, line_number,
-        message.c_str()
+    std::ostringstream message(std::ostringstream::out);
+    sake::assert_failure_action::print(
+        message,
+        macro, expression, filename, function, line_number
     );
+    fail(fail_level, message.str().c_str());
 }
 
 void
@@ -441,49 +423,13 @@ fail(
     char const * filename, char const * function, unsigned int line_number,
     unsigned int subexpression_index, char const * subexpression)
 {
-#if 1
-    static const int uint_digits10 = (std::numeric_limits< unsigned int >::digits + 2)/3;
-    std::string message;
-    message.reserve(
-        (2 + 18 + uint_digits10 + 10 + 3)
-      + std::strlen(subexpression)
-      + std::strlen(expression)
-    );
-    char subexpression_index_buffer[uint_digits10 + 1];
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 4996 ) // 'sprintf': This function or variable may
-                                  // be unsafe. Consider using sprintf_s
-                                  // instead. To disable deprecation, use
-                                  // _CRT_SECURE_NO_WARNINGS. See online help
-                                  // for details.
-#endif // #ifdef _MSC_VER
-    std::sprintf(subexpression_index_buffer, "%u", subexpression_index);
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif // #ifdef _MSC_VER
-    message.operator+=("{ ")
-           .operator+=(subexpression)
-           .operator+=(" } (subexpression ")
-           .operator+=(subexpression_index_buffer)
-           .operator+=(" within { ")
-           .operator+=(expression)
-           .operator+=(" })");
-    fail(
-        fail_level, macro, expression,
-        filename, function, line_number,
-        message.c_str()
-    );
-#else // #if 1
     std::ostringstream message(std::ostringstream::out);
-    message << "{ " << subexpression << " } "
-               "(subexpression " << subexpression_index << " within { " << expression << " })";
-    fail(
-        fail_level, macro, expression,
-        filename, function, line_number,
-        message.str().c_str()
+    sake::assert_failure_action::print(
+        message,
+        macro, expression, filename, function, line_number,
+        subexpression_index, subexpression
     );
-#endif // #if 1
+    fail(fail_level, message.str().c_str());
 }
 
 } // namespace test

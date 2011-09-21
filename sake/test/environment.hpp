@@ -26,7 +26,7 @@
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 
-#include <sake/core/utility/ostreamable.hpp>
+#include <sake/core/utility/assert.hpp>
 
 #ifndef SAKE_TEST_ENVIRONMENT_MAX_ARITY
 #define SAKE_TEST_ENVIRONMENT_MAX_ARITY 8
@@ -109,11 +109,7 @@ private:
     static void apply(environment& this_, void* p_f)
     { (**static_cast< void (**)( environment& ) >(p_f))(this_); }
 
-    void fail(
-        e_fail_level fail_level,
-        char const * macro, char const * expression,
-        char const * filename, char const * function, unsigned int line_number,
-        char const * message);
+    void fail(e_fail_level fail_level, char const * message);
 };
 
 /*******************************************************************************
@@ -136,14 +132,13 @@ fail(
     LHS const & lhs, char const * op, RHS const & rhs)
 {
     std::ostringstream message(std::ostringstream::out);
-    message << "{ " << subexpression << " } == "
-               "{ " << sake::make_ostreamable(lhs) << ' ' << op << ' ' << sake::make_ostreamable(rhs) << " } "
-               "(subexpression " << subexpression_index << " within { " << expression << " })";
-    fail(
-        fail_level, macro, expression,
-        filename, function, line_number,
-        message.str().c_str()
+    sake::assert_failure_action::print(
+        message,
+        macro, expression, filename, function, line_number,
+        subexpression_index, subexpression,
+        lhs, op, rhs
     );
+    fail(fail_level, message.str().c_str());
 }
 
 } // namespace test
@@ -161,9 +156,7 @@ fail(
     LHS ## n const & lhs ## n, \
     char const * const op ## n, \
     RHS ## n const & rhs ## n
-#define or_stream_lhsn_opn_rhsn( z, n, data ) \
-    << BOOST_PP_EXPR_IF( n, " || " << ) \
-    sake::make_ostreamable( lhs ## n ) << ' ' << op ## n << ' ' << sake::make_ostreamable( rhs ## n )
+#define lhsn_opn_rhsn( z, n, data ) lhs ## n, op ## n, rhs ## n
 
     template< BOOST_PP_ENUM( N, class_LHSn_class_RHSn, ~ ) >
     void fail(
@@ -173,18 +166,17 @@ fail(
         BOOST_PP_ENUM( N, LHSn_lhsn_opn_RHSn_rhsn, ~ ) )
     {
         std::ostringstream message(std::ostringstream::out);
-        message << "{ " << expression << " } == "
-                   "{ " BOOST_PP_REPEAT( N, or_stream_lhsn_opn_rhsn, ~ ) << " }";
-        fail(
-            fail_level, macro, expression,
-            filename, function, line_number,
-            message.str().c_str()
+        sake::assert_failure_action::print(
+            message,
+            macro, expression, filename, function, line_number,
+            BOOST_PP_ENUM( N, lhsn_opn_rhsn, ~ )
         );
+        fail(fail_level, message.str().c_str());
     }
 
 #undef class_LHSn_class_RHSn
 #undef LHSn_lhsn_opn_RHSn_rhsn
-#undef or_stream_lhsn_opn_rhsn
+#undef lhsn_opn_rhsn
 
 #undef N
 

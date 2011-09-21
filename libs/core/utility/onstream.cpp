@@ -1,5 +1,5 @@
 /*******************************************************************************
- * lib/core/utility/onstream.cpp
+ * libs/core/utility/onstream.cpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

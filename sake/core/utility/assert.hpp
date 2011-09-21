@@ -106,6 +106,8 @@
 #include <sstream>
 
 #include <boost/current_function.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/iteration/self.hpp>
@@ -117,6 +119,10 @@
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/is_floating_point.hpp>
+#include <boost/type_traits/is_signed.hpp>
 
 #include <sake/core/utility/bisfo.hpp>
 #include <sake/core/utility/debug.hpp>
@@ -483,6 +489,32 @@ namespace assert_failure_action
 namespace functional
 {
 
+namespace print_private
+{
+
+template< class LHS, class RHS >
+struct dispatch_long;
+template< class LHS, class RHS >
+struct dispatch_ulong;
+template< class LHS, class RHS >
+struct dispatch_ldouble;
+
+template<
+    class LHS, class RHS,
+    bool = dispatch_long< LHS, RHS >::value,
+    bool = dispatch_ulong< LHS, RHS >::value,
+    bool = dispatch_ldouble< LHS, RHS >::value
+>
+struct dispatch_builtin_type;
+
+template<
+    class LHS, class RHS,
+    class T = typename dispatch_builtin_type< LHS, RHS >::type
+>
+struct dispatch;
+
+} // namespace print_private
+
 struct print
 {
     typedef void result_type;
@@ -512,15 +544,10 @@ struct print
         unsigned int const subexpression_index, char const * const subexpression,
         LHS const & lhs, char const * const op, RHS const & rhs) const
     {
-        std::ostringstream message(std::ostringstream::out);
-        message << "{ " << subexpression << " } == "
-                   "{ " << sake::make_ostreamable(lhs)
-                        << ' ' << op << ' '
-                        << sake::make_ostreamable(rhs) << " } "
-                   "(subexpression " << subexpression_index << " within { " << expression << " })";
-        operator()(o,
+        print_private::dispatch< LHS, RHS >::apply(o,
             macro, expression, filename, function, line_number,
-            message.str().c_str()
+            subexpression_index, subexpression,
+            lhs, op, rhs
         );
     }
 
@@ -534,22 +561,157 @@ struct print
 #define failure_action_abort() std::abort()
 #define BOOST_PP_INDIRECT_SELF <sake/core/utility/assert.hpp>
 #include BOOST_PP_INCLUDE_SELF()
-#undef failure_action
-#undef failure_action_abort
 
 #define failure_action         terminate
 #define failure_action_abort() std::terminate()
 #define BOOST_PP_INDIRECT_SELF <sake/core/utility/assert.hpp>
 #include BOOST_PP_INCLUDE_SELF()
-#undef failure_action
-#undef failure_action_abort
 
 #define failure_action         exit
 #define failure_action_abort() std::exit( EXIT_FAILURE )
 #define BOOST_PP_INDIRECT_SELF <sake/core/utility/assert.hpp>
 #include BOOST_PP_INCLUDE_SELF()
-#undef failure_action
-#undef failure_action_abort
+
+namespace print_private
+{
+
+template< class T >
+void
+apply_builtin(
+    std::ostream& o,
+    char const * const macro, char const * const expression,
+    char const * const filename, char const * const function, unsigned int const line_number,
+    T const lhs, char const * op, T const rhs);
+
+template< class T >
+void
+apply_builtin(
+    std::ostream& o,
+    char const * const macro, char const * const expression,
+    char const * const filename, char const * const function, unsigned int const line_number,
+    unsigned int const subexpression_index, char const * const subexpression,
+    T const lhs, char const * const op, T const rhs);
+
+template< class LHS, class RHS >
+struct dispatch_long
+    : boost::mpl::and_<
+          boost::integral_constant< bool, (sizeof( LHS ) <= sizeof( long )) >,
+          boost::integral_constant< bool, (sizeof( RHS ) <= sizeof( long )) >,
+          boost::mpl::and_<
+              boost::is_integral< LHS >,
+              boost::is_integral< RHS >,
+              boost::is_signed< LHS >,
+              boost::is_signed< RHS >
+          >
+      >
+{ };
+
+template< class LHS, class RHS >
+struct dispatch_ulong
+    : boost::mpl::and_<
+          boost::integral_constant< bool, (sizeof( LHS ) <= sizeof( unsigned long )) >,
+          boost::integral_constant< bool, (sizeof( RHS ) <= sizeof( unsigned long )) >,
+          boost::mpl::and_<
+              boost::is_integral< LHS >,
+              boost::is_integral< RHS >,
+              boost::mpl::not_< boost::is_signed< LHS > >,
+              boost::mpl::not_< boost::is_signed< RHS > >
+          >
+      >
+{ };
+
+template< class LHS, class RHS >
+struct dispatch_ldouble
+    : boost::mpl::and_<
+          boost::is_floating_point< LHS >,
+          boost::is_floating_point< RHS >
+      >
+{ };
+
+template< class LHS, class RHS >
+struct dispatch_builtin_type< LHS, RHS, false, false, false >
+{ typedef void type; };
+template< class LHS, class RHS >
+struct dispatch_builtin_type< LHS, RHS, true, false, false >
+{ typedef long type; };
+template< class LHS, class RHS >
+struct dispatch_builtin_type< LHS, RHS, false, true, false >
+{ typedef unsigned long type; };
+template< class LHS, class RHS >
+struct dispatch_builtin_type< LHS, RHS, false, false, true >
+{ typedef long double type; };
+
+template< class LHS, class RHS >
+struct dispatch< LHS, RHS, void >
+{
+    static void apply(
+        std::ostream& o,
+        char const * const macro, char const * const expression,
+        char const * const filename, char const * const function, unsigned int const line_number,
+        LHS const & lhs, char const * const op, RHS const & rhs)
+    {
+        std::ostringstream message(std::ostringstream::out);
+        message << "{ " << expression << " } == "
+                   "{ " << sake::make_ostreamable(lhs)
+                        << ' ' << op << ' '
+                        << sake::make_ostreamable(rhs) << " }";
+        functional::print()(o,
+            macro, expression, filename, function, line_number,
+            message.str().c_str()
+        );
+    }
+
+    static void apply(
+        std::ostream& o,
+        char const * const macro, char const * const expression,
+        char const * const filename, char const * const function, unsigned int const line_number,
+        unsigned int const subexpression_index, char const * const subexpression,
+        LHS const & lhs, char const * const op, RHS const & rhs)
+    {
+        std::ostringstream message(std::ostringstream::out);
+        message << "{ " << subexpression << " } == "
+                   "{ " << sake::make_ostreamable(lhs)
+                        << ' ' << op << ' '
+                        << sake::make_ostreamable(rhs) << " } "
+                   "(subexpression " << subexpression_index << " within { " << expression << " })";
+        functional::print()(o,
+            macro, expression, filename, function, line_number,
+            message.str().c_str()
+        );
+    }
+};
+
+template< class LHS, class RHS, class T >
+struct dispatch
+{
+    static void apply(
+        std::ostream& o,
+        char const * const macro, char const * const expression,
+        char const * const filename, char const * const function, unsigned int const line_number,
+        LHS const lhs, char const * const op, RHS const rhs)
+    {
+        apply_builtin<T>(o,
+            macro, expression, filename, function, line_number,
+            lhs, op, rhs
+        );
+    }
+
+    static void apply(
+        std::ostream& o,
+        char const * const macro, char const * const expression,
+        char const * const filename, char const * const function, unsigned int const line_number,
+        unsigned int const subexpression_index, char const * const subexpression,
+        LHS const lhs, char const * const op, RHS const rhs)
+    {
+        apply_builtin<T>(o,
+            macro, expression, filename, function, line_number,
+            subexpression_index, subexpression,
+            lhs, op, rhs
+        );
+    }
+};
+
+} // namespace print_private
 
 } // namespace functional
 
@@ -603,6 +765,9 @@ struct failure_action
 
 };
 
+#undef failure_action
+#undef failure_action_abort
+
 #endif // #ifndef BOOST_PP_IS_SELFISH
 
 #else // #ifndef BOOST_PP_IS_ITERATING
@@ -639,6 +804,12 @@ struct failure_action
 
 #else // #ifdef failure_action
 
+#if N == 1
+        print_private::dispatch< LHS0, RHS0 >::apply(o,
+            macro, expression, filename, function, line_number,
+            lhs0, op0, rhs0
+        );
+#else // #if N == 1
         std::ostringstream message(std::ostringstream::out);
         message << "{ " << expression << " } == "
                    "{ " BOOST_PP_REPEAT( N, or_stream_lhsn_opn_rhsn, ~ ) << " }";
@@ -646,6 +817,7 @@ struct failure_action
             macro, expression, filename, function, line_number,
             message.str().c_str()
         );
+#endif // #if N == 1
 
 #endif // #ifdef failure_action
 
