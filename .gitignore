@@ -1,4 +1,13 @@
-# MSVC aux files
+*_debug
+*_release
+*_profile
+
+# Scons
+.scon*
+build
+lib
+
+# MSVC files
 *.ncb
 *.suo
 *.user
