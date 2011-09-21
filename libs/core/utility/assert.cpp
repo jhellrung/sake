@@ -18,7 +18,7 @@
 //#include <sstream>
 #include <string>
 
-#include <boost/preprocessor/iteration/self.hpp>
+//#include <boost/preprocessor/iteration/self.hpp>
 
 #include <sake/core/utility/assert.hpp>
 
@@ -35,7 +35,7 @@ void
 print::
 operator()(
     std::ostream& o,
-    char const * const macro, char const * const expression,
+    char const * const macro, char const * const /*expression*/,
     char const * const filename, char const * const function, unsigned int const line_number,
     char const * const message) const
 {
@@ -117,22 +117,25 @@ operator()(
 
 #define failure_action         abort
 #define failure_action_abort() std::abort()
-#define BOOST_PP_INDIRECT_SELF "assert.cpp"
-#include BOOST_PP_INCLUDE_SELF()
+//#define BOOST_PP_INDIRECT_SELF "assert.cpp"
+//#include BOOST_PP_INCLUDE_SELF()
+#include "assert.ipp"
 #undef failure_action
 #undef failure_action_abort
 
 #define failure_action         terminate
 #define failure_action_abort() std::terminate()
-#define BOOST_PP_INDIRECT_SELF "assert.cpp"
-#include BOOST_PP_INCLUDE_SELF()
+//#define BOOST_PP_INDIRECT_SELF "assert.cpp"
+//#include BOOST_PP_INCLUDE_SELF()
+#include "assert.ipp"
 #undef failure_action
 #undef failure_action_abort
 
 #define failure_action         exit
 #define failure_action_abort() std::exit( EXIT_FAILURE )
-#define BOOST_PP_INDIRECT_SELF "assert.cpp"
-#include BOOST_PP_INCLUDE_SELF()
+//#define BOOST_PP_INDIRECT_SELF "assert.cpp"
+//#include BOOST_PP_INCLUDE_SELF()
+#include "assert.ipp"
 #undef failure_action
 #undef failure_action_abort
 
