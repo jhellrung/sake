@@ -50,7 +50,7 @@
 namespace sake_unit_test
 {
 
-void introspection_test(sake::test::environment& env)
+void introspection_test(sake::test::environment& /*env*/)
 { }
 
 } // namespace sake_unit_test

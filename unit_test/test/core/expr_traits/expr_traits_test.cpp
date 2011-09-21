@@ -16,7 +16,7 @@
 namespace sake_unit_test
 {
 
-void expr_traits_test(sake::test::environment& env)
+void expr_traits_test(sake::test::environment& /*env*/)
 { }
 
 } // namespace sake_unit_test

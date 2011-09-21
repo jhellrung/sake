@@ -68,7 +68,7 @@ BOOST_MPL_ASSERT_NOT((sake::is_callable< yes_callable2 const, int ( int, int ) >
 
 } // namespace
 
-void is_callable_test(sake::test::environment& env)
+void is_callable_test(sake::test::environment& /*env*/)
 { }
 
 } // namespace sake_unit_test

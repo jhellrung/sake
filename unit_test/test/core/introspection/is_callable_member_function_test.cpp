@@ -71,7 +71,7 @@ BOOST_MPL_ASSERT_NOT((is_callable_mem_fn_x< yes_x3, void ( void* ) >));
 
 } // namespace
 
-void is_callable_member_function_test(sake::test::environment& env)
+void is_callable_member_function_test(sake::test::environment& /*env*/)
 { }
 
 } // namespace sake_unit_test
