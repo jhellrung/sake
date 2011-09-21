@@ -199,6 +199,7 @@ operator()(
             this_.p_current_scope = p_outer_scope;
         }
     } _exit_scope = { *this, p_current_scope, local_scope_name };
+    static_cast<void>(_exit_scope);
 
     // Construct scope_name.
     std::string scope_name;
@@ -244,6 +245,7 @@ operator()(
                 ~update_elapsed_time()
                 { elapsed_time += timer.elapsed(); }
             } _update_elapsed_time = { timer, p_current_scope->second.elapsed_time };
+            static_cast<void>(_update_elapsed_time);
             (*p_f)(this_, p);
         }
         catch(fail_require_exception) { }
@@ -383,7 +385,7 @@ inline void
 environment::impl::
 fail(
     e_fail_level const fail_level,
-    char const * const macro, char const * const expression,
+    char const * const macro, char const * const /*expression*/,
     char const * const filename, char const * const function, unsigned int const line_number,
     char const * const message)
 {
