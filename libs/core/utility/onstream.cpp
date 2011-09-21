@@ -11,7 +11,7 @@
 namespace sake
 {
 
- onstream  nout;
-wonstream wnout;
+sake:: onstream  nout;
+sake::wonstream wnout;
 
 } // namespace sake
