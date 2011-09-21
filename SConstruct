@@ -11,7 +11,7 @@ import os
 
 vars = Variables('SConstruct.variables', ARGUMENTS)
 vars.AddVariables(
-    EnumVariable('BUILD_CONFIG', "Build configuration", 'debug', allowed_values=('debug', 'release', 'profile')),
+    EnumVariable('BUILDCONFIG', "Build configuration", 'debug', allowed_values=('debug', 'release', 'profile')),
     PathVariable('BOOST_ROOT', "Path to Boost root (e.g., 'boost_1_xy_z')", None),
     ('MARCH', "-march option for the C++ compiler", None)
 )
@@ -24,54 +24,72 @@ if not env.has_key('BOOST_ROOT'):
 env.Append(CPPPATH=['#'])
 env.Append(CPPPATH=[env['BOOST_ROOT']])
 
+platform     = env['PLATFORM']
+build_config = env['BUILDCONFIG']
+
 ## Set platform- and architecture-specific variables.
 ## This should be updated as needed.
-cxx_flags = ''
+plat_arch = platform
+cc_flags   = ''
+cxx_flags  = ''
 link_flags = ''
-platarch = env['PLATFORM']
-if env['BUILD_CONFIG'] in ['release', 'profile']:
+if build_config != 'debug':
     env.Append(CPPDEFINES=['NDEBUG'])
-if env['PLATFORM'] == 'win32':
+if platform == 'win32':
     print "Unknown CXX:", env['CXX']
     Exit(2)
-elif env['PLATFORM'] == 'posix':
+    env.Append(CPPDEFINES=['NOMINMAX'])
+    cxx_flags += ' /nologo /errorReport:none'
+    cxx_flags += ' /EHsc /GR'
+    cxx_flags += ' /Wall /WL'
+    link_flags += ' /NOLOGO /ERRORREPORT:NONE'
+    if build_config == 'debug':
+        cc_flags   += ' /MDd'
+        cxx_flags  += ' /Od /Zi /RTCc /RTC1 /MDd'
+        link_flags += ' /DEBUG'
+    else
+        cc_flags   += ' /MD'
+        cxx_flags  += ' /O2 /GL /MD /Gy'
+        link_flags += ' /LTCG'
+elif platform == 'posix':
     if env['CXX'] == 'g++':
         if env.has_key('MARCH'):
-            platarch = env['MARCH']
-            cxx_flags += ' -march=' + env['MARCH']
+            march = env['MARCH']
+            plat_arch = march
+            cxx_flags += ' -march=' + march
             # Intel
-            if env['MARCH'] in ['pentium-mmx', 'pentium2',
-                                'pentium3', 'pentium3m',
-                                'pentium-m', 'pentium4', 'pentium4m',
-                                'prescott',
-                                'nocona', 'core2']:
+            if march in ['pentium-mmx', 'pentium2',
+                         'pentium3', 'pentium3m',
+                         'pentium-m', 'pentium4', 'pentium4m',
+                         'prescott',
+                         'nocona', 'core2']:
                 cxx_flags += ' -mmmx'
-                if not env['MARCH'] in ['pentium-mmx', 'pentium2']:
+                if not march in ['pentium-mmx', 'pentium2']:
                     cxx_flags += ' -mfpmath=sse -msse'
-                    if not env['MARCH'] in ['pentium3', 'pentium3m']:
+                    if not march in ['pentium3', 'pentium3m']:
                         cxx_flags += ' -msse2'
-                        if not env['MARCH'] in ['pentium-m', 'pentium4', 'pentium4m']:
+                        if not march in ['pentium-m', 'pentium4', 'pentium4m']:
                             cxx_flags += ' -msse3'
-                            if not env['MARCH'] in ['prescott']:
+                            if not march in ['prescott']:
                                 cxx_flags += ' -mssse3'
-                                if not env['MARCH'] in ['nocona', 'core2']:
+                                if not march in ['nocona', 'core2']:
                                     pass
             # AMD
-            elif env['MARCH'] in ['k6',
-                                  'k6-2', 'k6-3', 'athlon', 'athlon-tbird',
-                                  'athlon-4', 'athlon-xp', 'athlon-mp',
-                                  'k8', 'opteron', 'athlon64', 'athlon-fx',
-                                  'amdfam10']:
+            elif march in ['k6',
+                           'k6-2', 'k6-3', 'athlon', 'athlon-tbird',
+                           'athlon-4', 'athlon-xp', 'athlon-mp',
+                           'k8', 'opteron', 'athlon64', 'athlon-fx',
+                           'amdfam10']:
                 cxx_flags += ' -mmmx'
-                if not env['MARCH'] in ['k6']:
+                if not march in ['k6']:
                     cxx_flags += ' -m3dnow'
-                    if not env['MARCH'] in ['k6-2', 'k6-3', 'athlon', 'athlon-tbird']:
+                    if not march in ['k6-2', 'k6-3', 'athlon', 'athlon-tbird']:
                         cxx_flags += ' -mfpmath=sse -msse'
-                        if not env['MARCH'] in ['athlon-4', 'athlon-xp', 'athlon-mp']:
+                        if not march in ['athlon-4', 'athlon-xp', 'athlon-mp']:
                             cxx_flags += ' -msse2 -m64'
-                            if not env['MARCH'] in ['k8', 'opteron', 'athlon64', 'athlon-fx']:
+                            if not march in ['k8', 'opteron', 'athlon64', 'athlon-fx']:
                                 cxx_flags += ' -msse3 -msse4a -mabm'
-                                if not env['MARCH'] in ['amdfam10']:
+                                if not march in ['amdfam10']:
                                     pass
         cxx_flags += ' -Wall' + \
                      ' -Woverloaded-virtual' + \
@@ -84,40 +102,41 @@ elif env['PLATFORM'] == 'posix':
                      ' -Wshadow' + \
                      ' -Wpointer-arith' + \
                      ' -Wwrite-strings'
-        if env['BUILD_CONFIG'] == 'debug':
+        if build_config == 'debug':
             cxx_flags  += ' -g'
             link_flags += ' -g'
         else:
             # -fprefetch-loop-arrays ?
             cxx_flags  += ' -O3 -funroll-loops'
-        if env['BUILD_CONFIG'] == 'profile':
+        if build_config == 'profile':
             cxx_flags  += ' -pg'
             link_flags += ' -pg'
     else:
         print "Unknown CXX:", env['CXX']
         Exit(2)
 else:
-    print "Unknown PLATFORM:", env['PLATFORM']
+    print "Unknown PLATFORM:", platform
     Exit(2)
+env.Append(CCFLAGS=cc_flags)
 env.Append(CXXFLAGS=cxx_flags)
 env.Append(LINKFLAGS=link_flags)
 
-env['PLATARCH'] = platarch
+env['PLATARCH'] = plat_arch
 
 ## Put all intermediate build files under #build.
-variant_dir = os.path.join('build', platarch, env['BUILD_CONFIG'])
+variant_dir = os.path.join('build', plat_arch, build_config)
 VariantDir(variant_dir, '.', duplicate=0)
 
 ## Install all libraries to #lib.
-lib_install_dir = os.path.join('#lib', platarch, env['BUILD_CONFIG'])
+lib_install_dir = os.path.join('#lib', plat_arch, build_config)
 env.Append(LIBPATH=[lib_install_dir])
 env.Append(LIBS=['sake_core'])
 
 ## Necessary for sake::timer.
-if env['PLATFORM'] == 'posix':
+if platform == 'posix':
     env.Append(LIBS=['rt'])
 
-prog_suffix = '_' + platarch + '_' + env['BUILD_CONFIG']
+prog_suffix = '_' + plat_arch + '_' + build_config
 
 ## Wrap env.Library + env.Install
 def LibraryInstall(env, target, source):
