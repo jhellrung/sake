@@ -17,11 +17,11 @@
 #ifndef SAKE_CORE_UTILITY_IDENTITY_TYPE_HPP
 #define SAKE_CORE_UTILITY_IDENTITY_TYPE_HPP
 
-#include <boost/mpl/assert.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 #define SAKE_IDENTITY_TYPE( _T_ ) \
-    sake::identity_type_private::impl< void ( _T_ ) >::type
+    ::sake::identity_type_private::impl< void _T_ >::type
 
 namespace sake
 {
@@ -40,8 +40,8 @@ template< class T >
 struct impl< void ( T ) >
 { typedef T type; };
 
-BOOST_MPL_ASSERT((boost::is_same< void, SAKE_IDENTITY_TYPE( void ) >));
-BOOST_MPL_ASSERT((boost::is_same< int, SAKE_IDENTITY_TYPE( int ) >));
+BOOST_STATIC_ASSERT((boost::is_same< void, SAKE_IDENTITY_TYPE(( void )) >::value));
+BOOST_STATIC_ASSERT((boost::is_same< int, SAKE_IDENTITY_TYPE(( int )) >::value));
 
 } // namespace identity_type_private
 
