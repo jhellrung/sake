@@ -47,7 +47,7 @@ if platform == 'win32':
         cc_flags   += ' /MDd'
         cxx_flags  += ' /Od /Zi /RTCc /RTC1 /MDd'
         link_flags += ' /DEBUG'
-    else
+    else:
         cc_flags   += ' /MD'
         cxx_flags  += ' /O2 /GL /MD /Gy'
         link_flags += ' /LTCG'
