@@ -6,6 +6,9 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
+#include <sake/core/utility/as_reference_to.hpp>
+#include <sake/core/utility/identity_type.hpp>
+
 #include <sake/test/environment.hpp>
 
 namespace sake_unit_test
