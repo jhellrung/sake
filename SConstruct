@@ -127,7 +127,7 @@ env['PLATARCH'] = plat_arch
 variant_dir = os.path.join('build', plat_arch, build_config)
 VariantDir(variant_dir, '.', duplicate=0)
 
-## Install all libraries to #lib.
+## Install all libraries under #lib.
 lib_install_dir = os.path.join('#lib', plat_arch, build_config)
 env.Append(LIBPATH=[lib_install_dir])
 env.Append(LIBS=['sake_core'])
@@ -138,23 +138,23 @@ if platform == 'posix':
 
 prog_suffix = '_' + plat_arch + '_' + build_config
 
-## Wrap env.Library + env.Install
+## env.Library + env.Install
 def LibraryInstall(env, target, source):
     lib = env.Library(target, source)
     env.Install(lib_install_dir, lib)
 
-## Wrap env.Program + env.InstallAs
+## env.Program + env.InstallAs
 def ProgramInstall(env, target, source):
     prog = env.Program(target, source)
     env.InstallAs(os.path.join('#' + Dir('.').srcnode().path, target + prog_suffix), prog)
 
 ## Recursively search for SConscript files starting from root.
-def find_SConscripts(env, root):
+def find_SConscripts(root):
     for dirpath, dirnames, filenames in os.walk(root):
         for f in fnmatch.filter(filenames, 'SConscript'):
             print os.path.join(variant_dir, dirpath, f)
             SConscript(os.path.join(variant_dir, dirpath, f))
 
 Export('env', 'LibraryInstall', 'ProgramInstall')
-find_SConscripts(env, 'libs')
-find_SConscripts(env, 'unit_test')
+find_SConscripts('libs')
+find_SConscripts('unit_test')
