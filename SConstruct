@@ -92,16 +92,16 @@ elif platform == 'posix':
                                 cxx_flags += ' -msse3 -msse4a -mabm'
                                 if not march in ['amdfam10']:
                                     pass
-        cxx_flags += ' -Wall' + \
-                     ' -Woverloaded-virtual' + \
-                     ' -Wsign-promo' + \
-                     ' -Winit-self' + \
-                     ' -Wmissing-include-dirs' + \
-                     ' -Wunused-parameter' + \
-                     ' -Wstrict-aliasing=2' + \
-                     ' -Wextra' + \
-                     ' -Wshadow' + \
-                     ' -Wpointer-arith' + \
+        cxx_flags += ' -Wall' \
+                     ' -Woverloaded-virtual' \
+                     ' -Wsign-promo' \
+                     ' -Winit-self' \
+                     ' -Wmissing-include-dirs' \
+                     ' -Wunused-parameter' \
+                     ' -Wstrict-aliasing=2' \
+                     ' -Wextra' \
+                     ' -Wshadow' \
+                     ' -Wpointer-arith' \
                      ' -Wwrite-strings'
         if build_config == 'debug':
             cxx_flags += ' -g'
