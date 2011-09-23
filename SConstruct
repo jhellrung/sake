@@ -30,15 +30,16 @@ build_config = env['BUILDCONFIG']
 ## Set platform- and architecture-specific variables.
 ## This should be updated as needed.
 plat_arch = platform
-cc_flags   = ''
-cxx_flags  = ''
+cpp_defines = []
+cc_flags = ''
+cxx_flags = ''
 link_flags = ''
 if build_config != 'debug':
-    env.Append(CPPDEFINES=['NDEBUG'])
+    cpp_defines.extend(['NDEBUG'])
 if platform == 'win32':
     print "Unknown CXX:", env['CXX']
     Exit(2)
-    env.Append(CPPDEFINES=['NOMINMAX'])
+    cpp_defines.extend(['NOMINMAX'])
     cxx_flags += ' /nologo /errorReport:none'
     cxx_flags += ' /EHsc /GR'
     cxx_flags += ' /Wall /WL'
@@ -103,13 +104,13 @@ elif platform == 'posix':
                      ' -Wpointer-arith' + \
                      ' -Wwrite-strings'
         if build_config == 'debug':
-            cxx_flags  += ' -g'
+            cxx_flags += ' -g'
             link_flags += ' -g'
         else:
             # -fprefetch-loop-arrays ?
-            cxx_flags  += ' -O3 -funroll-loops'
+            cxx_flags += ' -O3 -funroll-loops'
         if build_config == 'profile':
-            cxx_flags  += ' -pg'
+            cxx_flags += ' -pg'
             link_flags += ' -pg'
     else:
         print "Unknown CXX:", env['CXX']
@@ -117,6 +118,7 @@ elif platform == 'posix':
 else:
     print "Unknown PLATFORM:", platform
     Exit(2)
+env.Append(CPPDEFINES=cpp_defines)
 env.Append(CCFLAGS=cc_flags)
 env.Append(CXXFLAGS=cxx_flags)
 env.Append(LINKFLAGS=link_flags)
