@@ -23,7 +23,7 @@
 #include <boost/config.hpp>
 #include <boost/exception/errinfo_api_function.hpp>
 #include <boost/exception/errinfo_errno.hpp>
-#include <boost/mpl/assert.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/throw_exception.hpp>
 
@@ -84,7 +84,7 @@
 #elif defined( SAKE_TIMER_USE_WINDOWS_QUERY_PERFORMANCE     )
 #include <Windows.h>
 #ifdef BOOST_HAS_MS_INT64
-BOOST_MPL_ASSERT((boost::is_same< LONGLONG, __int64 >));
+BOOST_STATIC_ASSERT((boost::is_same< LONGLONG, __int64 >::value));
 #endif // #ifdef BOOST_HAS_MS_INT64
 #elif defined( SAKE_TIMER_USE_CTIME                         )
 #include <ctime>
@@ -120,11 +120,11 @@ private:
     typedef std::clock_t time_type;
 #endif
 
-    static void get_current_time(time_type& t);
+    static void get_time(time_type& t);
 #ifdef SAKE_TIMER_USE_WINDOWS_QUERY_PERFORMANCE
     static double get_frequency();
 #endif // #ifdef SAKE_TIMER_USE_WINDOWS_QUERY_PERFORMANCE
-    time_type m_start_time;
+    time_type m_start;
 };
 
 /*******************************************************************************
@@ -145,83 +145,75 @@ timer()
 inline void
 timer::
 restart()
-{ get_current_time(m_start_time); }
+{ get_time(m_start); }
 
 inline double
 timer::
 elapsed() const
 {
-    time_type current_time;
-    get_current_time(current_time);
+    time_type now;
+    get_time(now);
 #if   defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_REALTIME  ) \
    || defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_MONOTONIC ) \
    || defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_PROCESS   ) \
    || defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_THREAD    )
-    return (current_time.tv_sec - m_start_time.tv_sec)
-         + 1.0e-9 * (current_time.tv_nsec - m_start_time.tv_nsec);
+    return (now.tv_sec - m_start.tv_sec) + 1.0e-9 * (now.tv_nsec - m_start.tv_nsec);
 #elif defined( SAKE_TIMER_USE_POSIX_GETTIMEOFDAY            )
-    return (current_time.tv_sec - m_start_time.tv_sec)
-         + 1.0e-6 * (current_time.tv_usec - m_start_time.tv_usec);
+    return (now.tv_sec - m_start.tv_sec) + 1.0e-6 * (now.tv_usec - m_start.tv_usec);
 #elif defined( SAKE_TIMER_USE_WINDOWS_QUERY_PERFORMANCE     )
-    static const double frequency = get_frequency();
+    static double const frequency = get_frequency();
 #ifdef BOOST_HAS_MS_INT64
-    return (current_time.QuadPart - m_start_time.QuadPart) / frequency;
+    return (now.QuadPart - m_start.QuadPart) / frequency;
 #else // #ifdef BOOST_HAS_MS_INT64
-    static const double double_0x100000000 = static_cast< double >(1UL << 16)
-                                           * static_cast< double >(1UL << 16);
-    return (current_time.LowPart >= m_start_time.LowPart ?
-                double_0x100000000 * (current_time.HighPart - m_start_time.HighPart)
-              + (current_time.LowPart - m_start_time.LowPart) :
-                double_0x100000000 * (current_time.HighPart - m_start_time.HighPart)
-              - (m_start_time.LowPart - current_time.LowPart)
-           ) / frequency;
+    static double const _0x100000000 = static_cast< double >(1UL << 16)
+                                     * static_cast< double >(1UL << 16);
+    return (now.LowPart >= m_start.LowPart ?
+                _0x100000000 * (now.HighPart - m_start.HighPart) + (now.LowPart - m_start.LowPart) :
+                _0x100000000 * (now.HighPart - m_start.HighPart) - (m_start.LowPart - now.LowPart))
+           / frequency;
 #endif // #ifdef BOOST_HAS_MS_INT64
 #elif defined( SAKE_TIMER_USE_CTIME                         )
-    return static_cast< double >(current_time - m_start_time) / CLOCKS_PER_SEC;
+    return static_cast< double >(now - m_start) / CLOCKS_PER_SEC;
 #endif
 }
 
 inline void
 timer::
-get_current_time(time_type& t)
+get_time(time_type& t)
 {
 #if   defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_REALTIME  ) \
    || defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_MONOTONIC ) \
    || defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_PROCESS   ) \
    || defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_THREAD    )
 #if   defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_REALTIME  )
-    const int e = clock_gettime(CLOCK_REALTIME, &t);
+    int const e = clock_gettime(CLOCK_REALTIME, &t);
 #elif defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_MONOTONIC )
-    const int e = clock_gettime(CLOCK_MONOTONIC, &t);
+    int const e = clock_gettime(CLOCK_MONOTONIC, &t);
 #elif defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_PROCESS   )
-    const int e = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
+    int const e = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
 #elif defined( SAKE_TIMER_USE_POSIX_CLOCK_GETTIME_THREAD    )
-    const int e = clock_gettime(CLOCK_THREAD_CPUTIME_ID, &t);
+    int const e = clock_gettime(CLOCK_THREAD_CPUTIME_ID, &t);
 #endif
     if(e == -1)
-        BOOST_THROW_EXCEPTION(
-            timer_error() << boost::errinfo_api_function("int clock_gettime(clockid_t,timespec*)")
-                          << boost::errinfo_errno(errno)
-        );
+        BOOST_THROW_EXCEPTION(timer_error()
+            << boost::errinfo_api_function("int clock_gettime(clockid_t,timespec*)")
+            << boost::errinfo_errno(errno));
 #elif defined( SAKE_TIMER_USE_POSIX_GETTIMEOFDAY            )
-    const int e = gettimeofday(&t, NULL);
+    int const e = gettimeofday(&t, NULL);
     if(e == -1)
-        BOOST_THROW_EXCEPTION(
-            timer_error() << boost::errinfo_api_function("int gettimeofday(timeval*,timezone*)")
-                          << boost::errinfo_errno(errno)
-        );
+        BOOST_THROW_EXCEPTION(timer_error()
+            << boost::errinfo_api_function("int gettimeofday(timeval*,timezone*)")
+            << boost::errinfo_errno(errno));
 #elif defined( SAKE_TIMER_USE_WINDOWS_QUERY_PERFORMANCE     )
-    const BOOL b = QueryPerformanceCounter(&t);
+    BOOL const b = QueryPerformanceCounter(&t);
     if(!b)
-        BOOST_THROW_EXCEPTION(
-            timer_error() << boost::errinfo_api_function("BOOL QueryPerformanceCounter(LARGE_INTEGER*)")
-        );
+        BOOST_THROW_EXCEPTION(timer_error()
+            << boost::errinfo_api_function("BOOL QueryPerformanceCounter(LARGE_INTEGER*)"));
 #elif defined( SAKE_TIMER_USE_CTIME                         )
     t = std::clock();
     if(t == -1)
-        BOOST_THROW_EXCEPTION(
-            timer_error() << boost::errinfo_api_function("std::clock_t std::clock()")
-        );
+        BOOST_THROW_EXCEPTION(timer_error()
+            << boost::errinfo_api_function("std::clock_t std::clock()"));
 #endif
 }
 
@@ -230,18 +222,17 @@ inline double
 timer::
 get_frequency()
 {
-    LARGE_INTEGER queried_frequency;
-    const BOOL b = QueryPerformanceFrequency(&queried_frequency);
+    LARGE_INTEGER frequency;
+    BOOL const b = QueryPerformanceFrequency(&frequency);
     if(!b)
-        BOOST_THROW_EXCEPTION(
-            timer_error() << boost::errinfo_api_function("BOOL QueryPerformanceFrequency(LARGE_INTEGER*)")
-        );
+        BOOST_THROW_EXCEPTION(timer_error()
+            << boost::errinfo_api_function("BOOL QueryPerformanceFrequency(LARGE_INTEGER*)"));
 #ifdef BOOST_HAS_MS_INT64
-    return static_cast< double >(queried_frequency.QuadPart);
+    return static_cast< double >(frequency.QuadPart);
 #else // #ifdef BOOST_HAS_MS_INT64
-    const double double_0x100000000 = static_cast< double >(1UL << 16)
-                                    * static_cast< double >(1UL << 16);
-    return double_0x100000000 * queried_frequency.HighPart + queried_frequency.LowPart;
+    double const _0x100000000 = static_cast< double >(1UL << 16)
+                              * static_cast< double >(1UL << 16);
+    return _0x100000000 * frequency.HighPart + frequency.LowPart;
 #endif // #ifdef BOOST_HAS_MS_INT64
 }
 #endif // #ifdef SAKE_TIMER_USE_WINDOWS_QUERY_PERFORMANCE
