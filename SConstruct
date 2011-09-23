@@ -37,7 +37,7 @@ link_flags = ''
 if build_config != 'debug':
     cpp_defines.extend(['NDEBUG'])
 if platform == 'win32':
-    print "Unknown CXX:", env['CXX']
+    print("Unknown CXX:", env['CXX'])
     Exit(2)
     cpp_defines.extend(['NOMINMAX'])
     cxx_flags += ' /nologo /errorReport:none'
@@ -113,10 +113,10 @@ elif platform == 'posix':
             cxx_flags += ' -pg'
             link_flags += ' -pg'
     else:
-        print "Unknown CXX:", env['CXX']
+        print("Unknown CXX:", env['CXX'])
         Exit(2)
 else:
-    print "Unknown PLATFORM:", platform
+    print("Unknown PLATFORM:", platform)
     Exit(2)
 env.Append(CPPDEFINES=cpp_defines)
 env.Append(CCFLAGS=cc_flags)
@@ -154,7 +154,7 @@ def ProgramInstall(env, target, source):
 def find_SConscripts(root):
     for dirpath, dirnames, filenames in os.walk(root):
         for f in fnmatch.filter(filenames, 'SConscript'):
-            print os.path.join(variant_dir, dirpath, f)
+            print(os.path.join(variant_dir, dirpath, f))
             SConscript(os.path.join(variant_dir, dirpath, f))
 
 Export('env', 'LibraryInstall', 'ProgramInstall')
