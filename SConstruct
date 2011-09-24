@@ -64,34 +64,36 @@ elif platform == 'posix':
                          'pentium-m', 'pentium4', 'pentium4m',
                          'prescott',
                          'nocona', 'core2']:
-                cxx_flags += ' -mmmx'
-                if not march in ['pentium-mmx', 'pentium2']:
+                while True:
+                    cxx_flags += ' -mmmx'
+                    if march in ['pentium-mmx', 'pentium2']: break
                     cxx_flags += ' -mfpmath=sse -msse'
-                    if not march in ['pentium3', 'pentium3m']:
-                        cxx_flags += ' -msse2'
-                        if not march in ['pentium-m', 'pentium4', 'pentium4m']:
-                            cxx_flags += ' -msse3'
-                            if not march in ['prescott']:
-                                cxx_flags += ' -mssse3'
-                                if not march in ['nocona', 'core2']:
-                                    pass
+                    if march in ['pentium3', 'pentium3m']: break
+                    cxx_flags += ' -msse2'
+                    if march in ['pentium-m', 'pentium4', 'pentium4m']: break
+                    cxx_flags += ' -msse3'
+                    if march in ['prescott']: break
+                    cxx_flags += ' -mssse3'
+                    if march in ['nocona', 'core2']: break
+                    assert False
             # AMD
             elif march in ['k6',
                            'k6-2', 'k6-3', 'athlon', 'athlon-tbird',
                            'athlon-4', 'athlon-xp', 'athlon-mp',
                            'k8', 'opteron', 'athlon64', 'athlon-fx',
                            'amdfam10']:
-                cxx_flags += ' -mmmx'
-                if not march in ['k6']:
+                while True:
+                    cxx_flags += ' -mmmx'
+                    if march in ['k6']: break
                     cxx_flags += ' -m3dnow'
-                    if not march in ['k6-2', 'k6-3', 'athlon', 'athlon-tbird']:
-                        cxx_flags += ' -mfpmath=sse -msse'
-                        if not march in ['athlon-4', 'athlon-xp', 'athlon-mp']:
-                            cxx_flags += ' -msse2 -m64'
-                            if not march in ['k8', 'opteron', 'athlon64', 'athlon-fx']:
-                                cxx_flags += ' -msse3 -msse4a -mabm'
-                                if not march in ['amdfam10']:
-                                    pass
+                    if march in ['k6-2', 'k6-3', 'athlon', 'athlon-tbird']: break
+                    cxx_flags += ' -mfpmath=sse -msse'
+                    if march in ['athlon-4', 'athlon-xp', 'athlon-mp']: break
+                    cxx_flags += ' -msse2 -m64'
+                    if march in ['k8', 'opteron', 'athlon64', 'athlon-fx']: break
+                    cxx_flags += ' -msse3 -msse4a -mabm'
+                    if march in ['amdfam10']: break
+                    assert False
         cxx_flags += ' -Wall' \
                      ' -Woverloaded-virtual' \
                      ' -Wsign-promo' \
