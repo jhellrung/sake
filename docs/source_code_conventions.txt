@@ -1,5 +1,5 @@
 /*******************************************************************************
- * docs/source_conventions.txt
+ * docs/source_code_conventions.txt
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -7,7 +7,7 @@
  ******************************************************************************/
 
 ================================
-Sake Code Conventions
+Sake Source Code Conventions
 ================================
 
 This document describes some of Sake's convention concerning the style of C++
@@ -35,11 +35,16 @@ checking classes, which should be in "CamelCase".
 --------------------------------
 Include Guards
 --------------------------------
-All hpp (single-inclusion header) files should have unique preprocessor include
-guards following the comment-header (see below).  To minimize the risk of
-include guard collision, include guards should take the form
-SAKE_[PATH]_[FILENAME]_[EXT], where [PATH], [FILENAME], and [EXT] should be
-replaced with the file's path, filename, and extension (hpp), respectively.
+Most hpp (single-inclusion header) files should have unique preprocessor include
+guards immediately following the comment-header (see below).  The exceptions are
+those hpp files which include themselves during the preprocessor phase.  For
+example, if one uses BOOST_PP_ITERATE from the Boost.Preprocessor library, one
+should use BOOST_PP_IS_ITERATING guards outside of the usual include guards.
+
+To minimize the risk of include guard identifier collision, include guards
+identifiers should take the form SAKE_[PATH]_[FILENAME]_[EXT], where [PATH],
+[FILENAME], and [EXT] should be replaced with the file's path (relative to the
+root Sake directory), filename, and extension (hpp), respectively.
 
 For example:
 
@@ -114,7 +119,7 @@ Vertical Spacing
 --------------------------------
 Sake generally uses only at most double spacing to separate components or major
 blocks of code within a single file, though one will find a few exceptions.
-Comment blocks typically separate components at higher levels beyond what double
+Block comments typically separate components at higher levels beyond what double
 spacing might be appropriate for.
 
 --------------------------------
@@ -129,7 +134,7 @@ characters.
 Identation
 --------------------------------
 The only mandatory rules regarding indentation are as follows:
-- No tab characters; this is the same policy adopted by Boost.
+- No tab characters; this is the same policy adopted by, e.g., Boost and Python.
 - Use indentation to aid in the readability and maintainability of the source
   code.
 The following are only suggested guidelines, and may be modified to the style
