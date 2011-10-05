@@ -24,11 +24,11 @@
 #ifndef SAKE_BOOST_EXT_TYPE_TRAITS_IS_CONVERTIBLE_WNRBT_HPP
 #define SAKE_BOOST_EXT_TYPE_TRAITS_IS_CONVERTIBLE_WNRBT_HPP
 
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/or.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/core/utility/extension.hpp>
 
@@ -60,7 +60,7 @@ namespace no_ext
 
 template< class From, class To >
 struct is_convertible_wnrbt< From&, To& >
-    : boost::mpl::or_<
+    : boost_ext::mpl::or2<
           boost_ext::is_convertible< From*, To* >,
           boost_ext::ext::is_convertible_wnrbt<
               typename boost::remove_cv< From >::type,
@@ -73,7 +73,7 @@ struct is_convertible_wnrbt< From&, To& >
 
 template< class From, class To >
 struct is_convertible_wnrbt< From, To& >
-    : boost::mpl::and_<
+    : boost_ext::mpl::and2<
           boost_ext::is_convertible< From, To& >,
           boost_ext::ext::is_convertible_wnrbt<
               typename boost::remove_cv< From >::type,

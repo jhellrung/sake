@@ -161,7 +161,7 @@ struct deduce_from_candidates
     )
 private:
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
-        typename SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, type > )),
+        typename SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, type > )),
         sake::declval< bool >() ? sake::declval< T0 >() : sake::declval< T1 >()
     ) );
 };

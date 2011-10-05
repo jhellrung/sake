@@ -38,7 +38,7 @@ namespace boost_ext
 template< class From, class To >
 struct is_convertible
 {
-    static const bool value = SAKE_EXPR_IS_CONVERTIBLE( sake::declval< From >(), To );
+    static bool const value = SAKE_EXPR_IS_CONVERTIBLE( sake::declval< From >(), To );
     typedef is_convertible type;
 };
 

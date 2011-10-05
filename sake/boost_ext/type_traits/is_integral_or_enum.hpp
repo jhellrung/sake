@@ -23,7 +23,7 @@ namespace boost_ext
 template< class T >
 struct is_integral_or_enum
 {
-    static const bool value =
+    static bool const value =
         boost::is_integral<T>::value
      || boost::is_enum<T>::value;
     typedef is_integral_or_enum type;

@@ -7,7 +7,7 @@
  *
  * struct boost_ext::add_reference_add_const<T>
  *
- * add_reference_add_const<T> -> const T&
+ * add_reference_add_const<T> -> T const &
  * add_reference_add_const< T& > -> T&
  * add_reference_add_const< T&& > -> T&&
  ******************************************************************************/
@@ -27,7 +27,7 @@ namespace boost_ext
 
 template< class T > struct add_reference_add_const { typedef T const & type; };
 template< class T > struct add_reference_add_const< T& > { typedef T& type; };
-template<> struct add_reference_add_const< void > { typedef const void type; };
+template<> struct add_reference_add_const< void > { typedef void const type; };
 template<> struct add_reference_add_const< void const > { typedef void const type; };
 template<> struct add_reference_add_const< void volatile > { typedef void const volatile type; };
 template<> struct add_reference_add_const< void const volatile > { typedef void const volatile type; };

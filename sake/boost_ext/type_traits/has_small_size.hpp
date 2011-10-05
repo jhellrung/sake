@@ -31,7 +31,7 @@ struct dispatch
 template< class T >
 struct dispatch< T, true >
 {
-    static const bool value = sizeof( T ) <= sizeof( void* );
+    static bool const value = sizeof( T ) <= sizeof( void* );
     typedef dispatch type;
 };
 

@@ -20,10 +20,10 @@
 #ifndef SAKE_BOOST_EXT_TYPE_TRAITS_IS_CONVERTIBLE_WNDP2BP_HPP
 #define SAKE_BOOST_EXT_TYPE_TRAITS_IS_CONVERTIBLE_WNDP2BP_HPP
 
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_void.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -48,9 +48,9 @@ struct dispatch
 
 template< class From, class To, class F, class T >
 struct dispatch< From, To, F*, T* >
-    : boost::mpl::and_<
+    : boost_ext::mpl::and2<
           boost_ext::is_convertible< From, To >,
-          boost::mpl::or_<
+          boost_ext::mpl::or2<
               boost::is_void<T>,
               boost_ext::is_same_sans_qualifiers<F,T>
           >

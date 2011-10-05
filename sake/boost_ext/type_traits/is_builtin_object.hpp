@@ -27,7 +27,7 @@ namespace boost_ext
 template< class T >
 struct is_builtin_object
 {
-    static const bool value =
+    static bool const value =
         boost::is_object<T>::value
     && !boost::is_class<T>::value
     && !boost::is_union<T>::value;
