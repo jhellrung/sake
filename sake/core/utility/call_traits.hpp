@@ -115,9 +115,9 @@ class dispatch< T, false, true >
     typedef typename boost::remove_cv<T>::type nocv_type;
 public:
     typedef T value_type;
-    typedef T& reference;
+    typedef const_type& param_type;
     typedef nocv_type fwd_param_type;
-    typedef SAKE_BOOST_EXT_RV_REF( nocv_type ) fwd_cast_type;
+    typedef SAKE_RV_REF( nocv_type ) fwd_cast_type;
     static fwd_cast_type
     fwd_cast(nocv_type& x)
     { return static_cast< fwd_cast_type >(x); }

@@ -100,7 +100,7 @@ struct switch_on_declared< SAKE_SIZEOF_NO_TAG >
 {
     template< int N >
     struct template_or_value
-    { static const bool value = true; };
+    { static bool const value = true; };
 };
 
 template< class T >

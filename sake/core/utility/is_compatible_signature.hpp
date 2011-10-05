@@ -20,14 +20,15 @@
 #include <boost/function_types/is_function.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/function_types/result_type.hpp>
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/mpl/unpack_args.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/mpl/zip_view.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/mpl/all.hpp>
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 namespace sake
@@ -54,22 +55,22 @@ struct dispatch< From, To, false >
 template< class From, class To >
 struct dispatch< From, To, true >
 {
-    BOOST_MPL_ASSERT((boost::function_types::is_function< From >));
-    BOOST_MPL_ASSERT((boost::function_types::is_function< To   >));
+    BOOST_STATIC_ASSERT((boost::function_types::is_function< From >::value));
+    BOOST_STATIC_ASSERT((boost::function_types::is_function< To   >::value));
 private:
     typedef typename boost::function_types::result_type< From >::type from_result_type;
     typedef typename boost::function_types::result_type< To   >::type   to_result_type;
     typedef typename boost::function_types::parameter_types< From >::type from_parameter_types;
     typedef typename boost::function_types::parameter_types< To   >::type   to_parameter_types;
 public:
-    typedef typename boost::mpl::and_<
+    static bool const value = boost_ext::mpl::and2<
         boost_ext::is_convertible< from_result_type, to_result_type >,
         boost_ext::mpl::all<
             boost::mpl::zip_view< boost::mpl::vector2< to_parameter_types, from_parameter_types > >,
             boost::mpl::unpack_args< boost::mpl::quote2< boost_ext::is_convertible > >
         >
-    >::type type;
-    static const bool value = type::value;
+    >::value;
+    typedef dispatch type;
 };
 
 } // namespace is_compatible_signature_private
@@ -80,6 +81,9 @@ struct is_compatible_signature
 { };
 
 namespace is_compatible_signature_private
+{
+
+namespace
 {
 
 #define test( from, to ) \
@@ -101,6 +105,8 @@ test( void ( int ), void ( ) )
 test( void* ( int ), int* ( int ) )
 test( void ( int* ), void ( void* ) )
 #undef test
+
+} // namespace
 
 } // namespace is_compatible_signature_private
 

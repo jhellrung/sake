@@ -134,7 +134,7 @@ private:
 SAKE_BOOST_EXT_DEFINE_EXCEPTION( sake, timer_error )
 
 /*******************************************************************************
- * timer member function implementations
+ * timer member implementations
  ******************************************************************************/
 
 inline

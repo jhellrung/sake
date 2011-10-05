@@ -15,11 +15,13 @@
 
 #ifndef BOOST_NO_DEFAULTED_FUNCTIONS
 
-#define SAKE_IMPLICITLY_DEFINED_DTOR( T ) ~T() = default;
+#define SAKE_IMPLICITLY_DEFINED_DTOR( T ) \
+    ~T() = default;
 
 #else // #ifndef BOOST_NO_DEFAULTED_FUNCTIONS
 
-#define SAKE_IMPLICITLY_DEFINED_DTOR( T ) ~T() { }
+#define SAKE_IMPLICITLY_DEFINED_DTOR( T ) \
+    ~T() { }
 
 #endif // #ifndef BOOST_NO_DEFAULTED_FUNCTIONS
 

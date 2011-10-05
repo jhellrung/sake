@@ -8,13 +8,13 @@
  * #define SAKE_USING_TYPENAME( scope, type )
  *
  * Expands to
- *     typedef typename scope :: type type ;
+ *     typedef scope :: type type
  * It is solely intended to reduce boilerplate.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_USING_TYPENAME_HPP
 #define SAKE_CORE_UTILITY_USING_TYPENAME_HPP
 
-#define SAKE_USING_TYPENAME( scope, type ) typedef typename scope :: type type ;
+#define SAKE_USING_TYPENAME( scope, type ) typedef scope :: type type
 
 #endif // #ifndef SAKE_CORE_UTILITY_USING_TYPENAME_HPP

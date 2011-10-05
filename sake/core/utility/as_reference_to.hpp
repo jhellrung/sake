@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * as_reference_to_< To >(From& from)
+ * as_reference_to< To >(From& from)
  *     -> result_of::as_reference_to< From, To >::type
  * as_reference_to(From& from, type_tag< To >)
  *     -> result_of::as_reference_to< From, To >::type
@@ -97,8 +97,8 @@ template< class From, class To >
 struct has_void_result
 {
     // purposely unqualified call to as_reference_to to allow for ADL
-    static const bool value = SAKE_EXPR_IS_VOID( as_reference_to(
-        ::sake::declval_ref< From >(),
+    static bool const value = SAKE_EXPR_IS_VOID( as_reference_to(
+        ::sake::declref< From >(),
         ::sake::type_tag< To >()
     ) );
     typedef has_void_result type;
@@ -108,7 +108,7 @@ template< class From, class To >
 struct star_has_void_result
 {
     // purposely unqualified call to as_reference_to to allow for ADL
-    static const bool value = SAKE_EXPR_IS_VOID( as_reference_to(
+    static bool const value = SAKE_EXPR_IS_VOID( as_reference_to(
         *::sake::declval< From >(),
         ::sake::type_tag< To >()
     ) );
@@ -116,16 +116,16 @@ struct star_has_void_result
 };
 
 #define define_non_void_result_helper( expression ) \
-    static const bool reference = SAKE_EXPR_APPLY( \
+    static bool const reference = SAKE_EXPR_APPLY( \
         ::boost::mpl::quote1< ::sake::boost_ext::is_reference >, \
         expression \
     ); \
     BOOST_STATIC_ASSERT((reference)); \
-    static const bool const_ = SAKE_EXPR_APPLY( \
+    static bool const const_ = SAKE_EXPR_APPLY( \
         ::boost::is_const< ::sake::boost_ext::remove_reference< ::boost::mpl::_1 > >, \
         expression \
     ); \
-    static const bool volatile_ = SAKE_EXPR_APPLY( \
+    static bool const volatile_ = SAKE_EXPR_APPLY( \
         ::boost::is_volatile< ::sake::boost_ext::remove_reference< ::boost::mpl::_1 > >, \
         expression \
     ); \
@@ -136,7 +136,7 @@ struct non_void_result_helper
 {
     define_non_void_result_helper(
         as_reference_to(
-            ::sake::declval_ref< From >(),
+            ::sake::declref< From >(),
             ::sake::type_tag< To >()
         )
     )
@@ -234,16 +234,14 @@ struct as_reference_to< void >
 
 } // namespace functional
 
-functional::as_reference_to<> const as_reference_to = { };
-
 template< class To, class From >
 inline typename result_of::as_reference_to< From, To >::type
-as_reference_to_(From& from)
+as_reference_to(From& from)
 { return ::sake_as_reference_to_private::impl< To >(from); }
 
 template< class To, class From >
 inline typename result_of::as_reference_to< From const, To >::type
-as_reference_to_(From const & from)
+as_reference_to(From const & from)
 { return ::sake_as_reference_to_private::impl< To >(from); }
 
 namespace as_reference_to_no_adl
@@ -263,12 +261,12 @@ struct dispatch< From, To, false, false >
 template< class From, class To, bool HasOperatorStar >
 struct dispatch< From, To, true, HasOperatorStar >
 {
-    static const bool const_ = !SAKE_EXPR_IS_CONVERTIBLE(
-        sake::declval_ref< From >(),
+    static bool const const_ = !SAKE_EXPR_IS_CONVERTIBLE(
+        sake::declref< From >(),
         To volatile &
     );
-    static const bool volatile_ = !SAKE_EXPR_IS_CONVERTIBLE(
-        sake::declval_ref< From >(),
+    static bool const volatile_ = !SAKE_EXPR_IS_CONVERTIBLE(
+        sake::declref< From >(),
         To const &
     );
     typedef typename boost_ext::add_cv_if_c< const_, volatile_, To >::type & result_type;

@@ -21,7 +21,7 @@
  *
  * See
  *     http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/nullptr
- * This provides a replacement of the nullptr keyword (from C++0x) in C++03.
+ * This provides a replacement of the nullptr keyword (from C++11) in C++03.
  * One should always use nullptr unqualified.  The macro SAKE_USING_NULLPTR
  * should be used when outside the sake namespace to bring nullptr into the
  * current scope.
@@ -94,10 +94,15 @@ operator<<(std::ostream& out, sake::nullptr_t)
 namespace nullptr_private
 {
 
+namespace
+{
+
 template< class T > int test(T);
 BOOST_STATIC_ASSERT( sizeof( test< void* >(nullptr) ) );
 BOOST_STATIC_ASSERT( sizeof( test< int* >(nullptr) ) );
 BOOST_STATIC_ASSERT( sizeof( test< bool >(nullptr) ) );
+
+} // namespace
 
 } // namespace nullptr_private
 

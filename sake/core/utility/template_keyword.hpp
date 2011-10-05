@@ -6,7 +6,8 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * #define SAKE_TEMPLATE_KEYWORD( keyword )
- * #define SAKE_TEMPLATE_KEYWORD_DEFAULT( keyword, default )
+ * #define SAKE_TEMPLATE_KEYWORD_VALUE( keyword )
+ * #define SAKE_TEMPLATE_KEYWORD_VALUE_DEFAULT( keyword, default )
  *
  * struct insert_keyword_value_if_c< Cond, Sequence, Keyword, Value >
  * struct insert_keyword_value_if< Cond, Sequence, Keyword, Value >
@@ -20,8 +21,8 @@
  *
  * namespace X_keyword
  * {
- * SAKE_TEMPLATE_KEYWORD( x )
- * SAKE_TEMPLATE_KEYWORD( y )
+ * SAKE_TEMPLATE_KEYWORD_VALUE( x )
+ * SAKE_TEMPLATE_KEYWORD_VALUE( y )
  * typedef ... default_x_type;
  * typedef ... default_y_type;
  * } // namespace X_keyword
@@ -59,11 +60,15 @@
 
 #define SAKE_TEMPLATE_KEYWORD( keyword ) \
 namespace tag { struct keyword; } \
+typedef ::boost::mpl::pair< tag::keyword, void >
+
+#define SAKE_TEMPLATE_KEYWORD_VALUE( keyword ) \
+namespace tag { struct keyword; } \
 template< class Value > struct keyword \
     : ::boost::mpl::pair< tag::keyword, Value > \
 { };
 
-#define SAKE_TEMPLATE_KEYWORD_DEFAULT( keyword, default ) \
+#define SAKE_TEMPLATE_KEYWORD_VALUE_DEFAULT( keyword, default ) \
 namespace tag { struct keyword; } \
 template< class Value = default > struct keyword \
     : ::boost::mpl::pair< tag::keyword, Value >\
@@ -75,20 +80,20 @@ namespace sake
 template<
     bool Cond,
     class Sequence,
-    template<class> class Keyword, class Value
+    template< class > class Keyword, class Value
 >
 struct insert_keyword_value_if_c;
 
 template<
     class Sequence,
-    template<class> class Keyword, class Value
+    template< class > class Keyword, class Value
 >
 struct insert_keyword_value_if_c< false, Sequence, Keyword, Value >
 { typedef Sequence type; };
 
 template<
     class Sequence,
-    template<class> class Keyword, class Value
+    template< class > class Keyword, class Value
 >
 struct insert_keyword_value_if_c< true, Sequence, Keyword, Value >
     : boost::mpl::insert< Sequence, Keyword< Value > >
@@ -97,7 +102,7 @@ struct insert_keyword_value_if_c< true, Sequence, Keyword, Value >
 template<
     class Cond,
     class Sequence,
-    template<class> class Keyword, class Value
+    template< class > class Keyword, class Value
 >
 struct insert_keyword_value_if
     : insert_keyword_value_if_c< Cond::value, Sequence, Keyword, Value >
@@ -106,20 +111,20 @@ struct insert_keyword_value_if
 template<
     bool Cond,
     class Sequence,
-    template<class> class Keyword, class Value
+    template< class > class Keyword, class Value
 >
 struct lazy_insert_keyword_value_if_c;
 
 template<
     class Sequence,
-    template<class> class Keyword, class Value
+    template< class > class Keyword, class Value
 >
 struct lazy_insert_keyword_value_if_c< false, Sequence, Keyword, Value >
 { typedef Sequence type; };
 
 template<
     class Sequence,
-    template<class> class Keyword, class Value
+    template< class > class Keyword, class Value
 >
 struct lazy_insert_keyword_value_if_c< true, Sequence, Keyword, Value >
     : boost::mpl::insert< Sequence, Keyword< typename Value::type > >
@@ -128,7 +133,7 @@ struct lazy_insert_keyword_value_if_c< true, Sequence, Keyword, Value >
 template<
     class Cond,
     class Sequence,
-    template<class> class Keyword, class Value
+    template< class > class Keyword, class Value
 >
 struct lazy_insert_keyword_value_if
     : lazy_insert_keyword_value_if_c< Cond::value, Sequence, Keyword, Value >

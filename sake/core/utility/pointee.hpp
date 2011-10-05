@@ -51,7 +51,7 @@ struct dispatch< P, true, HasTypeElementType, HasTypeValueType >
 {
 private:
     typedef typename boost::iterator_value<P>::type value_type;
-    static const bool is_const = !SAKE_EXPR_IS_CONVERTIBLE( *sake::declval_ref<P>(), value_type& );
+    static bool const is_const = !SAKE_EXPR_IS_CONVERTIBLE( *sake::declref<P>(), value_type& );
 public:
     typedef typename boost_ext::add_const_if_c< is_const, value_type >::type type;
 };

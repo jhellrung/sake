@@ -22,9 +22,7 @@
 #ifndef SAKE_CORE_UTILITY_IS_BY_VALUE_OPTIMAL_HPP
 #define SAKE_CORE_UTILITY_IS_BY_VALUE_OPTIMAL_HPP
 
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/mpl/or.hpp>
 #include <boost/type_traits/has_trivial_copy.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
 #include <boost/type_traits/integral_constant.hpp>
@@ -35,6 +33,8 @@
 #include <boost/type_traits/is_union.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/has_small_size.hpp>
 
 #include <sake/core/ref/is_reference_wrapper.hpp>
@@ -53,21 +53,21 @@ namespace no_ext
 
 template< class T >
 struct is_by_value_optimal
-    : boost::mpl::or_<
+    : boost_ext::mpl::or4<
           boost::is_scalar<T>,
           sake::is_reference_wrapper<T>,
           boost::is_stateless<T>,
-          boost::mpl::and_<
-              boost::mpl::or_<
+          boost_ext::mpl::and2<
+              boost_ext::mpl::or2<
                   boost_ext::has_small_size<T>,
-                  boost::mpl::and_<
+                  boost_ext::mpl::and2<
                       boost::mpl::not_< boost::is_union<T> >,
                       boost::is_empty<T>
                   >
               >,
-              boost::mpl::or_<
+              boost_ext::mpl::or2<
                   boost::is_pod<T>,
-                  boost::mpl::and_<
+                  boost_ext::mpl::and2<
                       boost::has_trivial_copy<T>,
                       boost::has_trivial_destructor<T>
                   >

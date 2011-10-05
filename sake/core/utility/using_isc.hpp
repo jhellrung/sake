@@ -8,13 +8,13 @@
  * #define SAKE_USING_ISC( scope, type, name )
  *
  * Expands to
- *     static const type name = scope :: name ;
+ *     static const type name = scope :: name
  * It is solely intended to reduce boilerplate.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_USING_ISC_HPP
 #define SAKE_CORE_UTILITY_USING_ISC_HPP
 
-#define SAKE_USING_ISC( scope, type, name ) static const type name = scope :: name ;
+#define SAKE_USING_ISC( scope, type, name ) static const type name = scope :: name
 
 #endif // #ifndef SAKE_CORE_UTILITY_USING_ISC_HPP

@@ -37,6 +37,11 @@
  *     typename T::type z;
  * };
  *
+ * Member types may be given by the "[typename] (( type ))" syntax understood by
+ * SAKE_IDENTITY_TYPE to specify types with unparenthesized commas.  Thus, an
+ * equivalent, but perhaps less readable, specification for the member type "T"
+ * above is "typename ((T))".
+ *
  * SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS defines a direct initialization
  * constructor via SAKE_DIRECT_INIT_CTOR and additionally declares the class's
  * members.  For this macro only, both T and member_seq may be prefixed with an
@@ -60,8 +65,8 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
-#include <boost/preprocessor/deduce_r.hpp>
 #include <boost/preprocessor/logical/bitor.hpp>
+#include <boost/preprocessor/repetition/deduce_r.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
@@ -71,6 +76,7 @@
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
 #include <sake/core/utility/call_traits.hpp>
+#include <sake/core/utility/identity_type.hpp>
 
 #define SAKE_DIRECT_INIT_CTOR_R( T, member_seq ) \
     SAKE_DIRECT_INIT_CTOR_R( BOOST_PP_DEDUCE_R(), T, member_seq )
@@ -84,7 +90,7 @@
 #define SAKE_DIRECT_INIT_CTOR_comma_member_param_type( r, data, i, elem ) \
     SAKE_DIRECT_INIT_CTOR_comma_member_param_type_impl( \
         i, \
-        BOOST_PP_TUPLE_ELEM( 2, 0, elem ), \
+        SAKE_IDENTITY_TYPE( BOOST_PP_TUPLE_ELEM( 2, 0, elem ) ), \
         BOOST_PP_TUPLE_ELEM( 2, 1, elem ) \
     )
 #define SAKE_DIRECT_INIT_CTOR_comma_member_param_type_impl( i, type, name ) \
@@ -122,7 +128,11 @@
     SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_ACCESS_COLON( T )
 
 #define SAKE_DIRECT_INIT_CTOR_declare_member( r, data, i, elem ) \
-    SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_CLASS( BOOST_PP_TUPLE_ELEM( 2, 0, elem ) ) \
+    SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_CLASS( \
+        SAKE_IDENTITY_TYPE( \
+            BOOST_PP_TUPLE_ELEM( 2, 0, elem ) \
+        ) \
+    ) \
     BOOST_PP_TUPLE_ELEM( 2, 1, elem );
 
 #endif // #ifndef SAKE_CORE_UTILITY_DIRECT_INIT_CTOR_HPP

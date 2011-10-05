@@ -106,8 +106,6 @@
 #include <sstream>
 
 #include <boost/current_function.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/iteration/self.hpp>
@@ -123,6 +121,9 @@
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 #include <boost/type_traits/is_signed.hpp>
+
+#include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 
 #include <sake/core/utility/bisfo.hpp>
 #include <sake/core/utility/debug.hpp>
@@ -594,35 +595,31 @@ apply_builtin(
 
 template< class LHS, class RHS >
 struct dispatch_long
-    : boost::mpl::and_<
+    : boost_ext::mpl::and6<
           boost::integral_constant< bool, (sizeof( LHS ) <= sizeof( long )) >,
           boost::integral_constant< bool, (sizeof( RHS ) <= sizeof( long )) >,
-          boost::mpl::and_<
-              boost::is_integral< LHS >,
-              boost::is_integral< RHS >,
-              boost::is_signed< LHS >,
-              boost::is_signed< RHS >
-          >
+          boost::is_integral< LHS >,
+          boost::is_integral< RHS >,
+          boost::is_signed< LHS >,
+          boost::is_signed< RHS >
       >
 { };
 
 template< class LHS, class RHS >
 struct dispatch_ulong
-    : boost::mpl::and_<
+    : boost_ext::mpl::and6<
           boost::integral_constant< bool, (sizeof( LHS ) <= sizeof( unsigned long )) >,
           boost::integral_constant< bool, (sizeof( RHS ) <= sizeof( unsigned long )) >,
-          boost::mpl::and_<
-              boost::is_integral< LHS >,
-              boost::is_integral< RHS >,
-              boost::mpl::not_< boost::is_signed< LHS > >,
-              boost::mpl::not_< boost::is_signed< RHS > >
-          >
+          boost::is_integral< LHS >,
+          boost::is_integral< RHS >,
+          boost::mpl::not_< boost::is_signed< LHS > >,
+          boost::mpl::not_< boost::is_signed< RHS > >
       >
 { };
 
 template< class LHS, class RHS >
 struct dispatch_ldouble
-    : boost::mpl::and_<
+    : boost_ext::mpl::and2<
           boost::is_floating_point< LHS >,
           boost::is_floating_point< RHS >
       >
