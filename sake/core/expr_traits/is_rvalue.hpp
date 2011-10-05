@@ -33,13 +33,18 @@ template< class T >
 sake::no_tag test(T&);
 sake::yes_tag test(...);
 
+namespace
+{
+
 struct dummy { };
-BOOST_STATIC_ASSERT(( !SAKE_EXPR_IS_RVALUE( sake::declval_ref < int >() ) ));
-BOOST_STATIC_ASSERT(( !SAKE_EXPR_IS_RVALUE( sake::declval_cref< int >() ) ));
-BOOST_STATIC_ASSERT((  SAKE_EXPR_IS_RVALUE( sake::declval     < int >() ) ));
-BOOST_STATIC_ASSERT(( !SAKE_EXPR_IS_RVALUE( sake::declval_ref < dummy >() ) ));
-BOOST_STATIC_ASSERT(( !SAKE_EXPR_IS_RVALUE( sake::declval_cref< dummy >() ) ));
-BOOST_STATIC_ASSERT((  SAKE_EXPR_IS_RVALUE( sake::declval     < dummy >() ) ));
+BOOST_STATIC_ASSERT(( !SAKE_EXPR_IS_RVALUE( sake::declref < int >() ) ));
+BOOST_STATIC_ASSERT(( !SAKE_EXPR_IS_RVALUE( sake::declcref< int >() ) ));
+BOOST_STATIC_ASSERT((  SAKE_EXPR_IS_RVALUE( sake::declval < int >() ) ));
+BOOST_STATIC_ASSERT(( !SAKE_EXPR_IS_RVALUE( sake::declref < dummy >() ) ));
+BOOST_STATIC_ASSERT(( !SAKE_EXPR_IS_RVALUE( sake::declcref< dummy >() ) ));
+BOOST_STATIC_ASSERT((  SAKE_EXPR_IS_RVALUE( sake::declval < dummy >() ) ));
+
+} // namespace
 
 } // namespace expr_is_rvalue_private
 

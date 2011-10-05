@@ -88,6 +88,9 @@ struct non_void
     non_void operator,(void_detector) const;
 };
 
+namespace
+{
+
 BOOST_STATIC_ASSERT( SAKE_EXPR_IS_VOID( sake::declval< void >() ) );
 
 struct dummy { };
@@ -97,16 +100,19 @@ L operator,(T, dummy_tmpl<L,R>);
 template< class L, class R, class T >
 R operator,(dummy_tmpl<L,R>, T);
 
-#define test( T ) BOOST_STATIC_ASSERT( !SAKE_EXPR_IS_VOID( (sake::declval<T>()) ) );
+#define test( T ) \
+    BOOST_STATIC_ASSERT( !SAKE_EXPR_IS_VOID( (sake::declval<T>()) ) );
 test( int )
 test( dummy )
-test( SAKE_IDENTITY_TYPE(( dummy_tmpl< int, int > )) )
+test( SAKE_IDENTITY_TYPE_WRAP(( dummy_tmpl< int, int > )) )
 #ifndef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-test( SAKE_IDENTITY_TYPE(( dummy_tmpl< int, void > )) )
+test( SAKE_IDENTITY_TYPE_WRAP(( dummy_tmpl< int, void > )) )
 #endif // #ifndef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-test( SAKE_IDENTITY_TYPE(( dummy_tmpl< void, int > )) )
+test( SAKE_IDENTITY_TYPE_WRAP(( dummy_tmpl< void, int > )) )
 //test( dummy_tmpl< void, void > )
 #undef test
+
+} // namespace
 
 } // namespace expr_is_void_private
 

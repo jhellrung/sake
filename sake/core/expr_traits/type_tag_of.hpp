@@ -21,26 +21,20 @@
 
 #include <boost/static_assert.hpp>
 
+#include <sake/core/expr_traits/private/type_tag_inducer.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
 #define SAKE_EXPR_TYPE_TAG_OF( expression ) \
     (false ? \
      ::sake::expr_type_tag_of_private::deduce( expression, expression ) : \
-     ::sake::expr_type_tag_of_private::inducer())
+     ::sake::expr_traits_private::type_tag_inducer())
 
 namespace sake
 {
 
 namespace expr_type_tag_of_private
 {
-
-struct inducer
-{
-    template< class T >
-    operator sake::type_tag<T>() const
-    { return sake::type_tag<T>(); }
-};
 
 template< class T, class U >
 inline sake::type_tag< T& >
@@ -57,13 +51,16 @@ inline sake::type_tag<T>
 deduce(T const &, ...)
 { return sake::type_tag<T>(); }
 
+namespace
+{
+
 template< class T >
 int assert_same(sake::type_tag<T>, sake::type_tag<T>);
 struct dummy { };
 
 #define test( T ) \
     BOOST_STATIC_ASSERT( sizeof( \
-        expr_type_tag_of_private::assert_same( \
+        assert_same( \
             SAKE_EXPR_TYPE_TAG_OF( sake::declval<T>() ), \
             sake::type_tag<T>() \
         ) \
@@ -79,6 +76,8 @@ test( dummy const & )
 test( dummy volatile & )
 test( dummy const volatile & )
 #undef test
+
+} // namespace
 
 } // namespace expr_type_tag_of_private
 

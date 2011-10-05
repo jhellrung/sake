@@ -71,17 +71,30 @@ template< class T >
 struct helper< T, false >
 { static sake::no_tag apply(...); };
 
-#define test( from, to ) BOOST_STATIC_ASSERT( SAKE_EXPR_IS_CONVERTIBLE( (sake::declval< from >()), to ) );
+namespace
+{
+
+#define test( from, to ) \
+    BOOST_STATIC_ASSERT( SAKE_EXPR_IS_CONVERTIBLE( \
+        (sake::declval< from >()), \
+        to \
+    ) );
 test( int, int )
 test( int, void )
 test( int, long )
 test( int*, void* )
 #undef test
-#define test( from, to ) BOOST_STATIC_ASSERT( !SAKE_EXPR_IS_CONVERTIBLE( (sake::declval< from >()), to ) );
+#define test( from, to ) \
+    BOOST_STATIC_ASSERT( !SAKE_EXPR_IS_CONVERTIBLE( \
+        (sake::declval< from >()), \
+        to \
+    ) );
 test( int, void * )
 test( void*, int )
 test( void*, int* )
 #undef test
+
+} // namespace
 
 } // namespace expr_is_convertible_private
 

@@ -1,27 +1,22 @@
 /*******************************************************************************
- * sake/core/expr_traits/apply.hpp
+ * sake/core/expr_traits/apply_member.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * SAKE_EXPR_APPLY( metafunction, expression )
- *
- * This evaluates (at compile-time) to true iff the type of the given expression
- * satisfies the given Boost.MPL metafunction class or lambda expression.
- *
- * Note: expression must have non-void type.
+ * SAKE_EXPR_APPLY_TO_MEMBER( metafunction, T, member )
  ******************************************************************************/
 
-#ifndef SAKE_CORE_EXPR_TRAITS_APPLY_HPP
-#define SAKE_CORE_EXPR_TRAITS_APPLY_HPP
+#ifndef SAKE_CORE_EXPR_TRAITS_APPLY_MEMBER_HPP
+#define SAKE_CORE_EXPR_TRAITS_APPLY_MEMBER_HPP
 
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/if.hpp>
 
 #include <sake/core/utility/yes_no_tag.hpp>
 
-#define SAKE_EXPR_APPLY( metafunction, expression ) \
+#define SAKE_EXPR_APPLY_TO_MEMBER( metafunction, expression ) \
     ( \
         sizeof( ::sake::yes_tag ) \
      == sizeof( ::sake::expr_apply_private::helper< metafunction >( expression, expression ) ) \
@@ -58,4 +53,4 @@ helper(T const &, ...);
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_EXPR_TRAITS_APPLY_HPP
+#endif // #ifndef SAKE_CORE_EXPR_TRAITS_APPLY_MEMBER_HPP
