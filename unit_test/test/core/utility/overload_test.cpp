@@ -78,13 +78,13 @@ BOOST_MPL_ASSERT((boost::is_same< boost::result_of< X ( int, int, int ) >::type,
 
 } // namespace
 
-void overload_test(sake::test::environment& env)
+void overload_test(sake::test::environment& /*env*/)
 {
     X x;
     int a = 0, b = 0, c = 0;
-    sizeof(test_same< R<1> >(x(a)));
-    sizeof(test_same< R<2> >(x(a, b)));
-    sizeof(test_same< R<3> >(x(a, b, c)));
+    static_cast< void >(sizeof(test_same< R<1> >(x(a))));
+    static_cast< void >(sizeof(test_same< R<2> >(x(a, b))));
+    static_cast< void >(sizeof(test_same< R<3> >(x(a, b, c))));
 }
 
 } // namespace sake_unit_test
