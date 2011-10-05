@@ -8,7 +8,7 @@
  * struct has_operator_post_decrement<
  *     T,
  *     Result = typename boost_ext::remove_qualifiers<T>::type,
- *     ResultMetafunction = boost::mpl::always< boost::true_type >
+ *     ResultPred = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 
@@ -28,8 +28,8 @@ namespace sake
 #define SAKE_INTROSPECTION_OPERATOR_APPLY( x )           x--
 #define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T ) \
     typename ::sake::boost_ext::remove_qualifiers<T>::type
-#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultMetafunction ) \
-    ::sake::introspection_private::builtin_has_operator_post_decrement< T, Result, ResultMetafunction >
+#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultPred ) \
+    ::sake::introspection_private::builtin_has_operator_post_decrement< T, Result, ResultPred >
 #include SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_UNARY()
 
 } // namespace sake

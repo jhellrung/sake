@@ -21,22 +21,22 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_unary_minus_impl
-    : builtin_has_operator_unary_sign_impl< T, Result, ResultMetafunction >
+    : builtin_has_operator_unary_sign_impl< T, Result, ResultPred >
 { };
 
-template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_unary_minus_impl< T*, Result, ResultMetafunction >
+template< class T, class Result, class ResultPred >
+struct builtin_has_operator_unary_minus_impl< T*, Result, ResultPred >
     : boost::false_type
 { };
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_unary_minus
     : builtin_has_operator_unary_minus_impl<
           typename boost_ext::remove_qualifiers<T>::type,
           Result,
-          ResultMetafunction
+          ResultPred
       >
 { };
 

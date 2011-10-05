@@ -7,7 +7,7 @@
  *
  * #define SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
  *
- * This defines an interface to allow one to easily define a is_callable_xxx
+ * This provides machinery to allow one to easily define a is_callable_xxx
  * metafunction, which determines (up to certain language limitations) whether
  * one can call a (free, unqualified) function xxx with a given signature.  One
  * defines certain predetermined macros to specify the desired function, then
@@ -16,7 +16,7 @@
  *
  * template<
  *     class Signature,
- *     class ResultMetafunction = boost::mpl::always< boost::true_type >
+ *     class ResultPred = boost::mpl::always< boost::true_type >
  * >
  * struct is_callable_xxx.
  *
@@ -36,7 +36,7 @@
  *     Expands to an application of the function with parameters given by the
  *     parenthesized argument list x_args.
  * SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS
- *     [ defaults to "( 1, SAKE_INTROSPECTION_FUNCTION_DEFAULT_MAX_ARITY )" ]
+ *     [ defaults to "( 1, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )" ]
  *     Expands to a Boost.PP 2-tuple giving the (inclusive) arity limits of the
  *     function.
  ******************************************************************************/
@@ -44,8 +44,8 @@
 #ifndef SAKE_CORE_INTROSPECTION_IS_CALLABLE_FUNCTION_HPP
 #define SAKE_CORE_INTROSPECTION_IS_CALLABLE_FUNCTION_HPP
 
+#include <boost/config.hpp>
 #include <boost/mpl/always.hpp>
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/not.hpp>
@@ -56,17 +56,16 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
+
 #include <sake/core/expr_traits/apply.hpp>
 #include <sake/core/expr_traits/is_convertible.hpp>
 #include <sake/core/expr_traits/is_void.hpp>
+#include <sake/core/introspection/fwd.hpp>
 #include <sake/core/introspection/private/dummy.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/convertible_from_any.hpp>
 #include <sake/core/utility/extension.hpp>
-
-#ifndef SAKE_INTROSPECTION_FUNCTION_DEFAULT_MAX_ARITY
-#define SAKE_INTROSPECTION_FUNCTION_DEFAULT_MAX_ARITY 8
-#endif // #ifndef SAKE_INTROSPECTION_FUNCTION_DEFAULT_MAX_ARITY
 
 #define SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION() \
     <sake/core/introspection/private/is_callable_function.ipp>

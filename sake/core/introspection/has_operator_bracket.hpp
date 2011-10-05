@@ -8,7 +8,7 @@
  * struct has_operator_bracket<
  *     T, U,
  *     Result = void,
- *     ResultMetafunction = boost::mpl::always< boost::true_type >
+ *     ResultPred = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 

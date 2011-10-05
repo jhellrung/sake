@@ -31,7 +31,7 @@
 #endif // #ifndef SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT
 
 #ifndef SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR
-#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultMetafunction ) ::boost::false_type
+#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultPred ) ::boost::false_type
 #endif // #ifndef SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR
 
 
@@ -44,11 +44,11 @@ namespace no_ext
 namespace trait_name_private
 {
 
-template< class Signature, class ResultMetafunction >
+template< class Signature, class ResultPred >
 struct impl;
 
 template<
-    class T, class U, class Result, class ResultMetafunction,
+    class T, class U, class Result, class ResultPred,
     bool = ::sake::boost_ext::is_builtin_object<
                typename ::sake::boost_ext::remove_reference<T>::type
            >::value &&
@@ -58,21 +58,21 @@ template<
 >
 struct dispatch;
 
-template< class T, class U, class Result, class ResultMetafunction >
-struct dispatch< T, U, Result, ResultMetafunction, true >
-    : SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultMetafunction )
+template< class T, class U, class Result, class ResultPred >
+struct dispatch< T, U, Result, ResultPred, true >
+    : SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultPred )
 { };
 
-template< class T, class U, class Result, class ResultMetafunction >
-struct dispatch< T, U, Result, ResultMetafunction, false >
-    : impl< Result ( T, U ), ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
+struct dispatch< T, U, Result, ResultPred, false >
+    : impl< Result ( T, U ), ResultPred >
 { };
 
 } // namespace trait_name_private
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME
-    : trait_name_private::dispatch< T, U, Result, ResultMetafunction >
+    : trait_name_private::dispatch< T, U, Result, ResultPred >
 { };
 
 } // namespace no_ext
@@ -82,10 +82,10 @@ SAKE_EXTENSION_CLASS_N( SAKE_INTROSPECTION_TRAIT_NAME, 4, 2 )
 template<
     class T, class U,
     class Result = SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ),
-    class ResultMetafunction = ::boost::mpl::always< ::boost::true_type >
+    class ResultPred = ::boost::mpl::always< ::boost::true_type >
 >
 struct SAKE_INTROSPECTION_TRAIT_NAME
-    : ext:: BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 ) < T, U, Result, ResultMetafunction >
+    : ext:: BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 ) < T, U, Result, ResultPred >
 { };
 
 namespace no_ext

@@ -9,9 +9,9 @@
 #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_LOGICAL_NOT_HPP
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_LOGICAL_NOT_HPP
 
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <boost/mpl/placeholders.hpp>
@@ -27,18 +27,21 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_logical_not
-    : boost::mpl::and_<
+    : boost_ext::mpl::and3<
           boost_ext::is_convertible< T, bool >,
           boost_ext::is_convertible< bool, Result >,
-          boost::mpl::apply1< ResultMetafunction, bool >
+          boost::mpl::apply1< ResultPred, bool >
       >
 { };
 
+namespace
+{
+
 #define test( T ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, bool > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, bool > )), \
         !sake::declval<T>() \
     ) );
 test( bool )
@@ -47,6 +50,8 @@ test( void* )
 test( int* )
 test( void (*)( ) )
 #undef test
+
+} // namespace
 
 } // namespace introspection_private
 

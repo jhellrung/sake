@@ -19,7 +19,7 @@
  * template< class T >
  * struct has_type_xxx
  * {
- *     static const bool value = [true iff T has a nested type named xxx];
+ *     static bool const value = [true iff T has a nested type named xxx];
  *     typedef has_type_xxx type;
  * };
  ******************************************************************************/
@@ -34,10 +34,10 @@ template< class T > \
 class trait \
 { \
     template< class > struct sfinae; \
-    template< class U > static ::sake::yes_tag test(sfinae< typename T::name >*); \
+    template< class U > static ::sake::yes_tag test(sfinae< typename U::name >*); \
     template< class U > static ::sake::no_tag test(...); \
 public: \
-    static const bool value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
+    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
     typedef trait type; \
 };
 

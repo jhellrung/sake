@@ -9,14 +9,12 @@
 #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_SHIFT_HPP
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_SHIFT_HPP
 
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/or.hpp>
 #include <boost/type_traits/integral_promotion.hpp>
-#include <boost/type_traits/is_enum.hpp>
-#include <boost/type_traits/is_integral.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
+#include <sake/boost_ext/type_traits/is_integral_or_enum.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <boost/mpl/placeholders.hpp>
@@ -32,37 +30,34 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_shift_impl
-    : boost::mpl::and_<
-          boost::mpl::or_<
-              boost::is_integral<T>,
-              boost::is_enum<T>
-          >,
-          boost::mpl::or_<
-              boost::is_integral<U>,
-              boost::is_enum<U>
-          >,
+    : boost_ext::mpl::and4<
+          boost_ext::is_integral_or_enum<T>,
+          boost_ext::is_integral_or_enum<U>,
           boost_ext::is_convertible<
               typename boost::integral_promotion<T>::type,
               Result
           >,
           boost::mpl::apply1<
-              ResultMetafunction,
+              ResultPred,
               typename boost::integral_promotion<T>::type
           >
       >
 { };
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_shift
     : builtin_has_operator_shift_impl<
           typename boost_ext::remove_qualifiers<T>::type,
           typename boost_ext::remove_qualifiers<U>::type,
           Result,
-          ResultMetafunction
+          ResultPred
       >
 { };
+
+namespace
+{
 
 #ifdef _MSC_VER
 #pragma warning ( push )
@@ -71,7 +66,7 @@ struct builtin_has_operator_shift
 
 #define test( T, op, U, Result ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, Result > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, Result > )), \
         sake::declval<T>() op sake::declval<U>() \
     ) );
 test( bool, <<, bool, int )
@@ -101,6 +96,8 @@ test( int, >>, long, int )
 #ifdef _MSC_VER
 #pragma warning ( pop )
 #endif // #ifdef _MSC_VER
+
+} // namespace
 
 } // namespace introspection_private
 

@@ -8,7 +8,7 @@
  * struct is_istreamable<T>
  *
  * is_istreamable is a metafunction which returns true if
- *     declval< std::ostream& >() >> declval_ref<T>()
+ *     declval< std::ostream& >() >> declref<T>()
  * is a syntactically valid expression.
  ******************************************************************************/
 

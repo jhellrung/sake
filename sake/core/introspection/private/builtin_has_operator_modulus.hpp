@@ -9,6 +9,7 @@
 #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_MODULUS_HPP
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_MODULUS_HPP
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_integral_or_enum.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -20,22 +21,22 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_modulus_impl
-    : boost::mpl::and_<
+    : boost_ext::mpl::and3<
           boost_ext::is_integral_or_enum<T>,
           boost_ext::is_integral_or_enum<U>,
-          builtin_has_operator_arithmetic_impl< T, U, Result, ResultMetafunction >
+          builtin_has_operator_arithmetic_impl< T, U, Result, ResultPred >
       >
 { };
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_modulus
     : builtin_has_operator_modulus_impl<
           typename boost_ext::remove_qualifiers<T>::type,
           typename boost_ext::remove_qualifiers<U>::type,
           Result,
-          ResultMetafunction
+          ResultPred
       >
 { };
 

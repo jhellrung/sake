@@ -11,7 +11,7 @@
  *         typename boost_ext::remove_qualifiers<T>::type,
  *         typename boost_ext::remove_qualifiers<U>::type
  *     >::type,
- *     ResultMetafunction = boost::mpl::always< boost::true_type >
+ *     ResultPred = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 
@@ -34,8 +34,8 @@ namespace sake
         typename boost_ext::remove_qualifiers<T>::type, \
         typename boost_ext::remove_qualifiers<U>::type \
     >::type
-#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultMetafunction ) \
-    ::sake::introspection_private::builtin_has_operator_plus< T, U, Result, ResultMetafunction >
+#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultPred ) \
+    ::sake::introspection_private::builtin_has_operator_plus< T, U, Result, ResultPred >
 #include SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_BINARY()
 
 } // namespace sake

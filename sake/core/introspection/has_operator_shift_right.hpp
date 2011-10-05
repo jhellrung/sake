@@ -8,7 +8,7 @@
  * struct has_operator_shift_right<
  *     T, U,
  *     Result = void,
- *     ResultMetafunction = boost::mpl::always< boost::true_type >
+ *     ResultPred = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 
@@ -23,8 +23,8 @@ namespace sake
 
 #define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_shift_right
 #define SAKE_INTROSPECTION_OPERATOR_NAME >>
-#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultMetafunction ) \
-    ::sake::introspection_private::builtin_has_operator_shift< T, U, Result, ResultMetafunction >
+#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, U, Result, ResultPred ) \
+    ::sake::introspection_private::builtin_has_operator_shift< T, U, Result, ResultPred >
 #include SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_BINARY()
 
 } // namespace sake

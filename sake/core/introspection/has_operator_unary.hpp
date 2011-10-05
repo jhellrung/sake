@@ -7,7 +7,7 @@
  *
  * #define SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_UNARY()
  *
- * This defines an interface to allow one to easily define a has_operator_op
+ * This provides machinery to allow one to easily define a has_operator_op
  * metafunction for a unary operator op.  One defines certain predetermined
  * macros to specify the desired operator, then #include's
  * SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_UNARY().  This generates a
@@ -16,7 +16,7 @@
  * template<
  *     class T,
  *     class Result = [specified default],
- *     class ResultMetafunction = boost::mpl::always< boost::true_type >
+ *     class ResultPred = boost::mpl::always< boost::true_type >
  * >
  * struct has_operator_op.
  *
@@ -38,12 +38,12 @@
  * SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T )
  *     [ defaults to "void" ]
  *     Expands to the default for the Result template parameter of the trait.
- * SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultMetafunction )
+ * SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultPred )
  *     [ defaults to "boost::false_type" ]
  *     Expands to a type with a nested type typedef indicating whether the
  *     builtin type T has the operator (with the result convertible to Result
  *     and satisfying the Boost.MPL metafunction class or lambda expression
- *     ResultMetafunction).
+ *     ResultPred).
  ******************************************************************************/
 
 #ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_UNARY_HPP

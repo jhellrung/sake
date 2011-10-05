@@ -30,7 +30,7 @@
 
 #ifndef SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS \
-    ( 1, SAKE_INTROSPECTION_FUNCTION_DEFAULT_MAX_ARITY )
+    ( 1, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )
 #endif // #ifndef SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS
 
 
@@ -47,7 +47,7 @@
 
 template<
     class Signature,
-    class ResultMetafunction = ::boost::mpl::always< ::boost::true_type >
+    class ResultPred = ::boost::mpl::always< ::boost::true_type >
 > struct SAKE_INTROSPECTION_TRAIT_NAME;
 
 
@@ -55,7 +55,7 @@ template<
 namespace no_ext
 {
 
-template< class Signature, class ResultMetafunction >
+template< class Signature, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME;
 
 namespace trait_name_private
@@ -63,7 +63,7 @@ namespace trait_name_private
 
 template< class Signature >
 struct has_void_result;
-template< class Signature, class ResultMetafunction >
+template< class Signature, class ResultPred >
 struct non_void_result_helper;
 
 #if min_arity == max_arity
@@ -83,9 +83,64 @@ SAKE_INTROSPECTION_FUNCTION_DECLARE(
 
 } // namespace trait_name_private
 
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+template< class Result, class... T, class ResultPred >
+struct SAKE_INTROSPECTION_TRAIT_NAME< Result ( T... ), ResultPred >
+    : ::sake::boost_ext::mpl::and2<
+          ::boost::mpl::not_< trait_name_private::has_void_result< void ( T... ) > >,
+          trait_name_private::non_void_result_helper< Result ( T... ), ResultPred >
+      >
+{ };
+
+template< class... T, class ResultPred >
+struct SAKE_INTROSPECTION_TRAIT_NAME< void ( T... ), ResultPred >
+    : ::boost::mpl::eval_if_c<
+          trait_name_private::has_void_result< void ( T... ) >::value,
+          ::boost::mpl::apply1< ResultPred, void >,
+          trait_name_private::non_void_result_helper< void ( T... ), ResultPred >
+      >
+{ };
+
+namespace trait_name_private
+{
+
+template< class... T >
+struct has_void_result< void ( T... ) >
+{
+    static bool const value = SAKE_EXPR_IS_VOID(
+        SAKE_INTROSPECTION_FUNCTION_APPLY( (::sake::declval<T>()...) ) );
+    typedef has_void_result type;
+};
+
+template< class Result, class... T, class ResultPred >
+struct non_void_result_helper< Result ( T... ), ResultPred >
+{
+    static bool const value =
+       !SAKE_EXPR_IS_CONVERTIBLE(
+            SAKE_INTROSPECTION_FUNCTION_APPLY( (::sake::declval<T>()...) ),
+            ::sake::introspection_private::dummy
+        )
+     && SAKE_EXPR_IS_CONVERTIBLE(
+            SAKE_INTROSPECTION_FUNCTION_APPLY( (::sake::declval<T>()...) ),
+            Result
+        )
+     && SAKE_EXPR_APPLY(
+            ResultPred,
+            SAKE_INTROSPECTION_FUNCTION_APPLY( (::sake::declval<T>()...) )
+        );
+    typedef non_void_result_helper type;
+};
+
+} // namespace trait_name_private
+
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+
 #define BOOST_PP_ITERATION_LIMITS SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS
 #define BOOST_PP_FILENAME_1       <sake/core/introspection/private/is_callable_function.ipp>
 #include BOOST_PP_ITERATE()
+
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 } // namespace no_ext
 
@@ -93,9 +148,9 @@ SAKE_INTROSPECTION_FUNCTION_DECLARE(
 
 SAKE_EXTENSION_CLASS( SAKE_INTROSPECTION_TRAIT_NAME, 2 )
 
-template< class Signature, class ResultMetafunction >
+template< class Signature, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME
-    : ext::SAKE_INTROSPECTION_TRAIT_NAME< Signature, ResultMetafunction >
+    : ext::SAKE_INTROSPECTION_TRAIT_NAME< Signature, ResultPred >
 { };
 
 
@@ -119,24 +174,24 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 #define class_T0N BOOST_PP_ENUM_PARAMS( N, class T )
 #define T0N       BOOST_PP_ENUM_PARAMS( N, T )
 #define apply_declval_T0N \
-    SAKE_INTROSPECTION_FUNCTION_APPLY( ( \
-        BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< T, >() BOOST_PP_INTERCEPT ) \
-    ) )
+    SAKE_INTROSPECTION_FUNCTION_APPLY( \
+        ( BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< T, >() BOOST_PP_INTERCEPT ) ) \
+    )
 
-template< class Result, class_T0N, class ResultMetafunction >
-struct SAKE_INTROSPECTION_TRAIT_NAME< Result ( T0N ), ResultMetafunction >
-    : ::boost::mpl::and_<
+template< class Result, class_T0N, class ResultPred >
+struct SAKE_INTROSPECTION_TRAIT_NAME< Result ( T0N ), ResultPred >
+    : ::sake::boost_ext::mpl::and2<
           ::boost::mpl::not_< trait_name_private::has_void_result< void ( T0N ) > >,
-          trait_name_private::non_void_result_helper< Result ( T0N ), ResultMetafunction >
+          trait_name_private::non_void_result_helper< Result ( T0N ), ResultPred >
       >
 { };
 
-template< class_T0N, class ResultMetafunction >
-struct SAKE_INTROSPECTION_TRAIT_NAME< void ( T0N ), ResultMetafunction >
+template< class_T0N, class ResultPred >
+struct SAKE_INTROSPECTION_TRAIT_NAME< void ( T0N ), ResultPred >
     : ::boost::mpl::eval_if_c<
           trait_name_private::has_void_result< void ( T0N ) >::value,
-          ::boost::mpl::apply1< ResultMetafunction, void >,
-          trait_name_private::non_void_result_helper< void ( T0N ), ResultMetafunction >
+          ::boost::mpl::apply1< ResultPred, void >,
+          trait_name_private::non_void_result_helper< void ( T0N ), ResultPred >
       >
 { };
 
@@ -146,17 +201,17 @@ namespace trait_name_private
 template< class_T0N >
 struct has_void_result< void ( T0N ) >
 {
-    static const bool value = SAKE_EXPR_IS_VOID( apply_declval_T0N );
+    static bool const value = SAKE_EXPR_IS_VOID( apply_declval_T0N );
     typedef has_void_result type;
 };
 
-template< class Result, class_T0N, class ResultMetafunction >
-struct non_void_result_helper< Result ( T0N ), ResultMetafunction >
+template< class Result, class_T0N, class ResultPred >
+struct non_void_result_helper< Result ( T0N ), ResultPred >
 {
-    static const bool value =
+    static bool const value =
        !SAKE_EXPR_IS_CONVERTIBLE( apply_declval_T0N, ::sake::introspection_private::dummy )
      && SAKE_EXPR_IS_CONVERTIBLE( apply_declval_T0N, Result )
-     && SAKE_EXPR_APPLY( ResultMetafunction, apply_declval_T0N );
+     && SAKE_EXPR_APPLY( ResultPred, apply_declval_T0N );
     typedef non_void_result_helper type;
 };
 

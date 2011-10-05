@@ -10,7 +10,7 @@
  *     Result = typename boost::integral_promotion<
  *         typename boost_ext::remove_qualifiers<T>::type
  *     >::type,
- *     ResultMetafunction = boost::mpl::always< boost::true_type >
+ *     ResultPred = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 
@@ -33,8 +33,8 @@ namespace sake
     typename boost::integral_promotion< \
         typename ::sake::boost_ext::remove_qualifiers<T>::type \
     >::type
-#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultMetafunction ) \
-    ::sake::introspection_private::builtin_has_operator_complement< T, Result, ResultMetafunction >
+#define SAKE_INTROSPECTION_BUILTIN_HAS_OPERATOR( T, Result, ResultPred ) \
+    ::sake::introspection_private::builtin_has_operator_complement< T, Result, ResultPred >
 #include SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_UNARY()
 
 } // namespace sake

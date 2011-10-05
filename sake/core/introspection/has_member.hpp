@@ -19,7 +19,7 @@
  * template< class T >
  * struct has_member_xxx
  * {
- *     static const bool value = [true iff T has a member named xxx];
+ *     static bool const value = [true iff T has a member named xxx];
  *     typedef has_member_xxx type;
  * };
  ******************************************************************************/
@@ -48,7 +48,7 @@ class trait \
     template< class U > static ::sake::no_tag test(sfinae< &U::name >*); \
     template< class U > static ::sake::yes_tag test(...); \
 public: \
-    static const bool vlaue = sizeof( ::sake::yes_tag ) == sizeof( test< detector >(0) ); \
+    static bool const vlaue = sizeof( ::sake::yes_tag ) == sizeof( test< detector >(0) ); \
     typedef trait type; \
 };
 

@@ -9,12 +9,12 @@
 #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_UNARY_SIGN_HPP
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_UNARY_SIGN_HPP
 
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/or.hpp>
 #include <boost/type_traits/integral_promotion.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_arithmetic_or_enum.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -32,30 +32,33 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_unary_sign_impl
-    : boost::mpl::and_<
-          boost::mpl::or_<
+    : boost_ext::mpl::and3<
+          boost_ext::mpl::or2<
               boost_ext::is_arithmetic_or_enum<T>,
               boost::is_pointer<T>
           >,
           boost_ext::is_convertible< typename boost::integral_promotion<T>::type, Result >,
-          boost::mpl::apply1< ResultMetafunction, typename boost::integral_promotion<T>::type >
+          boost::mpl::apply1< ResultPred, typename boost::integral_promotion<T>::type >
       >
 { };
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_unary_sign
     : builtin_has_operator_unary_sign_impl<
           typename boost_ext::remove_qualifiers<T>::type,
           Result,
-          ResultMetafunction
+          ResultPred
       >
 { };
 
+namespace
+{
+
 #define test( op, T, Result ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, Result > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, Result > )), \
         op sake::declval<T>() \
     ) );
 test( +, bool, int )
@@ -76,6 +79,8 @@ test( -, unsigned int, unsigned int )
 #pragma warning ( pop )
 #endif // #ifdef _MSC_VER
 #undef test
+
+} // namespace
 
 } // namespace introspection_private
 

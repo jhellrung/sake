@@ -8,7 +8,7 @@
  * struct is_callable_mem_fun_get<
  *     T,
  *     Signature = void,
- *     ResultMetafunction = boost::mpl::always< boost::true_type >
+ *     ResultPred = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 

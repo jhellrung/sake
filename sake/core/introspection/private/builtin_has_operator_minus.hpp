@@ -11,13 +11,13 @@
 
 #include <cstddef>
 
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_object.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_integral_or_enum.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -37,52 +37,55 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_minus_dispatch
-    : builtin_has_operator_arithmetic_impl< T, U, Result, ResultMetafunction >
+    : builtin_has_operator_arithmetic_impl< T, U, Result, ResultPred >
 { };
 
-template< class T, class U, class Result, class ResultMetafunction >
-struct builtin_has_operator_minus_dispatch< T*, U, Result, ResultMetafunction >
-    : boost::mpl::and_<
+template< class T, class U, class Result, class ResultPred >
+struct builtin_has_operator_minus_dispatch< T*, U, Result, ResultPred >
+    : boost_ext::mpl::and4<
           boost::is_object<T>,
           boost_ext::is_integral_or_enum<U>,
           boost_ext::is_convertible< T*, Result >,
-          boost::mpl::apply1< ResultMetafunction, T* >
+          boost::mpl::apply1< ResultPred, T* >
       >
 { };
 
-template< class T, class U, class Result, class ResultMetafunction >
-struct builtin_has_operator_minus_dispatch< T, U*, Result, ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
+struct builtin_has_operator_minus_dispatch< T, U*, Result, ResultPred >
     : boost::false_type
 { };
 
-template< class T, class U, class Result, class ResultMetafunction >
-struct builtin_has_operator_minus_dispatch< T*, U*, Result, ResultMetafunction >
-    : boost::mpl::and_<
+template< class T, class U, class Result, class ResultPred >
+struct builtin_has_operator_minus_dispatch< T*, U*, Result, ResultPred >
+    : boost_ext::mpl::and4<
           boost::is_same<
               typename boost::remove_cv<T>::type,
               typename boost::remove_cv<U>::type
           >,
           boost::is_object<T>,
           boost_ext::is_convertible< std::ptrdiff_t, Result >,
-          boost::mpl::apply1< ResultMetafunction, std::ptrdiff_t >
+          boost::mpl::apply1< ResultPred, std::ptrdiff_t >
       >
 { };
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_minus
     : builtin_has_operator_minus_dispatch<
           typename boost_ext::remove_qualifiers<T>::type,
           typename boost_ext::remove_qualifiers<U>::type,
           Result,
-          ResultMetafunction
+          ResultPred
       >
 { };
 
+namespace
+{
+
 #define test( T, U ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, T* > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, T* > )), \
         sake::declval< T* >() - sake::declval<U>() \
     ) );
 test( int*, bool )
@@ -94,7 +97,7 @@ test( int const *, unsigned int )
 #undef test
 #define test( T, U ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, std::ptrdiff_t > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, std::ptrdiff_t > )), \
         sake::declval< T* >() - sake::declval< U* >() \
     ) );
 test( int, int )
@@ -102,6 +105,8 @@ test( int, int const )
 test( int const, int )
 test( int const, int const )
 #undef test
+
+} // namespace
 
 } // namespace introspection_private
 

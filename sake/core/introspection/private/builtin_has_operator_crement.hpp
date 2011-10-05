@@ -52,9 +52,12 @@ struct builtin_has_operator_crement< T& >
     : builtin_has_operator_crement_helper<T>
 { };
 
+namespace
+{
+
 #define test( op, T ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, T& > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, T& > )), \
         op sake::declval< T& >() \
     ) );
 test( ++, bool )
@@ -65,13 +68,13 @@ test( --, int* )
 #undef test
 #define test( T, op ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, T > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, T > )), \
         sake::declval< T& >() op \
     ) );
 // For some reason, the type of declval< bool& >()++ is bool& on MSVC9.
 #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
 BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
-    SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, bool& > )),
+    SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, bool& > )),
     sake::declval< bool& >()++
 ) );
 #else // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
@@ -82,6 +85,8 @@ test( int*, ++ )
 test( int, -- )
 test( int*, -- )
 #undef test
+
+} // namespace
 
 } // namespace introspection_private
 

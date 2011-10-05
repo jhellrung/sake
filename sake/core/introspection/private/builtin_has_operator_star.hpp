@@ -9,13 +9,12 @@
 #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_STAR_HPP
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_STAR_HPP
 
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/or.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_object.hpp>
 #include <boost/type_traits/is_function.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -36,55 +35,58 @@ namespace introspection_private
 {
 
 template<
-    class T, class Result, class ResultMetafunction,
+    class T, class Result, class ResultPred,
     bool = boost::is_function<T>::value
 >
 struct builtin_has_operator_star_dispatch_on_function;
 
-template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_star_dispatch_on_function< T, Result, ResultMetafunction, false >
-    : boost::mpl::and_<
+template< class T, class Result, class ResultPred >
+struct builtin_has_operator_star_dispatch_on_function< T, Result, ResultPred, false >
+    : boost_ext::mpl::and3<
           boost::is_object<T>,
           boost_ext::is_convertible< typename boost_ext::add_reference<T>::type, Result >,
-          boost::mpl::apply1< ResultMetafunction, typename boost_ext::add_reference<T>::type >
+          boost::mpl::apply1< ResultPred, typename boost_ext::add_reference<T>::type >
       >
 { };
 
-template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_star_dispatch_on_function< T, Result, ResultMetafunction, true >
-    : boost::mpl::and_<
+template< class T, class Result, class ResultPred >
+struct builtin_has_operator_star_dispatch_on_function< T, Result, ResultPred, true >
+    : boost_ext::mpl::and2<
 #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
           boost_ext::is_convertible< T*, Result >,
-          boost::mpl::apply1< ResultMetafunction, T* >
+          boost::mpl::apply1< ResultPred, T* >
 #else // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
           boost_ext::is_convertible< T&, Result >,
-          boost::mpl::apply1< ResultMetafunction, T& >
+          boost::mpl::apply1< ResultPred, T& >
 #endif // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
       >
 { };
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_star_dispatch_on_pointer
     : boost::false_type
 { };
 
-template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_star_dispatch_on_pointer< T*, Result, ResultMetafunction >
-    : builtin_has_operator_star_dispatch_on_function< T, Result, ResultMetafunction >
+template< class T, class Result, class ResultPred >
+struct builtin_has_operator_star_dispatch_on_pointer< T*, Result, ResultPred >
+    : builtin_has_operator_star_dispatch_on_function< T, Result, ResultPred >
 { };
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_star
     : builtin_has_operator_star_dispatch_on_pointer<
           typename boost_ext::remove_qualifiers<T>::type,
           Result,
-          ResultMetafunction
+          ResultPred
       >
 { };
 
+namespace
+{
+
 #define test( T, Result ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, Result > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, Result > )), \
         *sake::declval<T>() \
     ) );
 test( int*, int& )
@@ -95,6 +97,8 @@ test( void (*)( ), void (*)( ) )
 test( void (*)( ), void (&)( ) )
 #endif // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
 #undef test
+
+} // namespace
 
 } // namespace introspection_private
 

@@ -20,7 +20,7 @@
  * template< class T >
  * struct has_template_xxx
  * {
- *     static const bool value = [true iff T has a nested class template named
+ *     static bool const value = [true iff T has a nested class template named
  *                                xxx taking only type template parameters];
  *     typedef has_type_xxx type;
  * };
@@ -34,7 +34,7 @@
  * template< class T >
  * struct has_template_xxx
  * {
- *     static const bool value = [true iff T has a nested class template named
+ *     static bool const value = [true iff T has a nested class template named
  *                                xxx taking 2 type template parameters];
  *     typedef has_type_xxx type;
  * };
@@ -52,12 +52,14 @@
  * template< class T >
  * struct has_template_xxx
  * {
- *     static const bool value = [true iff T has a nested class template named
+ *     static bool const value = [true iff T has a nested class template named
  *                                xxx taking 2 template parameters, the first
  *                                being a type parameter and the second being an
  *                                integral parameter];
  *     typedef has_type_xxx type;
  * };
+ *
+ * TODO: Can this be simplified via variadic templates?
  ******************************************************************************/
 
 #ifndef BOOST_PP_IS_ITERATING
@@ -95,7 +97,7 @@ class trait \
     ) \
     template< class U > static ::sake::no_tag test(...); \
 public: \
-    static const bool value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
+    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
     typedef trait type; \
 };
 
@@ -110,7 +112,7 @@ class trait \
     template< class U > static ::sake::yes_tag test(sfinae< U::template name >*); \
     template< class U > static ::sake::no_tag test(...); \
 public: \
-    static const bool value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
+    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
     typedef trait type; \
 };
 
@@ -145,7 +147,7 @@ namespace has_template_private
 
 #define N BOOST_PP_ITERATION()
 
-template< template< BOOST_PP_ENUM_PARAMS( BOOST_PP_INC( N ), class T ) > class T >
+template< template< BOOST_PP_ENUM_PARAMS( BOOST_PP_INC( N ), class T ) > class U >
 struct BOOST_PP_CAT( sfinae, N ) ;
 
 #endif // #ifndef BOOST_PP_IS_ITERATING

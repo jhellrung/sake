@@ -9,10 +9,10 @@
 #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_COMPARE_HPP
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_COMPARE_HPP
 
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/or.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_arithmetic_or_enum.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_cv_signature.hpp>
@@ -31,20 +31,20 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_compare_dispatch
-    : boost::mpl::and_<
+    : boost_ext::mpl::and4<
           boost_ext::is_arithmetic_or_enum<T>,
           boost_ext::is_arithmetic_or_enum<U>,
           boost_ext::is_convertible< bool, Result >,
-          boost::mpl::apply1< ResultMetafunction, bool >
+          boost::mpl::apply1< ResultPred, bool >
       >
 { };
 
-template< class T, class U, class Result, class ResultMetafunction >
-struct builtin_has_operator_compare_dispatch< T*, U*, Result, ResultMetafunction >
-    : boost::mpl::and_<
-          boost::mpl::or_<
+template< class T, class U, class Result, class ResultPred >
+struct builtin_has_operator_compare_dispatch< T*, U*, Result, ResultPred >
+    : boost_ext::mpl::and3<
+          boost_ext::mpl::or2<
               boost_ext::is_convertible<
                   typename boost_ext::remove_cv_signature< T* >::type,
                   typename boost_ext::remove_cv_signature< U* >::type
@@ -55,23 +55,26 @@ struct builtin_has_operator_compare_dispatch< T*, U*, Result, ResultMetafunction
               >
           >,
           boost_ext::is_convertible< bool, Result >,
-          boost::mpl::apply1< ResultMetafunction, bool >
+          boost::mpl::apply1< ResultPred, bool >
       >
 { };
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_compare
     : builtin_has_operator_compare_dispatch<
           typename boost_ext::remove_qualifiers<T>::type,
           typename boost_ext::remove_qualifiers<U>::type,
           Result,
-          ResultMetafunction
+          ResultPred
       >
 { };
 
+namespace
+{
+
 #define test( T, op, U ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, bool > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, bool > )), \
         sake::declval<T>() op sake::declval<U>() \
     ) );
 test( int, ==, int )
@@ -93,6 +96,8 @@ test( int, >=, int )
 test( void*, >=, int const * )
 test( int**, >=, int const * const * )
 #undef test
+
+} // namespace
 
 } // namespace introspection_private
 

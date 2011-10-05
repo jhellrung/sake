@@ -9,9 +9,9 @@
 #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_BINARY_LOGICAL_HPP
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_BINARY_LOGICAL_HPP
 
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <boost/mpl/placeholders.hpp>
@@ -27,19 +27,22 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class U, class Result, class ResultMetafunction >
+template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_binary_logical
-    : boost::mpl::and_<
+    : boost_ext::mpl::and4<
           boost_ext::is_convertible< T, bool >,
           boost_ext::is_convertible< U, bool >,
           boost_ext::is_convertible< bool, Result >,
-          boost::mpl::apply1< ResultMetafunction, bool >
+          boost::mpl::apply1< ResultPred, bool >
       >
 { };
 
+namespace
+{
+
 #define test( T, op, U ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, bool > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, bool > )), \
         sake::declval<T>() op sake::declval<U>() \
     ) );
 test( bool, &&, bool )
@@ -53,6 +56,8 @@ test( void*, ||, void* )
 test( int*, ||, int* )
 test( void (*)( ), ||, void (*)( ) )
 #undef test
+
+} // namespace
 
 } // namespace introspection_private
 

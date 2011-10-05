@@ -9,10 +9,10 @@
 #ifndef SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_COMPLEMENT_HPP
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_COMPLEMENT_HPP
 
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/integral_promotion.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_integral_or_enum.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -30,27 +30,30 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_complement_impl
-    : boost::mpl::and_<
+    : boost_ext::mpl::and3<
           boost_ext::is_integral_or_enum<T>,
           boost_ext::is_convertible< typename boost::integral_promotion<T>::type, Result >,
-          boost::mpl::apply1< ResultMetafunction, typename boost::integral_promotion<T>::type >
+          boost::mpl::apply1< ResultPred, typename boost::integral_promotion<T>::type >
       >
 { };
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_complement
     : builtin_has_operator_complement_impl<
           typename boost_ext::remove_qualifiers<T>::type,
           Result,
-          ResultMetafunction
+          ResultPred
       >
 { };
 
+namespace
+{
+
 #define test( T, Result ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE(( boost::is_same< boost::mpl::_1, Result > )), \
+        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, Result > )), \
         ~sake::declval<T>() \
     ) );
 #ifdef _MSC_VER
@@ -65,6 +68,8 @@ test( short, int )
 test( int, int )
 test( long, long )
 #undef test
+
+} // namespace
 
 } // namespace introspection_private
 

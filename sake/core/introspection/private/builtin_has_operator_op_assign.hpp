@@ -10,10 +10,10 @@
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_OP_ASSIGN_HPP
 
 #include <boost/mpl/always.hpp>
-#include <boost/mpl/and.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 namespace sake
@@ -25,22 +25,22 @@ namespace introspection_private
 template< template< class, class, class, class > class BuiltinHasOperatorOp >
 struct builtin_has_operator_op_assign
 {
-    template< class T, class U, class Result, class ResultMetafunction >
+    template< class T, class U, class Result, class ResultPred >
     struct apply
         : boost::false_type
     { };
 
-    template< class T, class U, class Result, class ResultMetafunction >
-    struct apply< T const &, U, Result, ResultMetafunction >
+    template< class T, class U, class Result, class ResultPred >
+    struct apply< T const &, U, Result, ResultPred >
         : boost::false_type
     { };
 
-    template< class T, class U, class Result, class ResultMetafunction >
-    struct apply< T&, U, Result, ResultMetafunction >
-        : boost::mpl::and_<
+    template< class T, class U, class Result, class ResultPred >
+    struct apply< T&, U, Result, ResultPred >
+        : boost_ext::mpl::and3<
               BuiltinHasOperatorOp< T, U, T&, boost::mpl::always< boost::true_type > >,
               boost_ext::is_convertible< T&, Result >,
-              boost::mpl::apply1< ResultMetafunction, T& >
+              boost::mpl::apply1< ResultPred, T& >
           >
     { };
 };

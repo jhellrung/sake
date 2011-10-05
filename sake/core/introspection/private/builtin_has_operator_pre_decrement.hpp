@@ -19,18 +19,18 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class Result, class ResultMetafunction >
+template< class T, class Result, class ResultPred >
 struct builtin_has_operator_pre_decrement
     : boost::false_type
 { };
 
-template< class T, class Result, class ResultMetafunction >
-struct builtin_has_operator_pre_decrement< T&, Result, ResultMetafunction >
-    : builtin_has_operator_pre_crement< T&, Result, ResultMetafunction >
+template< class T, class Result, class ResultPred >
+struct builtin_has_operator_pre_decrement< T&, Result, ResultPred >
+    : builtin_has_operator_pre_crement< T&, Result, ResultPred >
 { };
 
-template< class Result, class ResultMetafunction >
-struct builtin_has_operator_pre_decrement< bool&, Result, ResultMetafunction >
+template< class Result, class ResultPred >
+struct builtin_has_operator_pre_decrement< bool&, Result, ResultPred >
     : boost::false_type
 { };
 
