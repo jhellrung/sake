@@ -14,15 +14,19 @@
 namespace sake_unit_test
 {
 
-void address_of_test(sake::test::environment& env);
-void assert_test(sake::test::environment& env);
-void swap_test(sake::test::environment& env);
+void   address_of_test(sake::test::environment& env);
+void       assert_test(sake::test::environment& env);
+void declare_once_test(sake::test::environment& env);
+void     overload_test(sake::test::environment& env);
+void         swap_test(sake::test::environment& env);
 
 void utility_test(sake::test::environment& env)
 {
-    env("address_of", &address_of_test);
-    env("assert", &assert_test);
-    env("swap", &swap_test);
+    env(  "address_of",   &address_of_test);
+    env(      "assert",       &assert_test);
+    env("declare_once", &declare_once_test);
+    env(    "overload",     &overload_test);
+    env(        "swap",         &swap_test);
 }
 
 } // namespace sake_unit_test

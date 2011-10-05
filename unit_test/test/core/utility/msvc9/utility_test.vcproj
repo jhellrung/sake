@@ -155,6 +155,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\overload_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\swap_test.cpp"
 			>
 		</File>
