@@ -15,7 +15,7 @@
 #ifndef SAKE_CORE_REF_UNWRAP_REFERENCE_HPP
 #define SAKE_CORE_REF_UNWRAP_REFERENCE_HPP
 
-#include <sake/core/ref/ref_fwd.hpp>
+#include <sake/core/ref/fwd.hpp>
 #include <sake/core/utility/extension.hpp>
 
 namespace sake
@@ -23,37 +23,49 @@ namespace sake
 
 namespace no_ext
 {
-template< class T > struct unwrap_reference { typedef T type; };
+
+template< class T >
+struct unwrap_reference
+{ typedef T type; };
+
 } // namespace no_ext
 
 SAKE_EXTENSION_UNARY_CLASS( unwrap_reference )
 
-namespace detail_unwrap_reference
+template< class T >
+struct unwrap_reference
+    : ext::unwrap_reference<T>
+{ };
+
+namespace unwrap_reference_private
 {
 
-template< class QualifiedT, class T, class Unwrapped = typename unwrap_reference<T>::type >
-struct unwrap_reference_helper { typedef Unwrapped type; };
-template< class QualifiedT, class T >
-struct unwrap_reference_helper< QualifiedT, T, T > { typedef QualifiedT type; };
+template<
+    class Q, class T,
+    class U = typename sake::unwrap_reference<T>::type
+>
+struct helper
+{ typedef U type; };
 
-} // namespace detail_unwrap_reference
+template< class Q, class T >
+struct helper< Q, T, T >
+{ typedef Q type; };
+
+} // namespace unwrap_reference_private
 
 template< class T >
-struct unwrap_reference : ext::unwrap_reference<T> { };
-
-template< class T >
-struct unwrap_reference< const T >
-    : detail_unwrap_reference::unwrap_reference_helper< const T, T >
+struct unwrap_reference< T const >
+    : unwrap_reference_private::helper< T const, T >
 { };
 
 template< class T >
-struct unwrap_reference< volatile T >
-    : detail_unwrap_reference::unwrap_reference_helper< volatile T, T >
+struct unwrap_reference< T volatile >
+    : unwrap_reference_private::helper< T volatile, T >
 { };
 
 template< class T >
-struct unwrap_reference< const volatile T >
-    : detail_unwrap_reference::unwrap_reference_helper< const volatile T, T >
+struct unwrap_reference< T const volatile >
+    : unwrap_reference_private::helper< T const volatile, T >
 { };
 
 } // namespace sake

@@ -17,7 +17,7 @@
 
 #include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/core/ref/ref_fwd.hpp>
+#include <sake/core/ref/fwd.hpp>
 #include <sake/core/ref/unwrap_reference.hpp>
 
 namespace sake

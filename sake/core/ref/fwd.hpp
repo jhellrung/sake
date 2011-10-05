@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/ref/ref_fwd.hpp
+ * sake/core/ref/fwd.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_REF_REF_FWD_HPP
-#define SAKE_CORE_REF_REF_FWD_HPP
+#ifndef SAKE_CORE_REF_FWD_HPP
+#define SAKE_CORE_REF_FWD_HPP
 
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -103,4 +103,4 @@ struct is_convertible_wnrbt<
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_REF_REF_FWD_HPP
+#endif // #ifndef SAKE_CORE_REF_FWD_HPP
