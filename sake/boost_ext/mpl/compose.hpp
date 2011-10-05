@@ -30,6 +30,7 @@
 #ifndef SAKE_BOOST_EXT_MPL_COMPOSE_HPP
 #define SAKE_BOOST_EXT_MPL_COMPOSE_HPP
 
+#include <boost/config.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
@@ -48,6 +49,23 @@ namespace boost_ext
 
 namespace mpl
 {
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+template< class F, class G >
+struct compose
+{
+    template< class... T >
+    struct apply
+        : boost::mpl::apply1<
+              F,
+              // TODO: Does this actually work?
+              typename boost::mpl::apply< G, T... >::type
+          >
+    { };
+};
+
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 template< class F, class G >
 struct compose;
@@ -88,6 +106,8 @@ struct compose
           >
     { };
 };
+
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 } // namespace mpl
 
