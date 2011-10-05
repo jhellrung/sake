@@ -9,6 +9,7 @@
 #include <boost/mpl/assert.hpp>
 
 #include <sake/core/introspection/is_callable.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 #include <sake/test/environment.hpp>
 
@@ -52,7 +53,9 @@ struct yes_callable2
     int operator()(int, int);
 };
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2 >));
+#if !SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 4, 3 ) )
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2, void* ( void* ) >));
+#endif // #if !SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 4, 3 ) )
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2, void ( void* ) >));
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2, void ( int* ) >));
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2 const, void* ( void* ) >));
