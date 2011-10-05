@@ -5,8 +5,8 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * boost_ext::mpl::at< Sequence, Key >
- * boost_ext::mpl::at< Sequence, Key, Default >
+ * struct boost_ext::mpl::at< Sequence, Key >
+ * struct boost_ext::mpl::at< Sequence, Key, Default >
  *
  * For some reason, the boost::mpl::at<...> only takes 2 parameters, even though
  * it's documented to take 3 (useful for accessing associative sequences).  This

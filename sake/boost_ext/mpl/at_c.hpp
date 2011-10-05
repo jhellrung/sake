@@ -5,8 +5,8 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * boost_ext::mpl::at_c< Sequence, N >
- * boost_ext::mpl::at_c< Sequence, N, Default >
+ * struct boost_ext::mpl::at_c< Sequence, N >
+ * struct boost_ext::mpl::at_c< Sequence, N, Default >
  *
  * boost_ext::mpl::at_c is identical to boost::mpl::at_c, except one can
  * optionally specify a 3rd argument to return in the event that N is not a
