@@ -1,45 +1,45 @@
 /*******************************************************************************
- * sake/core/move/is_movable.hpp
+ * sake/core/move/is_movable_copyable.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * [only for C++03]
- * struct is_movable<T>
+ * struct is_movable_copyable<T>
  *
- * is_movable is a Boost.MPL metafunction that determines if the given type has
- * move emulation enabled.
+ * This is a metafunction evaluating to true only if T is both movable and
+ * copyable.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_MOVE_IS_MOVABLE_HPP
-#define SAKE_CORE_MOVE_IS_MOVABLE_HPP
+#ifndef SAKE_CORE_MOVE_IS_MOVABLE_COPYABLE_HPP
+#define SAKE_CORE_MOVE_IS_MOVABLE_COPYABLE_HPP
 
 #include <boost/config.hpp>
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
 
 #include <boost/type_traits/integral_constant.hpp>
-#include <boost/type_traits/is_class.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
+#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv.hpp>
 
 namespace sake
 {
 
 template< class T >
-struct is_movable
+struct is_movable_copyable
     : boost_ext::mpl::and2<
-          boost::is_class<T>,
-          boost_ext::is_convertible< T, boost::rv<T>& >
+          sake::is_movable<T>,
+          boost_ext::is_convertible< T const &, boost::rv<T> const & >
       >
 { };
 
 template< class T >
-struct is_movable< T const >
+struct is_movable_copyable< T& >
     : boost::false_type
 { };
 
@@ -47,4 +47,4 @@ struct is_movable< T const >
 
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
-#endif // #ifndef SAKE_CORE_MOVE_IS_MOVABLE_HPP
+#endif // #ifndef SAKE_CORE_MOVE_IS_MOVABLE_COPYABLE_HPP
