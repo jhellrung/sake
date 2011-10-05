@@ -105,7 +105,7 @@ struct environment::impl::scope_data
 };
 
 /*******************************************************************************
- * environment and environment::impl member function implementations
+ * environment and environment::impl member implementations
  ******************************************************************************/
 
 environment::
