@@ -283,7 +283,7 @@ struct dispatch< From, To, false, true >
         sake_as_reference_to_private::star_non_void_result_helper< From&, To >
     >::type result_type;
     static result_type apply(From& from)
-    { return sake::as_reference_to_< To >(*from); }
+    { return sake::as_reference_to< To >(*from); }
 };
 
 } // namespace private_
