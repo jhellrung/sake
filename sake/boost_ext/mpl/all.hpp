@@ -16,6 +16,7 @@
 
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/find_if.hpp>
+#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/protect.hpp>
 #include <boost/mpl/quote.hpp>
@@ -39,7 +40,7 @@ struct all
               Sequence,
               boost_ext::mpl::compose<
                   boost::mpl::quote1< boost::mpl::not_ >,
-                  boost::mpl::protect<F>
+                  boost::mpl::protect< typename boost::mpl::lambda<F>::type >
               >
           >::type,
           typename boost::mpl::end< Sequence >::type
