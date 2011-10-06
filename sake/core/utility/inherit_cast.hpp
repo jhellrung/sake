@@ -104,7 +104,7 @@ struct inherit_cast
 template<>
 struct inherit_cast< void >
 {
-    SAKE_RESULT_FROM_METAFUNCTION( 2, result_of::inherit_cast )
+    SAKE_RESULT_FROM_METAFUNCTION( result_of::inherit_cast, 2 )
 
     template< class U, class T >
     typename result_of::inherit_cast< U&, T >::type

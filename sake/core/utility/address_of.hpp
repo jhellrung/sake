@@ -56,7 +56,7 @@ namespace functional
 
 struct address_of
 {
-    SAKE_RESULT_FROM_METAFUNCTION( 1, result_of::address_of )
+    SAKE_RESULT_FROM_METAFUNCTION( result_of::address_of, 1 )
 
     template< class T >
     typename result_of::address_of< T& >::type

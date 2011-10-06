@@ -47,6 +47,7 @@
 #include <boost/type_traits/remove_cv.hpp>
 
 #include <sake/boost_ext/type_traits/add_const_remove_volatile.hpp>
+#include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
 
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/utility/extension.hpp>
@@ -133,7 +134,7 @@ struct call_traits
 template< class T >
 struct call_traits< T& >
 {
-    BOOST_STATIC_ASSERT((boost_ext::is_rvalue_reference< T& >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference< T& >::value));
     typedef T& value_type;
     typedef T& param_type;
     typedef T& fwd_param_type;

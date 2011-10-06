@@ -78,13 +78,17 @@
 #include <sake/core/utility/call_traits.hpp>
 #include <sake/core/utility/identity_type.hpp>
 
-#define SAKE_DIRECT_INIT_CTOR_R( T, member_seq ) \
+/*******************************************************************************
+ * #define SAKE_DIRECT_INIT_CTOR[_R]( [r,] T, member_seq )
+ ******************************************************************************/
+
+#define SAKE_DIRECT_INIT_CTOR( T, member_seq ) \
     SAKE_DIRECT_INIT_CTOR_R( BOOST_PP_DEDUCE_R(), T, member_seq )
 
 #define SAKE_DIRECT_INIT_CTOR_R( r, T, member_seq ) \
     BOOST_PP_EXPR_IIF( BOOST_PP_EQUAL( BOOST_PP_SEQ_SIZE( member_seq ), 1 ), explicit ) \
     T ( BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_DIRECT_INIT_CTOR_comma_member_param_type, ~, member_seq ) ) \
-        : BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_DIRECT_INIT_CTOR_comma_init_member, ~, MemberSeq ) \
+        : BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_DIRECT_INIT_CTOR_comma_init_member, ~, member_seq ) \
     { }
 
 #define SAKE_DIRECT_INIT_CTOR_comma_member_param_type( r, data, i, elem ) \
@@ -110,6 +114,10 @@
 #define SAKE_DIRECT_INIT_CTOR_comma_init_member_impl( i, name ) \
     BOOST_PP_COMMA_IF( i ) name ( BOOST_PP_CAT( _ ## i ## _, name ) )
 
+/*******************************************************************************
+ * #define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS[_R]( [r,] T, member_seq )
+ ******************************************************************************/
+
 #define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS( T, member_seq ) \
     SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_R( BOOST_PP_DEDUCE_R(), T, member_seq )
 
@@ -129,10 +137,7 @@
 
 #define SAKE_DIRECT_INIT_CTOR_declare_member( r, data, i, elem ) \
     SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_CLASS( \
-        SAKE_IDENTITY_TYPE( \
-            BOOST_PP_TUPLE_ELEM( 2, 0, elem ) \
-        ) \
-    ) \
+        SAKE_IDENTITY_TYPE( BOOST_PP_TUPLE_ELEM( 2, 0, elem ) ) ) \
     BOOST_PP_TUPLE_ELEM( 2, 1, elem );
 
 #endif // #ifndef SAKE_CORE_UTILITY_DIRECT_INIT_CTOR_HPP

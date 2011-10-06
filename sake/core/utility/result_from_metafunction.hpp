@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_RESULT_FROM_METAFUNCTION[_DZ]( [d,] [z,] n, metafunction)
+ * #define SAKE_RESULT_FROM_METAFUNCTION[_DZ]( [d,] [z,] metafunction, n )
  *
  * This expands into a result struct definition (compatible with Boost.ResultOf)
  * in terms of a specified metafunction.
@@ -23,7 +23,7 @@
  * {
  * struct f
  * {
- *     SAKE_RESULT_FROM_METAFUNCTION( 1, result_of::f )
+ *     SAKE_RESULT_FROM_METAFUNCTION( result_of::f, 1 )
  *     template< class T >
  *     typename result_of::f<T>::type // or "result< f ( T ) >::type"
  *     operator()(T x) const
@@ -44,19 +44,19 @@
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
-#define SAKE_RESULT_FROM_METAFUNCTION( n, metafunction ) \
-    SAKE_RESULT_FROM_METAFUNCTION_DZ( BOOST_PP_DEDUCE_D(), BOOST_PP_DEDUCE_Z(), n, metafunction )
-#define SAKE_RESULT_FROM_METAFUNCTION_D( d, n, metafunction ) \
-    SAKE_RESULT_FROM_METAFUNCTION_DZ( d, BOOST_PP_DEDUCE_Z(), n, metafunction )
-#define SAKE_RESULT_FROM_METAFUNCTION_Z( z, n, metafunction ) \
-    SAKE_RESULT_FROM_METAFUNCTION_DZ( BOOST_PP_DEDUCE_D(), z, n, metafunction )
+#define SAKE_RESULT_FROM_METAFUNCTION( metafunction, n ) \
+    SAKE_RESULT_FROM_METAFUNCTION_DZ( BOOST_PP_DEDUCE_D(), BOOST_PP_DEDUCE_Z(), metafunction, n )
+#define SAKE_RESULT_FROM_METAFUNCTION_D( d, metafunction, n ) \
+    SAKE_RESULT_FROM_METAFUNCTION_DZ( d, BOOST_PP_DEDUCE_Z(), metafunction, n )
+#define SAKE_RESULT_FROM_METAFUNCTION_Z( z, metafunction, n ) \
+    SAKE_RESULT_FROM_METAFUNCTION_DZ( BOOST_PP_DEDUCE_D(), z, metafunction, n )
 
-#define SAKE_RESULT_FROM_METAFUNCTION_DZ( d, z, n, metafunction ) \
+#define SAKE_RESULT_FROM_METAFUNCTION_DZ( d, z, metafunction, n ) \
     template< class > struct result; \
-    BOOST_PP_CAT( SAKE_RESULT_FROM_METAFUNCTION_dispatch, BOOST_PP_IS_BINARY( n ) ) ( d, z, n, metafunction )
-#define SAKE_RESULT_FROM_METAFUNCTION_dispatch0( d, z, n, metafunction ) \
+    BOOST_PP_CAT( SAKE_RESULT_FROM_METAFUNCTION_dispatch, BOOST_PP_IS_BINARY( n ) ) ( d, z, metafunction, n )
+#define SAKE_RESULT_FROM_METAFUNCTION_dispatch0( d, z, metafunction, n ) \
     SAKE_RESULT_FROM_METAFUNCTION_result( z, n, metafunction )
-#define SAKE_RESULT_FROM_METAFUNCTION_dispatch1( d, z, n, metafunction ) \
+#define SAKE_RESULT_FROM_METAFUNCTION_dispatch1( d, z, metafunction, n ) \
     BOOST_PP_CAT( BOOST_PP_REPEAT_FROM_TO_D_, z ) ( \
         d, \
         BOOST_PP_TUPLE_ELEM( 2, 0, n ), \

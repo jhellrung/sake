@@ -99,7 +99,7 @@ namespace functional
 
 struct move
 {
-    SAKE_RESULT_FROM_METAFUNCTION( 1, result_of::move )
+    SAKE_RESULT_FROM_METAFUNCTION( result_of::move, 1 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 

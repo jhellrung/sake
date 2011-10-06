@@ -219,7 +219,7 @@ struct as_reference_to
 template<>
 struct as_reference_to< void >
 {
-    SAKE_RESULT_FROM_METAFUNCTION( 2, result_of::as_reference_to )
+    SAKE_RESULT_FROM_METAFUNCTION( result_of::as_reference_to, 2 )
 
     template< class From, class To >
     typename result_of::as_reference_to< From, To >::type
