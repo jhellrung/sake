@@ -51,18 +51,11 @@ struct is_convertible_wnrbt
     : boost::false_type
 { };
 
-} // namespace no_ext
-
-SAKE_EXTENSION_CLASS( is_convertible_wnrbt, 2 )
-
-namespace no_ext
-{
-
 template< class From, class To >
 struct is_convertible_wnrbt< From&, To& >
     : boost_ext::mpl::or2<
           boost_ext::is_convertible< From*, To* >,
-          boost_ext::ext::is_convertible_wnrbt<
+          boost_ext::is_convertible_wnrbt<
               typename boost::remove_cv< From >::type,
               To&
           >
@@ -70,6 +63,8 @@ struct is_convertible_wnrbt< From&, To& >
 { };
 
 } // namespace no_ext
+
+SAKE_EXTENSION_CLASS( is_convertible_wnrbt, 2 )
 
 template< class From, class To >
 struct is_convertible_wnrbt< From, To& >
