@@ -147,11 +147,19 @@
 			>
 		</File>
 		<File
+			RelativePath="..\as_reference_to_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\assert_test.cpp"
 			>
 		</File>
 		<File
 			RelativePath="..\declare_once_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\direct_init_ctor_test.cpp"
 			>
 		</File>
 		<File

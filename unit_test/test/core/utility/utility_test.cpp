@@ -6,7 +6,6 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#include <sake/core/utility/as_reference_to.hpp>
 #include <sake/core/utility/identity_type.hpp>
 
 #include <sake/test/environment.hpp>
@@ -14,19 +13,23 @@
 namespace sake_unit_test
 {
 
-void   address_of_test(sake::test::environment& env);
-void       assert_test(sake::test::environment& env);
+void address_of_test(sake::test::environment& env);
+void as_reference_to_test(sake::test::environment& env);
+void assert_test(sake::test::environment& env);
+void direct_init_ctor_test(sake::test::environment& env);
 void declare_once_test(sake::test::environment& env);
-void     overload_test(sake::test::environment& env);
-void         swap_test(sake::test::environment& env);
+void overload_test(sake::test::environment& env);
+void swap_test(sake::test::environment& env);
 
 void utility_test(sake::test::environment& env)
 {
-    env(  "address_of",   &address_of_test);
-    env(      "assert",       &assert_test);
+    env("address_of", &address_of_test);
+    env("as_reference_to", &as_reference_to_test);
+    env("assert", &assert_test);
+    env("direct_init_ctor", &direct_init_ctor_test);
     env("declare_once", &declare_once_test);
-    env(    "overload",     &overload_test);
-    env(        "swap",         &swap_test);
+    env("overload", &overload_test);
+    env("swap", &swap_test);
 }
 
 } // namespace sake_unit_test
