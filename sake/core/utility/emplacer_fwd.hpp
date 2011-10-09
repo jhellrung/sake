@@ -132,12 +132,12 @@ struct disable_if_is_emplacer
 
 template< class T, class Result, class ValuePred = sake::default_tag >
 struct lazy_enable_if_is_emplacer
-    : boost::lazy_enable_if_c< is_emplacer< T, ValuePred >, Result >
+    : boost::lazy_enable_if_c< is_emplacer< T, ValuePred >::value, Result >
 { };
 
 template< class T, class Result, class ValuePred = sake::default_tag >
 struct lazy_disable_if_is_emplacer
-    : boost::lazy_disable_if< is_emplacer< T, ValuePred >, Result >
+    : boost::lazy_disable_if_c< is_emplacer< T, ValuePred >::value, Result >
 { };
 
 /*******************************************************************************

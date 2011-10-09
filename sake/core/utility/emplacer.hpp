@@ -78,10 +78,7 @@ namespace sake
 namespace emplacer_private
 {
 
-template<
-    class U,
-    bool = sake::is_by_value_optimal<U>::value
->
+template< class U, bool = sake::is_by_value_optimal<U>::value >
 struct traits;
 
 template< class Signature >
@@ -342,6 +339,7 @@ struct traits< U, false >
 template< class U >
 struct traits< U, true >
 {
+    BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference<U>::value));
     typedef typename boost::remove_cv<U>::type type;
     static type cast(type x)
     { return x; }
@@ -357,8 +355,6 @@ template< class U0, class... U >
 struct base< void ( U0, U... ) >
     : base< void ( U... ) >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference< U0 >::value));
-
     base(traits< U0 >::type y0, traits<U>::type... y)
         : m_y0(traits< U0 >::cast(y0)),
           base< void ( U... ) >(traits<U>::cast(y)...)
@@ -465,8 +461,6 @@ template< class_U0N >
 struct base< void ( U0N ) >
     : base< void ( U1N ) >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference< U0 >::value));
-
     base(traits_U0N_type_y0N)
         : m_y0(traits< U0 >::cast(y0)),
           base< void ( U1N ) >(traits_U1N_cast_y1N)

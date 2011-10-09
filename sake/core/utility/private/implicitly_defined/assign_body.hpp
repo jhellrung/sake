@@ -44,10 +44,10 @@
     ) ( r, T, base_seq, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_assign_bases_0_0( r, T, base_seq, member_seq ) \
     BOOST_PP_SEQ_FOR_EACH_R( r, SAKE_IMPLICITLY_DEFINED_assign_base, ~, base_seq ) \
-    SAKE_IMPLICITLY_DEFINED_assign_bases_1( r, T, assign, base_seq, member_seq )
+    SAKE_IMPLICITLY_DEFINED_assign_bases_1( r, T, base_seq, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_assign_base( r, data, elem ) \
     elem::operator=(::sake::move(::sake::inherit_cast< elem >(other)));
-#define SAKE_IMPLICITLY_DEFINED_assign_bases_0_1( r, T, assign, base_seq, member_seq ) \
+#define SAKE_IMPLICITLY_DEFINED_assign_bases_0_1( r, T, base_seq, member_seq ) \
     return ::sake::inherit_cast<T>( BOOST_PP_APPLY( base_seq ) ::operator=( \
         ::sake::move(::sake::inherit_cast< BOOST_PP_APPLY( base_seq ) >(other)) \
     ));

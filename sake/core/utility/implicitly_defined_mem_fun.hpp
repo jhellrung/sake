@@ -28,7 +28,7 @@
     SAKE_IMPLICITLY_DEFINED_MEM_FUN_R( BOOST_PP_DEDUCE_R(), T, tag_seq, base_seq, member_seq )
 
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_R( r, T, tag_seq, base_seq, member_seq ) \
-    SAKE_BOOST_EXT_PP_SEQ_FOR_EACH_ ## r ( \
+    BOOST_PP_CAT( SAKE_BOOST_EXT_PP_SEQ_FOR_EACH_, r ) ( \
         SAKE_IMPLICITLY_DEFINED_MEM_FUN_dispatch, \
         ( T, base_seq, member_seq ), \
         tag_seq \
@@ -43,7 +43,7 @@
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_copy_assign( r, T, base_seq, member_seq ) \
     SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_R( r, T, base_seq, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_copy_assign_if_any_umc( r, T, base_seq, member_seq ) \
-    SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IF_ANY_UMC( r, T, base_seq, member_seq )
+    SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IF_ANY_UMC_R( r, T, base_seq, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_copy_assign_impl( r, T, base_seq, member_seq ) \
     SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IMPL_R( r, T, base_seq, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_default_ctor( r, T, base_seq, member_seq ) \

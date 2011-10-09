@@ -58,20 +58,20 @@
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/pair.hpp>
 
-#define SAKE_TEMPLATE_KEYWORD( keyword ) \
-namespace tag { struct keyword; } \
-typedef ::boost::mpl::pair< tag::keyword, void >
+#define SAKE_TEMPLATE_KEYWORD( name ) \
+namespace tag { struct name; } \
+typedef ::boost::mpl::pair< tag::name, void > name;
 
-#define SAKE_TEMPLATE_KEYWORD_VALUE( keyword ) \
-namespace tag { struct keyword; } \
-template< class Value > struct keyword \
-    : ::boost::mpl::pair< tag::keyword, Value > \
+#define SAKE_TEMPLATE_KEYWORD_VALUE( name ) \
+namespace tag { struct name; } \
+template< class Value > struct name \
+    : ::boost::mpl::pair< tag::name, Value > \
 { };
 
-#define SAKE_TEMPLATE_KEYWORD_VALUE_DEFAULT( keyword, default ) \
-namespace tag { struct keyword; } \
-template< class Value = default > struct keyword \
-    : ::boost::mpl::pair< tag::keyword, Value >\
+#define SAKE_TEMPLATE_KEYWORD_VALUE_DEFAULT( name, default ) \
+namespace tag { struct name; } \
+template< class Value = default > struct name \
+    : ::boost::mpl::pair< tag::name, Value >\
 { };
 
 namespace sake

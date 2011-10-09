@@ -17,6 +17,7 @@
 #define SAKE_CORE_UTILITY_EMPLACER_ACCESS_HPP
 
 #include <boost/config.hpp>
+#include <boost/mpl/integral_c.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
@@ -29,7 +30,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/range_c.hpp>
-#include <sake/boost_ext/mpl/vector_c.hpp>
+#include <sake/boost_ext/mpl/vector.hpp>
 #include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
@@ -114,14 +115,14 @@ class emplacer_access
     construct(void* const p, sake::emplacer< V ( U... ) > e)
     {
         typedef typename boost_ext::mpl::range_c<
-            unsigned int, 0, sizeof( U... )
+            unsigned int, 0, sizeof...( U )
         >::type range_c_type;
         construct(p, e, range_c_type());
     }
     template< class T, class V, class... U, class... N >
     static void
     construct(void* const p, sake::emplacer< V ( U... ) > e,
-        boost_ext::mpl::vector_c< unsigned int, N... >)
+        boost_ext::mpl::vector< boost::mpl::integral_c< unsigned int, N >... >)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
         BOOST_STATIC_ASSERT((
@@ -133,20 +134,20 @@ class emplacer_access
 
     template< class T, class V, class... U >
     static typename boost::enable_if_c<
-        (sizeof( U... ) >= 2),
+        (sizeof...( U ) >= 2),
         T
     >::type
     construct(sake::emplacer< V ( U... ) > e)
     {
         typedef typename boost_ext::mpl::range_c<
-            unsigned int, 0, sizeof( U... )
+            unsigned int, 0, sizeof...( U )
         >::type range_c_type;
         return construct(e, range_c_type());
     }
     template< class T, class V, class... U, class... N >
     static T
     construct(sake::emplacer< V ( U... ) > e,
-        boost_ext::mpl::vector_c< unsigned int, N... >)
+        boost_ext::mpl::vector< boost::mpl::integral_c< unsigned int, N >... >)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
         BOOST_STATIC_ASSERT((

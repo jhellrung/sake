@@ -58,7 +58,7 @@
 
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IF_ANY_UMC_R( r, T, base_seq, member_seq ) \
     T& operator=(typename ::boost::mpl::if_c< \
-        SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc( r, T, base_seq, member_seq ) ::value \
+        SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc( r, T, base_seq, member_seq ) ::value, \
         T const &, \
         ::sake::implicitly_defined_private::disabler<T> \
     >::type other) \
