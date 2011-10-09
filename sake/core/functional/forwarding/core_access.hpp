@@ -13,7 +13,7 @@
 #include <boost/function_types/result_type.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 
-#include <sake/core/functional/forwarding/forwarding_fwd.hpp>
+#include <sake/core/functional/forwarding/fwd.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/overload.hpp>
 
@@ -26,8 +26,8 @@ namespace forwarding
 class core_access
 {
     template< class, class > friend class nullary_base;
-    template< class, class > friend class forwarding_base;
     template< class, class, int > friend struct nullary_base_private::impl;
+    template< class, class > friend class base;
 
     template< class Signature > // Signature = {const} Derived ( T0, ... )
     struct enable

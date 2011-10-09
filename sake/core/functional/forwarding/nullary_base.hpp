@@ -76,14 +76,6 @@ namespace nullary_base_private
 
 template< class > struct dummy;
 
-template<
-    class Derived, class Params,
-    int = 1 * boost::mpl::has_key< Params, keyword::tag::result >::value +
-          2 * boost::mpl::has_key< Params, keyword::tag::nullary_callable >::value +
-          4 * boost::mpl::has_key< Params, keyword::tag::nullary_const_callable >::value
->
-struct impl;
-
 #define n 0
 #define specialized_declarations() \
     template< class T > void operator()(dummy<T>);

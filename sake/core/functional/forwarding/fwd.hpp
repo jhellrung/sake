@@ -45,6 +45,14 @@ class nullary_base;
 template< class Derived, class Params = keyword::default_params >
 class base;
 
+namespace nullary_base_private
+{
+
+template< class Derived, class Params, int >
+struct impl;
+
+} // namespace nullary_base_private
+
 } // namespace forwarding
 
 } // namespace sake
