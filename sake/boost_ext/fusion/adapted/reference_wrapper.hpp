@@ -58,7 +58,7 @@ namespace traits
 template< class T >
 struct tag_of<
     T,
-    typename boost::enable_if_c< boost_ext::mpl::and2<
+    typename boost::enable_if_c< sake::boost_ext::mpl::and2<
         sake::is_reference_wrapper<T>,
         boost::fusion::traits::is_sequence<
             typename sake::unwrap_reference<T>::type
