@@ -7,22 +7,20 @@
  *
  * struct boost_ext::mpl::all< Sequence, F >
  *
- * This is a metafunction which determines whether all elements of the given
- * Boost.MPL sequence satisify the given Boost.MPL metafunction.
+ * This is a metafunction which determines whether all element of the given
+ * Boost.MPL sequence satisifies the given Boost.MPL metafunction.
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_MPL_ALL_HPP
 #define SAKE_BOOST_EXT_MPL_ALL_HPP
 
+#include <boost/mpl/apply.hpp>
 #include <boost/mpl/begin_end.hpp>
-#include <boost/mpl/find_if.hpp>
-#include <boost/mpl/lambda.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/protect.hpp>
-#include <boost/mpl/quote.hpp>
-#include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/deref.hpp>
+#include <boost/mpl/next.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/boost_ext/mpl/compose.hpp>
+#include <sake/boost_ext/mpl/and.hpp>
 
 namespace sake
 {
@@ -34,16 +32,32 @@ namespace mpl
 {
 
 template< class Sequence, class F >
+struct all;
+
+namespace all_private
+{
+
+template< class I, class E, class F >
+struct iterate
+    : boost_ext::mpl::and2<
+          boost::mpl::apply1< F, typename boost::mpl::deref<I>::type >,
+          iterate< typename boost::mpl::next<I>::type, E, F >
+      >
+{ };
+
+template< class E, class F >
+struct iterate<E,E,F>
+    : boost::true_type
+{ };
+
+} // namespace all_private
+
+template< class Sequence, class F >
 struct all
-    : boost::is_same<
-          typename boost::mpl::find_if<
-              Sequence,
-              boost_ext::mpl::compose<
-                  boost::mpl::quote1< boost::mpl::not_ >,
-                  boost::mpl::protect< typename boost::mpl::lambda<F>::type >
-              >
-          >::type,
-          typename boost::mpl::end< Sequence >::type
+    : all_private::iterate<
+          typename boost::mpl::begin< Sequence >::type,
+          typename boost::mpl::end< Sequence >::type,
+          F
       >
 { };
 

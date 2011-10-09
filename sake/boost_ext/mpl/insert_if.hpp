@@ -29,7 +29,7 @@ template< bool C, class Sequence, class T >
 struct insert_if_c;
 
 template< class Sequence, class T >
-struct insert_if_ic< false, Sequence, T >
+struct insert_if_c< false, Sequence, T >
 { typedef Sequence type; };
 
 template< class Sequence, class T >

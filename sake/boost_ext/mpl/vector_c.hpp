@@ -13,6 +13,12 @@
 
 #include <boost/config.hpp>
 
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+#include <boost/mpl/integral_c.hpp>
+
+#include <sake/boost_ext/mpl/vector.hpp>
+
 namespace sake
 {
 
@@ -22,18 +28,17 @@ namespace boost_ext
 namespace mpl
 {
 
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-
 template< class T, T... N >
 struct vector_c
-{ };
-
-#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+    : boost_ext::mpl::vector< boost::mpl::integral_c<T,N>... >
+{ typedef T value_type; };
 
 } // namespace mpl
 
 } // namespace boost_ext
 
 } // namespace sake
+
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 #endif // #ifndef SAKE_BOOST_EXT_MPL_VECTOR_C_HPP
