@@ -12,7 +12,7 @@
 
 #if !defined( SAKE_INTROSPECTION_OPERATOR_NAME ) \
 && (!defined( SAKE_INTROSPECTION_OPERATOR_DECLARE ) \
- && !defined( SAKE_INTROSPECTION_OPERATOR_APPLY ))
+ || !defined( SAKE_INTROSPECTION_OPERATOR_APPLY ))
 #error SAKE_INTROSPECTION_OPERATOR_NAME not defined.
 #endif // #if !defined( ... ) && ...
 

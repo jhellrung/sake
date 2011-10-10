@@ -77,7 +77,7 @@ private:
 
 BOOST_STATIC_ASSERT( sizeof( sake::nullptr_t ) == sizeof( void* ) );
 
-sake::nullptr_t const nullptr = { };
+sake::nullptr_t const nullptr = { 0 };
 
 inline bool operator==(sake::nullptr_t, sake::nullptr_t) { return true; }
 inline bool operator!=(sake::nullptr_t, sake::nullptr_t) { return false; }

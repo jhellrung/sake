@@ -5,15 +5,15 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * declval<T>()  -> T
+ * declval<T>() -> T
  *
- * declcval<T>() -> boost::add_const<T>::type
- * declvval<T>() -> boost::add_volatile<T>::type
+ * declcval<T>()  -> boost::add_const<T>::type
+ * declvval<T>()  -> boost::add_volatile<T>::type
  * declcvval<T>() -> boost::add_cv<T>::type
  *
- * declref<T>()  -> boost_ext::add_reference<T>::type
- * declcref<T>() -> boost_ext::add_reference_add_const<T>::type
- * declvref<T>() -> boost_ext::add_reference_add_volatile<T>::type
+ * declref<T>()   -> boost_ext::add_reference<T>::type
+ * declcref<T>()  -> boost_ext::add_reference_add_const<T>::type
+ * declvref<T>()  -> boost_ext::add_reference_add_volatile<T>::type
  * declcvref<T>() -> boost_ext::add_reference_add_cv<T>::type
  *
  * declval can be used to syntactically represent an "rvalue correct" instance

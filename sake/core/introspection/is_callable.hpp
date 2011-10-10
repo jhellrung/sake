@@ -115,8 +115,8 @@ struct fallback_nullary : T
     operator fallback_type() const;
 };
 
-template< class T > struct fallback_nullary< T const > : fallback<T> { };
-template< class T > struct fallback_nullary< T& > : fallback<T> { };
+template< class T > struct fallback_nullary< T const > : fallback_nullary<T> { };
+template< class T > struct fallback_nullary< T& > : fallback_nullary<T> { };
 
 template< class T >
 class has_void_result< T, void ( ) >

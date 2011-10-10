@@ -65,6 +65,8 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/control/expr_iif.hpp>
+#include <boost/preprocessor/detail/is_unary.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/logical/bitor.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
@@ -122,17 +124,23 @@
     SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_R( BOOST_PP_DEDUCE_R(), T, member_seq )
 
 #define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_R( r, T, member_seq ) \
+    BOOST_PP_CAT( \
+        SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl_, \
+        BOOST_PP_IS_UNARY( member_seq ) \
+    ) ( r, T, member_seq )
+#define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl_0( r, T, member_seq ) \
+    SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl( r, \
+        T, \
+        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_ACCESS_COLON( member_seq ) BOOST_PP_EMPTY, \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_ACCESS( member_seq ) \
+    )
+#define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl_1( r, T, member_seq ) \
+    SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl( r, T, BOOST_PP_EMPTY, member_seq )
+#define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl( r, T, member_access_colon, member_seq ) \
     SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_ACCESS_COLON( T ) \
-    SAKE_DIRECT_INIT_CTOR_R( r, \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_ACCESS( T ), \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_ACCESS( member_seq ) \
-    ) \
-    SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_ACCESS_COLON( member_seq ) \
-    BOOST_PP_SEQ_FOR_EACH_I_R( r, \
-        SAKE_DIRECT_INIT_CTOR_declare_member, \
-        ~, \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_ACCESS( member_seq ) \
-    ) \
+    SAKE_DIRECT_INIT_CTOR_R( r, SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_ACCESS( T ), member_seq ) \
+    member_access_colon() \
+    BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_DIRECT_INIT_CTOR_declare_member, ~, member_seq ) \
     SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_ACCESS_COLON( T )
 
 #define SAKE_DIRECT_INIT_CTOR_declare_member( r, data, i, elem ) \

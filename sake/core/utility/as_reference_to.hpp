@@ -109,7 +109,7 @@ struct star_has_void_result
 {
     // purposely unqualified call to as_reference_to to allow for ADL
     static bool const value = SAKE_EXPR_IS_VOID( as_reference_to(
-        *::sake::declval< From >(),
+        *::sake::declref< From >(),
         ::sake::type_tag< To >()
     ) );
     typedef star_has_void_result type;
@@ -173,11 +173,11 @@ namespace result_of
 
 template< class From, class To >
 struct as_reference_to
-    : boost::mpl::eval_if<
+    : boost::mpl::eval_if_c<
           ::sake_as_reference_to_private::has_void_result<
               From,
               typename sake::remove_type_tag< To >::type
-          >,
+          >::value,
           boost::mpl::identity< void >,
           ::sake_as_reference_to_private::non_void_result_helper<
               From,

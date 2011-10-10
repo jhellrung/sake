@@ -53,7 +53,7 @@ struct helper;
 template< class T >
 struct helper< true, T >
     : T
-{ };
+{ static bool const value = T::value; };
 
 template< class T >
 struct helper< false, T >

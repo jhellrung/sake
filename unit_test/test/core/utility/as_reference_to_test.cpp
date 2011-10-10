@@ -53,22 +53,22 @@ struct C
 void as_reference_to_test(sake::test::environment& env)
 {
     int x = 0;
-    BOOST_MPL_ASSERT((boost::is_same< int&, typename sake::result_of::as_reference_to< int&, int >::type >));
+    BOOST_MPL_ASSERT((boost::is_same< int&, sake::result_of::as_reference_to< int&, int >::type >));
     SAKE_TEST_CHECK_RELATION( env, &x, ==, &sake::as_reference_to< int >(x) );
     int* p = &x;
-    BOOST_MPL_ASSERT((boost::is_same< int&, typename sake::result_of::as_reference_to< int*&, int >::type >));
+    BOOST_MPL_ASSERT((boost::is_same< int&, sake::result_of::as_reference_to< int*&, int >::type >));
     SAKE_TEST_CHECK_RELATION( env, &x, ==, &sake::as_reference_to< int >(p) );
     int** q = &p;
-    BOOST_MPL_ASSERT((boost::is_same< int&, typename sake::result_of::as_reference_to< int**&, int >::type >));
+    BOOST_MPL_ASSERT((boost::is_same< int&, sake::result_of::as_reference_to< int**&, int >::type >));
     SAKE_TEST_CHECK_RELATION( env, &x, ==, &sake::as_reference_to< int >(q) );
     A a = { x }; 
-    BOOST_MPL_ASSERT((boost::is_same< int&, typename sake::result_of::as_reference_to< A&, int >::type >));
+    BOOST_MPL_ASSERT((boost::is_same< int&, sake::result_of::as_reference_to< A&, int >::type >));
     SAKE_TEST_CHECK_RELATION( env, &x, ==, &sake::as_reference_to< int >(a) );
     B b = { x };
-    BOOST_MPL_ASSERT((boost::is_same< int&, typename sake::result_of::as_reference_to< B&, int >::type >));
+    BOOST_MPL_ASSERT((boost::is_same< int&, sake::result_of::as_reference_to< B&, int >::type >));
     SAKE_TEST_CHECK_RELATION( env, &x, ==, &sake::as_reference_to< int >(b) );
     C c = { x };
-    BOOST_MPL_ASSERT((boost::is_same< int&, typename sake::result_of::as_reference_to< C&, int >::type >));
+    BOOST_MPL_ASSERT((boost::is_same< int&, sake::result_of::as_reference_to< C&, int >::type >));
     SAKE_TEST_CHECK_RELATION( env, &x, ==, &sake::as_reference_to< int >(c) );
 }
 

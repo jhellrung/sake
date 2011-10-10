@@ -48,7 +48,8 @@
 template<
     class Signature,
     class ResultPred = ::boost::mpl::always< ::boost::true_type >
-> struct SAKE_INTROSPECTION_TRAIT_NAME;
+>
+struct SAKE_INTROSPECTION_TRAIT_NAME;
 
 
 
@@ -95,12 +96,14 @@ struct SAKE_INTROSPECTION_TRAIT_NAME< Result ( T... ), ResultPred >
 
 template< class... T, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME< void ( T... ), ResultPred >
-    : ::boost::mpl::eval_if_c<
-          trait_name_private::has_void_result< void ( T... ) >::value,
-          ::boost::mpl::apply1< ResultPred, void >,
-          trait_name_private::non_void_result_helper< void ( T... ), ResultPred >
-      >
-{ };
+{
+    static bool const value = ::boost::mpl::eval_if_c<
+        trait_name_private::has_void_result< void ( T... ) >::value,
+        ::boost::mpl::apply1< ResultPred, void >,
+        trait_name_private::non_void_result_helper< void ( T... ), ResultPred >
+    >::type::value;
+    typedef SAKE_INTROSPECTION_TRAIT_NAME type;
+};
 
 namespace trait_name_private
 {
@@ -175,8 +178,7 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 #define T0N       BOOST_PP_ENUM_PARAMS( N, T )
 #define apply_declval_T0N \
     SAKE_INTROSPECTION_FUNCTION_APPLY( \
-        ( BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< T, >() BOOST_PP_INTERCEPT ) ) \
-    )
+        ( BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< T, >() BOOST_PP_INTERCEPT ) ) )
 
 template< class Result, class_T0N, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME< Result ( T0N ), ResultPred >
@@ -188,12 +190,14 @@ struct SAKE_INTROSPECTION_TRAIT_NAME< Result ( T0N ), ResultPred >
 
 template< class_T0N, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME< void ( T0N ), ResultPred >
-    : ::boost::mpl::eval_if_c<
-          trait_name_private::has_void_result< void ( T0N ) >::value,
-          ::boost::mpl::apply1< ResultPred, void >,
-          trait_name_private::non_void_result_helper< void ( T0N ), ResultPred >
-      >
-{ };
+{
+    static bool const value = ::boost::mpl::eval_if_c<
+        trait_name_private::has_void_result< void ( T0N ) >::value,
+        ::boost::mpl::apply1< ResultPred, void >,
+        trait_name_private::non_void_result_helper< void ( T0N ), ResultPred >
+    >::type::value;
+    typedef SAKE_INTROSPECTION_TRAIT_NAME type;
+};
 
 namespace trait_name_private
 {

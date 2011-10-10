@@ -57,7 +57,7 @@ struct helper< true, T >
 template< class T >
 struct helper< false, T >
     : T
-{ };
+{ static bool const value = T::value; };
 
 } // namespace or_private
 

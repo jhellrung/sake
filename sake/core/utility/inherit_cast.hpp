@@ -57,7 +57,7 @@ template< class T, class U >
 inline typename result_of::inherit_cast< U*, T >::type
 inherit_cast(U* const p)
 {
-    typedef typename boost_ext::propagate_const<U,T>::type T_;
+    typedef typename boost_ext::propagate_cv<U,T>::type T_;
     return static_cast< T_* >(p);
 }
 
