@@ -44,6 +44,7 @@
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/quote.hpp>
+#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -69,7 +70,6 @@
 #include <sake/core/utility/is_by_value_optimal.hpp>
 #include <sake/core/utility/non_copy_assignable.hpp>
 #include <sake/core/utility/overload.hpp>
-#include <sake/core/utility/private/emplacer.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
 namespace sake
@@ -84,13 +84,22 @@ struct traits;
 template< class Signature >
 struct base;
 
+template<>
+struct base< void ( ) >
+{
+protected:
+    template< unsigned int >
+    struct at_c_impl
+    { };
+};
+
 template<
     class U,
     bool = sake::is_emplacer<
                typename boost_ext::remove_qualifiers<U>::type
            >::value
 >
-struct wrap_dispatch
+struct wrap_dispatch;
 
 template<
     class T, class U,
@@ -215,9 +224,9 @@ public:
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 #define traits_Un_type_yn( z, n, data ) \
-    typename emplacer_private::traits< U ## n >::type y ## n
+    typename emplacer_private::traits< BOOST_PP_CAT( U, n ) >::type BOOST_PP_CAT( y, n )
 #define traits_Un_cast_yn( z, n, data ) \
-    emplacer_private::traits< U ## n >::cast( y ## n )
+    emplacer_private::traits< BOOST_PP_CAT( U, n ) >::cast( BOOST_PP_CAT( y, n ) )
 
 #define BOOST_PP_ITERATION_LIMITS ( 0, SAKE_EMPLACER_MAX_ARITY )
 #define BOOST_PP_FILENAME_1       <sake/core/utility/emplacer.hpp>
@@ -271,7 +280,7 @@ make_typed_emplacer()
 #define SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( n, classU_tuple ) \
     class T, BOOST_PP_TUPLE_REM_CTOR( n, classU_tuple )
 #define SAKE_OVERLOAD_RESULT( n, U_tuple ) \
-    boost::mpl::identity< typed_emplacer< T U_tuple > >
+    boost::mpl::identity< emplacer< T U_tuple > >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     make_typed_emplacer
 #define SAKE_OVERLOAD_BODY( n, U_tuple, y_tuple, forward_y_tuple ) \
@@ -345,10 +354,6 @@ struct traits< U, true >
     { return x; }
 };
 
-template<>
-struct base< void ( ) >
-{ };
-
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 template< class U0, class... U >
@@ -356,31 +361,31 @@ struct base< void ( U0, U... ) >
     : base< void ( U... ) >
 {
     base(traits< U0 >::type y0, traits<U>::type... y)
-        : m_y0(traits< U0 >::cast(y0)),
-          base< void ( U... ) >(traits<U>::cast(y)...)
+        : base< void ( U... ) >(traits<U>::cast(y)...),
+          m_y0(traits< U0 >::cast(y0))
     { }
 
 protected:
-    template< unsigned int N, class = void >
+    template< unsigned int K, class = void >
     struct at_c_impl
-        : base< void ( U... ) >::at_c_impl< N-1 >
+        : base< void ( U... ) >::template at_c_impl< K-1 >
     { };
     template< class _ >
     struct at_c_impl< 0, _ >
     {
-        typedef typename traits< U0 >::type result_type;
-        static result_type apply(base const & this_)
+        typedef typename traits< U0 >::type type;
+        static type apply(base const & this_)
         { return traits< U0 >::cast(this_.m_y0); }
     };
     template< unsigned int, class > friend struct at_c_impl;
 public:
-    template< unsigned int N >
-    typename at_c_impl<N>::result_type
+    template< unsigned int K >
+    typename at_c_impl<K>::type
     at_c() const
-    { return at_c_impl<N>::apply(*this); }
+    { return at_c_impl<K>::apply(*this); }
 
 private:
-    traits< U0 >::type m_y0;
+    typename traits< U0 >::type m_y0;
 };
 
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
@@ -462,31 +467,35 @@ struct base< void ( U0N ) >
     : base< void ( U1N ) >
 {
     base(traits_U0N_type_y0N)
-        : m_y0(traits< U0 >::cast(y0)),
-          base< void ( U1N ) >(traits_U1N_cast_y1N)
+        : base< void ( U1N ) >(traits_U1N_cast_y1N),
+          m_y0(traits< U0 >::cast(y0))
     { }
 
 protected:
-    template< unsigned int N, class = void >
+    template< unsigned int K, class = void >
     struct at_c_impl
-        : base< void ( U1N ) >::at_c_impl< N-1 >
+#if N == 1
+        : base< void ( ) >::at_c_impl< K-1 >
+#else // #if N == 1
+        : base< void ( U1N ) >::template at_c_impl< K-1 >
+#endif // #if N == 1
     { };
     template< class _ >
     struct at_c_impl< 0, _ >
     {
-        typedef typename traits< U0 >::type result_type;
-        static result_type apply(base const & this_)
+        typedef typename traits< U0 >::type type;
+        static type apply(base const & this_)
         { return traits< U0 >::cast(this_.m_y0); }
     };
     template< unsigned int, class > friend struct at_c_impl;
 public:
-    template< unsigned int N >
-    typename at_c_impl<N>::result_type
+    template< unsigned int K >
+    typename at_c_impl<K>::type
     at_c() const
-    { return at_c_impl<N>::apply(*this); }
+    { return at_c_impl<K>::apply(*this); }
 
 private:
-    traits< U0 >::type m_y0;
+    typename traits< U0 >::type m_y0;
 };
 
 } // namespace emplacer_private
