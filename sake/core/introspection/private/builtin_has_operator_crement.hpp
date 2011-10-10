@@ -72,14 +72,14 @@ test( --, int* )
         sake::declval< T& >() op \
     ) );
 // For some reason, the type of declval< bool& >()++ is bool& on MSVC9.
-#if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
 BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
     SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, bool& > )),
     sake::declval< bool& >()++
 ) );
-#else // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+#else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
 test( bool, ++ )
-#endif // #if SAKE_WORKAROUND_MSVC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
 test( int, ++ )
 test( int*, ++ )
 test( int, -- )
