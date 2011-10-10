@@ -137,9 +137,9 @@ struct reverse< vector<>, vector< U... > >
 
 template< class V, class W = vector<> >
 struct pop_back;
-template< class T0, class T1, class... T, class... U >
-struct pop_back< vector< T0, T1, T... >, vector< U... > >
-    : pop_back< vector< T1, T... >, vector< U..., T0 > >
+template< class T0, class... T, class... U >
+struct pop_back< vector< T0, T... >, vector< U... > >
+    : pop_back< vector< T... >, vector< U..., T0 > >
 { };
 template< class T0, class... U >
 struct pop_back< vector< T0 >, vector< U... > >
