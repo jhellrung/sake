@@ -163,6 +163,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\emplacer_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\overload_test.cpp"
 			>
 		</File>

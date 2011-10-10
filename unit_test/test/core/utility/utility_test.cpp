@@ -18,6 +18,7 @@ void as_reference_to_test(sake::test::environment& env);
 void assert_test(sake::test::environment& env);
 void direct_init_ctor_test(sake::test::environment& env);
 void declare_once_test(sake::test::environment& env);
+void emplacer_test(sake::test::environment& env);
 void overload_test(sake::test::environment& env);
 void swap_test(sake::test::environment& env);
 
@@ -28,6 +29,7 @@ void utility_test(sake::test::environment& env)
     env("assert", &assert_test);
     env("direct_init_ctor", &direct_init_ctor_test);
     env("declare_once", &declare_once_test);
+    env("emplacer", &emplacer_test);
     env("overload", &overload_test);
     env("swap", &swap_test);
 }
