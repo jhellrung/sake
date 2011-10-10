@@ -19,13 +19,10 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
 
 #include <sake/boost_ext/mpl/vector.hpp>
 
 #include <sake/core/keyword/fwd.hpp>
-#include <sake/core/utility/type_tag.hpp>
 
 namespace sake
 {
@@ -39,23 +36,29 @@ struct arg_pack_from_mpl_vector;
 template<>
 struct arg_pack<>
 {
+
+protected:
+    template< class K >
+    struct at_impl
+    {
+        typedef typename K::value_type type;
+        static type apply(arg_pack const & /*this_*/, K const k)
+        { return k.value(); }
+    };
+public:
+
     struct result_of
     {
         template< class K >
         struct at
-        { typedef typename K::value_type type; };
+            : at_impl<K>
+        { };
     };
 
     template< class K >
-    typename result_of::template at<K>::type
+    typename result_of::at<K>::type
     operator[](K const k) const
-    { return at(k, sake::type_tag< typename K::tag >()); }
-
-protected:
-    template< class K >
-    typename K::value_type
-    at(K const k, sake::type_tag< typename K::tag >) const
-    { return k.value(); }
+    { return at_impl<K>::apply(*this, k); }
 };
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
@@ -73,35 +76,33 @@ struct arg_pack< A0, A... >
           m_a0(a0)
     { }
 
+protected:
+    template< class K, class Tag = typename K::tag >
+    struct at_impl
+        : arg_pack< A... >::template at_impl<K>
+    { };
+    template< class K >
+    struct at_impl< K, typename A0::tag >
+    {
+        typedef typename A0::value_type type;
+        static type apply(arg_pack const & this_, K const k)
+        { return this_.m_a0.value(); }
+    };
+    template< class, class > friend struct at_impl;
+public:
+
     struct result_of
     {
-        template< class K, class Tag = typename K::tag >
-        struct at
-            : arg_pack< A... >::result_of::template at<K>
-        { };
         template< class K >
-        struct at< K, typename A0::tag >
-        { typedef typename A0::value_type type; };
+        struct at
+            : at_impl<K>
+        { };
     };
 
     template< class K >
     typename result_of::template at<K>::type
     operator[](K const k) const
-    { return at(k, sake::type_tag< typename K::tag >()); }
-
-protected:
-    template< class K, class Tag >
-    typename result_of::template at<K>::type
-    at(K const k, sake::type_tag< Tag >) const
-    {
-        BOOST_STATIC_ASSERT((boost::is_same< Tag, typename K::tag >::value));
-        return arg_pack< A... >::at(k, sake::type_tag< Tag >());
-    }
-
-    template< class K >
-    typename A0::value_type
-    at(K const k, sake::type_tag< typename A0::tag >) const
-    { return m_a0.value(); }
+    { return at_impl<K>::apply(*this, k); }
 
 private:
     A0 const m_a0;
@@ -158,39 +159,37 @@ struct arg_pack< A0N >
     { }
 #endif // #if N == 1
 
+protected:
+    template< class K, class Tag = typename K::tag >
+    struct at_impl
+#if N == 1
+        : arg_pack<>::at_impl<K>
+#else // #if N == 1
+        : arg_pack< A1N >::template at_impl<K>
+#endif // #if N == 1
+    { };
+    template< class K >
+    struct at_impl< K, typename A0::tag >
+    {
+        typedef typename A0::value_type type;
+        static type apply(arg_pack const & this_, K const k)
+        { return this_.m_a0.value(); }
+    };
+    template< class, class > friend struct at_impl;
+public:
+
     struct result_of
     {
-        template< class K, class Tag = typename K::tag >
-        struct at
-#if N == 1
-            : arg_pack<>::result_of::at<K>
-#else // #if N == 1
-            : arg_pack< A1N >::result_of::template at<K>
-#endif // #if N == 1
-        { };
         template< class K >
-        struct at< K, typename A0::tag >
-        { typedef typename A0::value_type type; };
+        struct at
+            : at_impl<K>
+        { };
     };
 
     template< class K >
     typename result_of::template at<K>::type
     operator[](K const k) const
-    { return at(k, sake::type_tag< typename K::tag >()); }
-
-protected:
-    template< class K, class Tag >
-    typename result_of::template at<K>::type
-    at(K const k, sake::type_tag< Tag >) const
-    {
-        BOOST_STATIC_ASSERT((boost::is_same< Tag, typename K::tag >::value));
-        return arg_pack< A1N >::at(k, sake::type_tag< Tag >());
-    }
-
-    template< class K >
-    typename A0::value_type
-    at(K const k, sake::type_tag< typename A0::tag >) const
-    { return m_a0.value(); }
+    { return at_impl<K>::apply(*this, k); }
 
 private:
     A0 const m_a0;
