@@ -5,6 +5,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core_test", "core_test.vcpr
 	ProjectSection(ProjectDependencies) = postProject
 		{5F523229-7A5C-42E9-A1D4-C699FF9C0EE4} = {5F523229-7A5C-42E9-A1D4-C699FF9C0EE4}
 		{62836898-8D77-433D-A34E-A5943E8DF040} = {62836898-8D77-433D-A34E-A5943E8DF040}
+		{F84A1AB2-B0E5-4FA9-9EFD-F5C0D8501FB4} = {F84A1AB2-B0E5-4FA9-9EFD-F5C0D8501FB4}
 		{69A987C2-0893-43B5-B966-FD8ED049538C} = {69A987C2-0893-43B5-B966-FD8ED049538C}
 		{578A02F6-804B-411F-9322-4D187DFF59E2} = {578A02F6-804B-411F-9322-4D187DFF59E2}
 	EndProjectSection
@@ -16,6 +17,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "expr_traits_test", "..\expr_traits\msvc9\expr_traits_test.vcproj", "{62836898-8D77-433D-A34E-A5943E8DF040}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ref_test", "..\ref\msvc9\ref_test.vcproj", "{578A02F6-804B-411F-9322-4D187DFF59E2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "keyword_test", "..\keyword\msvc9\keyword_test.vcproj", "{F84A1AB2-B0E5-4FA9-9EFD-F5C0D8501FB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +46,10 @@ Global
 		{578A02F6-804B-411F-9322-4D187DFF59E2}.Debug|Win32.Build.0 = Debug|Win32
 		{578A02F6-804B-411F-9322-4D187DFF59E2}.Release|Win32.ActiveCfg = Release|Win32
 		{578A02F6-804B-411F-9322-4D187DFF59E2}.Release|Win32.Build.0 = Release|Win32
+		{F84A1AB2-B0E5-4FA9-9EFD-F5C0D8501FB4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F84A1AB2-B0E5-4FA9-9EFD-F5C0D8501FB4}.Debug|Win32.Build.0 = Debug|Win32
+		{F84A1AB2-B0E5-4FA9-9EFD-F5C0D8501FB4}.Release|Win32.ActiveCfg = Release|Win32
+		{F84A1AB2-B0E5-4FA9-9EFD-F5C0D8501FB4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
