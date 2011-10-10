@@ -149,10 +149,12 @@ BOOST_MPL_ASSERT((arg_packer_type::enable<
 
 void keyword_test(sake::test::environment& env)
 {
-    A const a, a2;
-    B const b, b2;
-    C const c, c2;
-    D const d, d2;
+    A const a = { }, a2 = { };
+    B const b = { }, b2 = { };
+    C const c = { }, c2 = { };
+    D const d = { }, d2 = { };
+    sake::keyword::tagged_value< keyword::tag::a, A const & > ka = (keyword::_a = a);
+    sake::keyword::tagged_value< keyword::tag::c, C const & > kc = (keyword::_c = c);
     {
         typedef boost::result_of< arg_packer_type ( A, B, C ) >::type arg_pack_type;
         arg_pack_type arg_pack = arg_packer_type()(a, b, c);
@@ -193,7 +195,7 @@ void keyword_test(sake::test::environment& env)
             A,
             sake::keyword::tagged_value< keyword::tag::c, C const & >
         ) >::type arg_pack_type;
-        arg_pack_type arg_pack = arg_packer_type()(a, keyword::_c = c);
+        arg_pack_type arg_pack = arg_packer_type()(a, kc);
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_a], ==, &a );
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_c], ==, &c );
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_a | a2], ==, &a  );
@@ -206,7 +208,7 @@ void keyword_test(sake::test::environment& env)
             sake::keyword::tagged_value< keyword::tag::c, C const & >,
             sake::keyword::tagged_value< keyword::tag::a, A const & >
         ) >::type arg_pack_type;
-        arg_pack_type arg_pack = arg_packer_type()(keyword::_c = c, keyword::_a = a);
+        arg_pack_type arg_pack = arg_packer_type()(kc, ka);
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_a], ==, &a );
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_c], ==, &c );
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_a | a2], ==, &a  );
@@ -220,7 +222,7 @@ void keyword_test(sake::test::environment& env)
             sake::keyword::tagged_value< keyword::tag::a, A const & >,
             D
         ) >::type arg_pack_type;
-        arg_pack_type arg_pack = arg_packer_type()(keyword::_c = c, keyword::_a = a, d);
+        arg_pack_type arg_pack = arg_packer_type()(kc, ka, d);
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_a], ==, &a );
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_c], ==, &c );
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_d], ==, &d );

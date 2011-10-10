@@ -27,8 +27,8 @@ struct tagged_lazy
     BOOST_STATIC_ASSERT((boost::is_object<T>::value));
     typedef Tag tag;
     typedef typename boost::result_of< T const ( ) >::type value_type;
-    explicit tagged_lazy(typename sake::call_traits<T>::param_type value)
-        : m_value(value)
+    explicit tagged_lazy(typename sake::call_traits<T>::param_type value_)
+        : m_value(value_)
     { }
     value_type value() const
     { return m_value(); }

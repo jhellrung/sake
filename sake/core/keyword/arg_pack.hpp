@@ -13,8 +13,10 @@
 
 #include <boost/config.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -38,7 +40,7 @@ struct arg_pack<>
 {
 
 protected:
-    template< class K >
+    template< class K, class Tag = typename K::tag >
     struct at_impl
     {
         typedef typename K::value_type type;
@@ -140,6 +142,16 @@ template< class_A0N >
 struct arg_pack_from_mpl_vector< BOOST_PP_CAT( boost::mpl::vector, N ) < A0N > >
 { typedef arg_pack< A0N > type; };
 
+#ifdef BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
+template< class_A0N >
+struct arg_pack_from_mpl_vector<
+    BOOST_PP_ENUM_PARAMS( N, boost::mpl::v_item< A ),
+    boost::mpl::vector0<>,
+    BOOST_PP_ENUM_PARAMS( N, 1 > BOOST_PP_INTERCEPT )
+>
+{ typedef arg_pack< A0N > type; };
+#endif // #ifdef BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
+
 template< class_A0N >
 #if N == SAKE_KEYWORD_MAX_ARITY
 struct arg_pack
@@ -172,7 +184,7 @@ protected:
     struct at_impl< K, typename A0::tag >
     {
         typedef typename A0::value_type type;
-        static type apply(arg_pack const & this_, K const k)
+        static type apply(arg_pack const & this_, K const /*k*/)
         { return this_.m_a0.value(); }
     };
     template< class, class > friend struct at_impl;

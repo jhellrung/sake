@@ -18,9 +18,8 @@
 
 #include <boost/config.hpp>
 #include <boost/mpl/integral_c.hpp>
-#include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 #include <boost/static_assert.hpp>
@@ -159,9 +158,13 @@ class emplacer_access
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
+#define e_at_c_n( z, n, data ) e.template at_c<n>()
+
 #define BOOST_PP_ITERATION_LIMITS ( 0, SAKE_EMPLACER_MAX_ARITY )
 #define BOOST_PP_FILENAME_1       <sake/core/utility/emplacer_access.hpp>
 #include BOOST_PP_ITERATE()
+
+#undef e_at_c_n
 
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
@@ -239,7 +242,7 @@ class emplacer_access
 #define class_U0N       BOOST_PP_ENUM_PARAMS( N, class U )
 #define comma_class_U0N BOOST_PP_ENUM_TRAILING_PARAMS( N, class U )
 #define U0N             BOOST_PP_ENUM_PARAMS( N, U )
-#define e_at_c_0N       BOOST_PP_ENUM_BINARY_PARAMS( N, e.template at_c<, >() BOOST_PP_INTERCEPT )
+#define e_at_c_0N       BOOST_PP_ENUM( N, e_at_c_n, ~ )
 
     template< class T, class V comma_class_U0N >
     static void

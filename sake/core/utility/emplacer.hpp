@@ -88,7 +88,7 @@ template<>
 struct base< void ( ) >
 {
 protected:
-    template< unsigned int >
+    template< unsigned int, class = void >
     struct at_c_impl
     { };
 };
@@ -548,11 +548,11 @@ public:
         { typedef emplacer< T ( U0N ) > type; };
     };
     template< class T >
-    typename result_of::as_typed<T>::type
+    typename result_of::template as_typed<T>::type
     as_typed()
     {
         BOOST_STATIC_ASSERT((!boost::is_void<T>::value));
-        return typename result_of::as_typed<T>::type(*this);
+        return typename result_of::template as_typed<T>::type(*this);
     }
 
     template< class > struct result;
