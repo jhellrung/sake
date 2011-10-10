@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/sandbox/keyword/arg_pack.hpp
+ * sake/core/keyword/arg_pack.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,20 +8,24 @@
 
 #ifndef BOOST_PP_IS_ITERATING
 
-#ifndef SAKE_SANDBOX_KEYWORD_ARG_PACK_HPP
-#define SAKE_SANDBOX_KEYWORD_ARG_PACK_HPP
+#ifndef SAKE_CORE_KEYWORD_ARG_PACK_HPP
+#define SAKE_CORE_KEYWORD_ARG_PACK_HPP
 
 #include <boost/config.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <sake/boost_ext/mpl/vector.hpp>
 
-#include <sake/sandbox/keyword/fwd.hpp>
+#include <sake/core/keyword/fwd.hpp>
+#include <sake/core/utility/type_tag.hpp>
 
 namespace sake
 {
@@ -39,22 +43,22 @@ struct arg_pack<>
     {
         template< class K >
         struct at
-        { typename K::value_type type; };
+        { typedef typename K::value_type type; };
     };
 
     template< class K >
     typename result_of::template at<K>::type
     operator[](K const k) const
-    { return at(k, typename K::tag()); }
+    { return at(k, sake::type_tag< typename K::tag >()); }
 
 protected:
-    template< class K, class Tag >
+    template< class K >
     typename K::value_type
-    at(K const k, Tag) const
+    at(K const k, sake::type_tag< typename K::tag >) const
     { return k.value(); }
 };
 
-#ifndef BOOST_PP_NO_VARIADIC_TEMPLATES
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 template< class... A >
 struct arg_pack_from_mpl_vector< boost_ext::mpl::vector< A... > >
@@ -83,33 +87,39 @@ struct arg_pack< A0, A... >
     template< class K >
     typename result_of::template at<K>::type
     operator[](K const k) const
-    { return at(k, typename K::tag()); }
+    { return at(k, sake::type_tag< typename K::tag >()); }
 
 protected:
+    template< class K, class Tag >
+    typename result_of::template at<K>::type
+    at(K const k, sake::type_tag< Tag >) const
+    {
+        BOOST_STATIC_ASSERT((boost::is_same< Tag, typename K::tag >::value));
+        return arg_pack< A... >::at(k, sake::type_tag< Tag >());
+    }
+
     template< class K >
     typename A0::value_type
-    at(K const k, typename A0::tag) const
+    at(K const k, sake::type_tag< typename A0::tag >) const
     { return m_a0.value(); }
-
-    using arg_pack< A... >::at;
 
 private:
     A0 const m_a0;
 };
 
-#else // #ifndef BOOST_PP_NO_VARIADIC_TEMPLATES
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 #define BOOST_PP_ITERATION_LIMITS ( 1, SAKE_KEYWORD_MAX_ARITY )
-#define BOOST_PP_FILENAME_1       <sake/sandbox/keyword/arg_pack.hpp>
+#define BOOST_PP_FILENAME_1       <sake/core/keyword/arg_pack.hpp>
 #include BOOST_PP_ITERATE()
 
-#endif // #ifndef BOOST_PP_NO_VARIADIC_TEMPLATES
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 } // namespace keyword
 
 } // namespace sake
 
-#endif // #ifndef SAKE_SANDBOX_KEYWORD_ARG_PACK_HPP
+#endif // #ifndef SAKE_CORE_KEYWORD_ARG_PACK_HPP
 
 #else // #ifndef BOOST_PP_IS_ITERATING
 
@@ -119,7 +129,7 @@ private:
 #define A0N           BOOST_PP_ENUM_PARAMS( N, A )
 #define A1N           BOOST_PP_ENUM_SHIFTED_PARAMS( N, A )
 #define A0N_const_a0N BOOST_PP_ENUM_BINARY_PARAMS( N, A, const a )
-#define a1N           BOOST_PP_ENUM_SHIFTED_PARAMS( N, A, const a )
+#define a1N           BOOST_PP_ENUM_SHIFTED_PARAMS( N, a )
 
 template< class_A0N >
 struct arg_pack_from_mpl_vector< boost::mpl::vector< A0N > >
@@ -133,23 +143,30 @@ template< class_A0N >
 #if N == SAKE_KEYWORD_MAX_ARITY
 struct arg_pack
 #else // #if N == SAKE_KEYWORD_MAX_ARITY
-struct arg_pack< BOOST_PP_ENUM_PARAMS( N, A ) >
+struct arg_pack< A0N >
 #endif // #if N == SAKE_KEYWORD_MAX_ARITY
     : arg_pack< A1N >
 {
 #if N == 1
-    explicit
-#endif // #if N == 1
+    explicit arg_pack(A0 const a0)
+        : m_a0(a0)
+    { }
+#else // #if N == 1
     arg_pack(A0N_const_a0N)
         : arg_pack< A1N >(a1N),
           m_a0(a0)
     { }
+#endif // #if N == 1
 
     struct result_of
     {
         template< class K, class Tag = typename K::tag >
         struct at
+#if N == 1
+            : arg_pack<>::result_of::at<K>
+#else // #if N == 1
             : arg_pack< A1N >::result_of::template at<K>
+#endif // #if N == 1
         { };
         template< class K >
         struct at< K, typename A0::tag >
@@ -159,15 +176,21 @@ struct arg_pack< BOOST_PP_ENUM_PARAMS( N, A ) >
     template< class K >
     typename result_of::template at<K>::type
     operator[](K const k) const
-    { return at(k, typename K::tag()); }
+    { return at(k, sake::type_tag< typename K::tag >()); }
 
 protected:
+    template< class K, class Tag >
+    typename result_of::template at<K>::type
+    at(K const k, sake::type_tag< Tag >) const
+    {
+        BOOST_STATIC_ASSERT((boost::is_same< Tag, typename K::tag >::value));
+        return arg_pack< A1N >::at(k, sake::type_tag< Tag >());
+    }
+
     template< class K >
     typename A0::value_type
-    at(K const k, typename A0::tag) const
+    at(K const k, sake::type_tag< typename A0::tag >) const
     { return m_a0.value(); }
-
-    using arg_pack< A1N >::at;
 
 private:
     A0 const m_a0;

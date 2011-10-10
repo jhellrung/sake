@@ -1,23 +1,23 @@
 /*******************************************************************************
- * sake/sandbox/keyword/keyword.hpp
+ * sake/core/keyword/keyword.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_SANDBOX_KEYWORD_KEYWORD_HPP
-#define SAKE_SANDBOX_KEYWORD_KEYWORD_HPP
+#ifndef SAKE_CORE_KEYWORD_KEYWORD_HPP
+#define SAKE_CORE_KEYWORD_KEYWORD_HPP
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-#include <sake/sandbox/keyword/tagged_value.hpp>
-#include <sake/sandbox/keyword/tagged_lazy.hpp>
+#include <sake/core/keyword/tagged_value.hpp>
+#include <sake/core/keyword/tagged_lazy.hpp>
 
 #define SAKE_KEYWORD( name ) \
 namespace tag { struct name; } \
-::sake::keyword::keyword< tag::name > const BOOST_PP_CAT( _, name ) = { };
+::sake::keyword::keyword_< tag::name > const BOOST_PP_CAT( _, name ) = { };
 
 namespace sake
 {
@@ -26,7 +26,7 @@ namespace keyword
 {
 
 template< class Tag >
-struct keyword
+struct keyword_
 {
     typedef Tag tag;
 
@@ -76,4 +76,4 @@ struct keyword
 
 } // namespace sake
 
-#endif // #ifndef SAKE_SANDBOX_KEYWORD_KEYWORD_HPP
+#endif // #ifndef SAKE_CORE_KEYWORD_KEYWORD_HPP

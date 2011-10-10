@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/sandbox/keyword/tag_args.hpp
+ * sake/core/keyword/tag_args.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_SANDBOX_KEYWORD_TAG_ARGS_HPP
-#define SAKE_SANDBOX_KEYWORD_TAG_ARGS_HPP
+#ifndef SAKE_CORE_KEYWORD_TAG_ARGS_HPP
+#define SAKE_CORE_KEYWORD_TAG_ARGS_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/apply.hpp>
@@ -28,8 +28,8 @@
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
-#include <sake/sandbox/keyword/param_spec.hpp>
-#include <sake/sandbox/keyword/tagged_value.hpp>
+#include <sake/core/keyword/param_spec.hpp>
+#include <sake/core/keyword/tagged_value.hpp>
 
 namespace sake
 {
@@ -111,7 +111,7 @@ template< class Ai, class Ae, class D >
 struct iterate_deduced;
 template<
     class Ai, class Ae, class D,
-    class Ax = typename boost::mpl::deref< Ai >::type >,
+    class Ax = typename boost::mpl::deref< Ai >::type,
     class Ax_ = typename boost_ext::remove_qualifiers< Ax >::type
 >
 struct iterate_deduced_0;
@@ -267,7 +267,7 @@ struct iterate_deduced_3
 
 } // namespace tag_args_private
 
-template< class A, class P, class D = void >
+template< class A, class P, class D >
 struct tag_args
     : tag_args_private::iterate_positional<
           typename boost::mpl::begin<A>::type,
@@ -293,4 +293,4 @@ struct tag_args< A, P, void >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_SANDBOX_KEYWORD_TAG_ARGS_HPP
+#endif // #ifndef SAKE_CORE_KEYWORD_TAG_ARGS_HPP
