@@ -25,7 +25,8 @@
 namespace sake
 {
 
-struct default_tag { };
+struct default_tag
+{ };
 
 default_tag const default_ = { };
 
