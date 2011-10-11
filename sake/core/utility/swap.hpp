@@ -21,7 +21,6 @@
 #include <boost/mpl/identity.hpp>
 
 #include <sake/core/move/move.hpp>
-#include <sake/core/utility/bisfo.hpp>
 
 namespace sake
 {
@@ -89,7 +88,7 @@ struct swap
 
 } // namespace functional
 
-SAKE_BISFO( swap )
+functional::swap const swap = { };
 
 } // namespace sake
 

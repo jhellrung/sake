@@ -21,7 +21,6 @@
 
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
-#include <sake/core/utility/bisfo.hpp>
 
 namespace sake
 {
@@ -70,7 +69,7 @@ struct address_of
 
 } // namespace functional
 
-SAKE_BISFO( address_of )
+functional::address_of const address_of = { };
 
 } // namespace sake
 
