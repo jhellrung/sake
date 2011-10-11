@@ -283,8 +283,8 @@ struct traits< T, true >
     operator _sake_rv_conv_type const & () const \
     { return *static_cast< _sake_rv_conv_type const * >(this); } \
     template< class V, class R, class P > \
-    operator ::sake::any_rv< V,R,P, ::sake::any_rv_private::apply1_pred_if_c<P,T,c>::value >() \
-    { return ::sake::any_rv< V,R,P, ::sake::any_rv_private::apply1_pred_if_c<P,T,c>::value >(this); }
+    operator ::sake::any_rv< V,R,P, ::sake::any_rv_private::apply1_pred_if_c<c,P,T>::value >() \
+    { return ::sake::any_rv< V,R,P, ::sake::any_rv_private::apply1_pred_if_c<c,P,T>::value >(this); }
 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C( T, c ) \
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( \

@@ -5,7 +5,11 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct any_rv< Visitor, Result, Pred >
+ * struct any_rv<
+ *     Visitor,
+ *     Result = default_tag,
+ *     Pred = boost::mpl::always< boost::true_type >
+ * >
  *
  * This defines a "typeless" emulated rvalue reference, which allows one to
  * capture arbitrary rvalues which support this particular kind of rvalue
@@ -46,15 +50,22 @@
 
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
+
+#include <sake/boost_ext/mpl/result_type.hpp>
+
+#include <sake/core/introspection/has_type_result_type.hpp>
+#include <sake/core/utility/default_tag.hpp>
 
 namespace sake
 {
 
 template<
     class Visitor,
-    class Result = void,
+    class Result = sake::default_tag,
     class Pred = boost::mpl::always< boost::true_type >,
     bool Enable = true
 >
@@ -62,7 +73,14 @@ struct any_rv
 {
     BOOST_STATIC_ASSERT((Enable));
 
-    typedef Result result_type;
+    typedef typename sake::lazy_replace_default_tag<
+        Result,
+        boost::mpl::eval_if<
+            sake::has_type_result_type< Visitor >,
+            boost_ext::mpl::result_type< Visitor >,
+            boost::mpl::identity< void >
+        >
+    >::type result_type;
 
     template< class T >
     explicit any_rv(T* const p)
@@ -102,16 +120,16 @@ template< class Pred, class T >
 struct apply1_pred
 { static bool const value = boost::mpl::apply1< Pred, T >::type::value; };
 
-template< class Pred, class T, bool c >
+template< bool C, class Pred, class T >
 struct apply1_pred_if_c;
 
 template< class Pred, class T >
-struct apply1_pred_if_c< Pred, T, true >
+struct apply1_pred_if_c< true, Pred, T >
     : apply1_pred< Pred, T >
 { };
 
 template< class Pred, class T >
-struct apply1_pred_if_c< Pred, T, false >
+struct apply1_pred_if_c< false, Pred, T >
 { static bool const value = false; };
 
 } // namespace any_rv_private
