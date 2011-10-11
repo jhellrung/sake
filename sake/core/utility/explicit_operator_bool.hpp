@@ -30,8 +30,6 @@
 
 #include <boost/config.hpp>
 
-
-
 #ifndef BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
 
 #define SAKE_EXPLICIT_OPERATOR_BOOL() \
