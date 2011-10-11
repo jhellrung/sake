@@ -125,7 +125,6 @@
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 
-#include <sake/core/utility/bisfo.hpp>
 #include <sake/core/utility/debug.hpp>
 #include <sake/core/utility/ostreamable.hpp>
 
@@ -712,10 +711,10 @@ struct dispatch
 
 } // namespace functional
 
-SAKE_BISFO( print )
-SAKE_BISFO( abort )
-SAKE_BISFO( terminate )
-SAKE_BISFO( exit )
+functional::print const print = { };
+functional::abort const abort = { };
+functional::terminate const terminate = { };
+functional::exit const exit = { };
 
 } // namespace assert_failure_action
 
