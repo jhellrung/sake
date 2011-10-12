@@ -88,7 +88,6 @@
 #include <sake/core/introspection/private/dummy.hpp>
 #include <sake/core/utility/convertible_from_any.hpp>
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/extension.hpp>
 #include <sake/core/utility/yes_no_tag.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION() \

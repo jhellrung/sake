@@ -10,9 +10,11 @@
  * cref_if_nbvo(T const & x)                   -> result_of::cref_if_nbvo<T>::type
  * cref_if_nbvo(T const & x, type_tag< Tags >) -> result_of::cref_if_nbvo< T, type_tag< Tags > >::type
  *
- * ref_if_nbvo (NBVO = Not By-Value-Optimal) will wrap its argument in a
- * sake::reference_wrapper if passing by value is not optimal (as given by
- * is_by_value_optimal).  In particular, reference wrappers are not rewrapped.
+ * NBVO = Not By-Value Optimal
+ *
+ * ref_if_nbvo will wrap its argument in a sake::reference_wrapper if passing by
+ * value is not optimal (as given by is_by_value_optimal).  In particular,
+ * reference wrappers are not rewrapped.
  *
  * The default tag set is boost::mpl::set1< ref_tag::parameter >.
  ******************************************************************************/

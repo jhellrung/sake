@@ -6,6 +6,8 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct unwrap_reference<T>
+ * struct extension::unwrap_reference< T, Enable = void >
+ * struct default_impl::unwrap_reference<T>
  *
  * This is a metafunction evaluating to the underlying referent if T is some
  * kind of reference wrapper, and to T otherwise.  A sake::reference_wrapper and
@@ -16,25 +18,17 @@
 #define SAKE_CORE_REF_UNWRAP_REFERENCE_HPP
 
 #include <sake/core/ref/fwd.hpp>
-#include <sake/core/utility/extension.hpp>
 
 namespace sake
 {
 
-namespace no_ext
-{
+/*******************************************************************************
+ * struct unwrap_reference<T>
+ ******************************************************************************/
 
 template< class T >
 struct unwrap_reference
-{ typedef T type; };
-
-} // namespace no_ext
-
-SAKE_EXTENSION_UNARY_CLASS( unwrap_reference )
-
-template< class T >
-struct unwrap_reference
-    : ext::unwrap_reference<T>
+    : extension::unwrap_reference<T>
 { };
 
 namespace unwrap_reference_private
@@ -67,6 +61,33 @@ template< class T >
 struct unwrap_reference< T const volatile >
     : unwrap_reference_private::helper< T const volatile, T >
 { };
+
+/*******************************************************************************
+ * struct extension::unwrap_reference< T, Enable = void >
+ ******************************************************************************/
+
+namespace extension
+{
+
+template< class T, class Enable /*= void*/ >
+struct unwrap_reference
+    : default_impl::unwrap_reference<T>
+{ };
+
+} // namespace extension
+
+/*******************************************************************************
+ * struct default_impl::unwrap_reference<T>
+ ******************************************************************************/
+
+namespace default_impl
+{
+
+template< class T >
+struct unwrap_reference
+{ typedef T type; };
+
+} // namespace default_impl
 
 } // namespace sake
 

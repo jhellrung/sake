@@ -165,11 +165,11 @@ private:
 };
 
 /*******************************************************************************
- * struct ext::unwrap_reference< reference_wrapper< T, Tags >, void >
- * struct ext::is_reference_wrapped_parameter< reference_wrapper< T, Tags >, void >
+ * struct extension::unwrap_reference< reference_wrapper< T, Tags >, void >
+ * struct extension::is_reference_wrapped_parameter< reference_wrapper< T, Tags >, void >
  ******************************************************************************/
 
-namespace ext
+namespace extension
 {
 
 template< class T, class Tags >
@@ -181,7 +181,7 @@ struct is_reference_wrapped_parameter< reference_wrapper< T, Tags >, void >
     : boost::mpl::has_key< Tags, sake::ref_tag::parameter >
 { };
 
-} // namespace ext
+} // namespace extension
 
 /*******************************************************************************
  * Allow a reference_wrapper wrapping a range to be viewed as a range itself.

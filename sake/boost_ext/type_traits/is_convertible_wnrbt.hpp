@@ -6,6 +6,8 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct boost_ext::is_convertible_wnrbt< From, To >
+ * struct boost_ext::extension::is_convertible_wnrbt< From, To, Enable = void >
+ * struct boost_ext::default_impl::is_convertible_wnrbt< From, To >
  *
  * WNRBT = With No Reference-Bound Temporary
  *
@@ -30,7 +32,7 @@
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/core/utility/extension.hpp>
+#include <sake/boost_ext/type_traits/is_convertible_wnrbt_fwd.hpp>
 
 namespace sake
 {
@@ -38,12 +40,45 @@ namespace sake
 namespace boost_ext
 {
 
+/*******************************************************************************
+ * struct boost_ext::is_convertible_wnrbt< From, To >
+ ******************************************************************************/
+
 template< class From, class To >
 struct is_convertible_wnrbt
     : boost_ext::is_convertible< From, To >
 { };
 
-namespace no_ext
+template< class From, class To >
+struct is_convertible_wnrbt< From, To& >
+    : boost_ext::mpl::and2<
+          boost_ext::is_convertible< From, To& >,
+          boost_ext::extension::is_convertible_wnrbt<
+              typename boost::remove_cv< From >::type,
+              To&
+          >
+      >
+{ };
+
+/*******************************************************************************
+ * struct boost_ext::extension::is_convertible_wnrbt< From, To, Enable = void >
+ ******************************************************************************/
+
+namespace extension
+{
+
+template< class From, class To, class Enable /*= void*/ >
+struct is_convertible_wnrbt
+    : boost_ext::default_impl::is_convertible_wnrbt< From, To >
+{ };
+
+} // namespace extension
+
+/*******************************************************************************
+ * struct boost_ext::default_impl::is_convertible_wnrbt< From, To >
+ ******************************************************************************/
+
+namespace default_impl
 {
 
 template< class From, class To >
@@ -62,20 +97,7 @@ struct is_convertible_wnrbt< From&, To& >
       >
 { };
 
-} // namespace no_ext
-
-SAKE_EXTENSION_CLASS( is_convertible_wnrbt, 2 )
-
-template< class From, class To >
-struct is_convertible_wnrbt< From, To& >
-    : boost_ext::mpl::and2<
-          boost_ext::is_convertible< From, To& >,
-          boost_ext::ext::is_convertible_wnrbt<
-              typename boost::remove_cv< From >::type,
-              To&
-          >
-      >
-{ };
+} // namespace default_impl
 
 } // namespace boost_ext
 

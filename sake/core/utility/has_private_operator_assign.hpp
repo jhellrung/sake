@@ -6,6 +6,8 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct has_private_operator_assign<T>
+ * struct extension::has_private_operator_assign< T, Enable = void >
+ * struct default_impl::has_private_operator_assign<T>
  *
  * This is a metafunction which should evaluate to true iff T has a private
  * assignment operator.  This is automatically correctly deduced if T uses
@@ -20,7 +22,7 @@
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/core/introspection/has_isc.hpp>
-#include <sake/core/utility/extension.hpp>
+#include <sake/core/utility/has_private_operator_assign_fwd.hpp>
 
 namespace sake
 {
@@ -30,13 +32,43 @@ SAKE_INTROSPECTION_DEFINE_HAS_ISC(
     has_private_operator_assign
 )
 
-namespace no_ext
+/*******************************************************************************
+ * struct has_private_operator_assign<T>
+ ******************************************************************************/
+
+template< class T >
+struct has_private_operator_assign
+    : extension::has_private_operator_assign<T>
+{ };
+
+/*******************************************************************************
+ * struct extension::has_private_operator_assign< T, Enable = void >
+ ******************************************************************************/
+
+namespace extension
+{
+
+template< class T, class Enable /*= void*/ >
+struct has_private_operator_assign
+    : default_impl::has_private_operator_assign<T>
+{ };
+
+} // namespace extension
+
+/*******************************************************************************
+ * struct default_impl::has_private_operator_assign<T>
+ ******************************************************************************/
+
+namespace default_impl
 {
 
 namespace has_private_operator_assign_private
 {
 
-template< class T, bool = has_isc_has_private_operator_assign<T>::value >
+template<
+    class T,
+    bool = sake::has_isc_has_private_operator_assign<T>::value
+>
 struct dispatch;
 
 template< class T >
@@ -58,14 +90,7 @@ struct has_private_operator_assign
     : has_private_operator_assign_private::dispatch<T>
 { };
 
-} // namespace no_ext
-
-SAKE_EXTENSION_UNARY_CLASS( has_private_operator_assign )
-
-template< class T >
-struct has_private_operator_assign
-    : ext::has_private_operator_assign<T>
-{ };
+} // namespace default_impl
 
 } // namespace sake
 

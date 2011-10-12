@@ -58,7 +58,6 @@
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/introspection/is_callable_function.hpp>
-#include <sake/core/utility/extension.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_HAS_OPERATOR_BINARY() \
     <sake/core/introspection/private/has_operator_binary.ipp>

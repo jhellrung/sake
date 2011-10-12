@@ -97,7 +97,7 @@ struct builtin_is_callable< R (*)( T... ), void, ResultPred >
 
 } // namespace introspection_private
 
-namespace no_ext
+namespace default_impl
 {
 
 namespace is_callable_private
@@ -162,7 +162,7 @@ struct dispatch< T, void ( ), ResultPred, false >
 
 } // namespace is_callable_private
 
-} // namespace no_ext
+} // namespace default_impl
 
 } // namespace sake
 

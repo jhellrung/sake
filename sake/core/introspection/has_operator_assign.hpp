@@ -50,7 +50,7 @@ SAKE_INTROSPECTION_DEFINE_HAS_MEMBER_FUNCTION(
 // has_private_assign metafunction) and still be able to identify move
 // assignable types.
 
-namespace ext
+namespace extension
 {
 
 namespace has_operator_assign_private
@@ -101,7 +101,7 @@ struct has_operator_assign<
       >
 { };
 
-} // namespace ext
+} // namespace extension
 
 } // namespace sake
 

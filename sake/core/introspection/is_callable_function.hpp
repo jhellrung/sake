@@ -65,7 +65,6 @@
 #include <sake/core/introspection/private/dummy.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/convertible_from_any.hpp>
-#include <sake/core/utility/extension.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION() \
     <sake/core/introspection/private/is_callable_function.ipp>

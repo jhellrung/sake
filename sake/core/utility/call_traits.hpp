@@ -5,7 +5,9 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * class call_traits<T>
+ * struct call_traits<T>
+ * struct extension::call_traits< T, Enable = void >
+ * struct default_impl::call_traits<T>
  *
  * This provides similar functionality as boost::call_traits.  See
  *     http://www.boost.org/libs/utility/call_traits.htm
@@ -50,16 +52,40 @@
 #include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
 
 #include <sake/core/move/is_movable.hpp>
-#include <sake/core/utility/extension.hpp>
+#include <sake/core/utility/call_traits_fwd.hpp>
 #include <sake/core/utility/is_by_value_optimal.hpp>
 
 namespace sake
 {
 
-template< class T >
-struct call_traits;
+/*******************************************************************************
+ * struct call_traits<T>
+ ******************************************************************************/
 
-namespace no_ext
+template< class T >
+struct call_traits
+    : extension::call_traits<T>
+{ };
+
+/*******************************************************************************
+ * struct extension::call_traits< T, Enable = void >
+ ******************************************************************************/
+
+namespace extension
+{
+
+template< class T, class Enable /*= void*/ >
+struct call_traits
+    : default_impl::call_traits<T>
+{ };
+
+} // namespace extension
+
+/*******************************************************************************
+ * struct default_impl::call_traits<T>
+ ******************************************************************************/
+
+namespace default_impl
 {
 
 namespace call_traits_private
@@ -186,14 +212,7 @@ struct call_traits< boost::rv<T> const & >
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-} // namespace no_ext
-
-SAKE_EXTENSION_UNARY_CLASS( call_traits )
-
-template< class T >
-struct call_traits
-    : ext::call_traits<T>
-{ };
+} // namespace default_impl
 
 } // namespace sake
 

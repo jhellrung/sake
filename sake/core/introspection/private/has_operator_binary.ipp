@@ -36,12 +36,70 @@
 
 
 
-#define trait_name_private BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
+template<
+    class T, class U,
+    class Result = SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ),
+    class ResultPred = ::boost::mpl::always< ::boost::true_type >
+>
+struct SAKE_INTROSPECTION_TRAIT_NAME;
 
-namespace no_ext
+namespace extension
+{
+template< class T, class U, class Result, class ResultPred, class Enable = void >
+struct BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 );
+template< class T, class U, class Result, class ResultPred, class Enable = void >
+struct BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 1 );
+} // namespace extension
+
+namespace default_impl
+{
+template<
+    class T, class U,
+    class Result = SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ),
+    class ResultPred = ::boost::mpl::always< ::boost::true_type >
+>
+struct SAKE_INTROSPECTION_TRAIT_NAME;
+} // namespace default_impl
+
+
+
+/*******************************************************************************
+ * struct SAKE_INTROSPECTION_TRAIT_NAME< T, U, Result = ..., ResultPred = ... >
+ ******************************************************************************/
+
+template< class T, class U, class Result, class ResultPred >
+struct SAKE_INTROSPECTION_TRAIT_NAME
+    : extension::BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 ) < T, U, Result, ResultPred >
+{ };
+
+/*******************************************************************************
+ * struct extension::SAKE_INTROSPECTION_TRAIT_NAME0< T, U, Result, ResultPred, Enable = void >
+ * struct extension::SAKE_INTROSPECTION_TRAIT_NAME1< T, U, Result, ResultPred, Enable = void >
+ ******************************************************************************/
+
+namespace extension
 {
 
-namespace trait_name_private
+template< class T, class U, class Result, class ResultPred, class Enable /*= void*/ >
+struct BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 )
+    : BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 1 )< T, U, Result, ResultPred >
+{ };
+
+template< class T, class U, class Result, class ResultPred, class Enable /*= void*/ >
+struct BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 1 )
+    : default_impl::SAKE_INTROSPECTION_TRAIT_NAME< T, U, Result, ResultPred >
+{ };
+
+} // namespace extension
+
+/*******************************************************************************
+ * struct default_impl::SAKE_INTROSPECTION_TRAIT_NAME< T, U, Result = ..., ResultPred = ... >
+ ******************************************************************************/
+
+namespace default_impl
+{
+
+namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
 {
 
 template< class Signature, class ResultPred >
@@ -68,30 +126,14 @@ struct dispatch< T, U, Result, ResultPred, false >
     : impl< Result ( T, U ), ResultPred >
 { };
 
-} // namespace trait_name_private
+} // namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
 
 template< class T, class U, class Result, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME
-    : trait_name_private::dispatch< T, U, Result, ResultPred >
+    : BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )::dispatch< T, U, Result, ResultPred >
 { };
 
-} // namespace no_ext
-
-SAKE_EXTENSION_CLASS_N( SAKE_INTROSPECTION_TRAIT_NAME, 4, 2 )
-
-template<
-    class T, class U,
-    class Result = SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ),
-    class ResultPred = ::boost::mpl::always< ::boost::true_type >
->
-struct SAKE_INTROSPECTION_TRAIT_NAME
-    : ext:: BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 ) < T, U, Result, ResultPred >
-{ };
-
-namespace no_ext
-{
-
-namespace trait_name_private
+namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
 {
 
 #undef SAKE_INTROSPECTION_TRAIT_NAME
@@ -107,11 +149,9 @@ namespace trait_name_private
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-} // namespace trait_name_private
+} // namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
 
-} // namespace no_ext
-
-#undef trait_name_private
+} // namespace default_impl
 
 
 

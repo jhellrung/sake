@@ -6,6 +6,8 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct is_by_value_optimal<T>
+ * struct extension::is_by_value_optimal< T, Enable = void >
+ * struct default_impl::is_by_value_optimal<T>
  *
  * This is a metafunction evaluating to true if passing T by value is optimal
  * relative to passing T by reference.
@@ -38,17 +40,52 @@
 #include <sake/boost_ext/type_traits/has_small_size.hpp>
 
 #include <sake/core/ref/is_reference_wrapper.hpp>
-#include <sake/core/utility/extension.hpp>
 
 #include <sake/core/utility/is_by_value_optimal_fwd.hpp>
 
 namespace sake
 {
 
-template< class T >
-struct is_by_value_optimal;
+/*******************************************************************************
+ * struct is_by_value_optimal<T>
+ ******************************************************************************/
 
-namespace no_ext
+template< class T >
+struct is_by_value_optimal
+    : extension::is_by_value_optimal<
+          typename boost::remove_cv<T>::type
+      >
+{ };
+
+template< class T >
+struct is_by_value_optimal< T* >
+    : boost::true_type
+{ };
+
+template< class T >
+struct is_by_value_optimal< T& >
+    : boost::true_type
+{ };
+
+/*******************************************************************************
+ * struct extension::is_by_value_optimal< T, Enable = void >
+ ******************************************************************************/
+
+namespace extension
+{
+
+template< class T, class Enable /*= void*/ >
+struct is_by_value_optimal
+    : default_impl::is_by_value_optimal<T>
+{ };
+
+} // namespace extension
+
+/*******************************************************************************
+ * struct default_impl::is_by_value_optimal<T>
+ ******************************************************************************/
+
+namespace default_impl
 {
 
 template< class T >
@@ -76,26 +113,7 @@ struct is_by_value_optimal
       >
 { };
 
-} // namespace no_ext
-
-SAKE_EXTENSION_UNARY_CLASS( is_by_value_optimal )
-
-template< class T >
-struct is_by_value_optimal
-    : ext::is_by_value_optimal<
-          typename boost::remove_cv<T>::type
-      >
-{ };
-
-template< class T >
-struct is_by_value_optimal< T* >
-    : boost::true_type
-{ };
-
-template< class T >
-struct is_by_value_optimal< T& >
-    : boost::true_type
-{ };
+} // namespace default_impl
 
 } // namespace sake
 

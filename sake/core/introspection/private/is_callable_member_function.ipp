@@ -36,10 +36,6 @@
 
 
 
-#define trait_name_private BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
-
-
-
 template<
     class T,
     class Signature = SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T ),
@@ -47,12 +43,55 @@ template<
 >
 struct SAKE_INTROSPECTION_TRAIT_NAME;
 
+namespace extension
+{
+template< class T, class Signature, class ResultPred, class Enable = void >
+struct SAKE_INTROSPECTION_TRAIT_NAME;
+} // namespace extension
+
+namespace default_impl
+{
+template<
+    class T,
+    class Signature = SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T ),
+    class ResultPred = ::boost::mpl::always< ::boost::true_type >
+>
+struct SAKE_INTROSPECTION_TRAIT_NAME;
+} // namespace default_impl
 
 
-namespace no_ext
+
+/*******************************************************************************
+ * struct SAKE_INTROSPECTION_TRAIT_NAME< T, Signature = ..., ResultPred = ... >
+ ******************************************************************************/
+
+template< class T, class Signature, class ResultPred >
+struct SAKE_INTROSPECTION_TRAIT_NAME
+    : extension::SAKE_INTROSPECTION_TRAIT_NAME< T, Signature, ResultPred >
+{ };
+
+/*******************************************************************************
+ * struct extension::SAKE_INTROSPECTION_TRAIT_NAME< T, Signature, ResultPred, Enable = void >
+ ******************************************************************************/
+
+namespace extension
 {
 
-namespace trait_name_private
+template< class T, class Signature, class ResultPred, class Enable /*= void*/ >
+struct SAKE_INTROSPECTION_TRAIT_NAME
+    : default_impl::SAKE_INTROSPECTION_TRAIT_NAME< T, Signature, ResultPred >
+{ };
+
+} // namespace extension
+
+/*******************************************************************************
+ * struct default_impl::SAKE_INTROSPECTION_TRAIT_NAME< T, Signature = ..., ResultPred = ... >
+ ******************************************************************************/
+
+namespace default_impl
+{
+
+namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
 {
 
 typedef ::boost::mpl::always< ::boost::true_type > always_true;
@@ -323,29 +362,20 @@ public:
 
 #endif // #if min_arity != max_arity && !defined( BOOST_NO_VARIADIC_TEMPLATES )
 
-} // namespace trait_name_private
+} // namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
 
 template< class T, class Signature, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME
-    : trait_name_private::dispatch< T, Signature, ResultPred >
+    : BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )::
+          dispatch< T, Signature, ResultPred >
 { };
 
-} // namespace no_ext
-
-
-
-SAKE_EXTENSION_CLASS( SAKE_INTROSPECTION_TRAIT_NAME, 3 )
-
-template< class T, class Signature, class ResultPred >
-struct SAKE_INTROSPECTION_TRAIT_NAME
-    : ext::SAKE_INTROSPECTION_TRAIT_NAME< T, Signature, ResultPred >
-{ };
+} // namespace default_impl
 
 
 
 #undef min_arity
 #undef max_arity
-#undef trait_name_private
 
 #undef SAKE_INTROSPECTION_TRAIT_NAME
 #undef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME

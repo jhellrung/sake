@@ -6,6 +6,8 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct pointee<P>
+ * struct extension::pointee< P, Enable = void >
+ * struct default_impl::pointee<P>
  *
  * This is a metafunction giving the type the given (possibly smart) pointer
  * or iterator refers to.  This includes a const qualifier if the pointer or
@@ -24,15 +26,42 @@
 #include <sake/core/introspection/has_type_value_type.hpp>
 #include <sake/core/introspection/is_incrementable.hpp>
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/extension.hpp>
 
 namespace sake
 {
 
-template< class P >
-struct pointee;
+/*******************************************************************************
+ * struct pointee<P>
+ ******************************************************************************/
 
-namespace no_ext
+template< class P >
+struct pointee
+    : extension::pointee<P>
+{ };
+
+template< class T >
+struct pointee< T* >
+{ typedef T type; };
+
+/*******************************************************************************
+ * struct extension::pointee< P, Enable = void >
+ ******************************************************************************/
+
+namespace extension
+{
+
+template< class P, class Enable /*= void*/ >
+struct pointee
+    : default_impl::pointee<P>
+{ };
+
+} // namespace extension
+
+/*******************************************************************************
+ * struct default_impl::pointee<P>
+ ******************************************************************************/
+
+namespace default_impl
 {
 
 namespace pointee_private
@@ -76,18 +105,7 @@ struct pointee
     : pointee_private::dispatch<P>
 { };
 
-template< class T >
-struct pointee< T* >
-{ typedef T type; };
-
-} // namespace no_ext
-
-SAKE_EXTENSION_UNARY_CLASS( pointee )
-
-template< class P >
-struct pointee
-    : ext::pointee<P>
-{ };
+} // namespace default_impl
 
 } // namespace sake
 

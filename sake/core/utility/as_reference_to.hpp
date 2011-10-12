@@ -9,6 +9,8 @@
  *     -> result_of::as_reference_to< From, To >::type
  * as_reference_to(From& from, type_tag< To >)
  *     -> result_of::as_reference_to< From, To >::type
+ * default_impl::as_reference_to(From& from, type_tag< To >)
+ *     -> result_of::as_reference_to< From, To >::type
  * struct functional::as_reference_to< To = void >
  *
  * This converts the given from parameter into a reference to a (possibly
@@ -63,10 +65,10 @@ struct as_reference_to;
 
 } // namespace result_of
 
-namespace as_reference_to_no_adl
+namespace default_impl
 {
 
-namespace private_
+namespace as_reference_to_private
 {
 
 template<
@@ -77,21 +79,21 @@ template<
 >
 struct dispatch;
 
-} // namespace private_
+} // namespace as_reference_to_private
 
 template< class From, class To >
-inline typename private_::dispatch< From, To >::result_type
+inline typename as_reference_to_private::dispatch< From, To >::type
 as_reference_to(From& from, sake::type_tag< To >)
-{ return private_::dispatch< From, To >::apply(from); }
+{ return as_reference_to_private::dispatch< From, To >::apply(from); }
 
-} // namespace as_reference_to_no_adl
+} // namespace default_impl
 
 } // namespace sake
 
 namespace sake_as_reference_to_private
 {
 
-using namespace ::sake::as_reference_to_no_adl;
+using ::sake::default_impl::as_reference_to;
 
 template< class From, class To >
 struct has_void_result
@@ -115,7 +117,7 @@ struct star_has_void_result
     typedef star_has_void_result type;
 };
 
-#define define_non_void_result_helper( expression ) \
+#define define_non_void_result( expression ) \
     static bool const reference = SAKE_EXPR_APPLY( \
         ::boost::mpl::quote1< ::sake::boost_ext::is_reference >, \
         expression \
@@ -132,9 +134,9 @@ struct star_has_void_result
     typedef typename ::sake::boost_ext::add_cv_if_c< const_, volatile_, To >::type & type;
 
 template< class From, class To >
-struct non_void_result_helper
+struct non_void_result
 {
-    define_non_void_result_helper(
+    define_non_void_result(
         as_reference_to(
             ::sake::declref< From >(),
             ::sake::type_tag< To >()
@@ -143,9 +145,9 @@ struct non_void_result_helper
 };
 
 template< class From, class To >
-struct star_non_void_result_helper
+struct star_non_void_result
 {
-    define_non_void_result_helper(
+    define_non_void_result(
         as_reference_to(
             *::sake::declval< From >(),
             ::sake::type_tag< To >()
@@ -153,7 +155,7 @@ struct star_non_void_result_helper
     )
 };
 
-#undef define_non_void_result_helper
+#undef define_non_void_result
 
 template< class To, class From >
 inline typename ::sake::result_of::as_reference_to< From, To >::type
@@ -179,7 +181,7 @@ struct as_reference_to
               typename sake::remove_type_tag< To >::type
           >::value,
           boost::mpl::identity< void >,
-          ::sake_as_reference_to_private::non_void_result_helper<
+          ::sake_as_reference_to_private::non_void_result<
               From,
               typename sake::remove_type_tag< To >::type
           >
@@ -244,16 +246,16 @@ inline typename result_of::as_reference_to< From const, To >::type
 as_reference_to(From const & from)
 { return ::sake_as_reference_to_private::impl< To >(from); }
 
-namespace as_reference_to_no_adl
+namespace default_impl
 {
 
-namespace private_
+namespace as_reference_to_private
 {
 
 template< class From, class To >
 struct dispatch< From, To, false, false >
 {
-    typedef void result_type;
+    typedef void type;
     static void apply(From&)
     { }
 };
@@ -269,8 +271,8 @@ struct dispatch< From, To, true, HasOperatorStar >
         sake::declref< From >(),
         To const &
     );
-    typedef typename boost_ext::add_cv_if_c< const_, volatile_, To >::type & result_type;
-    static result_type apply(From& from)
+    typedef typename boost_ext::add_cv_if_c< const_, volatile_, To >::type & type;
+    static type apply(From& from)
     { return from; }
 };
 
@@ -280,15 +282,15 @@ struct dispatch< From, To, false, true >
     typedef typename boost::mpl::eval_if<
         sake_as_reference_to_private::star_has_void_result< From&, To >,
         boost::mpl::identity< void >,
-        sake_as_reference_to_private::star_non_void_result_helper< From&, To >
-    >::type result_type;
-    static result_type apply(From& from)
+        sake_as_reference_to_private::star_non_void_result< From&, To >
+    >::type type;
+    static type apply(From& from)
     { return sake::as_reference_to< To >(*from); }
 };
 
-} // namespace private_
+} // namespace as_reference_to_private
 
-} // namespace as_reference_to_no_adl
+} // namespace default_impl
 
 } // namespace sake
 

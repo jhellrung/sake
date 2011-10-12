@@ -27,18 +27,37 @@ struct is_reference_wrapper;
 template< class T >
 struct unwrap_reference;
 
+template< class T >
+struct is_reference_wrapped_parameter;
+
 template< class T, class Tags = ref_tag::default_tags >
 class reference_wrapper;
 
+namespace extension
+{
+template< class T, class Enable = void >
+struct unwrap_reference;
+template< class T, class Enable = void >
+struct is_reference_wrapped_parameter;
+} // namespace extension
+
+namespace default_impl
+{
+template< class T >
+struct unwrap_reference;
+template< class T >
+struct is_reference_wrapped_parameter;
+} // namespace default_impl
+
 #if 0
 /*******************************************************************************
- * struct ext::range_mutable_cursor< T, Introversal, ... >
- * struct ext::range_const_cursor< T, Introversal, ... >
- * struct ext::range_is_view< T, ... >
- * struct ext::range_static_size< T, ... >
+ * struct extension::range_mutable_cursor< T, Introversal, ... >
+ * struct extension::range_const_cursor< T, Introversal, ... >
+ * struct extension::range_is_view< T, ... >
+ * struct extension::range_static_size< T, ... >
  ******************************************************************************/
 
-namespace ext
+namespace extension
 {
 
 template< class T, class Introversal >
@@ -73,17 +92,17 @@ struct range_static_size<
     : sake::range_static_size< typename sake::unwrap_reference<T>::type >
 { };
 
-} // namespace ext
+} // namespace extension
 #endif // #if 0
 
 /*******************************************************************************
- * struct boost_ext::ext::is_convertible_wnrbt< T, U, ... >
+ * struct boost_ext::extension::is_convertible_wnrbt< T, U, ... >
  ******************************************************************************/
 
 namespace boost_ext
 {
 
-namespace ext
+namespace extension
 {
 
 template< class T, class U >
@@ -97,7 +116,7 @@ struct is_convertible_wnrbt<
       >
 { };
 
-} // namespace ext
+} // namespace extension
 
 } // namespace boost_ext
 

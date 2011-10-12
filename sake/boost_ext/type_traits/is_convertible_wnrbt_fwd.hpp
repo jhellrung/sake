@@ -18,13 +18,17 @@ namespace boost_ext
 template< class From, class To >
 struct is_convertible_wnrbt;
 
-namespace ext
+namespace extension
 {
-
-template< class From, class To, class Enable >
+template< class From, class To, class Enable = void >
 struct is_convertible_wnrbt;
+} // namespace extension
 
-} // namespace ext
+namespace default_impl
+{
+template< class From, class To >
+struct is_convertible_wnrbt;
+} // namespace default_impl
 
 } // namespace boost_ext
 
