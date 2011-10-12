@@ -47,7 +47,7 @@ struct fuzzy_sign_t
     int as_int_nothrow() const;
 
 private:
-    fuzzy_sign_t(unsigned int const value);
+    explicit fuzzy_sign_t(unsigned int const value);
 public:
     // public only to allow access to the free operators.
     static unsigned int const zero_sign_value = 0;
