@@ -186,7 +186,7 @@ operator()(
                 return;
             if(this_.p_log && this_.p_current_scope->second.log_level <= log_level_cross_scope)
                 try {
-                    *this_.p_log << std::setw(this_.p_current_scope->second.depth) << ""
+                    *this_.p_log << std::setw(2 * this_.p_current_scope->second.depth) << ""
                                  << "Exiting local scope " << local_scope_name << "..."
                                  << std::endl;
                 }
@@ -227,7 +227,7 @@ operator()(
     assert(p_current_scope->second.depth == depth);
 
     if(p_log && log_level <= log_level_cross_scope)
-        *p_log << std::setw(depth) << ""
+        *p_log << std::setw(2 * depth) << ""
                << "Entering local scope " << local_scope_name << "..."
                << std::endl;
 
@@ -249,24 +249,24 @@ operator()(
             if(rethrow_exception)
                 throw;
             if(p_log && log_level <= log_level_exception)
-                *p_log << std::setw(depth) << "" << "*** boost::exception thrown ***\n"
-                       << std::setw(depth) << "" << boost::diagnostic_information(e)
+                *p_log << std::setw(2 * depth) << "" << "*** boost::exception thrown ***\n"
+                       << std::setw(2 * depth) << "" << boost::diagnostic_information(e)
                        << std::endl;
         }
         catch(std::exception& e) {
             if(rethrow_exception)
                 throw;
             if(p_log && log_level <= log_level_exception)
-                *p_log << std::setw(depth) << "" << "*** std::exception thrown ***\n"
-                       << std::setw(depth) << "" << boost::diagnostic_information(e)
+                *p_log << std::setw(2 * depth) << "" << "*** std::exception thrown ***\n"
+                       << std::setw(2 * depth) << "" << boost::diagnostic_information(e)
                        << std::endl;
         }
         catch(...) {
             if(rethrow_exception)
                 throw;
             if(p_log && log_level <= log_level_exception)
-                *p_log << std::setw(depth) << "" << "*** unknown exception thrown ***\n"
-                       << std::setw(depth) << "" << "(boost::diagnostic_information unavailable)"
+                *p_log << std::setw(2 * depth) << "" << "*** unknown exception thrown ***\n"
+                       << std::setw(2 * depth) << "" << "(boost::diagnostic_information unavailable)"
                        << std::endl;
         }
     }
@@ -394,7 +394,7 @@ fail(e_fail_level const fail_level, char const* const message)
         break;
     }
     if(p_log && data.log_level <= log_level_fail) {
-        *p_log << std::setw(data.depth) << message;
+        *p_log << std::setw(2 * data.depth) << message;
         p_log->flush();
     }
     if(fail_level == fail_level_require)
