@@ -350,7 +350,7 @@ inline int
 fuzzy_sign_t::
 as_int_nothrow() const
 {
-    SAKE_ASSERT_RELATION( m_value, !=, indeterminate_sign_value );
+    SAKE_ASSERT_RELATION( m_value, !=, static_cast< unsigned int >(indeterminate_sign_value) );
     return static_cast< int >((m_value + 1) & 3) - 1;
 }
 

@@ -30,35 +30,48 @@
 #define SAKE_CORE_MATH_SIGN_HPP
 
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/vector/vector10.hpp>
-#include <boost/type_traits/is_same.hpp>
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
-#include <sake/core/expr_traits/best_conversion.hpp>
+#include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/compare.hpp>
 #include <sake/core/math/fuzzy_sign_t.hpp>
 #include <sake/core/math/sign_fwd.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
-#include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/identity_type.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
-
-namespace sake_sign_private
-{
-template< class T >
-struct result;
-} // namespace sake_sign_private
 
 namespace sake
 {
+
+#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable_sign
+#define SAKE_INTROSPECTION_FUNCTION_NAME sign
+#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 1 )
+#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun_sign
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME sign
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
+
+namespace default_impl
+{
+
+namespace sign_private
+{
+
+template<
+    class T,
+    bool S    = sake::is_callable_mem_fun_sign< T const &, sake::sign_t ( ) >::value
+             || sake::is_callable_mem_fun_sign< T const &, int ( ) >::value,
+    bool SorF = S || sake::is_callable_mem_fun_sign< T const &, sake::fuzzy_sign_t ( ) >::value
+>
+struct dispatch;
+
+} // namespace sign_private
+
+} // namespace default_impl
 
 namespace result_of
 {
@@ -95,9 +108,32 @@ struct sign
 namespace default_impl
 {
 
+namespace sign_private
+{
+
+template<
+    class T,
+    bool S    = sake::is_callable_sign< sake::sign_t ( T const & ) >::value
+             || sake::is_callable_sign< int ( T const & ) >::value,
+    bool SorF = S || sake::is_callable_sign< sake::fuzzy_sign_t ( T const & ) >::value
+>
+struct dispatch;
+
+template< class T, bool S >
+struct dispatch< T, S, true >
+    : boost::mpl::if_c< S, sake::sign_t, sake::fuzzy_sign_t >
+{ };
+
+template< class T >
+struct dispatch< T, false, false >
+    : sake::default_impl::sign_private::dispatch<T>
+{ };
+
+} // namespace sign_private
+
 template< class T >
 struct sign
-    : ::sake_sign_private::result<
+    : sign_private::dispatch<
           typename boost_ext::remove_qualifiers<T>::type
       >
 { };
@@ -111,14 +147,6 @@ namespace default_impl
 
 namespace sign_private
 {
-
-template<
-    class T,
-    bool S     = sake::is_callable_mem_fun_sign< T const &, sake::sign_t ( ) >::value
-              || sake::is_callable_mem_fun_sign< T const &, int ( ) >::value,
-    bool SorFS = S || sake::is_callable_mem_fun_sign< T const &, sake::fuzzy_sign_t ( ) >::value
->
-struct dispatch;
 
 template< class T, bool S >
 struct dispatch< T, S, true >
@@ -139,7 +167,7 @@ struct dispatch< T, false, false >
 } // namespace sign_private
 
 template< class T >
-inline typename sign_private::dispatch<T>::type
+inline typename sake::result_of::sign<T>::type
 sign(T const & x)
 { return sign_private::dispatch<T>::apply(x); }
 
@@ -150,28 +178,11 @@ sign(T const & x)
 namespace sake_sign_private
 {
 
-using ::sake::default_impl::sign;
-
-template< class T >
-struct result
-{
-    SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
-        sign(::sake::declcref<T>()),
-        SAKE_IDENTITY_TYPE_WRAP((::boost::mpl::vector3<
-            int, ::sake::sign_t, ::sake::fuzzy_sign_t >)),
-        nominal_type
-    );
-    typedef typename boost::mpl::if_c<
-        boost::is_same< nominal_type, int >::value,
-        ::sake::sign_t,
-        nominal_type
-    >::type type;
-};
-
 template< class T >
 typename ::sake::result_of::sign<T>::type
 impl(T const & x)
 {
+    using ::sake::default_impl::sign;
     typedef typename ::sake::result_of::sign<T>::type result_type;
     return static_cast< result_type >(sign(x));
 }

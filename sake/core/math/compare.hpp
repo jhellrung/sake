@@ -145,20 +145,20 @@ template<
                || sake::is_callable_compare1< int ( T0 const &, T1 const & ) >::value,
     bool SorF10 = S10 || sake::is_callable_compare1< sake::fuzzy_sign_t ( T0 const &, T1 const & ) >::value
 >
-struct dispatch_on_fun;
+struct dispatch;
 
 template< class T0, class T1, bool S01, bool S10, bool SorF10 >
-struct dispatch_on_fun< T0, T1, S01, true, S10, SorF10 >
+struct dispatch< T0, T1, S01, true, S10, SorF10 >
     : boost::mpl::if_c< S01, sake::sign_t, sake::fuzzy_sign_t >
 { };
 
 template< class T0, class T1, bool S10 >
-struct dispatch_on_fun< T0, T1, false, false, S10, true >
+struct dispatch< T0, T1, false, false, S10, true >
     : boost::mpl::if_c< S10, sake::sign_t, sake::fuzzy_sign_t >
 { };
 
 template< class T0, class T1 >
-struct dispatch_on_fun< T0, T1, false, false, false, false >
+struct dispatch< T0, T1, false, false, false, false >
     : sake::default_impl::compare_private::dispatch_on_mem_fun< T0, T1 >
 { };
 
@@ -166,7 +166,7 @@ struct dispatch_on_fun< T0, T1, false, false, false, false >
 
 template< class T0, class T1 /*= T0*/ >
 struct compare
-    : compare_private::dispatch_on_fun<
+    : compare_private::dispatch<
           typename boost_ext::remove_qualifiers< T0 >::type,
           typename boost_ext::remove_qualifiers< T1 >::type
       >
