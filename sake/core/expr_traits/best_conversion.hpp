@@ -40,7 +40,7 @@
         candidate_types, \
         SAKE_EXPR_BEST_CONVERSION_INDEX( expression, candidate_types ), \
         void \
-    >
+    >::type
 
 #define SAKE_EXPR_BEST_CONVERSION_TYPEDEF( expression, candidate_types, type_ ) \
     static const int BOOST_PP_CAT( _sake_expr_best_conversion_index_for_, type_ ) = \
