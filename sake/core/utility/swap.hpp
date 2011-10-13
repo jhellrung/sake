@@ -6,10 +6,10 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * swap(T0& x0, T1& x1) -> void
- * default_impl::swap(T& x0, ... x1) -> void
  * struct functional::swap
  *
- * swap swaps its arguments.  It should be semantically equivalent to
+ * swap swaps its arguments, with the default implementation using move
+ * construction and assignment.  It should be semantically equivalent to
  * boost::swap or an qualified call to swap.
  ******************************************************************************/
 
@@ -20,65 +20,55 @@
 
 #include <boost/static_assert.hpp>
 
+#include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/move/move.hpp>
-
-namespace sake
-{
-
-namespace default_impl
-{
-
-namespace swap_private
-{
-
-// We use this wrapper template to make the following swap overload less
-// preferable to std::swap and boost::swap.
-template< class T >
-struct wrapper
-{
-    typedef wrapper type;
-    T& x;
-    wrapper(T& x_) : x(x_) { }
-};
-
-} // namespace swap_private
-
-template< class T >
-inline void
-swap(T& x0, typename swap_private::wrapper<T>::type const w1)
-{
-    T temp(sake::move(x0));
-    x0 = sake::move(w1.x);
-    w1.x = sake::move(temp);
-}
-
-} // namespace default_impl
-
-} // namespace sake
 
 namespace sake_swap_private
 {
 
+#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
+#define SAKE_INTROSPECTION_FUNCTION_NAME swap
+#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
+#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
+
 template< class T0, class T1 >
 inline void
-impl(T0& x0, T1& x1)
-{
-    using ::sake::default_impl::swap;
-    swap(x0, x1);
-}
-
-template< class T0, std::size_t N0, class T1, std::size_t N1 >
-void impl(T0 (&x0)[N0], T1 (&x1)[N1])
-{
-    BOOST_STATIC_ASSERT((N0 == N1));
-    for(std::size_t i = 0; i != N0; ++i)
-        ::sake_swap_private::impl(x0[i], x1[i]);
-}
+adl(T0& x0, T1& x1)
+{ swap(x0, x1); }
 
 } // namespace sake_swap_private
 
 namespace sake
 {
+
+namespace swap_private
+{
+
+template<
+    class T0, class T1,
+    bool = sake_swap_private::is_callable< void ( T0&, T1& ) >::value
+>
+struct dispatch;
+
+template< class T0, class T1 >
+struct dispatch< T0, T1, false >
+{
+    static void apply(T0& x0, T1& x1)
+    {
+        T0 temp(sake::move(x0));
+        x0 = sake::move(x1);
+        x1 = sake::move(temp);
+    }
+};
+
+template< class T0, class T1 >
+struct dispatch< T0, T1, true >
+{
+    static void apply(T0& x0, T1& x1)
+    { sake_swap_private::adl(x0, x1); }
+};
+
+} // namespace swap_private
 
 namespace functional
 {
@@ -89,7 +79,15 @@ struct swap
 
     template< class T0, class T1 >
     void operator()(T0& x0, T1& x1) const
-    { ::sake_swap_private::impl(x0, x1); }
+    { sake::swap_private::dispatch< T0, T1 >::apply(x0, x1); }
+
+    template< class T0, std::size_t N0, class T1, std::size_t N1 >
+    void operator()(T0 (&a0)[N0], T1 (&a1)[N1])
+    {
+        BOOST_STATIC_ASSERT((N0 == N1));
+        for(std::size_t i = 0; i != N0; ++i)
+            operator()(a0[i], a1[i]);
+    }
 };
 
 } // namespace functional
