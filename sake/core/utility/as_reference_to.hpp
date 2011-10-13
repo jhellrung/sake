@@ -49,29 +49,14 @@
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
-namespace sake_as_reference_to_private
-{
-
-#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
-#define SAKE_INTROSPECTION_FUNCTION_NAME as_reference_to
-#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
-#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
-
-} // namespace sake_as_reference_to_private
-
 namespace sake
 {
 
 namespace as_reference_to_private
 {
 
-template<
-    class From, class To,
-    bool = sake_as_reference_to_private::is_callable<
-               void ( From&, sake::type_tag< To > )
-           >::value
->
-struct dispatch_on_is_callable;
+template< class From, class To >
+struct impl;
 
 } // namespace as_reference_to_private
 
@@ -80,7 +65,7 @@ namespace result_of
 
 template< class From, class To >
 struct as_reference_to
-    : as_reference_to_private::dispatch_on_is_callable<
+    : as_reference_to_private::impl<
           From,
           typename sake::remove_type_tag< To >::type
       >
@@ -114,12 +99,12 @@ struct as_reference_to
     template< class From >
     typename result_of::as_reference_to< From, To >::type
     operator()(From& from) const
-    { return as_reference_to_private::dispatch_on_is_callable< From, To >::apply(from); }
+    { return as_reference_to_private::impl< From, To >::apply(from); }
 
     template< class From >
     typename result_of::as_reference_to< From const, To >::type
     operator()(From const & from) const
-    { return as_reference_to_private::dispatch_on_is_callable< From const, To >::apply(from); }
+    { return as_reference_to_private::impl< From const, To >::apply(from); }
 };
 
 template<>
@@ -155,6 +140,11 @@ as_reference_to(From const & from)
 namespace sake_as_reference_to_private
 {
 
+#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
+#define SAKE_INTROSPECTION_FUNCTION_NAME as_reference_to
+#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
+#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
+
 template< class From, class To >
 struct adl
 {
@@ -187,6 +177,14 @@ namespace as_reference_to_private
 
 template<
     class From, class To,
+    bool = sake_as_reference_to_private::is_callable<
+               void ( From&, sake::type_tag< To > )
+           >::value
+>
+struct dispatch_on_is_callable;
+
+template<
+    class From, class To,
     bool = boost_ext::is_convertible_wnrbt< From&, To const & >::value
         || boost_ext::is_convertible_wnrbt< From&, To const volatile & >::value
 >
@@ -197,6 +195,11 @@ template<
     bool = sake::has_operator_star< From& >::value
 >
 struct dispatch_on_has_operator_star;
+
+template< class From, class To >
+struct impl
+    : dispatch_on_is_callable< From, To >
+{ };
 
 template< class From, class To >
 struct dispatch_on_is_callable< From, To, true >
