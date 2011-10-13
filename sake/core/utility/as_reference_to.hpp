@@ -7,10 +7,6 @@
  *
  * as_reference_to< To >(From& from)
  *     -> result_of::as_reference_to< From, To >::type
- * as_reference_to(From& from, type_tag< To >)
- *     -> result_of::as_reference_to< From, To >::type
- * default_impl::as_reference_to(From& from, type_tag< To >)
- *     -> result_of::as_reference_to< From, To >::type
  * struct functional::as_reference_to< To = void >
  *
  * This converts the given from parameter into a reference to a (possibly
@@ -27,14 +23,12 @@
  * based on the overload found via ADL, so it should not be specialized.
  *
  * If result_of::as_reference_to< From, To >::type is void, then From& cannot be
- * converted into any reference to a To.
+ * converted into any reference to a To via as_reference_to.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_AS_REFERENCE_TO_HPP
 #define SAKE_CORE_UTILITY_AS_REFERENCE_TO_HPP
 
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/static_assert.hpp>
@@ -44,28 +38,28 @@
 #include <sake/boost_ext/type_traits/add_cv_if.hpp>
 #include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
+#include <sake/boost_ext/type_traits/is_lvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/expr_traits/apply.hpp>
 #include <sake/core/expr_traits/is_convertible.hpp>
-#include <sake/core/expr_traits/is_void.hpp>
 #include <sake/core/introspection/has_operator_star.hpp>
+#include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
+namespace sake_as_reference_to_private
+{
+
+#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
+#define SAKE_INTROSPECTION_FUNCTION_NAME as_reference_to
+#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
+#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
+
+} // namespace sake_as_reference_to_private
+
 namespace sake
-{
-
-namespace result_of
-{
-
-template< class From, class To >
-struct as_reference_to;
-
-} // namespace result_of
-
-namespace default_impl
 {
 
 namespace as_reference_to_private
@@ -73,118 +67,22 @@ namespace as_reference_to_private
 
 template<
     class From, class To,
-    bool = boost_ext::is_convertible_wnrbt< From&, To const & >::value ||
-           boost_ext::is_convertible_wnrbt< From&, To const volatile & >::value,
-    bool = sake::has_operator_star< From& >::value
+    bool = sake_as_reference_to_private::is_callable<
+               void ( From&, sake::type_tag< To > )
+           >::value
 >
-struct dispatch;
+struct dispatch_on_is_callable;
 
 } // namespace as_reference_to_private
-
-template< class From, class To >
-inline typename as_reference_to_private::dispatch< From, To >::type
-as_reference_to(From& from, sake::type_tag< To >)
-{ return as_reference_to_private::dispatch< From, To >::apply(from); }
-
-} // namespace default_impl
-
-} // namespace sake
-
-namespace sake_as_reference_to_private
-{
-
-using ::sake::default_impl::as_reference_to;
-
-template< class From, class To >
-struct has_void_result
-{
-    // purposely unqualified call to as_reference_to to allow for ADL
-    static bool const value = SAKE_EXPR_IS_VOID( as_reference_to(
-        ::sake::declref< From >(),
-        ::sake::type_tag< To >()
-    ) );
-    typedef has_void_result type;
-};
-
-template< class From, class To >
-struct star_has_void_result
-{
-    // purposely unqualified call to as_reference_to to allow for ADL
-    static bool const value = SAKE_EXPR_IS_VOID( as_reference_to(
-        *::sake::declref< From >(),
-        ::sake::type_tag< To >()
-    ) );
-    typedef star_has_void_result type;
-};
-
-#define define_non_void_result( expression ) \
-    static bool const reference = SAKE_EXPR_APPLY( \
-        ::boost::mpl::quote1< ::sake::boost_ext::is_reference >, \
-        expression \
-    ); \
-    BOOST_STATIC_ASSERT((reference)); \
-    static bool const const_ = SAKE_EXPR_APPLY( \
-        ::boost::is_const< ::sake::boost_ext::remove_reference< ::boost::mpl::_1 > >, \
-        expression \
-    ); \
-    static bool const volatile_ = SAKE_EXPR_APPLY( \
-        ::boost::is_volatile< ::sake::boost_ext::remove_reference< ::boost::mpl::_1 > >, \
-        expression \
-    ); \
-    typedef typename ::sake::boost_ext::add_cv_if_c< const_, volatile_, To >::type & type;
-
-template< class From, class To >
-struct non_void_result
-{
-    define_non_void_result(
-        as_reference_to(
-            ::sake::declref< From >(),
-            ::sake::type_tag< To >()
-        )
-    )
-};
-
-template< class From, class To >
-struct star_non_void_result
-{
-    define_non_void_result(
-        as_reference_to(
-            *::sake::declval< From >(),
-            ::sake::type_tag< To >()
-        )
-    )
-};
-
-#undef define_non_void_result
-
-template< class To, class From >
-inline typename ::sake::result_of::as_reference_to< From, To >::type
-impl(From& from)
-{
-    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_reference< To >::value));
-    return as_reference_to(from, ::sake::type_tag< To >());
-}
-
-} // namespace sake_as_reference_to_private
-
-namespace sake
-{
 
 namespace result_of
 {
 
 template< class From, class To >
 struct as_reference_to
-    : boost::mpl::eval_if_c<
-          ::sake_as_reference_to_private::has_void_result<
-              From,
-              typename sake::remove_type_tag< To >::type
-          >::value,
-          boost::mpl::identity< void >,
-          ::sake_as_reference_to_private::non_void_result<
-              From,
-              typename sake::remove_type_tag< To >::type
-          >
+    : as_reference_to_private::dispatch_on_is_callable<
+          From,
+          typename sake::remove_type_tag< To >::type
       >
 { };
 
@@ -194,6 +92,12 @@ struct as_reference_to< From&, To >
 { };
 
 } // namespace result_of
+
+/*******************************************************************************
+ * as_reference_to< To >(From& from)
+ *     -> result_of::as_reference_to< From, To >::type
+ * struct functional::as_reference_to< To = void >
+ ******************************************************************************/
 
 namespace functional
 {
@@ -210,12 +114,12 @@ struct as_reference_to
     template< class From >
     typename result_of::as_reference_to< From, To >::type
     operator()(From& from) const
-    { return ::sake_as_reference_to_private::impl< To >(from); }
+    { return as_reference_to_private::dispatch_on_is_callable< From, To >::apply(from); }
 
     template< class From >
     typename result_of::as_reference_to< From const, To >::type
     operator()(From const & from) const
-    { return ::sake_as_reference_to_private::impl< To >(from); }
+    { return as_reference_to_private::dispatch_on_is_callable< From const, To >::apply(from); }
 };
 
 template<>
@@ -226,12 +130,12 @@ struct as_reference_to< void >
     template< class From, class To >
     typename result_of::as_reference_to< From, To >::type
     operator()(From& from, sake::type_tag< To >) const
-    { return ::sake_as_reference_to_private::impl< To >(from); }
+    { return functional::as_reference_to< To >()(from); }
 
     template< class From, class To >
     typename result_of::as_reference_to< From const, To >::type
     operator()(From const & from, sake::type_tag< To >) const
-    { return ::sake_as_reference_to_private::impl< To >(from); }
+    { return functional::as_reference_to< To >()(from); }
 };
 
 } // namespace functional
@@ -239,58 +143,109 @@ struct as_reference_to< void >
 template< class To, class From >
 inline typename result_of::as_reference_to< From, To >::type
 as_reference_to(From& from)
-{ return ::sake_as_reference_to_private::impl< To >(from); }
+{ return functional::as_reference_to< To >()(from); }
 
 template< class To, class From >
 inline typename result_of::as_reference_to< From const, To >::type
 as_reference_to(From const & from)
-{ return ::sake_as_reference_to_private::impl< To >(from); }
+{ return functional::as_reference_to< To >()(from); }
 
-namespace default_impl
+} // namespace sake
+
+namespace sake_as_reference_to_private
+{
+
+template< class From, class To >
+struct adl
+{
+    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_reference< To >::value));
+    static bool const is_lvalue_reference = SAKE_EXPR_APPLY(
+        ::boost::mpl::quote1< ::sake::boost_ext::is_lvalue_reference >,
+        as_reference_to(::sake::declcref< From >(), ::sake::type_tag< To >())
+    );
+    BOOST_STATIC_ASSERT((is_lvalue_reference));
+    static bool const const_ = SAKE_EXPR_APPLY(
+        ::boost::is_const< ::sake::boost_ext::remove_reference< ::boost::mpl::_1 > >,
+        as_reference_to(::sake::declcref< From >(), ::sake::type_tag< To >())
+    );
+    static bool const volatile_ = SAKE_EXPR_APPLY(
+        ::boost::is_volatile< ::sake::boost_ext::remove_reference< ::boost::mpl::_1 > >,
+        as_reference_to(::sake::declcref< From >(), ::sake::type_tag< To >())
+    );
+    typedef typename ::sake::boost_ext::add_cv_if_c< const_, volatile_, To >::type & type;
+    static type apply(From& from)
+    { return as_reference_to(from, ::sake::type_tag< To >()); }
+};
+
+} // namespace sake_as_reference_to_private
+
+namespace sake
 {
 
 namespace as_reference_to_private
 {
 
-template< class From, class To >
-struct dispatch< From, To, false, false >
-{
-    typedef void type;
-    static void apply(From&)
-    { }
-};
+template<
+    class From, class To,
+    bool = boost_ext::is_convertible_wnrbt< From&, To const & >::value
+        || boost_ext::is_convertible_wnrbt< From&, To const volatile & >::value
+>
+struct dispatch_on_is_convertible_wnrbt;
 
-template< class From, class To, bool HasOperatorStar >
-struct dispatch< From, To, true, HasOperatorStar >
+template<
+    class From, class To,
+    bool = sake::has_operator_star< From& >::value
+>
+struct dispatch_on_has_operator_star;
+
+template< class From, class To >
+struct dispatch_on_is_callable< From, To, true >
+    : ::sake_as_reference_to_private::adl< From, To >
+{ };
+
+template< class From, class To >
+struct dispatch_on_is_callable< From, To, false >
+    : dispatch_on_is_convertible_wnrbt< From, To >
+{ };
+
+template< class From, class To >
+struct dispatch_on_is_convertible_wnrbt< From, To, true >
 {
     static bool const const_ = !SAKE_EXPR_IS_CONVERTIBLE(
-        sake::declref< From >(),
-        To volatile &
-    );
+        sake::declref< From >(), To volatile & );
     static bool const volatile_ = !SAKE_EXPR_IS_CONVERTIBLE(
-        sake::declref< From >(),
-        To const &
-    );
+        sake::declref< From >(), To const & );
     typedef typename boost_ext::add_cv_if_c< const_, volatile_, To >::type & type;
     static type apply(From& from)
     { return from; }
 };
 
 template< class From, class To >
-struct dispatch< From, To, false, true >
+struct dispatch_on_is_convertible_wnrbt< From, To, false >
+    : dispatch_on_has_operator_star< From, To >
+{ };
+
+template< class From, class To >
+struct dispatch_on_has_operator_star< From, To, true >
 {
-    typedef typename boost::mpl::eval_if<
-        sake_as_reference_to_private::star_has_void_result< From&, To >,
-        boost::mpl::identity< void >,
-        sake_as_reference_to_private::star_non_void_result< From&, To >
-    >::type type;
+    static bool const const_ = SAKE_EXPR_APPLY(
+        ::boost::is_const< ::sake::boost_ext::remove_reference< ::boost::mpl::_1 > >,
+        sake::functional::as_reference_to< To >()(*sake::declref< From >())
+    );
+    static bool const volatile_ = SAKE_EXPR_APPLY(
+        ::boost::is_volatile< ::sake::boost_ext::remove_reference< ::boost::mpl::_1 > >,
+        sake::functional::as_reference_to< To >()(*sake::declref< From >())
+    );
+    typedef typename ::sake::boost_ext::add_cv_if_c< const_, volatile_, To >::type & type;
     static type apply(From& from)
-    { return sake::as_reference_to< To >(*from); }
+    { return sake::functional::as_reference_to< To >()(*from); }
 };
 
-} // namespace as_reference_to_private
+template< class From, class To >
+struct dispatch_on_has_operator_star< From, To, false >
+{ typedef void type; };
 
-} // namespace default_impl
+} // namespace as_reference_to_private
 
 } // namespace sake
 
