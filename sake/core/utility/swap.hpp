@@ -31,11 +31,6 @@ namespace sake_swap_private
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-template< class T0, class T1 >
-inline void
-adl(T0& x0, T1& x1)
-{ swap(x0, x1); }
-
 } // namespace sake_swap_private
 
 namespace sake
@@ -50,25 +45,12 @@ template<
 >
 struct dispatch;
 
-template< class T0, class T1 >
-struct dispatch< T0, T1, false >
-{
-    static void apply(T0& x0, T1& x1)
-    {
-        T0 temp(sake::move(x0));
-        x0 = sake::move(x1);
-        x1 = sake::move(temp);
-    }
-};
-
-template< class T0, class T1 >
-struct dispatch< T0, T1, true >
-{
-    static void apply(T0& x0, T1& x1)
-    { sake_swap_private::adl(x0, x1); }
-};
-
 } // namespace swap_private
+
+/*******************************************************************************
+ * swap(T0& x0, T1& x1) -> void
+ * struct functional::swap
+ ******************************************************************************/
 
 namespace functional
 {
@@ -93,6 +75,44 @@ struct swap
 } // namespace functional
 
 functional::swap const swap = { };
+
+} // namespace sake
+
+namespace sake_swap_private
+{
+
+template< class T0, class T1 >
+inline void
+adl(T0& x0, T1& x1)
+{ swap(x0, x1); }
+
+} // namespace sake_swap_private
+
+namespace sake
+{
+
+namespace swap_private
+{
+
+template< class T0, class T1 >
+struct dispatch< T0, T1, false >
+{
+    static void apply(T0& x0, T1& x1)
+    {
+        T0 temp(sake::move(x0));
+        x0 = sake::move(x1);
+        x1 = sake::move(temp);
+    }
+};
+
+template< class T0, class T1 >
+struct dispatch< T0, T1, true >
+{
+    static void apply(T0& x0, T1& x1)
+    { sake_swap_private::adl(x0, x1); }
+};
+
+} // namespace swap_private
 
 } // namespace sake
 
