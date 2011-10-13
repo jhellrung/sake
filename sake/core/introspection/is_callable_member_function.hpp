@@ -33,10 +33,14 @@
  * SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T )
  *     [ defaults to "void" ]
  *     Expands to the default for the Signature template parameter.
+ * SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
+ *     [ optional ]
+ *     Expands to the (fixed) arity of the member function.
  * SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
- *     [ defaults to "( 0, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )" ]
+ *     [ optional, defaults to "( 0, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )" ]
  *     Expands to a Boost.Preprocessor 2-tuple giving the (inclusive) arity
- *     limits of the member function.
+ *     limits of the member function.  Note that at most one of *_ARITY and
+ *     *_ARITY_LIMITS should be defined.
  * SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION( T, Signature, ResultPred )
  *     [ defaults to "boost::false_type" ]
  *     Expands to a type with a nested type typedef indicating whether the
@@ -46,6 +50,11 @@
  *     "member" should be convertible to the result type of Signature and
  *     satisfy the Boost.MPL metafunction class or lambda expression
  *     ResultPred.
+ *
+ * For member functions with a language-imposed fixed arity N (e.g., operator[]
+ * or operator=), one should define *_ARITY as "N" to ensure that the member
+ * function overloads defined by the implementation have a syntactically valid
+ * signature.  Otherwise, it's better to define *_ARITY_LIMITS as "( N, N )".
  *
  * Note that this doesn't work quite so well for nullary member functions.
  * (const) reference conversions of the result type can be picked up, but no

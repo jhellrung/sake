@@ -40,7 +40,7 @@ SAKE_INTROSPECTION_DEFINE_HAS_MEMBER_FUNCTION(
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T ) \
     typename ::sake::boost_ext::add_reference<T>::type \
         ( typename ::sake::boost_ext::add_reference_add_const<T>::type )
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 1, 1 )
+#define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY 1
 #define SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION( T, Signature, ResultPred ) \
     ::sake::introspection_private::builtin_has_operator_assign< T, Signature, ResultPred >
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()

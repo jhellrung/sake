@@ -35,10 +35,19 @@
  *     [ defaults to "SAKE_INTROSPECTION_FUNCTION_NAME x_args" ]
  *     Expands to an application of the function with parameters given by the
  *     parenthesized argument list x_args.
+ * SAKE_INTROSPECTION_FUNCTION_ARITY
+ *     [ optional ]
+ *     Expands to the (fixed) arity of the function.
  * SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS
- *     [ defaults to "( 1, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )" ]
+ *     [ optional, defaults to "( 1, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )" ]
  *     Expands to a Boost.PP 2-tuple giving the (inclusive) arity limits of the
- *     function.
+ *     function.  Note that at most one of *_ARITY and *_ARITY_LIMITS should be
+ *     defined.
+ *
+ * For functions with a language-imposed fixed arity N (e.g., operators), one
+ * one should define *_ARITY as "N" to ensure that the member function overloads
+ * defined by the implementation have a syntactically valid signature.
+ * Otherwise, it's better to define *_ARITY_LIMITS as "( N, N )".
  ******************************************************************************/
 
 #ifndef SAKE_CORE_INTROSPECTION_IS_CALLABLE_FUNCTION_HPP

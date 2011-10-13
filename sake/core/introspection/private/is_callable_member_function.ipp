@@ -24,15 +24,25 @@
 #define SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION( T, Signature, ResultPred ) ::boost::false_type
 #endif // #ifndef SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION
 
+#ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
 #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )
-#endif // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
-
+#define min_arity 0
+#define max_arity SAKE_INTROSPECTION_DEFAULT_MAX_ARITY
+#else // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
 #define min_arity BOOST_PP_TUPLE_ELEM( 2, 0, SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS )
 #define max_arity BOOST_PP_TUPLE_ELEM( 2, 1, SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS )
 #if !(0 <= min_arity && min_arity <= max_arity)
-#error Invalid SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS.
-#endif // #if !(...)
+#error Invalid SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS.
+#endif // #if !(1 <= min_arity && min_arity <= max_arity)
+#endif // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
+#else // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
+#ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
+#error Must not define both SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY and\
+ SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
+#endif // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
+#define min_arity SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
+#define max_arity SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
+#endif // #ifndef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
 
 
 
@@ -113,22 +123,22 @@ struct dispatch< T, Signature, ResultPred, true >
 
 struct member_detector_base
 {
-#if min_arity == max_arity
+#ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
     void SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
-        ( BOOST_PP_ENUM_PARAMS( min_arity, int BOOST_PP_INTERCEPT ) )
+        ( BOOST_PP_ENUM_PARAMS( SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY, int BOOST_PP_INTERCEPT ) )
     { }
-#else // #if min_arity == max_arity
+#else // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
     void SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( ) { }
-#endif // #if min_arity == max_arity
+#endif // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
 };
 
 template<
     void (member_detector_base::*)
-#if min_arity == max_arity
-        ( BOOST_PP_ENUM_PARAMS( min_arity, int BOOST_PP_INTERCEPT ) )
-#else // #if min_arity == max_arity
+#ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
+        ( BOOST_PP_ENUM_PARAMS( SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY, int BOOST_PP_INTERCEPT ) )
+#else // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
         ( )
-#endif // #if min_arity == max_arity
+#endif // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
 >
 struct sfinae_member;
 
@@ -271,14 +281,14 @@ struct fallback : T
     using T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME;
     ::sake::introspection_private::dummy
     SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
-#if min_arity == max_arity
+#ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
         ( BOOST_PP_ENUM_PARAMS(
-            min_arity,
+            SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY,
             ::sake::convertible_from_any BOOST_PP_INTERCEPT
         ) ) const;
-#else // #if min_arity == max_arity
+#else // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
         (...) const;
-#endif // #if min_arity == max_arity
+#endif // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
 };
 
 template< class T > struct fallback< T const > : fallback<T> { };
@@ -289,7 +299,8 @@ class has_void_result;
 template< class T, class Signature, class ResultPred >
 class non_void_result_helper;
 
-#if min_arity != max_arity && !defined( BOOST_NO_VARIADIC_TEMPLATES )
+#if !defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY ) \
+ && !defined( BOOST_NO_VARIADIC_TEMPLATES )
 
 template< class T, class Result, class T0, class... T, class ResultPred >
 struct dispatch< T, Result ( T0, T... ), ResultPred, false >
@@ -352,7 +363,7 @@ public:
     typedef non_void_result_helper type;
 };
 
-#else // #if min_arity != max_arity && !defined( BOOST_NO_VARIADIC_TEMPLATES )
+#else // #if !defined( ... ) && !defined( ... )
 
 #if max_arity > 0
 #define BOOST_PP_ITERATION_LIMITS ( (min_arity > 0 ? min_arity : 1), max_arity )
@@ -360,7 +371,7 @@ public:
 #include BOOST_PP_ITERATE()
 #endif // #if max_arity > 0
 
-#endif // #if min_arity != max_arity && !defined( BOOST_NO_VARIADIC_TEMPLATES )
+#endif // #if !defined( ... ) && !defined( ... )
 
 } // namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
 
@@ -380,6 +391,7 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 #undef SAKE_INTROSPECTION_TRAIT_NAME
 #undef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
 #undef SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE
+#undef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
 #undef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
 #undef SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION
 
