@@ -28,9 +28,6 @@ struct A
     { return x; }
 };
 
-int& as_reference_to(A a, sake::type_tag<int>)
-{ return a; }
-
 struct B
 {
     int& x;
