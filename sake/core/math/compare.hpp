@@ -45,6 +45,7 @@
 
 #include <sake/core/expr_traits/best_conversion.hpp>
 #include <sake/core/functional/operators/less.hpp>
+#include <sake/core/functional/operators/unary_minus.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/compare_fwd.hpp>
@@ -233,25 +234,16 @@ struct dispatch< T0, T1, Result, 4 >
 
 template< class T0, class T1 >
 struct dispatch< T0, T1, void, 3 >
-{
-    SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
-        sake::declcref< T1 >().compare(sake::declcref< T0 >()),
-        result_of::default_impl::compare_result_types,
-        nominal_type
-    );
-    BOOST_STATIC_ASSERT((!boost::is_void< nominal_type >::value));
-    typedef typename boost::mpl::if_c<
-        boost::is_same< nominal_type, int >::value,
-        sake::sign_t,
-        nominal_type
-    >::type type;
-};
+    : sake::operators::result_of::unary_minus<
+          typename result_of::extension::compare< T1, T0 >::type
+      >
+{ };
 
 template< class T0, class T1, class Result >
 struct dispatch< T0, T1, Result, 3 >
 {
     static Result apply(T0 const & x0, T1 const & x1)
-    { return -static_cast< Result >(x1.compare(x0)); }
+    { return -sake::compare(x1, x0); }
 };
 
 template< class T0, class T1, class Result >
@@ -261,14 +253,16 @@ struct dispatch< T0, T1, Result, 2 >
 
 template< class T0, class T1 >
 struct dispatch< T0, T1, void, 1 >
-    : ::sake_compare_private::adl< T1, T0, void >
+    : sake::operators::result_of::unary_minus<
+          typename result_of::extension::compare< T1, T0 >::type
+      >
 { };
 
 template< class T0, class T1, class Result >
 struct dispatch< T0, T1, Result, 1 >
 {
     static Result apply(T0 const & x0, T1 const & x1)
-    { return -::sake_compare_private::adl< T1, T0, Result >::apply(x1, x0); }
+    { return -sake::compare(x1, x0); }
 };
 
 template<
