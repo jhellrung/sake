@@ -118,7 +118,7 @@ struct abs_result_types
 
 template< class T >
 struct abs
-    : sake::abs_private::dispatch<
+    : abs_private::dispatch<
           typename boost_ext::remove_qualifiers<T>::type,
           void
       >

@@ -38,6 +38,7 @@
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/dispatch_priority_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -57,7 +58,7 @@ namespace result_of
 template< class T >
 struct abs_ip
 {
-    BOOST_STATIC_ASSERT((boost_ext::is_lvalue_reference<T>));
+    BOOST_STATIC_ASSERT((boost_ext::is_lvalue_reference<T>::value));
     typedef T type;
 };
 
@@ -88,11 +89,17 @@ struct abs_ip
     operator()(long& x) const
     { return x = std::abs(x); }
 
-    #ifndef BOOST_NO_LONG_LONG
+#ifndef BOOST_NO_LONG_LONG
     long long&
     operator()(long long& x) const
-    { return x = std::abs(x); }
-    #endif // #ifndef BOOST_NO_LONG_LONG
+    {
+#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+        return x < 0 ? (x = -x) : x;
+#else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+        return x = std::abs(x);
+#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+    }
+#endif // #ifndef BOOST_NO_LONG_LONG
 
     float&
     operator()(float& x) const
