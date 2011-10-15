@@ -11,14 +11,20 @@
 namespace sake_unit_test
 {
 
+void abs_ip_test(sake::test::environment& env);
 void abs_test(sake::test::environment& env);
 void compare_test(sake::test::environment& env);
+void intlog2_test(sake::test::environment& env);
+void negate_ip_test(sake::test::environment& env);
 void sign_test(sake::test::environment& env);
 
 void math_test(sake::test::environment& env)
 {
     env("abs", &abs_test);
+    env("abs_ip", &abs_ip_test);
     env("compare", &compare_test);
+    env("intlog2", &intlog2_test);
+    env("negate_ip", &negate_ip_test);
     env("sign", &sign_test);
 }
 

@@ -143,6 +143,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\abs_ip_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\abs_test.cpp"
 			>
 		</File>
@@ -151,7 +155,15 @@
 			>
 		</File>
 		<File
+			RelativePath="..\intlog2_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\math_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\negate_ip_test.cpp"
 			>
 		</File>
 		<File
