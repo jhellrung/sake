@@ -12,27 +12,32 @@
  * struct result_of::extension::sign< T, Enable = void >
  * struct result_of::default_impl::sign<T>
  *
- * sign returns the sign of its argument (either a sake::sign_t or, in the event
- * that the sign could be indeterminate, a sake::fuzzy_sign_t).  It
- * automatically uses ADL to find overloads of sign, falling back to a default
- * implementation if ADL fails.
+ * Teturns the sign of its argument (either a sake::sign_t or, in the event
+ * that the sign could be indeterminate, a sake::fuzzy_sign_t).
  *
- * The default implementation of sign(T const &)
- * - forwards to T::sign, if available; else
- * - compares the argument to sake::zero via sake::compare.
+ * sake::sign(T const &) is implemented in terms of
+ * - T::sign(), if available; else
+ * - sign(T const &) (unqualified, hence subject to ADL), if available; else
+ * - comparison with sake::zero (via sake::compare).
  *
- * The default implementation of result_of::sign metafunction is evaluated based
- * on the sign overload found via ADL, and is able to detect result types
- * convertible to either sake::sign_t (including int's) and sake::fuzzy_sign_t.
+ * The default implementation of the result_of::sign metafunction is evaluated
+ * based on the result of the first available implementation above and is able
+ * to detect result types convertible to int, sake::sign_t, and
+ * sake::fuzzy_sign_t.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_MATH_SIGN_HPP
 #define SAKE_CORE_MATH_SIGN_HPP
 
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/vector/vector10.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_void.hpp>
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/expr_traits/best_conversion.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/compare.hpp>
@@ -40,38 +45,26 @@
 #include <sake/core/math/sign_fwd.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
+#include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
 {
 
-#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable_sign
-#define SAKE_INTROSPECTION_FUNCTION_NAME sign
-#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 1 )
-#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
-
-#define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun_sign
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME sign
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
-#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
-
-namespace default_impl
-{
-
 namespace sign_private
 {
 
+template< class T >
+struct dispatch_index;
+
 template<
     class T,
-    bool S    = sake::is_callable_mem_fun_sign< T const &, sake::sign_t ( ) >::value
-             || sake::is_callable_mem_fun_sign< T const &, int ( ) >::value,
-    bool SorF = S || sake::is_callable_mem_fun_sign< T const &, sake::fuzzy_sign_t ( ) >::value
+    class Result = typename result_of::sign<T>::type,
+    unsigned int = dispatch_index<T>::value
 >
 struct dispatch;
 
 } // namespace sign_private
-
-} // namespace default_impl
 
 namespace result_of
 {
@@ -108,89 +101,23 @@ struct sign
 namespace default_impl
 {
 
-namespace sign_private
-{
-
-template<
-    class T,
-    bool S    = sake::is_callable_sign< sake::sign_t ( T const & ) >::value
-             || sake::is_callable_sign< int ( T const & ) >::value,
-    bool SorF = S || sake::is_callable_sign< sake::fuzzy_sign_t ( T const & ) >::value
->
-struct dispatch;
-
-template< class T, bool S >
-struct dispatch< T, S, true >
-    : boost::mpl::if_c< S, sake::sign_t, sake::fuzzy_sign_t >
-{ };
-
-template< class T >
-struct dispatch< T, false, false >
-    : sake::default_impl::sign_private::dispatch<T>
-{ };
-
-} // namespace sign_private
+typedef boost::mpl::vector3<
+    int,
+    sake::sign_t,
+    sake::fuzzy_sign_t
+> sign_result_types;
 
 template< class T >
 struct sign
     : sign_private::dispatch<
-          typename boost_ext::remove_qualifiers<T>::type
+          typename boost_ext::remove_qualifiers<T>::type,
+          void
       >
 { };
 
 } // namespace default_impl
 
 } // namespace result_of
-
-namespace default_impl
-{
-
-namespace sign_private
-{
-
-template< class T, bool S >
-struct dispatch< T, S, true >
-{
-    typedef typename boost::mpl::if_c< S, sake::sign_t, sake::fuzzy_sign_t >::type type;
-    static type apply(T const & x)
-    { return static_cast< type >(x.sign()); }
-};
-
-template< class T >
-struct dispatch< T, false, false >
-{
-    typedef typename sake::result_of::compare< T, sake::zero_t >::type type;
-    static type apply(T const & x)
-    { return sake::compare(x, sake::zero); }
-};
-
-} // namespace sign_private
-
-template< class T >
-inline typename sake::result_of::sign<T>::type
-sign(T const & x)
-{ return sign_private::dispatch<T>::apply(x); }
-
-} // namespace default_impl
-
-} // namespace sake
-
-namespace sake_sign_private
-{
-
-template< class T >
-typename ::sake::result_of::sign<T>::type
-impl(T const & x)
-{
-    using ::sake::default_impl::sign;
-    typedef typename ::sake::result_of::sign<T>::type result_type;
-    return static_cast< result_type >(sign(x));
-}
-
-} // namespace sake_sign_private
-
-namespace sake
-{
 
 /*******************************************************************************
  * sign(T const & x) -> result_of::sign<T>::type
@@ -207,12 +134,106 @@ struct sign
     template< class T >
     typename result_of::sign<T>::type
     operator()(T const & x) const
-    { return ::sake_sign_private::impl(x); }
+    { return sign_private::dispatch<T>::apply(x); }
 };
 
 } // namespace functional
 
 functional::sign const sign = { };
+
+} // namespace sake
+
+namespace sake_sign_private
+{
+
+#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
+#define SAKE_INTROSPECTION_FUNCTION_NAME sign
+#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 1 )
+#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
+
+template< class T, class Result >
+struct adl
+{
+    static Result apply(T const & x)
+    { return static_cast< Result >(sign(x)); }
+};
+
+template< class T >
+struct adl< T, void >
+{
+    SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
+        sign(::sake::declcref<T>()),
+        ::sake::result_of::default_impl::sign_result_types,
+        nominal_type
+    );
+    BOOST_STATIC_ASSERT((!boost::is_void< nominal_type >::value));
+    typedef typename boost::mpl::if_c<
+        ::boost::is_same< nominal_type, int >::value,
+        ::sake::sign_t,
+        nominal_type
+    >::type type;
+};
+
+} // namespace sake_sign_private
+
+namespace sake
+{
+
+namespace sign_private
+{
+
+#define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun
+#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME sign
+#define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
+#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
+
+template< class T >
+struct dispatch_index
+{
+    static unsigned int const _ =
+        (1 << 2) * is_callable_mem_fun< T const & >::value
+      | (1 << 1) * sake_sign_private::is_callable< void ( T const & ) >::value
+      | (1 << 0);
+    static unsigned int const value = sake::static_intlog2_c<_>::value;
+};
+
+template< class T >
+struct dispatch< T, void, 2 >
+{
+    SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
+        sake::declcref<T>().sign(),
+        result_of::default_impl::sign_result_types,
+        nominal_type
+    );
+    BOOST_STATIC_ASSERT((!boost::is_void< nominal_type >::value));
+    typedef typename boost::mpl::if_c<
+        boost::is_same< nominal_type, int >::value,
+        sake::sign_t,
+        nominal_type
+    >::type type;
+};
+
+template< class T, class Result >
+struct dispatch< T, Result, 2 >
+{
+    static Result apply(T const & x)
+    { return static_cast< Result >(x.sign()); }
+};
+
+template< class T, class Result >
+struct dispatch< T, Result, 1 >
+    : ::sake_sign_private::adl< T, Result >
+{ };
+
+template< class T, class Result >
+struct dispatch< T, Result, 0 >
+{
+    typedef typename sake::result_of::compare< T, sake::zero_t >::type type;
+    static type apply(T const & x)
+    { return sake::compare(x, sake::zero); }
+};
+
+} // namespace sign_private
 
 } // namespace sake
 

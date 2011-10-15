@@ -45,6 +45,7 @@
 #include <sake/core/expr_traits/is_convertible.hpp>
 #include <sake/core/introspection/has_operator_star.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
+#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
@@ -56,7 +57,13 @@ namespace as_reference_to_private
 {
 
 template< class From, class To >
-struct impl;
+struct dispatch_index;
+
+template<
+    class From, class To,
+    unsigned int = dispatch_index< From, To >::value
+>
+struct dispatch;
 
 } // namespace as_reference_to_private
 
@@ -65,7 +72,7 @@ namespace result_of
 
 template< class From, class To >
 struct as_reference_to
-    : as_reference_to_private::impl<
+    : as_reference_to_private::dispatch<
           From,
           typename sake::remove_type_tag< To >::type
       >
@@ -99,12 +106,12 @@ struct as_reference_to
     template< class From >
     typename result_of::as_reference_to< From, To >::type
     operator()(From& from) const
-    { return as_reference_to_private::impl< From, To >::apply(from); }
+    { return as_reference_to_private::dispatch< From, To >::apply(from); }
 
     template< class From >
     typename result_of::as_reference_to< From const, To >::type
     operator()(From const & from) const
-    { return as_reference_to_private::impl< From const, To >::apply(from); }
+    { return as_reference_to_private::dispatch< From const, To >::apply(from); }
 };
 
 template<>
@@ -175,44 +182,25 @@ namespace sake
 namespace as_reference_to_private
 {
 
-template<
-    class From, class To,
-    bool = sake_as_reference_to_private::is_callable<
-               void ( From&, sake::type_tag< To > )
-           >::value
->
-struct dispatch_on_is_callable;
-
-template<
-    class From, class To,
-    bool = boost_ext::is_convertible_wnrbt< From&, To const & >::value
-        || boost_ext::is_convertible_wnrbt< From&, To const volatile & >::value
->
-struct dispatch_on_is_convertible_wnrbt;
-
-template<
-    class From, class To,
-    bool = sake::has_operator_star< From& >::value
->
-struct dispatch_on_has_operator_star;
+template< class From, class To >
+struct dispatch_index
+{
+    static unsigned int const n =
+        (1u << 3) * sake_as_reference_to_private::is_callable< void ( From&, sake::type_tag< To > ) >::value
+      | (1u << 2) * boost_ext::is_convertible_wnrbt< From&, To const & >::value
+      | (1u << 2) * boost_ext::is_convertible_wnrbt< From&, To const volatile & >::value
+      | (1u << 1) * sake::has_operator_star< From& >::value
+      | (1u << 0);
+    static unsigned int const value = sake::static_intlog2_c<n>::value;
+};
 
 template< class From, class To >
-struct impl
-    : dispatch_on_is_callable< From, To >
-{ };
-
-template< class From, class To >
-struct dispatch_on_is_callable< From, To, true >
+struct dispatch< From, To, 3 >
     : ::sake_as_reference_to_private::adl< From, To >
 { };
 
 template< class From, class To >
-struct dispatch_on_is_callable< From, To, false >
-    : dispatch_on_is_convertible_wnrbt< From, To >
-{ };
-
-template< class From, class To >
-struct dispatch_on_is_convertible_wnrbt< From, To, true >
+struct dispatch< From, To, 2 >
 {
     static bool const const_ = !SAKE_EXPR_IS_CONVERTIBLE(
         sake::declref< From >(), To volatile & );
@@ -224,12 +212,7 @@ struct dispatch_on_is_convertible_wnrbt< From, To, true >
 };
 
 template< class From, class To >
-struct dispatch_on_is_convertible_wnrbt< From, To, false >
-    : dispatch_on_has_operator_star< From, To >
-{ };
-
-template< class From, class To >
-struct dispatch_on_has_operator_star< From, To, true >
+struct dispatch< From, To, 1 >
 {
     static bool const const_ = SAKE_EXPR_APPLY(
         ::boost::is_const< ::sake::boost_ext::remove_reference< ::boost::mpl::_1 > >,
@@ -245,7 +228,7 @@ struct dispatch_on_has_operator_star< From, To, true >
 };
 
 template< class From, class To >
-struct dispatch_on_has_operator_star< From, To, false >
+struct dispatch< From, To, 0 >
 { typedef void type; };
 
 } // namespace as_reference_to_private

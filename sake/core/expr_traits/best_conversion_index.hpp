@@ -37,17 +37,17 @@ namespace sake
 namespace expr_best_conversion_index_private
 {
 
-template< class First, class Last, std::size_t Index >
+template< class I, class E, std::size_t K >
 struct overloads_iterate
-    : overloads_iterate< typename boost::mpl::next< First >::type, Last, Index + 1 >
+    : overloads_iterate< typename boost::mpl::next<I>::type, E, K+1 >
 {
-    using overloads_iterate< typename boost::mpl::next< First >::type, Last, Index + 1 >::apply;
-    static sake::sizeof_t< 1 + Index > apply(typename boost::mpl::deref< First >::type);
+    using overloads_iterate< typename boost::mpl::next<I>::type, E, K+1 >::apply;
+    static sake::sizeof_t< 1+K > apply(typename boost::mpl::deref<I>::type);
 };
 
-template< class Last, std::size_t Index >
-struct overloads_iterate< Last, Last, Index >
-{ static sake::sizeof_t< 1 + Index > apply(...); };
+template< class E, std::size_t K >
+struct overloads_iterate< E, E, K >
+{ static sake::sizeof_t< 1+K > apply(...); };
 
 template< class Sequence >
 struct overloads

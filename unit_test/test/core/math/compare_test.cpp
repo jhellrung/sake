@@ -30,16 +30,11 @@ struct X
 };
 
 inline int
-compare0(X<0> const x0, X<0> const x1)
+compare(X<0> const x0, X<0> const x1)
 { return sake::compare(x0.x, x1.x).as_int(); }
-inline int
-compare1(X<0>, X<0>);
 
 inline sake::fuzzy_sign_t
-compare0(X<0> const x0, X<1> const x1)
-{ return sake::compare(x0.x, x1.x); }
-inline sake::fuzzy_sign_t
-compare1(X<1> const x0, X<0> const x1)
+compare(X<0> const x0, X<1> const x1)
 { return sake::compare(x0.x, x1.x); }
 
 struct Y
@@ -56,6 +51,7 @@ BOOST_STATIC_ASSERT((boost::is_same<
     sake::result_of::compare< int, int >::type,
     sake::sign_t
 >::value));
+
 BOOST_STATIC_ASSERT((boost::is_same<
     sake::result_of::compare< X<0>, X<0> >::type,
     sake::sign_t

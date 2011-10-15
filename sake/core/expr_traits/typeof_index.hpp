@@ -39,8 +39,8 @@ struct deduce
     template< class T >
     struct result
     {
-        static const std::size_t index = boost_ext::mpl::find_index< Sequence, T >::type::value;
-        typedef sake::sizeof_t< 1 + index > type;
+        static const std::size_t k = boost_ext::mpl::find_index< Sequence, T >::type::value;
+        typedef sake::sizeof_t< 1+k > type;
     };
 
     template< class T, class U >

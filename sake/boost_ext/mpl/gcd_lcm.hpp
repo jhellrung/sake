@@ -17,12 +17,12 @@
 #ifndef SAKE_BOOST_EXT_MPL_GCD_LCM_HPP
 #define SAKE_BOOST_EXT_MPL_GCD_LCM_HPP
 
-#include <boost/mpl/assert.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/modulus.hpp>
 #include <boost/mpl/times.hpp>
+#include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/mpl/abs.hpp>
 
@@ -61,7 +61,7 @@ struct dispatch< N0, N1, false, false >
 template< class N0, class N1 >
 struct dispatch< N0, N1, false, true >
 {
-    BOOST_MPL_ASSERT_NOT((boost::mpl::equal_to< N0, boost::mpl::int_<0> >));
+    BOOST_STATIC_ASSERT((!boost::mpl::equal_to< N0, boost::mpl::int_<0> >::value));
     typedef N0 type;
 };
 

@@ -21,9 +21,7 @@ struct compare;
 namespace extension
 {
 template< class T0, class T1, class Enable = void >
-struct compare0;
-template< class T0, class T1, class Enable = void >
-struct compare1;
+struct compare;
 } // namespace extension
 
 namespace default_impl
