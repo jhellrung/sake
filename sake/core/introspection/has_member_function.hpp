@@ -42,10 +42,10 @@
 template< class T, class Signature > \
 class trait \
 { \
-    template< class U > static ::sake::yes_tag test( \
-        ::sake::has_member_function_private::sfinae< T, Signature >::template \
-        _< &U::name >* = 0); \
-    template< class U > static ::sake::no_tag test(...); \
+    template< class T_ > static ::sake::yes_tag test( \
+        typename ::sake::has_member_function_private::sfinae< T, Signature >::template \
+        _< &T_::name >* = 0); \
+    template< class T_ > static ::sake::no_tag test(...); \
 public: \
     static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
     typedef trait type; \

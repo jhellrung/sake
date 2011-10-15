@@ -95,7 +95,7 @@ class trait \
         SAKE_INTROSPECTION_HAS_TEMPLATE_test_sfinae_n, \
         name \
     ) \
-    template< class U > static ::sake::no_tag test(...); \
+    template< class T_ > static ::sake::no_tag test(...); \
 public: \
     static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
     typedef trait type; \
@@ -109,16 +109,16 @@ template< class T > \
 class trait \
 { \
     template< template< SAKE_INTROSPECTION_HAS_TEMPLATE_params( params ) > class U > struct sfinae; \
-    template< class U > static ::sake::yes_tag test(sfinae< U::template name >*); \
-    template< class U > static ::sake::no_tag test(...); \
+    template< class T_ > static ::sake::yes_tag test(sfinae< T_::template name >*); \
+    template< class T_ > static ::sake::no_tag test(...); \
 public: \
     static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
     typedef trait type; \
 };
 
 #define SAKE_INTROSPECTION_HAS_TEMPLATE_test_sfinae_n( z, n, data ) \
-    template< class U > static ::sake::yes_tag \
-    test(::sake::has_template_private::sfinae ## n < U::template data >*);
+    template< class T_ > static ::sake::yes_tag \
+    test(::sake::has_template_private::sfinae ## n < T_::template data >*);
 
 #define SAKE_INTROSPECTION_HAS_TEMPLATE_params( params ) \
     BOOST_PP_CAT( SAKE_INTROSPECTION_HAS_TEMPLATE_params_, BOOST_PP_IS_UNARY( params ) ) ( params )

@@ -45,8 +45,8 @@ class trait \
         ::sake::void_ \
     >::type base_type; \
     struct detector : base_type, detector_base { }; \
-    template< class U > static ::sake::no_tag test(sfinae< &U::name >*); \
-    template< class U > static ::sake::yes_tag test(...); \
+    template< class T_ > static ::sake::no_tag test(sfinae< &T_::name >*); \
+    template< class T_ > static ::sake::yes_tag test(...); \
 public: \
     static bool const vlaue = sizeof( ::sake::yes_tag ) == sizeof( test< detector >(0) ); \
     typedef trait type; \

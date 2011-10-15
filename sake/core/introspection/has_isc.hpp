@@ -34,8 +34,8 @@ template< class T > \
 class trait \
 { \
     template< int > struct sfinae; \
-    template< class U > static ::sake::yes_tag test(sfinae< T::name >*); \
-    template< class U > static ::sake::no_tag test(...); \
+    template< class T_ > static ::sake::yes_tag test(sfinae< T_::name >*); \
+    template< class T_ > static ::sake::no_tag test(...); \
 public: \
     static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
     typedef trait type; \
