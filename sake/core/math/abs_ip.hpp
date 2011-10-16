@@ -116,7 +116,13 @@ struct abs_ip
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace abs_ip_adl_barrier
+{ functional::abs_ip const abs_ip = { }; }
+using namespace abs_ip_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 functional::abs_ip const abs_ip = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

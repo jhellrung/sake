@@ -48,6 +48,7 @@
 #include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -158,7 +159,13 @@ struct abs
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace abs_adl_barrier
+{ functional::abs const abs = { }; }
+using namespace abs_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 functional::abs const abs = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

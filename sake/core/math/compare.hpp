@@ -55,6 +55,7 @@
 #include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -149,7 +150,13 @@ struct compare
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace compare_adl_barrier
+{ functional::compare const compare = { }; }
+using namespace compare_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 functional::compare const compare = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

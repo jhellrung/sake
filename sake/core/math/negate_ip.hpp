@@ -29,6 +29,7 @@
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/utility/dispatch_priority_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -73,7 +74,13 @@ struct negate_ip
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace negate_ip_adl_barrier
+{ functional::negate_ip const negate_ip = { }; }
+using namespace negate_ip_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 functional::negate_ip const negate_ip = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

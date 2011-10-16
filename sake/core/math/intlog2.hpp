@@ -50,6 +50,7 @@
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/debug.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -166,8 +167,15 @@ struct intlog2_nothrow
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace intlog2_adl_barrier
+{ functional::intlog2 const intlog2 = { };
+  functional::intlog2_nothrow const intlog2_nothrow = { }; }
+using namespace intlog2_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 functional::intlog2 const intlog2 = { };
 functional::intlog2_nothrow const intlog2_nothrow = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 
