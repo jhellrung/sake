@@ -21,7 +21,6 @@ namespace sake_unit_test
 namespace
 {
 
-#if 0
 struct X
 {
     int x;
@@ -30,7 +29,7 @@ struct X
 
 inline X
 abs(X const x)
-{ return X(static_cast< int >(sake::abs(x))); }
+{ return X(static_cast< int >(sake::abs(x.x))); }
 
 struct Y
 {
@@ -68,13 +67,11 @@ BOOST_STATIC_ASSERT((boost::is_same<
     sake::result_of::abs< double >::type,
     double
 >::value));
-#endif
 
 } // namespace
 
 void abs_test(sake::test::environment& env)
 {
-#if 0
     SAKE_TEST_CHECK_RELATION( env, sake::abs(-10), ==, +10 );
     SAKE_TEST_CHECK_RELATION( env, sake::abs(+10), ==, +10 );
 
@@ -89,7 +86,6 @@ void abs_test(sake::test::environment& env)
 
     SAKE_TEST_CHECK_RELATION( env, sake::abs(Z(-10)).x, ==, +10 );
     SAKE_TEST_CHECK_RELATION( env, sake::abs(Z(+10)).x, ==, +10 );
-#endif
 }
 
 } // namespace sake_unit_test
