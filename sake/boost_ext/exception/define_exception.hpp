@@ -24,7 +24,7 @@
         : virtual ::std::exception, \
           virtual ::boost::exception \
     { \
-        const char* what() const throw ( ) \
+        char const * what() const throw ( ) \
         { return BOOST_PP_STRINGIZE( scope ) "::" BOOST_PP_STRINGIZE( name ); } \
     };
 
