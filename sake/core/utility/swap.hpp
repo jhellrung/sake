@@ -30,6 +30,7 @@
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/utility/dispatch_priority_tag.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -70,7 +71,13 @@ struct swap
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace swap_adl_barrier
+{ functional::swap const swap = { }; }
+using namespace swap_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 functional::swap const swap = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

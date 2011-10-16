@@ -132,6 +132,9 @@ struct as_reference_to< void >
 
 } // namespace functional
 
+namespace as_reference_to_adl_barrier
+{
+
 template< class To, class From >
 inline typename result_of::as_reference_to< From, To >::type
 as_reference_to(From& from)
@@ -141,6 +144,10 @@ template< class To, class From >
 inline typename result_of::as_reference_to< From const, To >::type
 as_reference_to(From const & from)
 { return functional::as_reference_to< To >()(from); }
+
+} // namespace as_reference_to_adl_barrier
+
+using namespace as_reference_to_adl_barrier;
 
 } // namespace sake
 

@@ -5,7 +5,8 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FN_DEF
+ * #define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF
+ * #define SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
  *
  * #define SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( version )
  * #define SAKE_WORKAROUND_EXPR_IF_MSC_VERSION_LESS_EQUAL( version, Expr )
@@ -22,7 +23,7 @@
  * This provides a number of macros to facilitate workarounds for MSVC and GCC
  * compilers.
  *
- * Of particular note is SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FN_DEF.  MSVC
+ * Of particular note is SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF.  MSVC
  * does not require (and, indeed, errors if included) the "template" keyword in
  * the return type of member function definitions when the standard otherwise
  * requires it.  To maintain portability, use the aforementioned macro in place
@@ -39,7 +40,7 @@
  *
  * template< class T >
  * template< class U >
- * typename X<T>:: SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FN_DEF Y<U>::type
+ * typename X<T>:: SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF Y<U>::type
  * f(U)
  * { }
  ******************************************************************************/
@@ -174,9 +175,13 @@
 #endif // #ifdef __GNUC__
 
 #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1600 )
-#define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FN_DEF
+#define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF
 #else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1600 )
-#define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FN_DEF template
+#define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF template
 #endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1600 )
+
+#if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,4,9) )
+#define SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+#endif // #if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,4,9) )
 
 #endif // #ifndef SAKE_CORE_UTILITY_WORKAROUND_HPP
