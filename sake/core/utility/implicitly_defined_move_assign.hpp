@@ -17,8 +17,8 @@
 #define SAKE_IMPLICITLY_DEFINED_MOVE_ASSIGN( T, base_seq, member_seq ) \
     SAKE_IMPLICITLY_DEFINED_MOVE_ASSIGN_R( BOOST_PP_DEDUCE_R(), T, base_seq, member_seq )
 
-#if !defined( BOOST_NO_RVALUE_REFERENCES ) \
- && !defined( BOOST_NO_DEFAULTED_FUNCTIONS )
+#if !defined( BOOST_NO_DEFAULTED_FUNCTIONS ) \
+ && !defined( BOOST_NO_RVALUE_REFERENCES )
 
 #define SAKE_IMPLICITLY_DEFINED_MOVE_ASSIGN_R( r, T, base_seq, member_seq ) \
     T& operator=(T&&) = default;

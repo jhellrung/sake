@@ -16,6 +16,7 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
+#include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 #include <sake/boost_ext/preprocessor/seq/for_each.hpp>
 
 #include <sake/core/utility/implicitly_defined_copy_assign.hpp>
@@ -41,18 +42,24 @@
     )
 
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_copy_assign( r, T, base_seq, member_seq ) \
-    SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_R( r, T, base_seq, member_seq )
+    SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_R( r, \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), base_seq, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_copy_assign_if_any_umc( r, T, base_seq, member_seq ) \
     SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IF_ANY_UMC_R( r, T, base_seq, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_copy_assign_impl( r, T, base_seq, member_seq ) \
-    SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IMPL_R( r, T, base_seq, member_seq )
+    SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IMPL_R( r, \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), base_seq, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_default_ctor( r, T, base_seq, member_seq ) \
-    SAKE_IMPLICITLY_DEFINED_DEFAULT_CTOR( T )
+    SAKE_IMPLICITLY_DEFINED_DEFAULT_CTOR( \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) )
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_dtor( r, T, base_seq, member_seq ) \
-    SAKE_IMPLICITLY_DEFINED_DTOR( T )
+    SAKE_IMPLICITLY_DEFINED_DTOR( \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) )
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_move_assign( r, T, base_seq, member_seq ) \
-    SAKE_IMPLICITLY_DEFINED_MOVE_ASSIGN_R( r, T, base_seq, member_seq )
+    SAKE_IMPLICITLY_DEFINED_MOVE_ASSIGN_R( r, \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), base_seq, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN_move_ctor( r, T, base_seq, member_seq ) \
-    SAKE_IMPLICITLY_DEFINED_MOVE_CTOR_R( r, T, base_seq, member_seq )
+    SAKE_IMPLICITLY_DEFINED_MOVE_CTOR_R( r, \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), base_seq, member_seq )
 
 #endif // #ifndef SAKE_CORE_UTILITY_IMPLICITLY_DEFINED_MEM_FUN_HPP

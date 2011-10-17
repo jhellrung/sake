@@ -16,6 +16,9 @@
  * SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE[_R]( [r,] T, U_seq )
  * SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_MOVABLE[_R]( [r,] T, U_seq )
  *
+ * Note: For *_IF_* only, if T is a dependent type, it should be prefixed with
+ * the "typename" keyword.
+ *
  * These macros provide the move emulation machinery necessary for a class to be
  * movable in the absence of true rvalue references.  These macros can take the
  * place of BOOST_MOVABLE_BUT_NOT_COPYABLE and BOOST_COPYABLE_AND_MOVABLE.
@@ -102,7 +105,7 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
-#include <sake/core/move/any_rv.hpp>
+#include <sake/core/move/rv_sink.hpp>
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
@@ -243,8 +246,8 @@ struct traits< T, true >
     operator ::boost::rv<T> const & () const \
     { return *static_cast< ::boost::rv<T> const * >(this); } \
     template< class V, class R, class P > \
-    operator ::sake::any_rv< V,R,P, ::sake::any_rv_private::apply1_pred<P,T>::value >() \
-    { return ::sake::any_rv< V,R,P, ::sake::any_rv_private::apply1_pred<P,T>::value >(this); }
+    operator ::sake::rv_sink< V,R,P, ::sake::rv_sink_private::apply1_pred<P,T>::value >() \
+    { return ::sake::rv_sink< V,R,P, ::sake::rv_sink_private::apply1_pred<P,T>::value >(this); }
 
 #define SAKE_MOVABLE_NONCOPYABLE( T ) \
     private: \
@@ -283,8 +286,8 @@ struct traits< T, true >
     operator _sake_rv_conv_type const & () const \
     { return *static_cast< _sake_rv_conv_type const * >(this); } \
     template< class V, class R, class P > \
-    operator ::sake::any_rv< V,R,P, ::sake::any_rv_private::apply1_pred_if_c<c,P,T>::value >() \
-    { return ::sake::any_rv< V,R,P, ::sake::any_rv_private::apply1_pred_if_c<c,P,T>::value >(this); }
+    operator ::sake::rv_sink< V,R,P, ::sake::rv_sink_private::apply1_pred_if_c<c,P,T>::value >() \
+    { return ::sake::rv_sink< V,R,P, ::sake::rv_sink_private::apply1_pred_if_c<c,P,T>::value >(this); }
 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C( T, c ) \
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( \

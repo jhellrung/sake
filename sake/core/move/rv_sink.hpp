@@ -1,48 +1,50 @@
 /*******************************************************************************
- * sake/core/move/any_rv.hpp
+ * sake/core/move/rv_sink.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct any_rv<
+ * struct rv_sink<
  *     Visitor,
  *     Result = default_tag,
  *     Pred = boost::mpl::always< boost::true_type >
  * >
  *
- * This defines a "typeless" emulated rvalue reference, which allows one to
- * capture arbitrary rvalues which support this particular kind of rvalue
- * reference emulation.
+ * rv_sink, when used as a function parameter, allows capturing of arbitrary
+ * rvalues of types with rvalue reference emulation.
  *
  * Example:
  *
  * struct f
  * {
  *     typedef ... result_type;
- *     typedef any_rv< f, result_type > any_rv_type;
+ *     typedef rv_sink< f, result_type > rv_sink_type;
  *
+ *     // lvalues
  *     template< class T >
  *     result_type
  *     operator()(T& x) const
  *     { ... }
  *
+ *     // const lvalues + non-movable rvalues
  *     template< class T >
  *     typename boost::disable_if<
- *         boost_ext::is_convertible< T&, any_rv_type >,
+ *         boost_ext::is_convertible< T&, rv_sink_type >,
  *         result_type
  *     >::type
  *     operator()(T const & x) const
  *     { ... }
  *
+ *     // movable rvalues
  *     result_type
- *     operator()(any_rv_type const x) const
+ *     operator()(rv_sink_type const x) const
  *     { return x(*this); }
  * };
  ******************************************************************************/
 
-#ifndef SAKE_CORE_MOVE_ANY_RV_HPP
-#define SAKE_CORE_MOVE_ANY_RV_HPP
+#ifndef SAKE_CORE_MOVE_RV_SINK_HPP
+#define SAKE_CORE_MOVE_RV_SINK_HPP
 
 #include <boost/config.hpp>
 
@@ -69,7 +71,7 @@ template<
     class Pred = boost::mpl::always< boost::true_type >,
     bool Enable = true
 >
-struct any_rv
+struct rv_sink
 {
     BOOST_STATIC_ASSERT((Enable));
 
@@ -83,7 +85,7 @@ struct any_rv
     >::type result_type;
 
     template< class T >
-    explicit any_rv(T* const p)
+    explicit rv_sink(T* const p)
         : m_apply(apply<T>),
           mp(static_cast< void* >(p))
     { BOOST_STATIC_ASSERT((boost::mpl::apply1< Pred, T >::type::value)); }
@@ -100,21 +102,21 @@ private:
     void* const mp;
 };
 
-namespace any_rv_private
+namespace rv_sink_private
 {
 
 // These helper structs are necessary to prevent MSVC9 from ICE'ing on
 // expressions like
 //
 // template< class V, class R, class P >
-// operator any_rv< V,R,P, boost::mpl::apply1< Pred, T >::type::value >()
-// { return any_rv< V,R,P, boost::mpl::apply1< Pred, T >::type::value >(this); }
+// operator rv_sink< V,R,P, boost::mpl::apply1< Pred, T >::type::value >()
+// { return rv_sink< V,R,P, boost::mpl::apply1< Pred, T >::type::value >(this); }
 //
 // Instead, use
 //
 // template< class V, class R, class P >
-// operator any_rv< V,R,P, apply1_pred< Pred, T >::value >()
-// { return any_rv< V,R,P, apply1_pred< Pred, T >::value >(this); }
+// operator rv_sink< V,R,P, apply1_pred< Pred, T >::value >()
+// { return rv_sink< V,R,P, apply1_pred< Pred, T >::value >(this); }
 
 template< class Pred, class T >
 struct apply1_pred
@@ -132,10 +134,10 @@ template< class Pred, class T >
 struct apply1_pred_if_c< false, Pred, T >
 { static bool const value = false; };
 
-} // namespace any_rv_private
+} // namespace rv_sink_private
 
 } // namespace sake
 
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
-#endif // #ifndef SAKE_CORE_MOVE_ANY_RV_HPP
+#endif // #ifndef SAKE_CORE_MOVE_RV_SINK_HPP

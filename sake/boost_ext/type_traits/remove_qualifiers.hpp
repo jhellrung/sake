@@ -32,8 +32,14 @@ template< class T > struct remove_qualifiers< T const > : remove_qualifiers<T> {
 template< class T > struct remove_qualifiers< T volatile > : remove_qualifiers<T> { };
 template< class T > struct remove_qualifiers< T const volatile > : remove_qualifiers<T> { };
 template< class T > struct remove_qualifiers< T& > : remove_qualifiers<T> { };
+template< class T > struct remove_qualifiers< T const & > : remove_qualifiers<T> { };
+template< class T > struct remove_qualifiers< T volatile & > : remove_qualifiers<T> { };
+template< class T > struct remove_qualifiers< T const volatile & > : remove_qualifiers<T> { };
 #ifndef BOOST_NO_RVALUE_REFERENCES
 template< class T > struct remove_qualifiers< T&& > : remove_qualifiers<T> { };
+template< class T > struct remove_qualifiers< T const && > : remove_qualifiers<T> { };
+template< class T > struct remove_qualifiers< T volatile && > : remove_qualifiers<T> { };
+template< class T > struct remove_qualifiers< T const volatile && > : remove_qualifiers<T> { };
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 template< class T > struct remove_qualifiers< boost::rv<T> > : remove_qualifiers<T> { };
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES

@@ -8,6 +8,9 @@
  * #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN[_R]( [r,] T, base_seq, member_seq )
  * #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IF_ANY_UMC[_R]( [r,] T, base_seq, member_seq )
  * #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IMPL[_R]( [r,], T, base_seq, member_seq )
+ *
+ * Note: For *_COPY_ASSIGN_IF_ANY_UMC[_R] only, if T is a dependent type, it
+ * should be prefixed with the "typename" keyword.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_IMPLICITLY_DEFINED_COPY_ASSIGN_HPP
@@ -15,6 +18,8 @@
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
+
+#include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
 #include <sake/core/utility/private/implicitly_defined/assign_body.hpp>
 
@@ -24,14 +29,15 @@
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IF_ANY_UMC( T, base_seq, member_seq ) \
     SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IF_ANY_UMC_R( BOOST_PP_DEDUCE_R(), T, base_seq, member_seq )
 
-#if !defined( BOOST_NO_RVALUE_REFERENCES ) \
- && !defined( BOOST_NO_DEFAULTED_FUNCTIONS )
+#if !defined( BOOST_NO_DEFAULTED_FUNCTIONS ) \
+ && !defined( BOOST_NO_RVALUE_REFERENCES )
 
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_R( r, T, base_seq, member_seq ) \
     T& operator=(T const &) = default;
 
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IF_ANY_UMC_R( r, T, base_seq, member_seq ) \
-    T& operator=(T const &) = default;
+    SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) & \
+    operator=(SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) const &) = default;
 
 #else // #if !defined(...) && !defined(...)
 
@@ -57,11 +63,14 @@
     { SAKE_IMPLICITLY_DEFINED_assign_body( r, T, base_seq, member_seq ) }
 
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_IF_ANY_UMC_R( r, T, base_seq, member_seq ) \
-    T& operator=(typename ::boost::mpl::if_c< \
-        SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc( r, T, base_seq, member_seq ) ::value, \
-        T const &, \
-        ::sake::implicitly_defined_private::disabler<T> \
-    >::type other) \
+    SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) & \
+    operator=( \
+        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) \
+        ::boost::mpl::if_c< \
+            SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc( r, T, base_seq, member_seq ) ::value, \
+            T const &, \
+            ::sake::implicitly_defined_private::disabler<T> \
+        >::type other) \
     { SAKE_IMPLICITLY_DEFINED_assign_body( r, T, base_seq, member_seq ) }
 
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc( r, T, base_seq, member_seq ) \
@@ -85,7 +94,7 @@
     BOOST_PP_CAT( ::sake::boost_ext::mpl::or, BOOST_PP_SEQ_SIZE( member_seq ) ) < \
         BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_comma_member_is_umc, ~, member_seq )
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_11( r, T, base_seq, member_seq ) \
-    ::boost::integral_constant< bool, false >
+    ::boost::false_type
 
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_comma_is_umc( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) ::sake::is_unfriendly_movable_copyable< elem >

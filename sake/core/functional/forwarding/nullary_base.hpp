@@ -149,7 +149,7 @@ protected:
     >::type chained_base_type;
 
     SAKE_IMPLICITLY_DEFINED_MEM_FUN(
-        impl,
+        typename impl,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( chained_base_type ), BOOST_PP_SEQ_NIL
     )

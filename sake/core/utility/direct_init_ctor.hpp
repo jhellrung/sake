@@ -75,7 +75,7 @@
 
 #include <sake/boost_ext/preprocessor/keyword/access.hpp>
 #include <sake/boost_ext/preprocessor/keyword/class.hpp>
-#include <sake/boost_ext/preprocessor/keyword/typename.hpp>
+#include <sake/boost_ext/preprocessor/keyword/dependent.hpp>
 
 #include <sake/core/utility/call_traits.hpp>
 #include <sake/core/utility/identity_type.hpp>
@@ -101,13 +101,7 @@
     )
 #define SAKE_DIRECT_INIT_CTOR_comma_member_param_type_impl( i, type, name ) \
     BOOST_PP_COMMA_IF( i ) \
-    BOOST_PP_EXPR_IIF( \
-        BOOST_PP_BITOR( \
-            SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_TYPENAME( type ), \
-            SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_CLASS( type ) \
-        ), \
-        typename \
-    ) \
+    SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_DEPENDENT( type ) \
     ::sake::call_traits< SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_CLASS( type ) >::param_type \
     BOOST_PP_CAT( _ ## i ## _, name )
 

@@ -63,8 +63,13 @@
     )
 #define SAKE_IMPLICITLY_DEFINED_comma_init_member( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
-    SAKE_IMPLICITLY_DEFINED_init_member_impl( BOOST_PP_IIF( \
-        BOOST_PP_IS_BINARY( elem ), BOOST_PP_TUPLE_ELEM, elem BOOST_PP_TUPLE_EAT(3) ) ( 2, 1, elem ) )
+    SAKE_IMPLICITLY_DEFINED_init_member_impl( \
+        BOOST_PP_IIF( \
+            BOOST_PP_IS_BINARY( elem ), \
+            BOOST_PP_TUPLE_ELEM, \
+            elem BOOST_PP_TUPLE_EAT(3) \
+        ) ( 2, 1, elem ) \
+    )
 #define SAKE_IMPLICITLY_DEFINED_init_member_impl( member ) \
     member(::sake::move(member))
 

@@ -263,7 +263,7 @@ struct dispatch< T, Result, 2 >
 
 template< class T, class Result >
 struct dispatch< T, Result, 1 >
-    : ::sake_abs_private::adl< T, Result >
+    : sake_abs_private::adl< T, Result >
 { };
 
 template< class T, class Result >

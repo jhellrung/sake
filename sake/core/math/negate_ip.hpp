@@ -68,7 +68,8 @@ struct negate_ip
     SAKE_RESULT_FROM_METAFUNCTION( result_of::negate_ip, 1 )
 
     template< class T >
-    T& operator()(T& x) const
+    T&
+    operator()(T& x) const
     { return negate_ip_private::impl(x); }
 };
 

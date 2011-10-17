@@ -20,7 +20,6 @@
 #include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/type_traits/integral_constant.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>

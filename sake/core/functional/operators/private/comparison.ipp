@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/functional/oeprators/private/comparison.ipp
+ * sake/core/functional/operators/private/comparison.ipp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -22,8 +22,6 @@
 #ifndef SAKE_OPERATORS_OP
 #error SAKE_OPERATORS_OP must be defined.
 #endif // SAKE_OPERATORS_OP
-
-#define name_private BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )
 
 namespace sake
 {
