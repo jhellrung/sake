@@ -41,8 +41,8 @@ those hpp files which include themselves during the preprocessor phase.  For
 example, if one uses BOOST_PP_ITERATE from the Boost.Preprocessor library, one
 should use BOOST_PP_IS_ITERATING guards outside of the usual include guards.
 
-To minimize the risk of include guard identifier collision, include guards
-identifiers should take the form SAKE_[PATH]_[FILENAME]_[EXT], where [PATH],
+To minimize the risk of include guard identifier collision, include guard
+identifiers should take the form [PATH]_[FILENAME]_[EXT], where [PATH],
 [FILENAME], and [EXT] should be replaced with the file's path (relative to the
 root Sake directory), filename, and extension (hpp), respectively.
 
