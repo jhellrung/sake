@@ -47,6 +47,7 @@
 #include <sake/core/math/abs_fwd.hpp>
 #include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/math/zero.hpp>
+#include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
 

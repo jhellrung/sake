@@ -108,7 +108,7 @@ namespace sake_inv_ip_private
 template< class Result, class T >
 inline Result
 adl(T& x)
-{ return inv_ip(x); }
+{ return static_cast< Result >(inv_ip(x)); }
 
 } // namespace sake_inv_ip_private
 

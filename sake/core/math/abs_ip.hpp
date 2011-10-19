@@ -137,7 +137,7 @@ namespace sake_abs_ip_private
 template< class Result, class T >
 inline Result
 adl(T& x)
-{ return abs_ip(x); }
+{ return static_cast< Result >(abs_ip(x)); }
 
 } // namespace sake_abs_ip_private
 

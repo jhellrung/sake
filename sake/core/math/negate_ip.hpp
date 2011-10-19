@@ -96,7 +96,7 @@ namespace sake_negate_ip_private
 template< class Result, class T >
 inline Result
 adl(T& x)
-{ return negate_ip(x); }
+{ return static_cast< Result >(negate_ip(x)); }
 
 } // namespace sake_negate_ip_private
 

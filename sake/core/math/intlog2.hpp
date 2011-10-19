@@ -49,6 +49,7 @@
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/debug.hpp>
+#include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
 
