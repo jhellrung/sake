@@ -12,15 +12,15 @@
 #ifndef SAKE_CORE_MATH_STATIC_SIGN_HPP
 #define SAKE_CORE_MATH_STATIC_SIGN_HPP
 
-#include <boost/type_traits/integral_constant.hpp>
-
 namespace sake
 {
 
 template< int N >
 struct static_sign_c
-    : boost::integral_constant< int, (0 < N) - (N < 0) >
-{ };
+{
+    static int const value = (0 < N) - (N < 0);
+    typedef static_sign_c type;
+};
 
 template< class N >
 struct static_sign

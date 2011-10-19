@@ -52,6 +52,27 @@ struct static_intlog2_c<4>
     typedef static_intlog2_c type;
 };
 
+template<>
+struct static_intlog2_c<5>
+{
+    static unsigned int const value = 2;
+    typedef static_intlog2_c type;
+};
+
+template<>
+struct static_intlog2_c<6>
+{
+    static unsigned int const value = 2;
+    typedef static_intlog2_c type;
+};
+
+template<>
+struct static_intlog2_c<7>
+{
+    static unsigned int const value = 2;
+    typedef static_intlog2_c type;
+};
+
 template< class N >
 struct static_intlog2
     : static_intlog2_c< N::value >

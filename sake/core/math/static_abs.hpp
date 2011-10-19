@@ -12,15 +12,15 @@
 #ifndef SAKE_CORE_MATH_STATIC_ABS_HPP
 #define SAKE_CORE_MATH_STATIC_ABS_HPP
 
-#include <boost/type_traits/integral_constant.hpp>
-
 namespace sake
 {
 
 template< int N >
 struct static_abs_c
-    : boost::integral_constant< int, (N < 0 ? -N : N) >
-{ };
+{
+    static unsigned int const value = N < 0 ? -N : N;
+    typedef static_abs_c type;
+};
 
 template< class N >
 struct static_abs
