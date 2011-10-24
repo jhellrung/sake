@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * operators::minus(T0 const & x0, T1 const & x1)
+ * operators::minus(T0&& x0, T1&& x1)
  *     -> operators::result_of::minus< T0, T1 >::type
  * struct operators::functional::minus
  *
@@ -23,6 +23,7 @@
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/move/forward.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -57,10 +58,7 @@ struct minus;
 
 template< class T0, class T1 >
 struct minus
-    : extension::minus0<
-          typename boost_ext::remove_qualifiers< T0 >::type,
-          typename boost_ext::remove_qualifiers< T1 >::type
-      >
+    : extension::minus0< T0, T1 >
 { };
 
 /*******************************************************************************
@@ -125,7 +123,7 @@ struct minus
 } // namespace result_of
 
 /*******************************************************************************
- * operators::minus(T0 const & x0, T1 const & x1)
+ * operators::minus(T0&& x0, T1&& x1)
  *     -> operators::result_of::minus< T0, T1 >::type
  * struct operators::functional::minus
  ******************************************************************************/
@@ -138,9 +136,9 @@ struct minus
     SAKE_RESULT_FROM_METAFUNCTION( result_of::minus, 2 )
 
     template< class T0, class T1 >
-    typename result_of::minus< T0, T1 >::type
-    operator()(T0 const & x0, T1 const & x1) const
-    { return x0 - x1; }
+    typename result_of::minus< SAKE_FWD_PARAM( T0 ), SAKE_FWD_PARAM( T1 ) >::type
+    operator()(SAKE_FWD_REF( T0 ) x0, SAKE_FWD_REF( T1 ) x1) const
+    { return sake::forward< T0 >(x0) - sake::forward< T1 >(x1); }
 };
 
 } // namespace functional

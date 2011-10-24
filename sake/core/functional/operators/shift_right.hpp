@@ -5,8 +5,8 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * operators::shift_right(T0& x0, T1& x1)
- *     -> operators::result_of::shift_right< T0&, T1& >::type
+ * operators::shift_right(T0&& x0, T1&& x1)
+ *     -> operators::result_of::shift_right< T0, T1 >::type
  * struct operators::functional::shift_right
  *
  * struct operators::result_of::shift_right< T0, T1 >
@@ -24,14 +24,10 @@
 #define SAKE_OPERATORS_OP   >>
 #include <sake/core/functional/operators/private/shift.ipp>
 
-namespace sake
-{
-namespace operators
-{
-namespace result_of
-{
-namespace extension
-{
+namespace sake {
+namespace operators {
+namespace result_of {
+namespace extension {
 template< class T >
 struct shift_right< std::istream&, T >
 { typedef std::istream& type; };

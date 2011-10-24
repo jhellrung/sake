@@ -5,11 +5,11 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * operators::logical_and(T0 const & x0, T1 const & x1)
+ * operators::logical_and(T0&& x0, T1&& x1)
  *     -> operators::result_of::logical_and< T0, T1 >::type
  * struct operators::functional::logical_and
  *
- * operators::and_(T0 const & x0, T1 const & x1)
+ * operators::and_(T0&& x0, T1&& x1)
  *     -> operators::result_of::and_< T0, T1 >::type
  * struct operators::functional::and_
  *

@@ -6,8 +6,12 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <boost/config.hpp>
 
+#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
+
+#include <sake/core/move/forward.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 #ifndef SAKE_OPERATORS_NAME
@@ -48,9 +52,7 @@ struct SAKE_OPERATORS_NAME;
 
 template< class T >
 struct SAKE_OPERATORS_NAME
-    : extension::SAKE_OPERATORS_NAME<
-          typename boost_ext::remove_qualifiers<T>::type
-      >
+    : extension::SAKE_OPERATORS_NAME<T>
 { };
 
 /*******************************************************************************
@@ -84,7 +86,7 @@ struct SAKE_OPERATORS_NAME
 } // namespace result_of
 
 /*******************************************************************************
- * operators::SAKE_OPERATORS_NAME(T const & x)
+ * operators::SAKE_OPERATORS_NAME(T&& x)
  *     -> operators::result_of::SAKE_OPERATORS_NAME<T>::type
  * struct operators::functional::SAKE_OPERATORS_NAME
  ******************************************************************************/
@@ -96,10 +98,29 @@ struct SAKE_OPERATORS_NAME
 {
     SAKE_RESULT_FROM_METAFUNCTION( result_of::SAKE_OPERATORS_NAME, 1 )
 
+#ifndef BOOST_NO_RVALUE_REFERENCES
+
     template< class T >
     typename result_of::SAKE_OPERATORS_NAME<T>::type
+    operator()(T&& x) const
+    { return SAKE_OPERATORS_OP sake::forward<T>(x); }
+
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class T >
+    typename result_of::SAKE_OPERATORS_NAME<
+        typename boost_ext::remove_rvalue_reference< T& >::type
+    >::type
+    operator()(T& x) const
+    { return SAKE_OPERATORS_OP x; }
+
+    template< class T >
+    typename result_of::SAKE_OPERATORS_NAME< T const & >::type
     operator()(T const & x) const
     { return SAKE_OPERATORS_OP x; }
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+
 };
 
 } // namespace functional

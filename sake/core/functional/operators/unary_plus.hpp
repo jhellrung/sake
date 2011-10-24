@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * operators::unary_plus(T const & x)
+ * operators::unary_plus(T&& x)
  *     -> operators::result_of::unary_plus<T>::type
  * struct operators::functional::unary_plus
  *

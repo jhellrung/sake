@@ -12,6 +12,7 @@
 
 #include <sake/boost_ext/type_traits/is_integral_or_enum.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -105,7 +106,7 @@ struct dispatch< T, false >
 
 template< class T0, class T1 >
 struct SAKE_OPERATORS_NAME
-    : BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )<
+    : BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::dispatch<
           typename boost_ext::remove_qualifiers< T0 >::type
       >
 { };
@@ -115,7 +116,7 @@ struct SAKE_OPERATORS_NAME
 } // namespace result_of
 
 /*******************************************************************************
- * operators::SAKE_OPERATORS_NAME(T0 const & x0, T1 const & x1)
+ * operators::SAKE_OPERATORS_NAME(T0&& x0, T1&& x1)
  *     -> operators::result_of::SAKE_OPERATORS_NAME< T0, T1 >::type
  * struct operators::functional::SAKE_OPERATORS_NAME
  ******************************************************************************/
@@ -137,22 +138,34 @@ struct SAKE_OPERATORS_NAME
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME< T0&, T1& >::type
+    typename result_of::SAKE_OPERATORS_NAME<
+        typename boost_ext::remove_rvalue_reference< T0& >::type,
+        typename boost_ext::remove_rvalue_reference< T1& >::type
+    >::type
     operator()(T0& x0, T1& x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME< T0&, T1 const & >::type
+    typename result_of::SAKE_OPERATORS_NAME<
+        typename boost_ext::remove_rvalue_reference< T0& >::type,
+        T1 const &
+    >::type
     operator()(T0& x0, T1 const & x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME< T0 const &, T1& >::type
+    typename result_of::SAKE_OPERATORS_NAME<
+        T0 const &,
+        typename boost_ext::remove_rvalue_reference< T1& >::type
+    >::type
     operator()(T0 const & x0, T1& x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME< T0 const &, T1 const & >::type
+    typename result_of::SAKE_OPERATORS_NAME<
+        T0 const &,
+        T1 const &
+    >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
