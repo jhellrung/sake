@@ -51,10 +51,10 @@ struct common_type;
 namespace common_type_private
 {
 
-template< class T > struct make_unsigned_with_bool : boost::make_unsigned<T> { };
-template<> struct make_unsigned_with_bool< bool > { typedef bool type; };
-template< class T > struct make_signed_with_bool : boost::make_signed<T> { };
-template<> struct make_signed_with_bool< bool > { typedef bool type; };
+template< class T > struct make_unsigned_ : boost::make_unsigned<T> { };
+template<> struct make_unsigned_< bool > { typedef bool type; };
+template< class T > struct make_signed_ : boost::make_signed<T> { };
+template<> struct make_signed_< bool > { typedef bool type; };
 
 template< class T0, class T1 >
 struct dispatch_on_void;
@@ -67,7 +67,7 @@ template<
         sake::declval< T1 >()
     )
 >
-struct dispatch_on_rvalue;
+struct dispatch_on_rvalue_result;
 
 template<
     class T0, class T1,
@@ -81,7 +81,7 @@ struct deduce_from_candidates;
 
 template< class T0, class T1 >
 struct dispatch_on_void
-    : dispatch_on_rvalue< T0, T1 >
+    : dispatch_on_rvalue_result< T0, T1 >
 { };
 
 template< class T > struct dispatch_on_void< T, void > { typedef void type; };
@@ -93,20 +93,11 @@ template<
     bool = boost_ext::is_integral_or_enum< T0 >::value
         && boost_ext::is_integral_or_enum< T1 >::value
 >
-struct nominal_candidates_dispatch
-{ typedef boost::mpl::vector2< T0, T1 > type; };
+struct nominal_candidates_dispatch;
 
 template< class T0, class T1 >
-struct nominal_candidates_dispatch< T0, T1, true >
-{
-    typedef boost::mpl::vector8<
-        typename make_unsigned_with_bool< T0 >::type,
-        typename make_unsigned_with_bool< T1 >::type,
-        typename make_signed_with_bool< T0 >::type,
-        typename make_signed_with_bool< T1 >::type,
-        T0, T1, unsigned int, int
-    > type;
-};
+struct nominal_candidates_dispatch< T0, T1, false >
+{ typedef boost::mpl::vector2< T0, T1 > type; };
 
 template< class T0, class T1 >
 struct nominal_candidates_dispatch< T0*, T1*, false >
@@ -119,6 +110,18 @@ struct nominal_candidates_dispatch< T0*, T1*, false >
 };
 
 template< class T0, class T1 >
+struct nominal_candidates_dispatch< T0, T1, true >
+{
+    typedef boost::mpl::vector8<
+        typename make_unsigned_< T0 >::type,
+        typename make_unsigned_< T1 >::type,
+        typename make_signed_< T0 >::type,
+        typename make_signed_< T1 >::type,
+        T0, T1, unsigned int, int
+    > type;
+};
+
+template< class T0, class T1 >
 struct nominal_candidates
     : nominal_candidates_dispatch<
           typename boost_ext::remove_qualifiers< T0 >::type,
@@ -127,7 +130,7 @@ struct nominal_candidates
 { };
 
 template< class T0, class T1 >
-struct dispatch_on_rvalue< T0, T1, true >
+struct dispatch_on_rvalue_result< T0, T1, true >
     : deduce_from_candidates<
           T0, T1,
           typename nominal_candidates< T0, T1 >::type
@@ -135,7 +138,7 @@ struct dispatch_on_rvalue< T0, T1, true >
 { };
 
 template< class T0, class T1 >
-struct dispatch_on_rvalue< T0, T1, false >
+struct dispatch_on_rvalue_result< T0, T1, false >
     : lvalue_result_impl< T0, T1 >
 { };
 
