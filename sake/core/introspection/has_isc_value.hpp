@@ -16,7 +16,7 @@
 namespace sake
 {
 
-SAKE_INTROSPECTION_DEFINE_HAS_TYPE( has_isc_value, value )
+SAKE_INTROSPECTION_DEFINE_HAS_ISC( has_isc_value, value )
 
 } // namespace sake
 
