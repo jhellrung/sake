@@ -151,6 +151,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\clamp_ip_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\clamp_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\compare_test.cpp"
 			>
 		</File>
@@ -163,11 +171,27 @@
 			>
 		</File>
 		<File
-			RelativePath="..\negate_ip_test.cpp"
+			RelativePath="..\max_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\min_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\neg_ip_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\pow_test.cpp"
 			>
 		</File>
 		<File
 			RelativePath="..\sign_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\sqr_test.cpp"
 			>
 		</File>
 	</Files>
