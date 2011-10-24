@@ -328,7 +328,7 @@ template< class B >
 struct dispatch_c< B, 0, false, false >
 {
     typedef B type;
-    static type apply(B& b)
+    static type apply(B& /*b*/)
     { return B(1); }
     template< class I >
     static type apply(B& /*b*/, I& i)
