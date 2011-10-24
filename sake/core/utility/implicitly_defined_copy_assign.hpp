@@ -67,33 +67,33 @@
     operator=( \
         SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) \
         ::boost::mpl::if_c< \
-            SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc( r, T, base_seq, member_seq ) ::value, \
-            T const &, \
-            ::sake::implicitly_defined_private::disabler<T> \
+            SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc( r, base_seq, member_seq ) ::value, \
+            SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) const &, \
+            ::sake::implicitly_defined_private::disabler< \
+                SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) > \
         >::type other) \
-    { SAKE_IMPLICITLY_DEFINED_assign_body( r, T, base_seq, member_seq ) }
+    { SAKE_IMPLICITLY_DEFINED_assign_body( r, \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
+        base_seq, \
+        member_seq ) }
 
-#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc( r, T, base_seq, member_seq ) \
+#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc( r, base_seq, member_seq ) \
     BOOST_PP_CAT( \
         SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_, \
-        BOOST_PP_CAT( \
-            SAKE_BOOST_EXT_PP_SEQ_IS_NIL( base_seq ), \
-            SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_seq ) \
-        ) \
-    ) ( r, T, base_seq, member_seq )
-#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_00( r, T, base_seq, member_seq ) \
+        BOOST_PP_CAT( SAKE_BOOST_EXT_PP_SEQ_IS_NIL( base_seq ), \
+                      SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_seq ) ) \
+    ) ( r, base_seq, member_seq )
+#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_00( r, base_seq, member_seq ) \
     ::sake::boost_ext::mpl::or2< \
-        SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_01( r, T, base_seq, member_seq ), \
-        SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_10( r, T, base_seq, member_seq ) \
-    >
-#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_01( r, T, base_seq, member_seq ) \
+        SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_01( r, base_seq, member_seq ), \
+        SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_10( r, base_seq, member_seq ) >
+#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_01( r, base_seq, member_seq ) \
     BOOST_PP_CAT( ::sake::boost_ext::mpl::or, BOOST_PP_SEQ_SIZE( base_seq ) ) < \
-        BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_comma_is_umc, ~, base_seq ) \
-    >
-#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_10( r, T, base_seq, member_seq ) \
+        BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_comma_is_umc, ~, base_seq ) >
+#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_10( r, base_seq, member_seq ) \
     BOOST_PP_CAT( ::sake::boost_ext::mpl::or, BOOST_PP_SEQ_SIZE( member_seq ) ) < \
-        BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_comma_member_is_umc, ~, member_seq )
-#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_11( r, T, base_seq, member_seq ) \
+        BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_comma_member_is_umc, ~, member_seq ) >
+#define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_any_umc_11( r, base_seq, member_seq ) \
     ::boost::false_type
 
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_comma_is_umc( r, data, i, elem ) \

@@ -13,7 +13,6 @@
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
-#include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
