@@ -371,21 +371,16 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
-    // For some reason, MSVC9 gives different common types depending on the
-    // order of the arguments, e.g.,
-    //     (bool ? X const & : X) -> X
-    // but
-    //     (bool ? X : X const &) -> X const &
-    // The latter order unexpectedly ends up returning a reference to a
-    // temporary, which is pretty dangerous, hence we use the former order.
-    typedef typename boost_ext::common_type<
-        T, typename sake::operators::result_of::unary_minus<T>::type
+    typedef typename boost_ext::remove_qualifiers<
+        typename boost_ext::common_type<
+            typename sake::operators::result_of::unary_minus<T>::type, T
+        >::type
     >::type type;
     template< class T_ >
     static type apply(SAKE_FWD2_REF( T_ ) x)
     {
-        return !(SAKE_AS_LVALUE( x ) < sake::zero) ?
-               sake::forward<T_>(x) : -sake::forward<T_>(x);
+        return SAKE_AS_LVALUE( x ) < sake::zero ?
+               -sake::forward<T_>(x) : sake::forward<T_>(x);
     }
 };
 
