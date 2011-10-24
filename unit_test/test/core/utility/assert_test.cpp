@@ -38,7 +38,7 @@ void assert_test(sake::test::environment& env)
     // Expected failures.
     unsigned int n_fail = 0;
     if(env.current_log_level() <= sake::test::environment::log_level_info)
-        env.log() << std::setw(env.current_depth() + 1) << ""
+        env.log() << std::setw(2 * env.current_depth() + 2) << ""
                   << "Expected SAKE_REQUIRE*_TEST failures on lines "
                   << __LINE__ + 1 << " - " << __LINE__ + 7 << "..." << std::endl;
     SAKE_ASSERT_EXT( 0 < 1 && 2 < 1, SAKE_ASSERT_TEST_FAILURE_MACRO, "SAKE_REQUIRE_TEST" );
