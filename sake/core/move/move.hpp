@@ -158,7 +158,7 @@ struct traits< T, true >
 
 template< class T >
 inline typename traits<T>::result_type
-impl(type_tag<T>, typename traits<T>::param_type x)
+impl(sake::type_tag<T>, typename traits<T>::param_type x)
 { return static_cast< typename traits<T>::result_type >(x); }
 
 } // namespace move_private
