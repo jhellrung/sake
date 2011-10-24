@@ -9,7 +9,7 @@
  * next(T x, D n) -> T
  * struct functional::next
  *
- * next essentially just extends boost::next to integral types.
+ * Essentially just extends boost::next to integral types.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_MATH_NEXT_HPP
@@ -51,52 +51,6 @@ namespace functional
 
 struct next
 {
-private:
-    template< class T, bool = is_iterator<T>::value >
-    struct dispatch_on_iterator
-    {
-        template< class D >
-        static T apply(T const & x, D const & n)
-        { return static_cast<T>(x + n); }
-    };
-
-    template< class T >
-    struct dispatch_on_iterator< T, true >
-    {
-        template< class D >
-        static T apply(T x, D n, boost::incrementable_traversal_tag)
-        {
-            SAKE_ASSERT_RELATION( n, >=, sake::zero );
-            if(sake::zero < n)
-                do {
-                    ++x;
-                } while(!(--n == sake::zero));
-            return x;
-        }
-
-        template< class D >
-        static T apply(T x, D n, boost::bidirectional_traversal_tag)
-        {
-            if(sake::zero < n)
-                do {
-                    ++x;
-                } while(!(--n == sake::zero));
-            else if(n < sake::zero)
-                do {
-                    --x;
-                } while(!(++n == sake::zero));
-            return x;
-        }
-
-        template< class D >
-        static T apply(T const & x, D const & n, boost::random_access_traversal_tag)
-        { return x + n; }
-
-        template< class D >
-        static T apply(T const & x, D const & n)
-        { return apply(x, n, typename boost::iterator_traversal<T>::type()); }
-    };
-public:
     SAKE_RESULT_FROM_METAFUNCTION( result_of::next, (1,2) )
 
     template< class T >
@@ -150,12 +104,12 @@ struct dispatch< T, true >
 
     template< class D >
     static T
-    apply(T const & x, D const & n, boost::random_access_traversal_tag)
+    apply(T const & x, D const n, boost::random_access_traversal_tag)
     { return x + n; }
 
     template< class D >
     static T
-    apply(T const & x, D const & n)
+    apply(T const & x, D const n)
     { return apply(x, n, typename boost::iterator_traversal<T>::type()); }
 };
 

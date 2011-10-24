@@ -23,8 +23,8 @@
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/math/unbounded_tag.hpp>
 #include <sake/core/move/forward.hpp>
-#include <sake/core/math/unbounded.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
@@ -77,7 +77,7 @@ namespace functional
 
 struct clamp
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::clamp_ip, (3,4) )
+    SAKE_RESULT_FROM_METAFUNCTION( result_of::clamp, (3,4) )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 

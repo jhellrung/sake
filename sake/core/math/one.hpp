@@ -10,13 +10,17 @@
  *
  * operator<<(std::ostream& o, one_t) -> std::ostream&
  *
+ * operator<<([builtin arithmetic type] x, one_t) -> [builtin arithmetic type]
+ * operator>>([builtin arithmetic type] x, one_t) -> [builtin arithmetic type]
+ * operator<<=([builtin arithmetic type]& x, one_t) -> [builtin arithmetic type]&
+ * operator>>=([builtin arithmetic type]& x, one_t) -> [builtin arithmetic type]&
+ *
  * operator/(one_t, T const & x) -> result_of::invert<T>::type
  *
- * operator&(one_t, [builtin integral type] x) -> bool
  * operator&([builtin integral type] x, one_t) -> bool
  *
  * sake::one is similar to sake::zero.  It provides a type to represent the
- * numeric constant "1", which may be used for more efficient construction and
+ * numeric constant "1".  It is primarily used for efficient construction and
  * arithmetic operations.
  ******************************************************************************/
 
@@ -25,12 +29,22 @@
 
 #include <ostream>
 
+#include <boost/config.hpp>
+#include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
+
+#include <sake/core/functional/operators/bit_and.hpp>
 #include <sake/core/functional/operators/divides.hpp>
-#include <sake/core/math/invert.hpp>
+#include <sake/core/functional/operators/shift_left.hpp>
+#include <sake/core/functional/operators/shift_right.hpp>
+#include <sake/core/math/inv.hpp>
 #include <sake/core/math/one_fwd.hpp>
+#include <sake/core/move/forward.hpp>
 
 namespace sake
 {
@@ -39,28 +53,39 @@ inline std::ostream&
 operator<<(std::ostream& o, sake::one_t)
 { return o << '1'; }
 
-namespace operators
-{
-namespace result_of
-{
-namespace extension
-{
+namespace operators {
+namespace result_of {
+namespace extension {
 
-template< class T >
-struct divides0< sake::one_t, T >
-    : sake::result_of::invert<T>
+template< class T0, class T1 >
+struct shift_left0< T0, T1,
+    typename boost::enable_if_c< boost::is_same<
+        typename boost_ext::remove_qualifiers< T0 >::type, sake::one_t
+    >::value >::type >
+    : boost_ext::remove_qualifiers< T1 >
 { };
 
-template< class T >
-struct bit_and0<
-    sake::one_t, T,
-    typename boost::enable_if_c< boost::is_integral<T>::value >::type >
-{ typedef bool type; };
+template< class T0, class T1 >
+struct shift_right0< T0, T1,
+    typename boost::enable_if_c< boost::is_same<
+        typename boost_ext::remove_qualifiers< T0 >::type, sake::one_t
+    >::value >::type >
+    : boost_ext::remove_qualifiers< T1 >
+{ };
 
-template< class T >
-struct bit_and1<
-    T, sake::one_t,
-    typename boost::enable_if_c< boost::is_integral<T>::value >::type >
+template< class T0, class T1 >
+struct divides0< T0, T1,
+    typename boost::enable_if_c< boost::is_same<
+        typename boost_ext::remove_qualifiers< T0 >::type, sake::one_t
+    >::value >::type >
+    : sake::result_of::inv< T1 >
+{ };
+
+template< class T0, class T1 >
+struct bit_and1< T0, T1,
+    typename boost::enable_if_c< boost::is_same<
+        typename boost_ext::remove_qualifiers< T1 >::type, sake::one_t
+    >::value >::type >
 { typedef bool type; };
 
 } // namespace extension
@@ -68,17 +93,59 @@ struct bit_and1<
 } // namespace operators
 
 template< class T >
-inline typename result_of::invert<T>::type
-operator/(sake::one_t, T const & x)
-{ return sake::invert(x); }
+inline typename boost::enable_if_c<
+    boost::is_arithmetic<T>::value,
+    T
+>::type
+operator<<(T const x, sake::one_t)
+{ return x * 2; }
 
 template< class T >
 inline typename boost::enable_if_c<
-    boost::is_integral<T>::value,
-    bool
+    boost::is_arithmetic<T>::value,
+    T
 >::type
-operator&(sake::one_t, T const x)
-{ return (1 & x) != 0; }
+operator>>(T const x, sake::one_t)
+{ return x / 2; }
+
+template< class T >
+inline typename boost::enable_if_c<
+    boost::is_arithmetic<T>::value,
+    T&
+>::type
+operator<<=(T& x, sake::one_t)
+{ return x *= 2; }
+
+template< class T >
+inline typename boost::enable_if_c<
+    boost::is_arithmetic<T>::value,
+    T&
+>::type
+operator>>=(T& x, sake::one_t)
+{ return x /= 2; }
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+
+template< class T >
+inline typename result_of::inv<T>::type
+operator/(sake::one_t, T&& x)
+{ return sake::inv(sake::forward<T>(x)); }
+
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+template< class T >
+inline typename result_of::inv<
+    typename boost_ext::remove_rvalue_reference< T& >::type
+>::type
+operator/(sake::one_t, T& x)
+{ return sake::inv(x); }
+
+template< class T >
+inline typename result_of::inv< T const & >::type
+operator/(sake::one_t, T const & x)
+{ return sake::inv(x); }
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T >
 inline typename boost::enable_if_c<

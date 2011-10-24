@@ -17,8 +17,8 @@
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
-#include <sake/boost_ext/move/forward.hpp>
-#include <sake/core/functional/result_from_metafunction.hpp>
+#include <sake/core/move/forward.hpp>
+#include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
 {
@@ -55,65 +55,65 @@ struct min
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename result_of::max<
+    typename result_of::min<
         typename boost_ext::remove_rvalue_reference< T0& >::type,
-        typename boost_ext::remove_rvalue_reference< T1& >::type,
+        typename boost_ext::remove_rvalue_reference< T1& >::type
     >::type
     operator()(T0& x0, T1& x1) const
     { return x1 < x0 ? x1 : x0; }
 
     template< class T0, class T1, class Less >
-    typename result_of::max<
+    typename result_of::min<
         typename boost_ext::remove_rvalue_reference< T0& >::type,
-        typename boost_ext::remove_rvalue_reference< T1& >::type,
+        typename boost_ext::remove_rvalue_reference< T1& >::type
     >::type
     operator()(T0& x0, T1& x1, Less less) const
     { return less(x1, x0) ? x1 : x0; }
 
     template< class T0, class T1 >
-    typename result_of::max<
+    typename result_of::min<
         typename boost_ext::remove_rvalue_reference< T0& >::type,
-        typename boost_ext::remove_rvalue_reference< T1 const & >::type,
+        typename boost_ext::remove_rvalue_reference< T1 const & >::type
     >::type
     operator()(T0& x0, T1 const & x1) const
     { return x1 < x0 ? x1 : x0; }
 
     template< class T0, class T1, class Less >
-    typename result_of::max<
+    typename result_of::min<
         typename boost_ext::remove_rvalue_reference< T0& >::type,
-        typename boost_ext::remove_rvalue_reference< T1 const & >::type,
+        typename boost_ext::remove_rvalue_reference< T1 const & >::type
     >::type
     operator()(T0& x0, T1 const & x1, Less less) const
     { return less(x1, x0) ? x1 : x0; }
 
     template< class T0, class T1 >
-    typename result_of::max<
+    typename result_of::min<
         typename boost_ext::remove_rvalue_reference< T0 const & >::type,
-        typename boost_ext::remove_rvalue_reference< T1& >::type,
+        typename boost_ext::remove_rvalue_reference< T1& >::type
     >::type
     operator()(T0 const & x0, T1& x1) const
     { return x1 < x0 ? x1 : x0; }
 
     template< class T0, class T1, class Less >
-    typename result_of::max<
+    typename result_of::min<
         typename boost_ext::remove_rvalue_reference< T0 const & >::type,
-        typename boost_ext::remove_rvalue_reference< T1& >::type,
+        typename boost_ext::remove_rvalue_reference< T1& >::type
     >::type
     operator()(T0 const & x0, T1& x1, Less less) const
     { return less(x1, x0) ? x1 : x0; }
 
     template< class T0, class T1 >
-    typename result_of::max<
+    typename result_of::min<
         typename boost_ext::remove_rvalue_reference< T0 const & >::type,
-        typename boost_ext::remove_rvalue_reference< T1 const & >::type,
+        typename boost_ext::remove_rvalue_reference< T1 const & >::type
     >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return x1 < x0 ? x1 : x0; }
 
     template< class T0, class T1, class Less >
-    typename result_of::max<
+    typename result_of::min<
         typename boost_ext::remove_rvalue_reference< T0 const & >::type,
-        typename boost_ext::remove_rvalue_reference< T1 const & >::type,
+        typename boost_ext::remove_rvalue_reference< T1 const & >::type
     >::type
     operator()(T0 const & x0, T1 const & x1, Less less) const
     { return less(x1, x0) ? x1 : x0; }

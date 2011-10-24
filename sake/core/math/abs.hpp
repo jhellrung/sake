@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * abs(T const & x) -> result_of::abs<T>::type
+ * abs(T&& x) -> result_of::abs<T>::type
  * struct functional::abs
  *
  * struct result_of::abs<T>
@@ -14,10 +14,13 @@
  *
  * Returns the absolute value of its argument.
  *
- * sake::abs(T const &) is implemented in terms of
+ * sake::abs(T) is implemented in terms of
  * - std::[f]abs if T is a builtin floating point or integral type; else
  * - T::abs(), if available; else
- * - abs(T const &) (unqualified, hence subject to ADL), if available; else
+ * - abs(T) (unqualified, hence subject to ADL), if available; else
+ * - T::abs_ip(), if available and the argument is an rvalue; else
+ * - abs_ip(T) (unqualified, hence subject to ADL), if available and the
+ *   argument is an rvalue; else
  * - comparison to sake::zero, returning either the argument or its negation.
  *
  * Note that for signed integral types, the return type is the corresponding
@@ -31,6 +34,7 @@
 
 #include <cmath>
 
+#include <boost/config.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_unsigned.hpp>
@@ -39,14 +43,19 @@
 #include <sake/boost_ext/mpl/unique2.hpp>
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/expr_traits/typeof.hpp>
 #include <sake/core/functional/operators/unary_minus.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/abs_fwd.hpp>
+#include <sake/core/math/private/abs_common.hpp>
 #include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/math/zero.hpp>
+#include <sake/core/move/as_lvalue.hpp>
+#include <sake/core/move/forward.hpp>
+#include <sake/core/move/rv.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
@@ -78,9 +87,7 @@ namespace result_of
 
 template< class T >
 struct abs
-    : extension::abs<
-          typename boost_ext::remove_qualifiers<T>::type
-      >
+    : extension::abs<T>
 { };
 
 /*******************************************************************************
@@ -107,9 +114,8 @@ namespace default_impl
 template< class T >
 struct abs_result_types
     : boost_ext::mpl::unique2<
-          boost::mpl::vector3<
+          boost::mpl::vector2<
               T,
-              T const &,
               typename boost_ext::common_type<
                   typename operators::result_of::unary_minus<T>::type,
                   T
@@ -120,10 +126,7 @@ struct abs_result_types
 
 template< class T >
 struct abs
-    : abs_private::dispatch<
-          typename boost_ext::remove_qualifiers<T>::type,
-          void
-      >
+    : abs_private::dispatch< T, void >
 { };
 
 } // namespace default_impl
@@ -142,10 +145,32 @@ struct abs
 {
     SAKE_RESULT_FROM_METAFUNCTION( result_of::abs, 1 )
 
+#ifndef BOOST_NO_RVALUE_REFERENCES
+
     template< class T >
     typename result_of::abs<T>::type
+    operator()(T&& x) const
+    { return abs_private::dispatch<T>::apply(sake::forward<T>(x)); }
+
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class T >
+    typename result_of::abs<
+        typename boost_ext::remove_rvalue_reference< T& >::type
+    >::type
+    operator()(T& x) const
+    {
+        return abs_private::dispatch<
+            typename boost_ext::remove_rvalue_reference< T& >::type
+        >::apply(x);
+    }
+
+    template< class T >
+    typename result_of::abs< T const & >::type
     operator()(T const & x) const
-    { return abs_private::dispatch<T>::apply(x); }
+    { return abs_private::dispatch< T const & >::apply(x); }
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     float
     operator()(float const x) const
@@ -181,16 +206,19 @@ namespace sake_abs_private
 template< class T, class Result >
 struct adl
 {
-    static Result apply(T const & x)
-    { return abs(x); }
+    template< class T_ >
+    static Result apply(SAKE_FWD2_REF( T_ ) x)
+    { return abs(::sake::forward<T_>(x)); }
 };
 
 template< class T >
 struct adl< T, void >
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
-        abs(::sake::declcref<T>()),
-        typename ::sake::result_of::default_impl::abs_result_types<T>::type,
+        abs(::sake::declval<T>()),
+        typename ::sake::result_of::default_impl::abs_result_types<
+            typename ::sake::boost_ext::remove_qualifiers<T>::type
+        >::type,
         type
     );
 };
@@ -212,19 +240,50 @@ template< class T >
 struct dispatch_index
 {
     static unsigned int const _ =
-        (1 << 4) * boost::is_signed<T>::value
-      | (1 << 3) * boost::is_unsigned<T>::value
-      | (1 << 2) * is_callable_mem_fun< T const & >::value
-      | (1 << 1) * sake_abs_private::is_callable< void ( T const & ) >::value
+        (1 << 8) * boost::is_signed<T>::value
+      | (1 << 7) * boost::is_unsigned<T>::value
+      | (1 << 6) * is_callable_mem_fun<T>::value
+      | (1 << 5) * ::sake_abs_private::is_callable< void ( T ) >::value
+      | (1 << 4) * abs_ip_private::is_callable_mem_fun< T&, T& ( ) >::value
+      | (1 << 3) * abs_ip_private::is_callable_mem_fun< T& >::value
+      | (1 << 2) * ::sake_abs_ip_private::is_callable< T& ( T& ) >::value
+      | (1 << 1) * ::sake_abs_ip_private::is_callable< void ( T& ) >::value
+      | (1 << 0);
+    static unsigned int const value = sake::static_intlog2_c<_>::value;
+};
+
+template< class T >
+struct dispatch_index< T& >
+{
+    static unsigned int const _ =
+        (1 << 8) * boost::is_signed<T>::value
+      | (1 << 7) * boost::is_unsigned<T>::value
+      | (1 << 6) * is_callable_mem_fun< T& >::value
+      | (1 << 5) * ::sake_abs_private::is_callable< void ( T& ) >::value
+      | (1 << 0);
+    static unsigned int const value = sake::static_intlog2_c<_>::value;
+};
+
+template< class T >
+struct dispatch_index< T const & >
+{
+    static unsigned int const _ =
+        (1 << 8) * boost::is_signed<T>::value
+      | (1 << 7) * boost::is_unsigned<T>::value
+      | (1 << 6) * is_callable_mem_fun< T const & >::value
+      | (1 << 5) * ::sake_abs_private::is_callable< void ( T const & ) >::value
       | (1 << 0);
     static unsigned int const value = sake::static_intlog2_c<_>::value;
 };
 
 template< class T, class Result >
-struct dispatch< T, Result, 4 >
+struct dispatch< T, Result, 8 >
 {
-    typedef typename boost::make_unsigned<T>::type type;
-    static type apply(T const x)
+    typedef typename boost::make_unsigned<
+        typename boost_ext::remove_qualifiers<T>::type
+    >::type type;
+    template< class T_ >
+    static type apply(T_ const x)
     {
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -238,44 +297,96 @@ struct dispatch< T, Result, 4 >
 };
 
 template< class T, class Result >
-struct dispatch< T, Result, 3 >
+struct dispatch< T, Result, 7 >
 {
-    typedef T type;
-    static type apply(T const x)
+    typedef typename boost_ext::remove_qualifiers<T>::type type;
+    template< class T_ >
+    static type apply(T_ const x)
     { return x; }
 };
 
 template< class T >
-struct dispatch< T, void, 2 >
+struct dispatch< T, void, 6 >
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
-        sake::declcref<T>().abs(),
-        typename result_of::default_impl::abs_result_types<T>::type,
+        sake::declval<T>().abs(),
+        typename result_of::default_impl::abs_result_types<
+            typename boost_ext::remove_qualifiers<T>::type
+        >::type,
         type
     );
 };
 
 template< class T, class Result >
+struct dispatch< T, Result, 6 >
+{
+    template< class T_ >
+    static Result apply(SAKE_FWD2_REF( T_ ) x)
+    { return sake::forward<T_>(x).abs(); }
+};
+
+template< class T, class Result >
+struct dispatch< T, Result, 5 >
+    : ::sake_abs_private::adl< T, Result >
+{ };
+
+template< class T, class Result >
+struct dispatch< T, Result, 4 >
+{
+    typedef SAKE_RV_REF( T ) type;
+    static type apply(type x)
+    { return static_cast< type >(SAKE_AS_LVALUE( x ).abs_ip()); }
+};
+
+template< class T, class Result >
+struct dispatch< T, Result, 3 >
+{
+    typedef SAKE_RV_REF( T ) type;
+    static type apply(type x)
+    {
+        SAKE_AS_LVALUE( x ).abs_ip();
+        return static_cast< type >(x);
+    }
+};
+
+template< class T, class Result >
 struct dispatch< T, Result, 2 >
 {
-    static Result apply(T const & x)
-    { return x.abs(); }
+    typedef SAKE_RV_REF( T ) type;
+    static type apply(type x)
+    { return ::sake_abs_ip_private::adl< type >(SAKE_AS_LVALUE( x )); }
 };
 
 template< class T, class Result >
 struct dispatch< T, Result, 1 >
-    : sake_abs_private::adl< T, Result >
-{ };
+{
+    typedef SAKE_RV_REF( T ) type;
+    static type apply(type x)
+    {
+        ::sake_abs_ip_private::adl< void >(SAKE_AS_LVALUE( x ));
+        return static_cast< type >(x);
+    }
+};
 
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
+    // For some reason, MSVC9 gives different common types depending on the
+    // order of the arguments, e.g.,
+    //     (bool ? X const & : X) -> X
+    // but
+    //     (bool ? X : X const &) -> X const &
+    // The latter order unexpectedly ends up returning a reference to a
+    // temporary, which is pretty dangerous, hence we use the former order.
     typedef typename boost_ext::common_type<
-        typename sake::operators::result_of::unary_minus<T>::type,
-        T
+        T, typename sake::operators::result_of::unary_minus<T>::type
     >::type type;
-    static type apply(T const & x)
-    { return x < sake::zero ? -x : x; }
+    template< class T_ >
+    static type apply(SAKE_FWD2_REF( T_ ) x)
+    {
+        return !(SAKE_AS_LVALUE( x ) < sake::zero) ?
+               sake::forward<T_>(x) : -sake::forward<T_>(x);
+    }
 };
 
 } // namespace abs_private

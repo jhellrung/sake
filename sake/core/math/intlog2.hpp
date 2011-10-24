@@ -508,7 +508,7 @@ struct dispatch< T, Result, 2 >
         if(x <= sake::zero)
             boost::throw_exception(intlog2_error()
                 << typename intlog2_errinfo::arg<T>::type(x));
-        return apply_nothrow(x);
+        return x.intlog2_nothrow();
     }
     static Result apply_nothrow(T const & x)
     {

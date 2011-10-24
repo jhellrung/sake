@@ -9,7 +9,7 @@
  * prior(T x, D n) -> T
  * struct functional::prior
  *
- * prior essentially just extends boost::prior to integral types.
+ * Essentially just extends boost::prior to integral types.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_MATH_PRIOR_HPP
@@ -76,7 +76,7 @@ struct dispatch< T, false >
     template< class D >
     static T
     apply(T const & x, D const & n)
-    { return static_cast<T>(x - n); }
+    { return x - n; }
 };
 
 template< class T >
@@ -95,12 +95,12 @@ struct dispatch< T, true >
 
     template< class D >
     static T
-    apply(T const & x, D const & n, boost::random_access_traversal_tag)
+    apply(T const & x, D const n, boost::random_access_traversal_tag)
     { return x - n; }
 
     template< class D >
     static T
-    apply(T const & x, D const & n)
+    apply(T const & x, D const n)
     {
         BOOST_STATIC_ASSERT((boost_ext::is_convertible<
             typename boost::iterator_traversal<T>::type,

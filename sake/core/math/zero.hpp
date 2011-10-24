@@ -57,7 +57,7 @@ inline typename boost::enable_if_c<
     boost::is_arithmetic<T>::value,
     bool
 >::type
-operator==(T const & x, sake::zero_t)
+operator==(T const x, sake::zero_t)
 { return x == 0; }
 
 template< class T >
@@ -65,7 +65,7 @@ inline typename boost::enable_if_c<
     boost::is_arithmetic<T>::value,
     bool
 >::type
-operator!=(T const & x, sake::zero_t)
+operator!=(T const x, sake::zero_t)
 { return x != 0; }
 
 template< class T >
@@ -73,7 +73,7 @@ inline typename boost::enable_if_c<
     boost::is_arithmetic<T>::value,
     bool
 >::type
-operator==(sake::zero_t, T const & x)
+operator==(sake::zero_t, T const x)
 { return 0 == x; }
 
 template< class T >
@@ -81,7 +81,7 @@ inline typename boost::enable_if_c<
     boost::is_arithmetic<T>::value,
     bool
 >::type
-operator!=(sake::zero_t, T const & x)
+operator!=(sake::zero_t, T const x)
 { return 0 != x; }
 
 #define define_operator( op ) \
@@ -93,7 +93,7 @@ inline typename boost::enable_if_c< \
     >::value, \
     bool \
 >::type \
-operator op (T const & x, sake::zero_t) \
+operator op (T const x, sake::zero_t) \
 { return x op 0; } \
 template< class T > \
 inline typename boost::enable_if_c< \
@@ -103,7 +103,7 @@ inline typename boost::enable_if_c< \
     >::value, \
     bool \
 >::type \
-operator op (sake::zero_t, T const & x) \
+operator op (sake::zero_t, T const x) \
 { return 0 op x; }
 define_operator( < )
 define_operator( > )
@@ -116,28 +116,28 @@ inline typename boost::enable_if_c<
     boost::is_unsigned<T>::value,
     bool
 >::type
-operator<(T const & x, sake::zero_t)
+operator<(T const /*x*/, sake::zero_t)
 { return false; }
 template< class T >
 inline typename boost::enable_if_c<
     boost::is_unsigned<T>::value,
     bool
 >::type
-operator>(T const & x, sake::zero_t)
+operator>(T const x, sake::zero_t)
 { return x != 0; }
 template< class T >
 inline typename boost::enable_if_c<
     boost::is_unsigned<T>::value,
     bool
 >::type
-operator<=(T const & x, sake::zero_t)
+operator<=(T const x, sake::zero_t)
 { return x == 0; }
 template< class T >
 inline typename boost::enable_if_c<
     boost::is_unsigned<T>::value,
     bool
 >::type
-operator>=(T const & x, sake::zero_t)
+operator>=(T const /*x*/, sake::zero_t)
 { return true; }
 
 template< class T >
@@ -145,28 +145,28 @@ inline typename boost::enable_if_c<
     boost::is_unsigned<T>::value,
     bool
 >::type
-operator<(sake::zero_t, T const & x)
+operator<(sake::zero_t, T const x)
 { return 0 != x; }
 template< class T >
 inline typename boost::enable_if_c<
     boost::is_unsigned<T>::value,
     bool
 >::type
-operator>(sake::zero_t, T const & x)
+operator>(sake::zero_t, T const /*x*/)
 { return false; }
 template< class T >
 inline typename boost::enable_if_c<
     boost::is_unsigned<T>::value,
     bool
 >::type
-operator<=(sake::zero_t, T const & x)
+operator<=(sake::zero_t, T const /*x*/)
 { return true; }
 template< class T >
 inline typename boost::enable_if_c<
     boost::is_unsigned<T>::value,
     bool
 >::type
-operator>=(sake::zero_t, T const & x)
+operator>=(sake::zero_t, T const x)
 { return 0 == x; }
 
 } // namespace sake

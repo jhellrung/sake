@@ -7,11 +7,10 @@
  *
  * distance(T0 const & x0, T1 const & x1)
  *     -> result_of::distance< T0, T1 >::type
- * distance(T0 const & x0, T1 const & x1, K const & k)
- *     -> result_of::distance< T0, T1, K >::type
  * struct functional::distance
  *
- * distance essentially just extends std::distance to integral types.
+ * Essentially just extends std::distance to integral types.
+ *
  * The result of distance is always a signed integral type, even if the
  * parameter types are unsigned integral types.
  ******************************************************************************/
@@ -28,8 +27,6 @@
 
 #include <sake/core/iterator/is_iterator.hpp>
 #include <sake/core/math/integer_difference.hpp>
-#include <sake/core/math/zero.hpp>
-#include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -38,7 +35,7 @@ namespace sake
 namespace result_of
 {
 
-template< class T0, class T1 = T0, class K = void >
+template< class T0, class T1 = T0 >
 struct distance;
 
 } // namespace result_of
@@ -46,13 +43,12 @@ struct distance;
 namespace distance_private
 {
 
-template< class T0, class T1, class K >
+template< class T0, class T1 >
 struct dispatch_index;
 
 template<
     class T0, class T1,
-    class K = void,
-    unsigned int = dispatch_index< T0, T1, K >::value
+    unsigned int = dispatch_index< T0, T1 >::value
 >
 struct dispatch;
 
@@ -63,17 +59,12 @@ namespace functional
 
 struct distance
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::distance, (2,3) )
+    SAKE_RESULT_FROM_METAFUNCTION( result_of::distance, 2 )
 
     template< class T0, class T1 >
     typename result_of::distance< T0, T1 >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return distance_private::dispatch< T0, T1 >::apply(x0, x1); }
-
-    template< class T0, class T1, class K >
-    typename result_of::distance< T0, T1, K >::type
-    operator()(T0 const & x0, T1 const & x1, K const & k) const
-    { return distance_private::dispatch< T0, T1, K >::apply(x0, x1, k); }
 };
 
 } // namespace functional
@@ -101,13 +92,8 @@ struct dispatch< T, true >
 
 } // namespace distance_private
 
-template< class T0, class T1 /*= T0*/, class K /*= void*/ >
+template< class T0, class T1 /*= T0*/ >
 struct distance
-    : boost_ext::common_type< K, typename distance< T0, T1 >::type >
-{ };
-
-template< class T0, class T1 >
-struct distance< T0, T1, void >
     : distance_private::dispatch<
           typename boost_ext::common_type<
               typename boost_ext::remove_qualifiers< T0 >::type,
@@ -121,11 +107,11 @@ struct distance< T0, T1, void >
 namespace distance_private
 {
 
-template< class T0, class T1, class K >
+template< class T0, class T1 >
 struct dispatch_index
 {
     typedef typename boost_ext::common_type< T0, T1 >::type common_type_;
-    typedef typename result_of::distance< T0, T1, K >::type result_type;
+    typedef typename result_of::distance< T0, T1 >::type result_type;
     static unsigned int const _ =
         (1 << 2) * sake::is_iterator< common_type_ >::value
       | (1 << 1) * boost_ext::is_convertible< common_type_, result_type >::value
@@ -134,7 +120,7 @@ struct dispatch_index
 };
 
 template< class T0, class T1 >
-struct dispatch< T0, T1, void, 2 >
+struct dispatch< T0, T1, 2 >
 {
     typedef typename boost_ext::common_type< T0, T1 >::type common_type_;
     typedef typename result_of::distance< T0, T1 >::type result_type;
@@ -156,31 +142,8 @@ struct dispatch< T0, T1, void, 2 >
     { return apply(i0, i1, typename boost::iterator_traversal< common_type_ >::type()); }
 };
 
-template< class T0, class T1, class K >
-struct dispatch< T0, T1, K, 2 >
-{
-    typedef typename boost_ext::common_type< T0, T1 >::type common_type_;
-    typedef typename result_of::distance< T0, T1, K >::type result_type;
-
-    static result_type
-    apply(T0 i0, const T1 i1, result_type k, boost::incrementable_traversal_tag)
-    {
-        SAKE_ASSERT_RELATION( k, ==, sake::zero );
-        for(; i0 != i1; ++i0, ++k);
-        return k;
-    }
-
-    static result_type
-    apply(T0 const & i0, T1 const & i1, K const &, boost::random_access_traversal_tag)
-    { return i1 - i0; }
-
-    static result_type
-    apply(T0 const & i0, T1 const & i1, K const & k)
-    { return apply(i0, i1, k, typename boost::iterator_traversal< common_type_ >::type()); }
-};
-
 template< class T0, class T1 >
-struct dispatch< T0, T1, void, 1 >
+struct dispatch< T0, T1, 1 >
 {
     typedef typename result_of::distance< T0, T1 >::type result_type;
     static result_type
@@ -188,30 +151,12 @@ struct dispatch< T0, T1, void, 1 >
     { return static_cast< result_type >(i1) - static_cast< result_type >(i0); }
 };
 
-template< class T0, class T1, class K >
-struct dispatch< T0, T1, K, 1 >
-{
-    typedef typename result_of::distance< T0, T1, K >::type result_type;
-    static result_type
-    apply(T0 const & i0, T1 const & i1, K const &)
-    { return static_cast< result_type >(i1) - static_cast< result_type >(i0); }
-};
-
 template< class T0, class T1 >
-struct dispatch< T0, T1, void, 0 >
+struct dispatch< T0, T1, 0 >
 {
     typedef typename result_of::distance< T0, T1 >::type result_type;
     static result_type
     apply(T0 const & i0, T1 const & i1)
-    { return i1 - i0; }
-};
-
-template< class T0, class T1, class K >
-struct dispatch< T0, T1, K, 0 >
-{
-    typedef typename result_of::distance< T0, T1, K >::type result_type;
-    static result_type
-    apply(T0 const & i0, T1 const & i1, K const &)
     { return i1 - i0; }
 };
 

@@ -20,7 +20,7 @@
 #include <sake/boost_ext/type_traits/is_lvalue_reference.hpp>
 
 #include <sake/core/move/forward.hpp>
-#include <sake/core/math/unbounded.hpp>
+#include <sake/core/math/unbounded_tag.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 

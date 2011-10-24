@@ -14,7 +14,7 @@
  * - std::[f]abs, if T is a builtin floating point or integral type; else
  * - T::abs_ip(), if available; else
  * - abs_ip(T&) (unqualified, hence subject to ADL), if available; else
- * - comparison with sake::zero and sake::negate_ip.
+ * - comparison with sake::zero and sake::neg_ip.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_MATH_ABS_IP_HPP
@@ -32,9 +32,8 @@
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference.hpp>
 
-#include <sake/core/introspection/is_callable_function.hpp>
-#include <sake/core/introspection/is_callable_member_function.hpp>
-#include <sake/core/math/negate_ip.hpp>
+#include <sake/core/math/neg_ip.hpp>
+#include <sake/core/math/private/abs_common.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/dispatch_priority_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -126,31 +125,11 @@ functional::abs_ip const abs_ip = { };
 
 } // namespace sake
 
-namespace sake_abs_ip_private
-{
-
-#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
-#define SAKE_INTROSPECTION_FUNCTION_NAME abs_ip
-#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 1 )
-#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
-
-template< class Result, class T >
-inline Result
-adl(T& x)
-{ return static_cast< Result >(abs_ip(x)); }
-
-} // namespace sake_abs_ip_private
-
 namespace sake
 {
 
 namespace abs_ip_private
 {
-
-#define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME abs_ip
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
-#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class T >
 inline typename boost::enable_if_c<
@@ -170,14 +149,17 @@ dispatch(T& x, sake::dispatch_priority_tag<5>)
 
 template< class T >
 inline typename boost::enable_if_c<
-    is_callable_mem_fun< T&, T& ( ) >::value,
+    abs_ip_private::is_callable_mem_fun< T&, T& ( ) >::value,
     T&
 >::type
 dispatch(T& x, sake::dispatch_priority_tag<4>)
 { return x.abs_ip(); }
 
 template< class T >
-inline typename boost::enable_if_c< is_callable_mem_fun< T& >::value, T& >::type
+inline typename boost::enable_if_c<
+    abs_ip_private::is_callable_mem_fun< T& >::value,
+    T&
+>::type
 dispatch(T& x, sake::dispatch_priority_tag<3>)
 { x.abs_ip(); return x; }
 
@@ -200,7 +182,7 @@ dispatch(T& x, sake::dispatch_priority_tag<1>)
 template< class T >
 inline T&
 dispatch(T& x, sake::dispatch_priority_tag<0>)
-{ return x < sake::zero ? sake::negate_ip(x) : x; }
+{ return x < sake::zero ? sake::neg_ip(x) : x; }
 
 template< class T >
 inline T&

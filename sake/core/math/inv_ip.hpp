@@ -26,9 +26,8 @@
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference.hpp>
 
-#include <sake/core/introspection/is_callable_function.hpp>
-#include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/inv.hpp>
+#include <sake/core/math/private/inv_common.hpp>
 #include <sake/core/utility/dispatch_priority_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
@@ -97,31 +96,11 @@ functional::inv_ip const inv_ip = { };
 
 } // namespace sake
 
-namespace sake_inv_ip_private
-{
-
-#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
-#define SAKE_INTROSPECTION_FUNCTION_NAME inv_ip
-#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 1 )
-#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
-
-template< class Result, class T >
-inline Result
-adl(T& x)
-{ return static_cast< Result >(inv_ip(x)); }
-
-} // namespace sake_inv_ip_private
-
 namespace sake
 {
 
 namespace inv_ip_private
 {
-
-#define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME inv_ip
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
-#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class T >
 inline typename boost::enable_if_c<
