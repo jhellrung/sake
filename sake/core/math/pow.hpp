@@ -17,6 +17,8 @@
 #define SAKE_CORE_MATH_POW_HPP
 
 #include <boost/config.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_empty.hpp>
 #include <boost/type_traits/is_signed.hpp>
 
 #include <sake/boost_ext/type_traits/common_type.hpp>
@@ -183,6 +185,7 @@ struct dispatch_index
 template< class B, class P >
 struct dispatch<B,P,2>
 {
+    BOOST_STATIC_ASSERT((boost::is_empty<P>::value));
     typedef typename dispatch_c< B, P::value >::type type;
     static type apply(B& b, P /*p*/)
     { return dispatch_c< B, P::value >::apply(b); }
@@ -197,8 +200,8 @@ struct dispatch<B,P,1>
     typedef B type;
     static type apply(B& b, P& p)
     {
-        unsigned int i = 1;
-        return apply(b,p,i);
+        B r(1);
+        return apply(b,p,r);
     }
     template< class I >
     static type apply(B& b, P& p, I& i)
@@ -326,7 +329,7 @@ struct dispatch_c< B, 0, false, false >
 {
     typedef B type;
     static type apply(B& b)
-    { return B(static_cast< unsigned int >(1)); }
+    { return B(1); }
     template< class I >
     static type apply(B& /*b*/, I& i)
     { return B(sake::move(i)); }
