@@ -209,19 +209,19 @@ operator()(
         scope_name = local_scope_name;
 
     // Return if this scope is not enabled.
-    std::map< std::string, scope_data >::iterator it = data_of_scope_name.find(scope_name);
-    if(!(it == data_of_scope_name.end() ? default_enable : it->second.enable))
+    std::map< std::string, scope_data >::iterator i = data_of_scope_name.find(scope_name);
+    if(!(i == data_of_scope_name.end() ? default_enable : i->second.enable))
         return;
 
     // If necessary, construct a scope_data object for this scope.
-    if(it == data_of_scope_name.end()) {
-        it = data_of_scope_name.insert(std::make_pair(scope_name, scope_data())).first;
-        it->second.log_level = p_current_scope ? p_current_scope->second.log_level : default_log_level;
+    if(i == data_of_scope_name.end()) {
+        i = data_of_scope_name.insert(std::make_pair(scope_name, scope_data())).first;
+        i->second.log_level = p_current_scope ? p_current_scope->second.log_level : default_log_level;
     }
     unsigned int const depth = p_current_scope ? p_current_scope->second.depth + 1 : 0;
-    assert(it->second.depth == 0 || it->second.depth == depth);
-    it->second.depth = depth;
-    p_current_scope = &*it;
+    assert(i->second.depth == 0 || i->second.depth == depth);
+    i->second.depth = depth;
+    p_current_scope = &*i;
     unsigned int const log_level = p_current_scope->second.log_level;
     bool const rethrow_exception = p_current_scope->second.rethrow_exception;
     assert(p_current_scope->second.depth == depth);
@@ -323,20 +323,20 @@ report() const
     assert(p_current_scope == 0);
     if(!p_log)
         return;
-    std::map< std::string, scope_data >::const_iterator it = data_of_scope_name.begin();
+    std::map< std::string, scope_data >::const_iterator i = data_of_scope_name.begin();
     double elapsed_time = 0;
     unsigned int n_fail_warn = 0;
     unsigned int n_fail_check = 0;
     unsigned int n_fail_require = 0;
     unsigned int n_throw_exception = 0;
-    for(; it != data_of_scope_name.end(); ++it) {
-        scope_data const & data = it->second;
+    for(; i != data_of_scope_name.end(); ++i) {
+        scope_data const & data = i->second;
         elapsed_time += data.elapsed_time;
         n_fail_warn += data.n_fail_warn;
         n_fail_check += data.n_fail_check;
         n_fail_require += data.n_fail_require;
         n_throw_exception += data.n_throw_exception;
-        *p_log << it->first << " (" << data.elapsed_time << " s) : "
+        *p_log << i->first << " (" << data.elapsed_time << " s) : "
                << data.n_fail_warn << " failed warn(s), "
                << data.n_fail_check << " failed check(s), "
                << data.n_fail_require << " failed require(s), "
@@ -360,9 +360,9 @@ environment::impl::
 main_return_value() const
 {
     assert(p_current_scope == 0);
-    std::map< std::string, scope_data >::const_iterator it = data_of_scope_name.begin();
-    for(; it != data_of_scope_name.end(); ++it) {
-        scope_data const & data = it->second;
+    std::map< std::string, scope_data >::const_iterator i = data_of_scope_name.begin();
+    for(; i != data_of_scope_name.end(); ++i) {
+        scope_data const & data = i->second;
         if(data.n_fail_check != 0 || data.n_fail_require != 0 || data.n_throw_exception != 0)
             return 1;
     }
