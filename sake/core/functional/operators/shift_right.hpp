@@ -29,7 +29,7 @@ namespace operators {
 namespace result_of {
 namespace extension {
 template< class T >
-struct shift_right< std::istream&, T >
+struct shift_right0< std::istream&, T >
 { typedef std::istream& type; };
 } // namespace extension
 } // namespace result_of
