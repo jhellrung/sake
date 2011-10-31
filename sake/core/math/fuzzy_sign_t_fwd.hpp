@@ -46,10 +46,26 @@ struct fuzzy_sign_t
     int as_int() const;
     int as_int_nothrow() const;
 
+    friend boost::logic::tribool
+    operator==(fuzzy_sign_t const s0, fuzzy_sign_t const s1);
+    friend boost::logic::tribool
+    operator!=(fuzzy_sign_t const s0, fuzzy_sign_t const s1);
+#define declare_operator( op ) \
+    friend boost::logic::tribool \
+    operator op (fuzzy_sign_t const s, sake::zero_t);
+    declare_operator( == )
+    declare_operator( != )
+    declare_operator( < )
+    declare_operator( > )
+    declare_operator( <= )
+    declare_operator( >= )
+#undef declare_operator
+
 private:
+    friend struct sake::functional::indeterminate;
+
     explicit fuzzy_sign_t(unsigned int const value);
-public:
-    // public only to allow access to the free operators.
+
     static unsigned int const zero_sign_value = 0;
     static unsigned int const positive_sign_value = 1;
     static unsigned int const negative_sign_value = 3;

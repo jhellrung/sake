@@ -54,7 +54,7 @@ operator!=(fuzzy_sign_t const s0, fuzzy_sign_t const s1)
            static_cast< boost::logic::tribool >(s0.m_value != s1.m_value);
 }
 
-#define define_comparison_operator( op ) \
+#define define_operator( op ) \
 inline boost::logic::tribool \
 operator op (fuzzy_sign_t const s0, fuzzy_sign_t const s1) \
 { \
@@ -62,11 +62,11 @@ operator op (fuzzy_sign_t const s0, fuzzy_sign_t const s1) \
            static_cast< boost::logic::tribool >(boost::logic::indeterminate) : \
            static_cast< boost::logic::tribool >(s0.as_int_nothrow() op s1.as_int_nothrow()); \
 }
-define_comparison_operator( < )
-define_comparison_operator( > )
-define_comparison_operator( <= )
-define_comparison_operator( >= )
-#undef define_comparison_operator
+define_operator( < )
+define_operator( > )
+define_operator( <= )
+define_operator( >= )
+#undef define_operator
 
 inline boost::logic::tribool
 operator==(fuzzy_sign_t const s, sake::zero_t)
