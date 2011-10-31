@@ -10,7 +10,7 @@
 Sake Source Code Conventions
 ================================
 
-This document describes some of Sake's convention concerning the style of C++
+This document describes some of Sake's conventions concerning the style of C++
 source code.
 
 --------------------------------
@@ -131,7 +131,7 @@ readability, in which cases the "revised" informal line length limit is 120
 characters.
 
 --------------------------------
-Identation
+Indentation
 --------------------------------
 The only mandatory rules regarding indentation are as follows:
 - No tab characters; this is the same policy adopted by, e.g., Boost and Python.
@@ -155,3 +155,9 @@ as it is kept reasonably consistent within said component or module.
 - The opening brace of a control block (if, else, for, while, do-while, switch,
   try, catch) should trail the closing parenthesis of the block declaration; the
   closing brace should appear on its own line.
+
+--------------------------------
+Miscellaneous
+--------------------------------
+- All files should end in a terminating newline.
+- All files should have no lines with trailing white space.
