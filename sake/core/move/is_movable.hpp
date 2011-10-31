@@ -23,8 +23,8 @@
 #include <boost/type_traits/is_class.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/type_traits/is_convertible.hpp>
 
+#include <sake/core/introspection/has_mem_fun_operator.hpp>
 #include <sake/core/move/rv.hpp>
 
 namespace sake
@@ -34,7 +34,7 @@ template< class T >
 struct is_movable
     : boost_ext::mpl::and2<
           boost::is_class<T>,
-          boost_ext::is_convertible< T, boost::rv<T>& >
+          sake::has_mem_fun_operator< T, boost::rv<T>& >
       >
 { };
 

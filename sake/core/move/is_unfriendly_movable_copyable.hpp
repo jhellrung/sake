@@ -40,7 +40,7 @@ namespace sake
 template< class T >
 struct is_unfriendly_movable_copyable
     : boost_ext::mpl::and2<
-          is_movable_copyable<T>,
+          sake::is_movable_copyable<T>,
           boost::mpl::not_< boost_ext::enclosing_is_const_copy_assignable<T> >
       >
 { };

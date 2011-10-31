@@ -117,8 +117,7 @@ struct BOOST_PP_CAT( or, N )
     : or_private::helper<
           T0::type::value,
           BOOST_PP_CAT( or, BOOST_PP_DEC( N ) )<
-              BOOST_PP_ENUM_SHIFTED_PARAMS( N, T )
-          >
+              BOOST_PP_ENUM_SHIFTED_PARAMS( N, T ) >
       >
 { };
 

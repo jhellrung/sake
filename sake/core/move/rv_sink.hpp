@@ -59,6 +59,7 @@
 
 #include <sake/boost_ext/mpl/result_type.hpp>
 
+#include <sake/core/move/move.hpp>
 #include <sake/core/introspection/has_type_result_type.hpp>
 #include <sake/core/utility/default_tag.hpp>
 

@@ -23,6 +23,7 @@
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
+#include <sake/boost_ext/mpl/as_vector.hpp>
 #include <sake/boost_ext/mpl/vector.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
@@ -269,12 +270,14 @@ struct iterate_deduced_3
 
 template< class A, class P, class D >
 struct tag_args
-    : tag_args_private::iterate_positional<
-          typename boost::mpl::begin<A>::type,
-          typename boost::mpl::end<A>::type,
-          typename boost::mpl::begin<P>::type,
-          typename boost::mpl::end<P>::type,
-          D
+    : boost_ext::mpl::as_vector<
+          typename tag_args_private::iterate_positional<
+              typename boost::mpl::begin<A>::type,
+              typename boost::mpl::end<A>::type,
+              typename boost::mpl::begin<P>::type,
+              typename boost::mpl::end<P>::type,
+              D
+          >::type
       >
 { };
 

@@ -337,9 +337,9 @@ struct traits< T, true >
     SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C( T, SAKE_MOVABLE_any_movable( r, U_seq ) )
 
 #define SAKE_MOVABLE_any_movable( r, U_seq ) \
-    BOOST_PP_CAT( ::sake::boost_ext::mpl::or, BOOST_PP_SEQ_SIZE( U_seq ) ) < \
+    ( ::sake::boost_ext::mpl::BOOST_PP_CAT( or, BOOST_PP_SEQ_SIZE( U_seq ) ) < \
         BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_MOVABLE_comma_is_movable, ~, U_seq ) \
-    >::value
+    >::value )
 #define SAKE_MOVABLE_comma_is_movable( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) ::sake::is_movable< elem >
 

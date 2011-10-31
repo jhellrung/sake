@@ -20,6 +20,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_object.hpp>
 
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/utility/declval.hpp>
@@ -39,8 +40,10 @@ namespace expr_is_convertible_private
 
 template<
     class T,
-    bool = boost::is_object<T>::value ||
-           boost_ext::is_reference<T>::value
+    bool = boost_ext::mpl::or2<
+               boost_ext::is_reference<T>,
+               boost::is_object<T>
+           >::value
 >
 struct helper;
 

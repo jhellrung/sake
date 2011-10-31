@@ -50,6 +50,7 @@
 #include <sake/boost_ext/fusion/algorithm/query/equal.hpp>
 #include <sake/boost_ext/fusion/algorithm/query/not_equal.hpp>
 #include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
+#include <sake/boost_ext/mpl/vector.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/propagate_const.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -66,6 +67,7 @@
 #include <sake/core/utility/implicitly_defined/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
+#include <sake/core/utility/swap.hpp>
 
 namespace sake
 {
@@ -80,7 +82,11 @@ namespace tuple_adl
 template<>
 struct tuple<>
 {
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost_ext::mpl::vector<> values_type;
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     typedef boost::mpl::vector0<> values_type;
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
     SAKE_IMPLICITLY_DEFINED_DEFAULT_CTOR( tuple )
@@ -249,12 +255,17 @@ struct at_c_dispatch;
 
 } // namespace tuple_adl
 
-#define datan_seq( z, n, data ) ( data ## n )
-#define Tn_n( z, n, data ) T ## n _ ## n;
+#define datan_seq( z, n, data ) \
+    ( data ## n )
+#define Tn_n( z, n, data ) \
+    T ## n _ ## n;
 #define comma_i_emplacer_construct_Ti_elem( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
     BOOST_PP_CAT( _, i ) (sake::emplacer_construct< BOOST_PP_CAT( T, i ) >(elem))
-#define fwd_ref_Un_xn( z, n, data ) SAKE_FWD_REF( U ## n ) x ## n
+#define _n_at_c_n_data( z, n, data ) \
+    _ ## n (boost_ext::fusion::at_c<n>(data))
+#define fwd_ref_Un_xn( z, n, data ) \
+    SAKE_FWD_REF( U ## n ) x ## n
 #define emplacer_assign_n_forward_Un_xn( z, n, data ) \
     sake::emplacer_assign(_ ## n, sake::forward< U ## n >(x ## n));
 #define _n_assign_at_c_n_forward_Sequence_s( z, n, data ) \
@@ -274,6 +285,7 @@ struct at_c_dispatch;
 #undef datan_seq
 #undef Tn_n
 #undef comma_i_emplacer_construct_Ti_elem
+#undef _n_at_c_n_data
 #undef fwd_ref_Un_xn
 #undef emplacer_assign_n_forward_Un_xn
 #undef _n_assign_at_c_n_forward_Sequence_s
@@ -322,7 +334,12 @@ struct tuple
 struct tuple< T0N >
 #endif // #if defined( BOOST_NO_VARIADIC_TEMPLATES ) && N == SAKE_TUPLE_MAX_SIZE
 {
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost_ext::mpl::vector< T0N > values_type;
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     typedef boost::mpl::BOOST_PP_CAT( vector, N )< T0N > values_type;
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+
     static std::size_t const static_size = N;
 
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE( typename tuple, T0N_seq )
@@ -436,8 +453,7 @@ struct tuple< T0N >
     tuple(Sequence&& s,
         typename boost::enable_if_c< utility_private::is_compatible_sequence<
             tuple, Sequence >::value >::type* = 0)
-        : first (boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s))),
-          second(boost_ext::fusion::at_c<1>(sake::forward< Sequence >(s)))
+        : BOOST_PP_ENUM( N, _n_at_c_n_data, sake::forward< Sequence >(s) )
     { }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -446,16 +462,14 @@ struct tuple< T0N >
     tuple(Sequence& s,
         typename boost::enable_if_c< utility_private::is_compatible_sequence<
             tuple, Sequence& >::value >::type* = 0)
-        : first (boost_ext::fusion::at_c<0>(s)),
-          second(boost_ext::fusion::at_c<1>(s))
+        : BOOST_PP_ENUM( N, _n_at_c_n_data, s )
     { }
 
     template< class Sequence >
     tuple(Sequence const & s,
         typename boost::enable_if_c< utility_private::is_compatible_sequence<
             tuple, Sequence const & >::value >::type* = 0)
-        : first (boost_ext::fusion::at_c<0>(s)),
-          second(boost_ext::fusion::at_c<1>(s))
+        : BOOST_PP_ENUM( N, _n_at_c_n_data, s )
     { }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES

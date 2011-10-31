@@ -63,7 +63,9 @@
 #include <sake/boost_ext/mpl/advance_c.hpp>
 #include <sake/boost_ext/mpl/all.hpp>
 #include <sake/boost_ext/mpl/any.hpp>
+#include <sake/boost_ext/mpl/as_vector.hpp>
 #include <sake/boost_ext/mpl/reverse_adjacent_find_index.hpp>
+#include <sake/boost_ext/mpl/vector.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/propagate_const.hpp>
@@ -98,7 +100,11 @@ namespace compressed_tuple_adl
 template<>
 struct compressed_tuple<>
 {
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost_ext::mpl::vector<> values_type;
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     typedef boost::mpl::vector0<> values_type;
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
     SAKE_IMPLICITLY_DEFINED_DEFAULT_CTOR( compressed_tuple )
@@ -265,9 +271,17 @@ namespace private_
 {
 
 template< class T0, class T1, bool _ >
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+struct storage< boost_ext::mpl::vector< T0, T1 >, _ >
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 struct storage< boost::mpl::vector2< T0, T1 >, _ >
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 {
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost_ext::mpl::vector< T0, T1 > values_type;
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     typedef boost::mpl::vector2< T0, T1 > values_type;
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
@@ -422,8 +436,6 @@ struct at_c_dispatch<I,J,3>
 #define class_U0N BOOST_PP_ENUM_PARAMS( N, class U )
 #define T0N       BOOST_PP_ENUM_PARAMS( N, T )
 
-#define vectorN boost::mpl::BOOST_PP_CAT( vector, N )
-
 template< class_T0N >
 #if defined( BOOST_NO_VARIADIC_TEMPLATES ) && N == SAKE_COMPRESSED_TUPLE_MAX_SIZE
 struct compressed_tuple
@@ -434,7 +446,11 @@ struct compressed_tuple< T0N >
     : sake::base_member< T0 >
 #endif // #if N == 1
 {
-    typedef vectorN< T0N > values_type;
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost_ext::mpl::vector< T0N > values_type;
+#else // BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost::mpl::BOOST_PP_CAT( vector, N )< T0N > values_type;
+#endif // BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = N;
 
     SAKE_BASIC_MOVABLE_COPYABLE( compressed_tuple )
@@ -647,7 +663,11 @@ namespace private_
 {
 
 template< class_T0N >
-struct storage< vectorN< T0N >, false >
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+struct storage< boost_ext::mpl::vector< T0N >, false >
+#else // BOOST_NO_VARIADIC_TEMPLATES
+struct storage< boost::mpl::BOOST_PP_CAT( vector, N )< T0N >, false >
+#endif // BOOST_NO_VARIADIC_TEMPLATES
     : sake::tuple< T0N >
 {
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
@@ -668,9 +688,17 @@ public:
 };
 
 template< class_T0N >
-struct storage< vectorN< T0N >, true >
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+struct storage< boost_ext::mpl::vector< T0N >, true >
+#else // BOOST_NO_VARIADIC_TEMPLATES
+struct storage< boost::mpl::BOOST_PP_CAT( vector, N )< T0N >, true >
+#endif // BOOST_NO_VARIADIC_TEMPLATES
 {
-    typedef vectorN< T0N > values_type;
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost_ext::mpl::vector< T0N > values_type;
+#else // BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost::mpl::BOOST_PP_CAT( vector, N )< T0N > values_type;
+#endif // BOOST_NO_VARIADIC_TEMPLATES
 
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
@@ -728,40 +756,48 @@ public:
 
 private:
     private_::storage<
-        // This might *look* complicated, but it's really not too bad.
-        // We just want to form a Boost.MPL sequence consisting of
-        //     T[0], ..., T[j-1],
-        //     compressed_pair< T[j], T[j+1] >,
-        //     T[j+2], ..., T[N-1]
-        typename boost::mpl::copy<
-            // T[j+2], ..., T[N-1]
-            boost::mpl::iterator_range<
-                typename boost_ext::mpl::advance_c<
-                    typename boost::mpl::begin< values_type >::type,
-                    j+2
-                >::type,
-                typename boost::mpl::end< values_type >::type
-            >,
-            boost::mpl::back_inserter<
-                typename boost::mpl::push_back<
-                    typename boost::mpl::copy<
-                        // T[0], ..., T[j-1]
-                        boost::mpl::iterator_range<
-                            typename boost::mpl::begin< values_type >::type,
-                            typename boost_ext::mpl::advance_c<
-                                typename boost::mpl::begin< values_type >::type,
-                                j+0
-                            >::type
-                        >,
-                        boost::mpl::back_inserter< boost::mpl::vector0<> >
+        typename boost_ext::mpl::as_vector<
+            // This might *look* complicated, but it's really not too bad.
+            // We just want to form a Boost.MPL sequence consisting of
+            //     T[0], ..., T[j-1],
+            //     compressed_pair< T[j], T[j+1] >,
+            //     T[j+2], ..., T[N-1]
+            typename boost::mpl::copy<
+                // T[j+2], ..., T[N-1]
+                boost::mpl::iterator_range<
+                    typename boost_ext::mpl::advance_c<
+                        typename boost::mpl::begin< values_type >::type,
+                        j+2
                     >::type,
-                    // compressed_pair< T[j], T[j+1] >
-                    sake::compressed_pair<
-                        typename boost::mpl::at_c< values_type, j+0 >::type,
-                        typename boost::mpl::at_c< values_type, j+1 >::type
-                    >
-                >::type
-            >
+                    typename boost::mpl::end< values_type >::type
+                >,
+                boost::mpl::back_inserter<
+                    typename boost::mpl::push_back<
+                        typename boost::mpl::copy<
+                            // T[0], ..., T[j-1]
+                            boost::mpl::iterator_range<
+                                typename boost::mpl::begin< values_type >::type,
+                                typename boost_ext::mpl::advance_c<
+                                    typename boost::mpl::begin< values_type >::type,
+                                    j+0
+                                >::type
+                            >,
+                            boost::mpl::back_inserter<
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+                                boost_ext::mpl::vector<>
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+                                boost::mpl::vector0<>
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+                            >
+                        >::type,
+                        // compressed_pair< T[j], T[j+1] >
+                        sake::compressed_pair<
+                            typename boost::mpl::at_c< values_type, j+0 >::type,
+                            typename boost::mpl::at_c< values_type, j+1 >::type
+                        >
+                    >::type
+                >
+            >::type
         >::type
     > m_storage;
 };
@@ -769,8 +805,6 @@ private:
 } // namespace private_
 
 #endif // #if N > 2
-
-#undef vectorN
 
 #undef class_T0N
 #undef class_U0N

@@ -218,7 +218,7 @@ private:
 template< class T0, class T1 >
 inline void
 swap(compressed_pair< T0, T1 >& x, compressed_pair< T0, T1 >& y)
-{ x0.swap(x1); }
+{ x.swap(y); }
 
 template< class T0, class T1 >
 inline std::size_t

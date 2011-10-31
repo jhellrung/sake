@@ -24,6 +24,7 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/vector/vector0.hpp>
 
+#include <sake/boost_ext/mpl/as_vector.hpp>
 #include <sake/boost_ext/mpl/vector.hpp>
 
 namespace sake
@@ -77,7 +78,8 @@ struct iterate< I,E,V, false >
 
 template< class I, class E, class V >
 struct iterate< I,E,V, true >
-{ typedef V type; };
+    : boost_ext::mpl::as_vector<V>
+{ };
 
 } // namespace as_mpl_vector_private
 

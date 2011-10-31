@@ -37,9 +37,8 @@ struct sfinae< T const volatile, U >
 template< class T, class U >
 class has_mem_fun_operator
 {
-    template< U (T::*)( ) > struct sfinae;
     template< class T_ > static sake::yes_tag test(
-        typename has_mem_fun_operator_private::sfinae<T,U>::template _< &T_::operator U >* = 0);
+        typename has_mem_fun_operator_private::sfinae<T,U>::template _< &T_::operator U >*);
     template< class T_ > static sake::no_tag test(...);
 public:
     static bool const value = sizeof( sake::yes_tag ) == sizeof( test<T>(0) );

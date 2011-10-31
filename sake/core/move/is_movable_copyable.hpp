@@ -22,8 +22,8 @@
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/type_traits/is_convertible.hpp>
 
+#include <sake/core/introspection/has_mem_fun_operator.hpp>
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv.hpp>
 
@@ -34,7 +34,7 @@ template< class T >
 struct is_movable_copyable
     : boost_ext::mpl::and2<
           sake::is_movable<T>,
-          boost_ext::is_convertible< T const &, boost::rv<T> const & >
+          sake::has_mem_fun_operator< T const, boost::rv<T> const & >
       >
 { };
 

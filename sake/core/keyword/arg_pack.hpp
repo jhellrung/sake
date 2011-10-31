@@ -16,7 +16,6 @@
 #include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -135,22 +134,8 @@ private:
 #define a1N           BOOST_PP_ENUM_SHIFTED_PARAMS( N, a )
 
 template< class_A0N >
-struct arg_pack_from_mpl_vector< boost::mpl::vector< A0N > >
+struct arg_pack_from_mpl_vector< boost::mpl::BOOST_PP_CAT( vector, N )< A0N > >
 { typedef arg_pack< A0N > type; };
-
-template< class_A0N >
-struct arg_pack_from_mpl_vector< BOOST_PP_CAT( boost::mpl::vector, N ) < A0N > >
-{ typedef arg_pack< A0N > type; };
-
-#ifdef BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
-template< class_A0N >
-struct arg_pack_from_mpl_vector<
-    BOOST_PP_ENUM_PARAMS( N, boost::mpl::v_item< A ),
-    boost::mpl::vector0<>,
-    BOOST_PP_ENUM_PARAMS( N, 1 > BOOST_PP_INTERCEPT )
->
-{ typedef arg_pack< A0N > type; };
-#endif // #ifdef BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
 
 template< class_A0N >
 #if N == SAKE_KEYWORD_MAX_ARITY
@@ -193,9 +178,7 @@ public:
     struct result_of
     {
         template< class K >
-        struct at
-            : at_impl<K>
-        { };
+        struct at : at_impl<K> { };
     };
 
     template< class K >
