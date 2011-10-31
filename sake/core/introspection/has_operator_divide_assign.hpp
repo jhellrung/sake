@@ -1,19 +1,19 @@
 /*******************************************************************************
- * sake/core/introspection/has_operator_divides_assign.hpp
+ * sake/core/introspection/has_operator_divide_assign.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct has_operator_divides_assign<
+ * struct has_operator_divide_assign<
  *     T, U,
  *     Result = typename boost_ext::add_reference<T>::type,
  *     ResultPred = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 
-#ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_DIVIDES_ASSIGN_HPP
-#define SAKE_CORE_INTROSPECTION_HAS_OPERATOR_DIVIDES_ASSIGN_HPP
+#ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_DIVIDE_ASSIGN_HPP
+#define SAKE_CORE_INTROSPECTION_HAS_OPERATOR_DIVIDE_ASSIGN_HPP
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 
@@ -24,7 +24,7 @@
 namespace sake
 {
 
-#define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_divides_assign
+#define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_divide_assign
 #define SAKE_INTROSPECTION_OPERATOR_NAME /=
 #define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ) \
     typename ::sake::boost_ext::add_reference<T>::type
@@ -36,4 +36,4 @@ namespace sake
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_DIVIDES_ASSIGN_HPP
+#endif // #ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_DIVIDE_ASSIGN_HPP
