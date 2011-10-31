@@ -20,15 +20,15 @@ namespace
 {
 
 struct X { };
+struct Y { };
+struct Z { char _[42]; };
 
-struct Y { char _[42]; };
-
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< int, X, X > ) == sizeof( int )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, int, X > ) == sizeof( int )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, X, int > ) == sizeof( int )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, X, Y > ) == sizeof( Y )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Y, X > ) == sizeof( Y )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< Y, X, X > ) == sizeof( Y )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< int, X, Y > ) == sizeof( int )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, int, Y > ) == sizeof( int )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Y, int > ) == sizeof( int )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Y, Z > ) == sizeof( Z )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Z, Y > ) == sizeof( Z )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< Z, X, Y > ) == sizeof( Z )));
 
 } // namespace
 
@@ -41,8 +41,18 @@ void compressed_tuple_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, x.at_c<2>(), ==, 2 );
     }
     {
+        sake::compressed_tuple< int, int, X > x(0, 1, X());
+        SAKE_TEST_CHECK_RELATION( env, x.at_c<0>(), ==, 0 );
+        SAKE_TEST_CHECK_RELATION( env, x.at_c<1>(), ==, 1 );
+    }
+    {
         sake::compressed_tuple< int, X, int > x(0, X(), 2);
         SAKE_TEST_CHECK_RELATION( env, x.at_c<0>(), ==, 0 );
+        SAKE_TEST_CHECK_RELATION( env, x.at_c<2>(), ==, 2 );
+    }
+    {
+        sake::compressed_tuple< X, int, int > x(X(), 1, 2);
+        SAKE_TEST_CHECK_RELATION( env, x.at_c<1>(), ==, 1 );
         SAKE_TEST_CHECK_RELATION( env, x.at_c<2>(), ==, 2 );
     }
 }
