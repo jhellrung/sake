@@ -14,7 +14,7 @@
  * Specifically, if BOOST_NO_RVALUE_REFERENCES, it casts movable rvalues of type
  * T and movable lvalues of type T& to boost::rv<T>&.  This is necessary to
  * coerce generic forwarding functions to capture rvalues as emulated rvalue
- * references.
+ * references.  Non-movable rvalues are cast to T const &.
  *
  * Note: If Expr accesses class members through this-> or by explicit
  * qualification, this might not work (MSVC9, at least, complains).  The
