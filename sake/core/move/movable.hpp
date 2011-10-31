@@ -301,7 +301,7 @@ struct traits< T, true >
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( typename_, T, c ) \
     private: \
     typedef ::sake::movable_private::optimal_traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPENAME( _sake_movable_traits, this_copy_assign_param_type ); \
+    SAKE_USING_TYPENAME( typename_() _sake_movable_traits, this_copy_assign_param_type ); \
     typedef typename_() _sake_movable_traits::enable_optimal_move_assign_param_type \
         _sake_enable_move_assign_param_type; \
     SAKE_MOVABLE_COPYABLE_IF_C_common( typename_, T, c ) \
