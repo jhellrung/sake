@@ -18,9 +18,7 @@ namespace sake
 {
 
 struct convertible_from_any
-{
-    convertible_from_any(...);
-};
+{ convertible_from_any(...); };
 
 } // namespace sake
 

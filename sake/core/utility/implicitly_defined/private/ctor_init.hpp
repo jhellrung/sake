@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/private/implicitly_defined/ctor_init.hpp
+ * sake/core/utility/implicitly_defined/private/ctor_init.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,8 +8,8 @@
  * #define SAKE_IMPLICITLY_DEFINED_ctor_init( r, base_seq, member_seq )
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_PRIVATE_IMPLICITLY_DEFINED_CTOR_INIT_HPP
-#define SAKE_CORE_UTILITY_PRIVATE_IMPLICITLY_DEFINED_CTOR_INIT_HPP
+#ifndef SAKE_CORE_UTILITY_IMPLICITLY_DEFINED_PRIVATE_CTOR_INIT_HPP
+#define SAKE_CORE_UTILITY_IMPLICITLY_DEFINED_PRIVATE_CTOR_INIT_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/control/iif.hpp>
@@ -73,4 +73,4 @@
 #define SAKE_IMPLICITLY_DEFINED_init_member_impl( member ) \
     member(::sake::move(member))
 
-#endif // #ifndef SAKE_CORE_UTILITY_PRIVATE_IMPLICITLY_DEFINED_CTOR_INIT_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_IMPLICITLY_DEFINED_PRIVATE_CTOR_INIT_HPP

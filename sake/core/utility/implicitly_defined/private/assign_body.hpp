@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/private/implicitly_defined/assign_body.hpp
+ * sake/core/utility/implicitly_defined/private/assign_body.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,8 +8,8 @@
  * #define SAKE_IMPLICITLY_DEFINED_assign_body( r, T, base_seq, member_seq )
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_PRIVATE_IMPLICITLY_DEFINED_ASSIGN_BODY_HPP
-#define SAKE_CORE_UTILITY_PRIVATE_IMPLICITLY_DEFINED_ASSIGN_BODY_HPP
+#ifndef SAKE_CORE_UTILITY_IMPLICITLY_DEFINED_PRIVATE_ASSIGN_BODY_HPP
+#define SAKE_CORE_UTILITY_IMPLICITLY_DEFINED_PRIVATE_ASSIGN_BODY_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
@@ -75,4 +75,4 @@
     member = ::sake::move(other.member);
 #define SAKE_IMPLICITLY_DEFINED_assign_members_1( r, T, member_seq )
 
-#endif // #ifndef SAKE_CORE_UTILITY_PRIVATE_IMPLICITLY_DEFINED_ASSIGN_BODY_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_IMPLICITLY_DEFINED_PRIVATE_ASSIGN_BODY_HPP
