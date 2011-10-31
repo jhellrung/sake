@@ -11,6 +11,9 @@
 #ifndef SAKE_CORE_ITERATOR_IS_ITERATOR_HPP
 #define SAKE_CORE_ITERATOR_IS_ITERATOR_HPP
 
+#include <boost/mpl/always.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+
 #include <sake/boost_ext/mpl/and.hpp>
 
 #include <sake/core/introspection/has_operator_star.hpp>
@@ -19,18 +22,14 @@
 namespace sake
 {
 
-template< class T, class Reference = void, class ReferencePred = void >
+template<
+    class T,
+    class Reference = void,
+    class ReferencePred = boost::mpl::always< boost::true_type >
+>
 struct is_iterator
     : boost_ext::mpl::and2<
           sake::has_operator_star< T const &, Reference, ReferencePred >,
-          sake::is_incrementable<T>
-      >
-{ };
-
-template< class T, class Reference >
-struct is_iterator< T, Reference, void >
-    : boost_ext::mpl::and2<
-          sake::has_operator_star< T const &, Reference >,
           sake::is_incrementable<T>
       >
 { };

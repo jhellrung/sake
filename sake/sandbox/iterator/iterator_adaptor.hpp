@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/iterator/iterator_adaptor.hpp
+ * sake/core/iterator/iterator_adaptor.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,158 +8,104 @@
  * struct iterator_adaptor<
  *     Derived,
  *     Base,
- *     Value       = default_t,
- *     Traversal   = default_t,
- *     Introversal = default_t,
- *     Reference   = default_t,
- *     Difference  = default_t,
- *     Member      = void_t,
- *     ChainedBase = void_t
+ *     Value       = sake::default_tag,
+ *     Reference   = sake::default_tag,
+ *     Difference  = sake::default_tag,
+ *     Traversal   = sake::default_tag,
+ *     Introversal = sake::default_tag,
+ *     Member      = sake::void_,
+ *     ChainedBase = sake::void_
  * >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_ITERATOR_ADAPTOR_HPP
 #define SAKE_CORE_ITERATOR_ITERATOR_ADAPTOR_HPP
 
-#include <boost/iterator/iterator_categories.hpp>
-#include <boost/iterator/iterator_traits.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/preprocessor/seq/seq.hpp>
-#include <boost/preprocessor/tuple/elem.hpp>
-#include <boost/type_traits/is_base_of.hpp>
-#include <boost/utility/enable_if.hpp>
+// #include <boost/iterator/iterator_categories.hpp>
+// #include <boost/iterator/iterator_traits.hpp>
+// #include <boost/mpl/and.hpp>
+// #include <boost/mpl/eval_if.hpp>
+// #include <boost/mpl/identity.hpp>
+// #include <boost/mpl/if.hpp>
+// #include <boost/mpl/not.hpp>
+// #include <boost/mpl/or.hpp>
+// #include <boost/preprocessor/seq/seq.hpp>
+// #include <boost/preprocessor/tuple/elem.hpp>
+// #include <boost/type_traits/is_base_of.hpp>
+// #include <boost/utility/enable_if.hpp>
 
-#include <sake/boost_ext/move/forward.hpp>
-#include <sake/boost_ext/type_traits/add_const_if.hpp>
-#include <sake/boost_ext/type_traits/add_reference.hpp>
-#include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
-#include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/is_convertible_wndp2bp.hpp>
-#include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
-#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
-#include <sake/core/cursor/at_begin.hpp>
-#include <sake/core/cursor/at_end.hpp>
-#include <sake/core/cursor/begin_distance.hpp>
-#include <sake/core/cursor/begin_end_distance.hpp>
-#include <sake/core/cursor/end_distance.hpp>
-#include <sake/core/cursor/introversal.hpp>
-#include <sake/core/cursor/to_begin.hpp>
-#include <sake/core/cursor/to_end.hpp>
-#include <sake/core/iterator/is_const_iterator.hpp>
-#include <sake/core/iterator/iterator_core_access.hpp>
-#include <sake/core/iterator/iterator_facade.hpp>
-#include <sake/core/math/compare.hpp>
-#include <sake/core/math/sign_t.hpp>
-#include <sake/core/utility/assignable.hpp>
-#include <sake/core/utility/autogen_default_ctor.hpp>
-#include <sake/core/utility/call_traits.hpp>
-#include <sake/core/utility/compressed_pair.hpp>
-#include <sake/core/utility/default_t.hpp>
-#include <sake/core/utility/default_constructible.hpp>
-#include <sake/core/utility/emplacer.hpp>
-#include <sake/core/utility/overload.hpp>
+// #include <sake/boost_ext/move/forward.hpp>
+// #include <sake/boost_ext/type_traits/add_const_if.hpp>
+// #include <sake/boost_ext/type_traits/add_reference.hpp>
+// #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
+// #include <sake/boost_ext/type_traits/is_convertible.hpp>
+// #include <sake/boost_ext/type_traits/is_convertible_wndp2bp.hpp>
+// #include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
+// #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+// #include <sake/core/cursor/at_begin.hpp>
+// #include <sake/core/cursor/at_end.hpp>
+// #include <sake/core/cursor/begin_distance.hpp>
+// #include <sake/core/cursor/begin_end_distance.hpp>
+// #include <sake/core/cursor/end_distance.hpp>
+// #include <sake/core/cursor/introversal.hpp>
+// #include <sake/core/cursor/to_begin.hpp>
+// #include <sake/core/cursor/to_end.hpp>
+// #include <sake/core/iterator/is_const_iterator.hpp>
+// #include <sake/core/iterator/iterator_core_access.hpp>
+// #include <sake/core/iterator/iterator_facade.hpp>
+#include <sake/core/iterator/private/adaptor_traits.hpp>
+// #include <sake/core/math/compare.hpp>
+// #include <sake/core/math/sign_t.hpp>
+// #include <sake/core/utility/assignable.hpp>
+// #include <sake/core/utility/autogen_default_ctor.hpp>
+// #include <sake/core/utility/call_traits.hpp>
+// #include <sake/core/utility/compressed_pair.hpp>
+#include <sake/core/utility/default_tag.hpp>
+// #include <sake/core/utility/default_constructible.hpp>
+// #include <sake/core/utility/emplacer.hpp>
+// #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/using_typename.hpp>
-#include <sake/core/utility/void_t.hpp>
-#include <sake/core/utility/workaround.hpp>
+#include <sake/core/utility/void.hpp>
+// #include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
 
 template<
     class Derived,
-    class Base,
-    class Value       = default_t,
-    class Traversal   = default_t,
-    class Introversal = default_t,
-    class Reference   = default_t,
-    class Difference  = default_t,
-    class Member      = void_t,
-    class ChainedBase = void_t
+    class IteratorBase,
+    class Value       = sake::default_tag,
+    class Reference   = sake::default_tag,
+    class Difference  = sake::default_tag,
+    class Traversal   = sake::default_tag,
+    class Introversal = sake::default_tag,
+    class Member      = sake::void_,
+    class ChainedBase = sake::void_
 >
-class iterator_adaptor;
-
-namespace detail_iterator_adaptor
-{
-
-template< class Base >
-struct default_facade_value
-    : boost_ext::add_const_if<
-          is_const_iterator< Base >,
-          typename boost::iterator_value< Base >::type
-      >
-{ };
-
-template< class D, class B, class V, class T, class I, class R, class F, class C >
-struct iterator_adaptor_traits
-{
-    typedef typename lazy_replace_default_t<
-        V,
-        default_facade_value<B>
-    >::type facade_value_type;
-    typedef typename lazy_replace_default_t<
-        T,
-        boost::iterator_traversal<B>
-    >::type traversal_type;
-    typedef typename lazy_replace_default_t<
-        I,
-        cursor_introversal<B>
-    >::type introversal_type;
-    typedef typename lazy_replace_default_t<
-        R,
-        boost::mpl::eval_if<
-            is_default_t<V>,
-            boost::iterator_reference<B>,
-            boost::mpl::identity< V& >
-        >
-    >::type reference;
-    typedef typename lazy_replace_default_t<
-        F,
-        boost::iterator_difference<B>
-    >::type difference_type;
-    typedef iterator_facade<
-        D,                 // Derived
-        facade_value_type, // Value
-        traversal_type,    // Traversal
-        introversal_type,  // Introversal
-        reference,         // Reference
-        difference_type,   // Difference
-        C                  // ChainedBase
-    > iterator_facade_;
-};
-
-} // namespace detail_iterator_adaptor
-
-template<
-    class Derived,
-    class Base,
-    class Value,
-    class Traversal,
-    class Introversal,
-    class Reference,
-    class Difference,
-    class Member,
-    class ChainedBase
->
-class iterator_adaptor
-    : public detail_iterator_adaptor::iterator_adaptor_traits<
-          Derived, Base, Value, Traversal, Introversal, Reference, Difference, ChainedBase
+struct iterator_adaptor
+    : iterator_adaptor_private::traits<
+          Derived, IteratorBase,
+          Value, Reference, Difference,
+          Traversal, Introversal,
+          ChainedBase
       >::iterator_facade_
 {
-    typedef detail_iterator_adaptor::iterator_adaptor_traits<
-        Derived, Base, Value, Traversal, Introversal, Reference, Difference, ChainedBase
-    > iterator_adaptor_traits_;
-    typedef typename iterator_adaptor_traits_::iterator_facade_ iterator_facade_;
+private:
+    typedef iterator_adaptor_private::traits<
+        Derived, IteratorBase,
+        Value, Reference, Difference,
+        Traversal, Introversal,
+        ChainedBase
+    > traits_;
+    SAKE_USING_TYPENAME( typename traits_, iterator_facade_ );
 public:
-    SAKE_USING_TYPENAME( iterator_facade_, reference );
-    SAKE_USING_TYPENAME( iterator_facade_, difference_type );
+    SAKE_USING_TYPENAME( typename iterator_facade_, value_type );
+    SAKE_USING_TYPENAME( typename iterator_facade_, reference );
+    SAKE_USING_TYPENAME( typename iterator_facade_, difference_type );
 
-    typedef Base base_type;
-    const base_type& base() const { return m_base_and_member.first(); }
+    typedef IteratorBase base_type;
+    base_type const & base() const
+    { return m_base_and_member.first(); }
 
     SAKE_ITERATOR_ENABLE_CURSOR( iterator_facade_ )
 

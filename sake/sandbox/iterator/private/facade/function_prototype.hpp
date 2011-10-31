@@ -18,12 +18,12 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #define SAKE_ITERATOR_FACADE_function_prototype( prefix, result, name ) \
-template< class D0, class V0, class T0, class I0, class R0, class F0, class C0, \
-          class D1, class V1, class T1, class I1, class R1, class F1, class C1 > \
+template< class Derived0, class V0, class R0, class F0, class T0, class I0, class B0, \
+          class Derived1, class V1, class R1, class F1, class T1, class I1, class B1 > \
 prefix typename ::sake::iterator_facade_private:: \
-    lazy_enable_if_is_interconvertible< D0, D1, result >::type \
-name(::sake::iterator_facade< D0, V0, T0, I0, R0, F0, C0 > const & i0, \
-     ::sake::iterator_facade< D1, V1, T1, I1, R1, F1, C1 > const & i1)
+    lazy_enable_if_is_interconvertible< Derived0, Derived1, result >::type \
+name(::sake::iterator_facade< Derived0, V0, R0, F0, T0, I0, B0 > const & i0, \
+     ::sake::iterator_facade< Derived1, V1, R1, F1, T1, I1, B1 > const & i1)
 
 namespace sake
 {

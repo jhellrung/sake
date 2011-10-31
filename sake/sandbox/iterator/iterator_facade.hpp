@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/iterator/iterator_facade.hpp
+ * sake/core/iterator/iterator_facade.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -7,12 +7,9 @@
  *
  * struct iterator_facade<
  *     Derived,
- *     Value,
- *     Traversal,
- *     Introversal,
- *     Reference,
- *     Difference,
- *     ChainedBase
+ *     Value, Reference, Difference,
+ *     Traversal, Introversal,
+ *     ChainedBase = sake::void_
  * >
  *
  * SAKE_ITERATOR_ENABLE_CURSOR( Base )
@@ -30,119 +27,117 @@
 
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/mpl/always.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/or.hpp>
+#include <boost/mpl/quote.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+
 #include <sake/core/cursor/introversal.hpp>
-#include <sake/core/iterator/detail_facade/category.hpp>
-#include <sake/core/iterator/detail_facade/operator_arrow_dispatch.hpp>
-#include <sake/core/iterator/detail_facade/operator_bracket_dispatch.hpp>
-#include <sake/core/iterator/detail_facade/operator_prototype.hpp>
-#include <sake/core/iterator/detail_facade/postincrement_dispatch.hpp>
+#include <sake/core/iterator/private/category.hpp>
+#include <sake/core/iterator/private/facade/common_difference_type.hpp>
+#include <sake/core/iterator/private/facade/function_prototype.hpp>
+#include <sake/core/iterator/private/facade/operator_arrow_dispatch.hpp>
+#include <sake/core/iterator/private/facade/operator_bracket_dispatch.hpp>
+#include <sake/core/iterator/private/facade/postincrement_dispatch.hpp>
 #include <sake/core/iterator/iterator_core_access.hpp>
 #include <sake/core/math/compare.hpp>
 #include <sake/core/math/sign.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
-#include <sake/core/utility/assert.hpp>
-#include <sake/core/utility/autogen_default_ctor.hpp>
-#include <sake/core/utility/call_traits.hpp>
+#include <sake/core/utility/implicitly_defined/default_ctor.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
-#include <sake/core/utility/void_t.hpp>
+#include <sake/core/utility/void.hpp>
 
 namespace sake
 {
 
 // This macro is necessary to ensure the cursor member functions can be found via introspection.
 #define SAKE_ITERATOR_ENABLE_CURSOR( Base ) \
-    using Base ::at_begin; \
-    using Base ::at_end; \
-    using Base ::to_begin; \
-    using Base ::to_end; \
-    using Base ::begin; \
-    using Base ::end; \
-    using Base ::begin_distance; \
-    using Base ::end_distance; \
-    using Base ::begin_end_distance;
+    using Base::at_begin; \
+    using Base::at_end; \
+    using Base::to_begin; \
+    using Base::to_end; \
+    using Base::begin; \
+    using Base::end; \
+    using Base::begin_distance; \
+    using Base::end_distance; \
+    using Base::begin_end_distance;
 
 #define SAKE_ITERATOR_ASSERT_TRAVERSAL( Traversal ) \
-    BOOST_MPL_ASSERT((::sake::boost_ext::is_convertible< iterator_traversal, Traversal >))
+    BOOST_STATIC_ASSERT((::sake::boost_ext::is_convertible< iterator_traversal, Traversal >::value))
 #define SAKE_ITERATOR_ASSERT_INTROVERSAL( Introversal ) \
-    BOOST_MPL_ASSERT((::sake::boost_ext::is_convertible< cursor_introversal, Introversal >))
+    BOOST_STATIC_ASSERT((::sake::boost_ext::is_convertible< cursor_introversal, Introversal >::value))
 
 /*******************************************************************************
  * struct iterator_facade<
  *     Derived,
- *     Value,
- *     Traversal,
- *     Introversal,
- *     Reference,
- *     Difference,
+ *     Value, Reference, Difference,
+ *     Traversal, Introversal,
  *     ChainedBase
  * >
  ******************************************************************************/
 
 template<
     class Derived,
-    class Value,
-    class Traversal,
-    class Introversal = null_introversal_tag,
-    class Reference   = Value&,
-    class Difference  = std::ptrdiff_t,
-    class ChainedBase = void_t
+    class Value, class Reference, class Difference,
+    class Traversal, class Introversal,
+    class ChainedBase = sake::void_
 >
 struct iterator_facade
     : ChainedBase
 {
     typedef Derived derived_type;
     derived_type& derived() { return *static_cast< derived_type* >(this); }
-    const derived_type& derived() const { return *static_cast< const derived_type* >(this); }
+    derived_type const & derived() const { return *static_cast< derived_type const * >(this); }
 
     typedef typename boost::remove_const< Value >::type value_type;
     typedef Reference reference;
     typedef Difference difference_type;
-    typedef typename detail_iterator_facade::category<
-        Traversal, Value
-    >::type iterator_category;
+    typedef typename iterator_private::category< Traversal, Value >::type iterator_category;
     typedef Traversal iterator_traversal;
     typedef Introversal cursor_introversal;
-private:
-    typedef typename call_traits< difference_type >::param_type difference_param_type;
-public:
 
-    reference operator*() const
+    /***************************************************************************
+     * Dereferenceable
+     * operator*() const -> reference
+     * operator->() const -> pointer
+     **************************************************************************/
+    reference
+    operator*() const
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::incrementable_traversal_tag );
         return iterator_core_access::dereference(derived());
     }
 private:
-    typedef detail_iterator_facade::operator_arrow_dispatch< Reference > operator_arrow_dispatch_;
+    typedef iterator_facade_private::operator_arrow_dispatch<
+        Reference
+    > operator_arrow_dispatch_;
 public:
     typedef typename operator_arrow_dispatch_::result_type pointer;
-    pointer operator->() const
+    pointer
+    operator->() const
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::incrementable_traversal_tag );
         return operator_arrow_dispatch_::apply(operator*());
     }
 
-    // Incrementable
-    derived_type& operator++()
+    /***************************************************************************
+     * Incrementable
+     * operator++() -> derived_type&
+     * operator++(int) -> ...
+     **************************************************************************/
+    derived_type&
+    operator++()
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::incrementable_traversal_tag );
         iterator_core_access::increment(derived());
         return derived();
     }
 private:
-    typedef detail_iterator_facade::postincrement_dispatch<
+    typedef iterator_facade_private::postincrement_dispatch<
         Value, Reference, Traversal, Derived
     > postincrement_dispatch_;
 public:
@@ -155,14 +150,20 @@ public:
         return result;
     }
 
-    // Bidirectional
-    derived_type& operator--()
+    /***************************************************************************
+     * Bidirectional
+     * operator--() -> derived_type&
+     * operator--(int) -> derived_type
+     **************************************************************************/
+    derived_type&
+    operator--()
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::bidirectional_traversal_tag );
         iterator_core_access::decrement(derived());
         return derived();
     }
-    derived_type operator--(int)
+    derived_type
+    operator--(int)
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::bidirectional_traversal_tag );
         derived_type result(derived());
@@ -170,160 +171,190 @@ public:
         return result;
     }
 
-    // RandomAccess
+    /***************************************************************************
+     * RandomAccess
+     * operator[](difference_type const n) const -> ...
+     * operator+=(difference_type const n) -> derived_type&
+     * operator-=(difference_type const n) -> derived_type&
+     **************************************************************************/
 private:
-    typedef detail_iterator_facade::operator_bracket_dispatch<
+    typedef iterator_facade_private::operator_bracket_dispatch<
         Value, Reference, Derived
     > operator_bracket_dispatch_;
 public:
     typename operator_bracket_dispatch_::result_type
-    operator[](difference_param_type n) const
+    operator[](difference_type const n) const
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::random_access_traversal_tag );
         return operator_bracket_dispatch_::apply(derived() + n);
     }
-    derived_type& operator+=(difference_param_type n)
+    derived_type&
+    operator+=(difference_type const n)
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::random_access_traversal_tag );
         iterator_core_access::advance(derived(), n);
         return derived();
     }
-    derived_type& operator-=(difference_param_type n)
+    derived_type&
+    operator-=(difference_type const n)
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::random_access_traversal_tag );
         return operator+=(-n);
     }
-    //derived_type operator+(difference_param_type n)
+    //derived_type
+    //operator+(difference_type const n)
     //{
     //    derived_type result(derived());
     //    return result += n;
     //}
-    derived_type operator-(difference_param_type n)
+    derived_type operator-(difference_type const n)
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::random_access_traversal_tag );
         derived_type result(derived());
         return result -= n;
     }
 
-    // BeginDetect
-    bool at_begin() const
+    /***************************************************************************
+     * BeginDetect
+     * at_begin() const -> bool
+     **************************************************************************/
+    bool
+    at_begin() const
     {
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( begin_detect_introversal_tag );
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::begin_detect_introversal_tag );
         return iterator_core_access::at_begin(derived());
     }
-    // BeginAccess
-    derived_type& to_begin()
+    /***************************************************************************
+     * BeginAccess
+     * to_begin() -> derived_type&
+     * begin() -> derived_type
+     **************************************************************************/
+    derived_type&
+    to_begin()
     {
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( begin_access_introversal_tag );
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::begin_access_introversal_tag );
         iterator_core_access::to_begin(derived());
         return derived();
     }
-    derived_type begin() const
+    derived_type
+    begin() const
     {
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( begin_access_introversal_tag );
-        return iterator_core_access::begin(derived());
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::begin_access_introversal_tag );
+        derived_type result(derived());
+        return result.to_begin();
     }
 
-    // EndDetect
-    bool at_end() const
+    /***************************************************************************
+     * EndDetect
+     * at_end() const -> bool
+     **************************************************************************/
+    bool
+    at_end() const
     {
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( end_detect_introversal_tag );
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::end_detect_introversal_tag );
         return iterator_core_access::at_end(derived());
     }
-    // EndAccess
-    derived_type& to_end()
+    /***************************************************************************
+     * EndAccess
+     * to_end() -> derived_type&
+     * end() -> derived_type
+     **************************************************************************/
+    derived_type&
+    to_end()
     {
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( end_access_introversal_tag );
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::end_access_introversal_tag );
         iterator_core_access::to_end(derived());
         return derived();
     }
     derived_type end() const
     {
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( end_access_introversal_tag );
-        return iterator_core_access::end(derived());
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::end_access_introversal_tag );
+        derived_type result(derived());
+        return result.to_end();
     }
 
-    // Bidirectional + BeginDetect
-    difference_type begin_distance() const
+    /***************************************************************************
+     * Bidirectional + BeginDetect
+     **************************************************************************/
+    difference_type
+    begin_distance() const
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::bidirectional_traversal_tag );
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( begin_detect_introversal_tag );
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::begin_detect_introversal_tag );
         return iterator_core_access::begin_distance(derived());
     }
-    // Forward + EndDetect
-    difference_type end_distance() const
+    /***************************************************************************
+     * Forward + EndDetect
+     **************************************************************************/
+    difference_type
+    end_distance() const
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::forward_traversal_tag );
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( end_detect_introversal_tag );
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::end_detect_introversal_tag );
         return iterator_core_access::end_distance(derived());
     }
-    // Bidirectional + BeginDetect + EndDetect
-    difference_type begin_end_distance() const
+    /***************************************************************************
+     * Bidirectional + BeginDetect + EndDetect
+     **************************************************************************/
+    difference_type
+    begin_end_distance() const
     {
         SAKE_ITERATOR_ASSERT_TRAVERSAL( boost::bidirectional_traversal_tag );
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( begin_detect_introversal_tag );
-        SAKE_ITERATOR_ASSERT_INTROVERSAL( end_detect_introversal_tag );
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::begin_detect_introversal_tag );
+        SAKE_ITERATOR_ASSERT_INTROVERSAL( sake::end_detect_introversal_tag );
         return iterator_core_access::begin_end_distance(derived());
     }
 
 protected:
     typedef ChainedBase chained_base_type;
 
-    SAKE_AUTOGEN_DEFAULT_CTOR( iterator_facade )
+    SAKE_IMPLICITLY_DEFINED_DEFAULT_CTOR( iterator_facade )
 
     template< class ChainedBaseConstruct >
-    explicit iterator_facade(const ChainedBaseConstruct& chained_base_construct,
-        typename boost::enable_if< boost::mpl::and_<
-            boost::mpl::not_< boost::is_base_of< iterator_facade, ChainedBaseConstruct > >,
-            boost::mpl::or_<
-                boost_ext::is_convertible< const ChainedBaseConstruct&, ChainedBase >,
-                is_maybe_typed_emplacer< ChainedBaseConstruct >
-            >
-        > >::type* = 0)
-        : ChainedBase(emplacer_construct< ChainedBase >(chained_base_construct))
+    explicit iterator_facade(ChainedBaseConstruct const & chained_base_construct,
+        typename boost::enable_if_c<
+            !boost::is_base_of< iterator_facade, ChainedBaseConstruct >::value
+         && (boost_ext::is_convertible< ChainedBaseConstruct const &, ChainedBase >::value
+          || sake::is_emplacer< ChainedBaseConstruct >::value)
+        >::type* = 0)
+        : ChainedBase(sake::emplacer_construct< ChainedBase >(chained_base_construct))
     { }
 
-    template<class,class,class,class,class,class,class> friend struct iterator_facade;
-    template< class D, class V, class T, class I, class R, class F, class C >
-    iterator_facade(const iterator_facade<D,V,T,I,R,F,C>& other,
-        typename boost::enable_if< boost_ext::is_convertible<
-            typename iterator_facade<D,V,T,I,R,F,C>::chained_base_type const &,
-            ChainedBase
-        > >::type* = 0)
-        : ChainedBase(static_cast< typename iterator_facade<D,V,T,I,R,F,C>::chained_base_type const & >(other))
+    template< class, class, class, class, class, class, class > friend struct iterator_facade;
+    template< class D, class V, class R, class F, class T, class I, class B >
+    iterator_facade(iterator_facade<D,V,R,F,T,I,B> const & other,
+        typename boost::enable_if_c<
+            boost_ext::is_convertible<
+                typename iterator_facade<D,V,R,F,T,I,B>::chained_base_type const &,
+                ChainedBase
+            >::value
+        >::type* = 0)
+        : ChainedBase(static_cast< typename iterator_facade<D,V,R,F,T,I,B>::chained_base_type const & >(other))
     { }
 
     friend class iterator_core_access;
 
     template< class T >
-    sake::sign_t compare_impl(const T& other) const
-    { return adl::sign(derived() - other); }
+    sake::sign_t
+    compare_impl(T const & other) const
+    { return sake::sign(derived() - other); }
     template< class T >
-    bool equal_to_impl(const T& other) const
-    { return adl::compare(derived(), other) == sake::zero; }
+    bool
+    equal_impl(T const & other) const
+    { return sake::compare(derived(), other) == sake::zero; }
     template< class T >
-    bool less_impl(const T& other) const
-    { return adl::compare(derived(), other) < sake::zero; }
-    template< class T >
-    bool less_equal_impl(const T& other) const
-    { return adl::compare(derived(), other) <= sake::zero; }
+    bool
+    less_impl(T const & other) const
+    { return sake::compare(derived(), other) < sake::zero; }
 
-    derived_type begin_impl() const
-    {
-        derived_type result(derived());
-        return result.to_begin();
-    }
-    derived_type end_impl() const
-    {
-        derived_type result(derived());
-        return result.to_end();
-    }
-
-    difference_type begin_distance_impl() const
+    difference_type
+    begin_distance_impl() const
     { return derived() - begin(); }
-    difference_type end_distance_impl() const
+    difference_type
+    end_distance_impl() const
     { return end() - derived(); }
-    difference_type begin_end_distance_impl() const
+    difference_type
+    begin_end_distance_impl() const
     { return end() - begin(); }
 };
 
@@ -331,68 +362,60 @@ protected:
  * iterator_facade comparison operators
  ******************************************************************************/
 
-SAKE_ITERATOR_FACADE_operator_prototype( inline, boost::mpl::always< bool >, == )
-{ return iterator_core_access::equal_to(it0.derived(), it1.derived()); }
-SAKE_ITERATOR_FACADE_operator_prototype( inline, boost::mpl::always< bool >, != )
-{ return !(it0.derived() == it1.derived()); }
-SAKE_ITERATOR_FACADE_operator_prototype( inline, boost::mpl::always< bool >, <  )
-{ return iterator_core_access::less(it0.derived(), it1.derived()); }
-SAKE_ITERATOR_FACADE_operator_prototype( inline, boost::mpl::always< bool >, >  )
-{ return !(it0.derived() <= it1.derived()); }
-SAKE_ITERATOR_FACADE_operator_prototype( inline, boost::mpl::always< bool >, <= )
-{ return iterator_core_access::less_equal(it0.derived(), it1.derived()); }
-SAKE_ITERATOR_FACADE_operator_prototype( inline, boost::mpl::always< bool >, >= )
-{ return !(it0.derived() < it1.derived()); }
-
-template<
-    class D0, class V0, class T0, class I0, class R0, class F0, class C0,
-    class D1, class V1, class T1, class I1, class R1, class F1, class C1
->
-inline typename detail_iterator_facade::lazy_enable_if_is_interoperable< D0, D1, sake::sign_t >::type
-compare(
-    const ::sake::iterator_facade< D0, V0, T0, I0, R0, F0, C0 >& it0,
-    const ::sake::iterator_facade< D1, V1, T1, I1, R1, F1, C1 >& it1)
-{ return iterator_core_access::compare(it0.derived(), it1.derived()); }
+SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< bool >, operator== )
+{ return iterator_core_access::equal(i0.derived(), i1.derived()); }
+SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< bool >, operator!= )
+{ return !(i0.derived() == i1.derived()); }
+SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< bool >, operator< )
+{ return iterator_core_access::less(i0.derived(), i1.derived()); }
+SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< bool >, operator> )
+{ return i1.derived() < i0.derived(); }
+SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< bool >, operator<= )
+{ return !(i1.derived() < i0.derived()); }
+SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< bool >, operator>= )
+{ return !(i0.derived() < i1.derived()); }
+SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< sake::sign_t >, compare )
+{ return iterator_core_access::compare(i0.derived(), i1.derived()); }
 
 /*******************************************************************************
  * iterator_facade arithmetic operators
  ******************************************************************************/
 
-SAKE_ITERATOR_FACADE_operator_prototype(
+SAKE_ITERATOR_FACADE_function_prototype(
     inline,
-    boost::mpl::quote2< detail_iterator_facade::common_difference_type >,
-    - )
-{ return iterator_core_access::difference(it0.derived(), it1.derived()); }
+    boost::mpl::quote2< iterator_facade_private::common_difference_type >,
+    operator-
+) { return iterator_core_access::difference(i0.derived(), i1.derived()); }
 
-template< class D, class V, class T, class I, class R, class F, class C >
-inline typename boost::enable_if<
+template< class Derived, class V, class R, class F, class T, class I, class B >
+inline typename boost::enable_if_c<
     boost_ext::is_convertible<
-        typename iterator_facade<D,V,T,I,R,F,C>::iterator_traversal,
+        typename iterator_facade< Derived, V,R,F,T,I,B >::iterator_traversal,
         boost::random_access_traversal_tag
-    >,
-    D
+    >::value,
+    Derived
 >::type
 operator+(
-    const iterator_facade<D,V,T,I,R,F,C>& it,
-    typename call_traits< typename D::difference_type >::param_type n)
+    iterator_facade< Derived, V,R,F,T,I,B > const & i,
+    typename Derived::difference_type const n)
 {
-    D result(it.derived());
+    Derived result(i.derived());
     return result += n;
 }
 
-template< class D, class V, class T, class I, class R, class F, class C >
-inline typename boost::enable_if<
+template< class Derived, class V, class R, class F, class T, class I, class B >
+inline typename boost::enable_if_c<
     boost_ext::is_convertible<
-        typename iterator_facade<D,V,T,I,R,F,C>::iterator_traversal,
+        typename iterator_facade< Derived, V,R,F,T,I,B >::iterator_traversal,
         boost::random_access_traversal_tag
-    >,
-    D
+    >::value,
+    Derived
 >::type
 operator+(
-    typename call_traits< typename D::difference_type >::param_type n,
-    const iterator_facade<D,V,T,I,R,F,C>& it)
+    typename Derived::difference_type const n,
+    iterator_facade< Derived, V,R,F,T,I,B > const & i)
 {
-    D result(it.derived());
+    Derived result(i.derived());
     return result += n;
 }
 

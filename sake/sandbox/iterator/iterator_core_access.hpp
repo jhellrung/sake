@@ -33,10 +33,12 @@ class iterator_core_access
 
     SAKE_ITERATOR_FACADE_function_prototype( friend, boost::mpl::always< bool >, operator== );
     SAKE_ITERATOR_FACADE_function_prototype( friend, boost::mpl::always< bool >, operator<  );
-    SAKE_ITERATOR_FACADE_function_prototype( friend, boost::mpl::always< bool >, operator<= );
     SAKE_ITERATOR_FACADE_function_prototype( friend, boost::mpl::always< sake::sign_t >, compare );
     SAKE_ITERATOR_FACADE_function_prototype(
-        friend, boost::mpl::quote2< iterator_facade_private::common_difference_type >, operator- );
+        friend,
+        boost::mpl::quote2< iterator_facade_private::common_difference_type >,
+        operator-
+    );
 
     // Readable/Writable
     template< class Derived >
@@ -107,21 +109,6 @@ class iterator_core_access
     >::type
     less(I const & i, J const & j)
     { return !j.less_equal_impl(i); }
-
-    template< class I, class J >
-    static typename boost::enable_if_c<
-        boost_ext::is_convertible<J,I>::value,
-        bool
-    >::type
-    less_equal(I const & i, J const & j)
-    { return i.less_equal_impl(j); }
-    template< class I, class J >
-    static typename boost::disable_if_c<
-        boost_ext::is_convertible<J,I>::value,
-        bool
-    >::type
-    less_equal(I const & i, J const & j)
-    { return !j.less_impl(i); }
 
     template< class I, class J >
     static typename boost::lazy_enable_if_c<
