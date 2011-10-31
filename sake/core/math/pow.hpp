@@ -24,7 +24,7 @@
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
-#include <sake/core/functional/operators/multiplies.hpp>
+#include <sake/core/functional/operators/multiply.hpp>
 #include <sake/core/introspection/has_isc_value.hpp>
 #include <sake/core/math/inv.hpp>
 #include <sake/core/math/inv_ip.hpp>
@@ -260,18 +260,18 @@ template< int P, class B >
 struct dispatch_c< B, P, false, true >
 {
     typedef typename result_of::sqr< B& >::type sqr_type;
-    typedef typename operators::result_of::multiplies<
+    typedef typename operators::result_of::multiply<
         B, typename dispatch_c< sqr_type, P/2 >::type >::type type;
     static type apply(B& b)
     {
         sqr_type b2 = sake::sqr(b);
-        return sake::move(b) * SAKE_MOVE((dispatch_c< sqr_type, P/2 >::apply(b2)));
+        return sake::move(b) * dispatch_c< sqr_type, P/2 >::apply(b2);
     }
     template< class I >
     static type apply(B& b, I& i)
     {
         sqr_type b2 = sake::sqr(b);
-        return sake::move(b) * SAKE_MOVE((dispatch_c< sqr_type, P/2 >::apply(b2,i)));
+        return sake::move(b) * dispatch_c< sqr_type, P/2 >::apply(b2,i);
     }
 };
 
@@ -291,7 +291,7 @@ template< class B >
 struct dispatch_c< B, 3, false, true >
 {
     typedef typename result_of::sqr< B& >::type sqr_type;
-    typedef typename operators::result_of::multiplies< B, sqr_type >::type type;
+    typedef typename operators::result_of::multiply< B, sqr_type >::type type;
     static type apply(B& b)
     {
         sqr_type b2 = sake::sqr(b);

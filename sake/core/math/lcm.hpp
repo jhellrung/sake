@@ -49,8 +49,8 @@ struct lcm
         sake::abs_ip(x0);
         sake::abs_ip(x1);
         return x1 < x0 ?
-               sake::move(x0) * (sake::move(x1) / SAKE_MOVE((sake::gcd(x1, x0)))) :
-               (sake::move(x0) / SAKE_MOVE((sake::gcd(x0, x1)))) * sake::move(x1);
+               sake::move(x0) * (sake::move(x1) / sake::gcd(x1, x0)) :
+               (sake::move(x0) / sake::gcd(x0, x1)) * sake::move(x1);
     }
 };
 

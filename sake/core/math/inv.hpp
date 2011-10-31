@@ -36,7 +36,7 @@
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/expr_traits/typeof.hpp>
-#include <sake/core/functional/operators/divides.hpp>
+#include <sake/core/functional/operators/divide.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/inv_fwd.hpp>
@@ -104,7 +104,7 @@ struct inv_result_types
     : boost_ext::mpl::unique2<
           boost::mpl::vector2<
               T,
-              typename operators::result_of::divides<T>::type
+              typename operators::result_of::divide<T>::type
           >
       >
 { };

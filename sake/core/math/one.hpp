@@ -39,7 +39,7 @@
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/functional/operators/bit_and.hpp>
-#include <sake/core/functional/operators/divides.hpp>
+#include <sake/core/functional/operators/divide.hpp>
 #include <sake/core/functional/operators/shift_left.hpp>
 #include <sake/core/functional/operators/shift_right.hpp>
 #include <sake/core/math/inv.hpp>
@@ -74,7 +74,7 @@ struct shift_right0< T0, T1,
 { };
 
 template< class T0, class T1 >
-struct divides0< T0, T1,
+struct divide0< T0, T1,
     typename boost::enable_if_c< boost::is_same<
         typename boost_ext::remove_qualifiers< T0 >::type, sake::one_t
     >::value >::type >

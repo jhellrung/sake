@@ -41,7 +41,7 @@
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/expr_traits/typeof.hpp>
-#include <sake/core/functional/operators/multiplies.hpp>
+#include <sake/core/functional/operators/multiply.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/private/sqr_common.hpp>
@@ -110,7 +110,7 @@ struct sqr_result_types
     : boost_ext::mpl::unique2<
           boost::mpl::vector2<
               T,
-              typename operators::result_of::multiplies<T>::type
+              typename operators::result_of::multiply<T>::type
           >
       >
 { };
@@ -343,7 +343,7 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
-    typedef typename sake::operators::result_of::multiplies<
+    typedef typename sake::operators::result_of::multiply<
         typename boost_ext::add_reference<T>::type
     >::type type;
     template< class T_ >
