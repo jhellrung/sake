@@ -14,8 +14,8 @@
 #include <sake/core/introspection/has_operator_bit_xor_assign.hpp>
 #include <sake/core/introspection/has_operator_bracket.hpp>
 #include <sake/core/introspection/has_operator_complement.hpp>
-#include <sake/core/introspection/has_operator_divides.hpp>
-#include <sake/core/introspection/has_operator_divides_assign.hpp>
+#include <sake/core/introspection/has_operator_divide.hpp>
+#include <sake/core/introspection/has_operator_divide_assign.hpp>
 #include <sake/core/introspection/has_operator_equal.hpp>
 #include <sake/core/introspection/has_operator_greater.hpp>
 #include <sake/core/introspection/has_operator_greater_equal.hpp>
@@ -28,8 +28,8 @@
 #include <sake/core/introspection/has_operator_minus_assign.hpp>
 #include <sake/core/introspection/has_operator_modulus.hpp>
 #include <sake/core/introspection/has_operator_modulus_assign.hpp>
-#include <sake/core/introspection/has_operator_multiplies.hpp>
-#include <sake/core/introspection/has_operator_multiplies_assign.hpp>
+#include <sake/core/introspection/has_operator_multiply.hpp>
+#include <sake/core/introspection/has_operator_multiply_assign.hpp>
 #include <sake/core/introspection/has_operator_not_equal.hpp>
 #include <sake/core/introspection/has_operator_plus.hpp>
 #include <sake/core/introspection/has_operator_plus_assign.hpp>
