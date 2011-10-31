@@ -329,6 +329,8 @@ report() const
     unsigned int n_fail_check = 0;
     unsigned int n_fail_require = 0;
     unsigned int n_throw_exception = 0;
+    *p_log << "[Showing # of failed warn(s), check(s), require(s), exception(s)]"
+           << std::endl;
     for(; i != data_of_scope_name.end(); ++i) {
         scope_data const & data = i->second;
         elapsed_time += data.elapsed_time;
@@ -337,17 +339,17 @@ report() const
         n_fail_require += data.n_fail_require;
         n_throw_exception += data.n_throw_exception;
         *p_log << i->first << " (" << data.elapsed_time << " s) : "
-               << data.n_fail_warn << " failed warn(s), "
-               << data.n_fail_check << " failed check(s), "
-               << data.n_fail_require << " failed require(s), "
-               << data.n_throw_exception << " thrown exception(s)"
+               << data.n_fail_warn << ' '
+               << data.n_fail_check << ' '
+               << data.n_fail_require << ' '
+               << data.n_throw_exception
                << std::endl;
     }
     *p_log << "CUMULATIVE (" << elapsed_time << " s) : "
-           << n_fail_warn << " failed warn(s), "
-           << n_fail_check << " failed check(s), "
-           << n_fail_require << " failed require(s), "
-           << n_throw_exception << " thrown exception(s)"
+           << n_fail_warn << ' '
+           << n_fail_check << ' '
+           << n_fail_require << ' '
+           << n_throw_exception
            << std::endl;
 }
 
