@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/implicitly_defined_copy_assign.hpp
+ * sake/core/utility/implicitly_defined/copy_assign.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -21,7 +21,7 @@
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
-#include <sake/core/utility/private/implicitly_defined/assign_body.hpp>
+#include <sake/core/utility/implicitly_defined/private/assign_body.hpp>
 
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN( T, operator_assign, base_seq, member_seq ) \
     SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_R( BOOST_PP_DEDUCE_R(), T, base_seq, member_seq )
@@ -56,7 +56,7 @@
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
 #include <sake/core/move/is_unfriendly_movable_copyable.hpp>
-#include <sake/core/utility/private/implicitly_defined/disabler.hpp>
+#include <sake/core/utility/implicitly_defined/private/disabler.hpp>
 
 #define SAKE_IMPLICITLY_DEFINED_COPY_ASSIGN_R( r, T, base_seq, member_seq ) \
     T& operator=(this_copy_assign_param_type other) \

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/implicitly_defined_mem_fun.hpp
+ * sake/core/utility/implicitly_defined/mem_fun.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -18,11 +18,11 @@
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 #include <sake/boost_ext/preprocessor/seq/for_each.hpp>
 
-#include <sake/core/utility/implicitly_defined_copy_assign.hpp>
-#include <sake/core/utility/implicitly_defined_default_ctor.hpp>
-#include <sake/core/utility/implicitly_defined_dtor.hpp>
-#include <sake/core/utility/implicitly_defined_move_assign.hpp>
-#include <sake/core/utility/implicitly_defined_move_ctor.hpp>
+#include <sake/core/utility/implicitly_defined/copy_assign.hpp>
+#include <sake/core/utility/implicitly_defined/default_ctor.hpp>
+#include <sake/core/utility/implicitly_defined/dtor.hpp>
+#include <sake/core/utility/implicitly_defined/move_assign.hpp>
+#include <sake/core/utility/implicitly_defined/move_ctor.hpp>
 
 #define SAKE_IMPLICITLY_DEFINED_MEM_FUN( T, tag_seq, base_seq, member_seq ) \
     SAKE_IMPLICITLY_DEFINED_MEM_FUN_R( BOOST_PP_DEDUCE_R(), T, tag_seq, base_seq, member_seq )

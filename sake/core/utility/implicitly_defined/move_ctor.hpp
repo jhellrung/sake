@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/implicitly_defined_move_ctor.hpp
+ * sake/core/utility/implicitly_defined/move_ctor.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -25,7 +25,7 @@
 
 #else // #if !defined(...) && !defined(...)
 
-#include <sake/core/utility/private/implicitly_defined/ctor_init.hpp>
+#include <sake/core/utility/implicitly_defined/private/ctor_init.hpp>
 
 #define SAKE_IMPLICITLY_DEFINED_MOVE_CTOR_R( r, T, base_seq, member_seq ) \
     T(this_rvalue_param_type other) \

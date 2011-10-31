@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/implicitly_defined_move_assign.hpp
+ * sake/core/utility/implicitly_defined/move_assign.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -25,7 +25,7 @@
 
 #else // #if !defined(...) && !defined(...)
 
-#include <sake/core/utility/private/implicitly_defined/assign_body.hpp>
+#include <sake/core/utility/implicitly_defined/private/assign_body.hpp>
 
 #define SAKE_IMPLICITLY_DEFINED_MOVE_ASSIGN_R( r, T, base_seq, member_seq ) \
     T& operator=(this_rvalue_param_type other) \

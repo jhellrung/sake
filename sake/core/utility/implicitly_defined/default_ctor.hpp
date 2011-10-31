@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/implicitly_defined_default_ctor.hpp
+ * sake/core/utility/implicitly_defined/default_ctor.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

@@ -29,7 +29,7 @@
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
-#include <sake/core/utility/implicitly_defined_mem_fun.hpp>
+#include <sake/core/utility/implicitly_defined/mem_fun.hpp>
 #include <sake/core/utility/using_typename.hpp>
 #include <sake/core/utility/void.hpp>
 
