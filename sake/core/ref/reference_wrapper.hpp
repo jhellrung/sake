@@ -44,8 +44,8 @@
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/range/begin_end_fwd.hpp>
-#include <sake/core/ref/is_reference_wrapped_parameter.hpp>
 #include <sake/core/ref/fwd.hpp>
+#include <sake/core/ref/is_wrapped_parameter.hpp>
 #include <sake/core/ref/ref_tag.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/assert.hpp>
@@ -166,7 +166,7 @@ private:
 
 /*******************************************************************************
  * struct extension::unwrap_reference< reference_wrapper< T, Tags >, void >
- * struct extension::is_reference_wrapped_parameter< reference_wrapper< T, Tags >, void >
+ * struct extension::is_wrapped_parameter< reference_wrapper< T, Tags >, void >
  ******************************************************************************/
 
 namespace extension
@@ -177,7 +177,7 @@ struct unwrap_reference< reference_wrapper< T, Tags >, void >
 { typedef T type; };
 
 template< class T, class Tags >
-struct is_reference_wrapped_parameter< reference_wrapper< T, Tags >, void >
+struct is_wrapped_parameter< reference_wrapper< T, Tags >, void >
     : boost::mpl::has_key< Tags, sake::ref_tag::parameter >
 { };
 

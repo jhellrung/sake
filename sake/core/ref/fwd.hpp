@@ -28,7 +28,7 @@ template< class T >
 struct unwrap_reference;
 
 template< class T >
-struct is_reference_wrapped_parameter;
+struct is_wrapped_parameter;
 
 template< class T, class Tags = ref_tag::default_tags >
 class reference_wrapper;
@@ -38,7 +38,7 @@ namespace extension
 template< class T, class Enable = void >
 struct unwrap_reference;
 template< class T, class Enable = void >
-struct is_reference_wrapped_parameter;
+struct is_wrapped_parameter;
 } // namespace extension
 
 namespace default_impl
@@ -46,7 +46,7 @@ namespace default_impl
 template< class T >
 struct unwrap_reference;
 template< class T >
-struct is_reference_wrapped_parameter;
+struct is_wrapped_parameter;
 } // namespace default_impl
 
 #if 0
