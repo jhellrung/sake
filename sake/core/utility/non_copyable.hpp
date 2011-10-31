@@ -18,7 +18,7 @@
 
 #include <boost/config.hpp>
 
-#include <sake/core/utility/implicitly_defined_default_ctor.hpp>
+#include <sake/core/utility/implicitly_defined/default_ctor.hpp>
 
 #ifndef BOOST_NO_DELETED_FUNCTIONS
 
