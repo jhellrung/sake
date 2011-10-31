@@ -23,20 +23,26 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_object.hpp>
+#include <boost/type_traits/is_pod.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_void.hpp>
+#include <boost/type_traits/is_volatile.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/range_c.hpp>
 #include <sake/boost_ext/mpl/vector.hpp>
 #include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
+#include <sake/boost_ext/type_traits/is_same_sans_cv.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
+#include <sake/core/utility/private/emplacer/traits.hpp>
 
 namespace sake
 {
@@ -51,14 +57,30 @@ class emplacer_access
      **************************************************************************/
 
     template< class T, class V >
-    static T
+    static typename boost::enable_if_c<
+        boost::is_pod<T>::value,
+        T
+    >::type
+    construct(sake::emplacer< V ( ) >)
+    {
+        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
+        T result;
+        return result;
+    }
+
+    template< class T, class V >
+    static typename boost::disable_if_c<
+        boost::is_pod<T>::value,
+        T
+    >::type
     construct(sake::emplacer< V ( ) >)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT((
-            boost::is_void<V>::value
-         || boost::is_same<T,V>::value
-        ));
+        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         return T();
     }
 
@@ -69,14 +91,13 @@ class emplacer_access
     template< class T, class V, class U0 >
     static typename boost::enable_if_c<
         boost_ext::is_same_sans_qualifiers< T, U0 >::value,
-        T
+        typename emplacer_private::traits< U0 >::type
     >::type
     construct(sake::emplacer< V ( U0 ) > e)
     {
-        BOOST_STATIC_ASSERT((
-            boost::is_void<V>::value
-         || boost::is_same<T,V>::value
-        ));
+        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         BOOST_STATIC_ASSERT((
            !boost_ext::is_reference<T>::value
          || boost_ext::is_reference< U0 >::value
@@ -91,10 +112,9 @@ class emplacer_access
     >::type
     construct(sake::emplacer< V ( U0 ) > e)
     {
-        BOOST_STATIC_ASSERT((
-            boost::is_void<V>::value
-         || boost::is_same<T,V>::value
-        ));
+        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         BOOST_STATIC_ASSERT((
            !boost_ext::is_reference<T>::value
          || boost_ext::is_convertible_wnrbt< U0, T >::value
@@ -124,22 +144,18 @@ class emplacer_access
         boost_ext::mpl::vector< boost::mpl::integral_c< unsigned int, N >... >)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT((
-            boost::is_void<V>::value
-         || boost::is_same<T,V>::value
-        ));
+        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         new(p) T(e.template at_c<N>()...);
     }
 
-    template< class T, class V, class... U >
-    static typename boost::enable_if_c<
-        (sizeof...( U ) >= 2),
-        T
-    >::type
-    construct(sake::emplacer< V ( U... ) > e)
+    template< class T, class V, class U0, class U1, class... U >
+    static T
+    construct(sake::emplacer< V ( U0, U1, U... ) > e)
     {
         typedef typename boost_ext::mpl::range_c<
-            unsigned int, 0, sizeof...( U )
+            unsigned int, 0, 2 + sizeof...( U )
         >::type range_c_type;
         return construct(e, range_c_type());
     }
@@ -149,10 +165,9 @@ class emplacer_access
         boost_ext::mpl::vector< boost::mpl::integral_c< unsigned int, N >... >)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT((
-            boost::is_void<V>::value
-         || boost::is_same<T,V>::value
-        ));
+        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         return T(e.template at_c<N>()...);
     }
 
@@ -169,63 +184,90 @@ class emplacer_access
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     /***************************************************************************
-     * assign(T& x, sake::emplacer< V ( ) > e) -> void
+     * assign(T& x, sake::emplacer< V ( ) > e) -> T&
      **************************************************************************/
 
     template< class T, class V >
-    static void
+    static T&
     assign(T& x, sake::emplacer< V ( ) >)
     {
         BOOST_STATIC_ASSERT((
             boost::is_void<V>::value
-         || boost::is_same<T,V>::value
+         || boost_ext::is_same_sans_cv<T,V>::value
         ));
         return x = T();
     }
 
     /***************************************************************************
-     * assign(T& x, sake::emplacer< V ( U0 ) > e) -> void
+     * assign(T& x, sake::emplacer< V ( U0 ) > e) -> T&
      **************************************************************************/
 
     template< class T, class V, class U0 >
     static typename boost::enable_if_c<
-        boost_ext::is_same_sans_qualifiers< T, U0 >::value
+        boost_ext::is_same_sans_qualifiers< T, U0 >::value,
+        T&
     >::type
     assign(T& x, sake::emplacer< V ( U0 ) > e)
     {
         BOOST_STATIC_ASSERT((
             boost::is_void<V>::value
-         || boost::is_same<T,V>::value
+         || boost_ext::is_same_sans_cv<T,V>::value
         ));
-        x = e.template at_c<0>();
+        return x = e.template at_c<0>();
     }
 
     /***************************************************************************
-     * assign(T& x, sake::emplacer< V ( U0, U1, ... ) > e) -> void
+     * assign(T& x, sake::emplacer< V ( U0, U1, ... ) > e) -> T&
      **************************************************************************/
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T, class Signature >
-    static void
+    static T&
     assign(T& x, sake::emplacer< Signature > e)
-    { x = construct<T>(e); }
+    {
+        typedef typename boost::remove_cv<T>::type T_;
+        typedef typename sake::emplacer< Signature >::value_type value_type;
+        BOOST_STATIC_ASSERT((
+            boost::is_void< value_type >::value
+         || boost::is_same< T_, value_type >::value
+        ));
+        return x = construct<T_>(e);
+    }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T, class Signature >
     static typename boost::enable_if_c<
-        sake::is_movable<T>::value
+        sake::is_movable<T>::value,
+        T&
     >::type
     assign(T& x, sake::emplacer< Signature > e)
-    { x = static_cast< SAKE_RV_REF( T ) >(construct<T>(e)); }
+    {
+        typedef typename boost::remove_cv<T>::type T_;
+        typedef typename sake::emplacer< Signature >::value_type value_type;
+        BOOST_STATIC_ASSERT((
+            boost::is_void< value_type >::value
+         || boost::is_same< T_, value_type >::value
+        ));
+        return x = static_cast< SAKE_RV_REF( T_ ) >(construct<T_>(e));
+    }
 
     template< class T, class Signature >
     static typename boost::disable_if_c<
-        sake::is_movable<T>::value
+        sake::is_movable<T>::value,
+        T&
     >::type
     assign(T& x, sake::emplacer< Signature > e)
-    { x = construct<T>(e); }
+    {
+        typedef typename boost::remove_cv<T>::type T_;
+        typedef typename sake::emplacer< Signature >::value_type value_type;
+        BOOST_STATIC_ASSERT((
+            boost::is_void< value_type >::value
+         || boost::is_same< T_, value_type >::value
+        ));
+        return x = construct<T_>(e);
+    }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -249,10 +291,9 @@ class emplacer_access
     construct(void* const p, sake::emplacer< V ( U0N ) > e)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT((
-            boost::is_void<V>::value
-         || boost::is_same<T,V>::value
-        ));
+        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         new(p) T(e_at_c_0N);
     }
 
@@ -263,10 +304,9 @@ class emplacer_access
     construct(sake::emplacer< V ( U0N ) > e)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT((
-            boost::is_void<V>::value
-         || boost::is_same<T,V>::value
-        ));
+        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         return T(e_at_c_0N);
     }
 

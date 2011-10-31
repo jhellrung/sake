@@ -8,6 +8,10 @@
  * class emplacer< void ( U0, ... ) >
  * class emplacer< T ( U0, ... ) >
  *
+ * emplacer_construct<T>(emplacer< Signature > e, void* p) -> void
+ * emplacer_construct<T>(emplacer< Signature > e) -> T [qualified]
+ * emplacer_assign(T& x, emplacer< Signature > e) -> T&
+ *
  * make_emplacer(U0&& y0, ...) -> emplacer< void ( U0, ... ) >
  * make_typed_emplacer<T>(U0&& y0, ...) -> emplacer< T ( U0, ... ) >
  *
@@ -15,22 +19,21 @@
  * typed_emplacer_wrap<T>(U&& y) -> result_of::typed_emplacer_wrap<T,U>::type
  *
  * emplacer objects provide an abstraction for constructor arguments, allowing
- * one to do generic in-place construction of objects.  This is very similar to
- * Boost.InPlaceFactory and Boost.TypedInPlaceFactory, with the major advantage
- * that this provides support for rvalue references and lvalue
- * references-to-non-const.
+ * one a generic facility to pass constructor arguments and do in-place
+ * construction.  This is vaguely similar to Boost.InPlaceFactory and
+ * Boost.TypedInPlaceFactory.
  *
- * An emplacer object holds bound constructor parameters.  A bound constructor
- * parameter is held by lvalue reference if the corresponding Ui is an lvalue
+ * An emplacer object holds bound constructor arguments.  A bound constructor
+ * argument is held by lvalue reference if the corresponding Ui is an lvalue
  * reference; by value if the corresponding Ui is a non-reference and
  * by-value-optimal; by reference-to-const if the corresponding Ui is a
  * non-reference, not by-value-optimal, and non-movable; and by (emulated)
  * rvalue reference otherwise.  One consequence is that emplacers are very cheap
- * to copy (no more expensive than passing each of the bound parameters as
- * separate function arguments) and should always be passed by value.
+ * to copy (no more expensive than passing each of the bound arguments as
+ * separate function arguments) and hence should always be passed by value.
  *
  * [typed_]emplacer_wrap is identical to the one-argument form of
- * make_[typed_]emplacer except when the argument is already an emplacer object
+ * make_[typed_]emplacer except when the argument is already an emplacer object,
  * in which case it amounts to an identity operation.
  ******************************************************************************/
 
@@ -41,6 +44,7 @@
 
 #include <boost/config.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/quote.hpp>
@@ -48,119 +52,41 @@
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_shifted.hpp>
-#include <boost/preprocessor/repetition/enum_shifted_params.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/is_object.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_void.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/utility/result_of.hpp>
 
-#include <sake/boost_ext/type_traits/add_reference.hpp>
-#include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
-#include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
-#include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
+#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/emplacer_access.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
-#include <sake/core/utility/is_by_value_optimal.hpp>
 #include <sake/core/utility/non_copy_assignable.hpp>
 #include <sake/core/utility/overload.hpp>
+#include <sake/core/utility/private/emplacer/base.hpp>
+#include <sake/core/utility/private/emplacer/traits.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
 namespace sake
 {
 
-namespace emplacer_private
-{
-
-template< class U, bool = sake::is_by_value_optimal<U>::value >
-struct traits;
-
-template< class Signature >
-struct base;
-
-template<>
-struct base< void ( ) >
-{
-protected:
-    template< unsigned int, class = void >
-    struct at_c_impl
-    { };
-};
-
-template<
-    class U,
-    bool = sake::is_emplacer<
-               typename boost_ext::remove_qualifiers<U>::type
-           >::value
->
-struct wrap_dispatch;
-
-template<
-    class T, class U,
-    bool = sake::is_emplacer<
-               typename boost_ext::remove_qualifiers<U>::type,
-               boost::mpl::quote1< boost::is_void >
-           >::value,
-    bool = sake::is_emplacer<
-               typename boost_ext::remove_qualifiers<U>::type,
-               boost::mpl::not_< boost::is_void< boost::mpl::_1 > >
-           >::value
->
-struct typed_wrap_dispatch;
-
-} // namespace emplacer_private
-
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-
 /*******************************************************************************
- * class emplacer< void ( U... ) >
+ * class emplacer< void ( ) >
  ******************************************************************************/
 
-template< class... U >
-class emplacer< void ( U... ) >
-    : public emplacer_private::base< void ( U... ) >
+template<>
+class emplacer< void ( ) >
 {
-    typedef emplacer_private::base< void ( U... ) > base_;
 public:
-    SAKE_NON_COPY_ASSIGNABLE( emplacer )
-
     typedef void value_type;
-
-    explicit emplacer(typename emplacer_private::traits<U>::type... y)
-        : base_(emplacer_private::traits<U>::cast(y)...)
-    { }
-
-    template< class T >
-    void construct(void* const p) const
-    { emplacer_access::construct<T>(p, *this); }
-
-    template< class T >
-    T construct() const
-    { return emplacer_access::construct<T>(*this); }
-
-    template< class T >
-    void assign(T& x) const
-    { emplacer_access::assign(x, *this); }
-
-    struct result_of
-    {
-        template< class T >
-        struct as_typed
-        { typedef emplacer< T ( U... ) > type; };
-    };
-    template< class T >
-    typename result_of::as_typed<T>::type
-    as_typed() const
-    {
-        BOOST_STATIC_ASSERT((!boost::is_void<T>::value));
-        return typename result_of::as_typed<T>::type(*this);
-    }
 
     template< class > struct result;
     template< class This, class P, class T >
@@ -174,51 +100,327 @@ public:
     { };
 
     template< class T >
-    void operator()(void* const p, sake::type_tag<T>) const
+    static void
+    construct(void* const p)
+    { emplacer_access::construct<T>(p, emplacer()); }
+
+    template< class T >
+    static typename result< emplacer const ( T ) >::type
+    construct()
+    { return emplacer_access::construct<T>(emplacer()); }
+
+    template< class T >
+    static T&
+    assign(T& x)
+    { return emplacer_access::assign(x, emplacer()); }
+
+    struct result_of
+    {
+        template< class T >
+        struct as_typed
+        { typedef emplacer< T ( ) > type; };
+    };
+    template< class T >
+    static typename result_of::as_typed<T>::type
+    as_typed()
+    {
+        BOOST_STATIC_ASSERT((!boost::is_void<T>::value));
+        return typename result_of::as_typed<T>::type();
+    }
+
+    template< class T >
+    void
+    operator()(void* const p, sake::type_tag<T>) const
     { construct<T>(p); }
 
     template< class T >
-    T operator()(sake::type_tag<T>) const
+    typename result< emplacer const ( T ) >::type
+    operator()(sake::type_tag<T>) const
     { return construct<T>(); }
 };
 
 /*******************************************************************************
- * class emplacer< T ( U... ) >
+ * class emplacer< T ( ) >
  ******************************************************************************/
 
-template< class T, class... U >
-class emplacer< T ( U... ) >
-    : public emplacer_private::base< void ( U... ) >
+template< class T >
+class emplacer< T ( ) >
 {
-    typedef emplacer_private::base< void ( U... ) > base_;
+    BOOST_STATIC_ASSERT((boost::is_object<T>::value));
+    BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+    BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
 public:
+    typedef T value_type;
 
+    typedef T result_type;
+
+    static void
+    construct(void* const p)
+    { emplacer_access::construct<T>(p, emplacer()); }
+
+    static result_type
+    construct()
+    { return emplacer_access::construct<T>(emplacer()); }
+
+    template< class V >
+    V&
+    assign(V& x)
+    { return emplacer_access::assign(x, emplacer()); }
+
+    void
+    operator()(void* const p) const
+    { construct(p); }
+
+    result_type
+    operator()() const
+    { return construct(); }
+};
+
+/*******************************************************************************
+ * class emplacer< void ( U0 ) >
+ ******************************************************************************/
+
+template< class U0 >
+class emplacer< void ( U0 ) >
+    : public emplacer_private::base< void ( U0 ) >
+{
+    typedef emplacer_private::base< void ( U0 ) > base_;
+public:
+    SAKE_NON_COPY_ASSIGNABLE( emplacer )
+
+    typedef void value_type;
+
+    template< class > struct result;
+    template< class This, class P, class T >
+    struct result< This ( P, T ) >
+    { typedef void type; };
+    template< class This, class T >
+    struct result< This ( T ) >
+    {
+        typedef typename sake::remove_type_tag<
+            typename boost_ext::remove_qualifiers<T>::type
+        >::type T_;
+        typedef typename boost::mpl::if_c<
+            boost_ext::is_same_sans_qualifiers< T_, U0 >::value,
+            typename emplacer_private::traits< U0 >::type,
+            T_
+        >::type type;
+    };
+
+    explicit emplacer(typename emplacer_private::traits< U0 >::type y)
+        : base_(emplacer_private::traits< U0 >::cast(y))
+    { }
+
+    template< class T >
+    void
+    construct(void* const p) const
+    { emplacer_access::construct<T>(p, *this); }
+
+    template< class T >
+    typename result< emplacer const ( T ) >::type
+    construct() const
+    { return emplacer_access::construct<T>(*this); }
+
+    template< class T >
+    T&
+    assign(T& x) const
+    { return emplacer_access::assign(x, *this); }
+
+    template< class T >
+    void
+    operator()(void* const p, sake::type_tag<T>) const
+    { construct<T>(p); }
+
+    template< class T >
+    typename result< emplacer const ( T ) >::type
+    operator()(sake::type_tag<T>) const
+    { return construct<T>(); }
+};
+
+/*******************************************************************************
+ * class emplacer< T ( U0 ) >
+ ******************************************************************************/
+
+template< class T, class U0 >
+class emplacer< T ( U0 ) >
+    : public emplacer_private::base< void ( U0 ) >
+{
+    BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+    BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+    typedef emplacer_private::base< void ( U0 ) > base_;
+public:
     SAKE_NON_COPY_ASSIGNABLE( emplacer )
 
     typedef T value_type;
 
-    explicit emplacer(typename emplacer_private::traits<U>::type... y)
-        : base_(emplacer_private::traits<U>::cast(y)...)
+    typedef typename boost::mpl::if_c<
+        boost_ext::is_same_sans_qualifiers< T, U0 >::value,
+        typename emplacer_private::traits< U0 >::type,
+        T
+    >::type result_type;
+
+    explicit emplacer(typename emplacer_private::traits< U0 >::type y)
+        : base_(emplacer_private::traits< U0 >::cast(y))
     { }
 
     explicit emplacer(base_ e)
         : base_(e)
     { }
 
-    void construct(void* const p)
+    void
+    construct(void* const p) const
     { emplacer_access::construct<T>(p, *this); }
 
-    T construct()
+    result_type
+    construct() const
     { return emplacer_access::construct<T>(*this); }
 
-    void assign(typename boost_ext::add_reference<T>::type x)
-    { emplacer_access::assign(x, *this); }
+    template< class V >
+    V&
+    assign(V& x) const
+    { return emplacer_access::assign(x, *this); }
+
+    void
+    operator()(void* const p) const
+    { construct(p); }
+
+    result_type
+    operator()() const
+    { return construct(); }
+};
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+/*******************************************************************************
+ * class emplacer< void ( U0, U1, U... ) >
+ ******************************************************************************/
+
+template< class U0, class U1, class... U >
+class emplacer< void ( U0, U1, U... ) >
+    : public emplacer_private::base< void ( U0, U1, U... ) >
+{
+    typedef emplacer_private::base< void ( U0, U1, U... ) > base_;
+public:
+    SAKE_NON_COPY_ASSIGNABLE( emplacer )
+
+    typedef void value_type;
+
+    template< class > struct result;
+    template< class This, class P, class T >
+    struct result< This ( P, T ) >
+    { typedef void type; };
+    template< class This, class T >
+    struct result< This ( T ) >
+        : sake::remove_type_tag<
+              typename boost_ext::remove_qualifiers<T>::type
+          >
+    { };
+
+    emplacer(
+        typename emplacer_private::traits< U0 >::type y0,
+        typename emplacer_private::traits< U1 >::type y1,
+        typename emplacer_private::traits<U>::type... y)
+        : base_(
+              emplacer_private::traits< U0 >::cast(y0),
+              emplacer_private::traits< U1 >::cast(y1),
+              emplacer_private::traits<U>::cast(y)...
+          )
+    { }
+
+    template< class T >
+    void
+    construct(void* const p) const
+    { emplacer_access::construct<T>(p, *this); }
+
+    template< class T >
+    typename result< emplacer const ( T ) >::type
+    construct() const
+    { return emplacer_access::construct<T>(*this); }
+
+    template< class T >
+    T&
+    assign(T& x) const
+    { return emplacer_access::assign(x, *this); }
+
+    struct result_of
+    {
+        template< class T >
+        struct as_typed
+        { typedef emplacer< T ( U0, U1, U... ) > type; };
+    };
+    template< class T >
+    typename result_of::as_typed<T>::type
+    as_typed() const
+    {
+        BOOST_STATIC_ASSERT((!boost::is_void<T>::value));
+        return typename result_of::as_typed<T>::type(*this);
+    }
+
+    template< class T >
+    void
+    operator()(void* const p, sake::type_tag<T>) const
+    { construct<T>(p); }
+
+    template< class T >
+    typename result< emplacer const ( T ) >::type
+    operator()(sake::type_tag<T>) const
+    { return construct<T>(); }
+};
+
+/*******************************************************************************
+ * class emplacer< T ( U0, U1, U... ) >
+ ******************************************************************************/
+
+template< class T, class U0, class U1, class... U >
+class emplacer< T ( U0, U1, U... ) >
+    : public emplacer_private::base< void ( U0, U1, U... ) >
+{
+    BOOST_STATIC_ASSERT((boost_ext::is_object<T>::value));
+    BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+    BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+    typedef emplacer_private::base< void ( U0, U1, U... ) > base_;
+public:
+    SAKE_NON_COPY_ASSIGNABLE( emplacer )
+
+    typedef T value_type;
 
     typedef T result_type;
-    T operator()() const
-    { return construct(); }
-    void operator()(void* const p) const
+
+    emplacer(
+        typename emplacer_private::traits< U0 >::type y0,
+        typename emplacer_private::traits< U1 >::type y1,
+        typename emplacer_private::traits<U>::type... y)
+        : base_(
+              emplacer_private::traits< U0 >::cast(y0),
+              emplacer_private::traits< U1 >::cast(y1),
+              emplacer_private::traits<U>::cast(y)...
+          )
+    { }
+
+    explicit emplacer(base_ e)
+        : base_(e)
+    { }
+
+    void
+    construct(void* const p) const
+    { emplacer_access::construct<T>(p, *this); }
+
+    result_type
+    construct() const
+    { return emplacer_access::construct<T>(*this); }
+
+    template< class V >
+    V&
+    assign(V& x) const
+    { return emplacer_access::assign(x, *this); }
+
+    void
+    operator()(void* const p) const
     { construct(p); }
+
+    result_type
+    operator()() const
+    { return construct(); }
 };
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
@@ -228,7 +430,7 @@ public:
 #define traits_Un_cast_yn( z, n, data ) \
     emplacer_private::traits< BOOST_PP_CAT( U, n ) >::cast( BOOST_PP_CAT( y, n ) )
 
-#define BOOST_PP_ITERATION_LIMITS ( 0, SAKE_EMPLACER_MAX_ARITY )
+#define BOOST_PP_ITERATION_LIMITS ( 2, SAKE_EMPLACER_MAX_ARITY )
 #define BOOST_PP_FILENAME_1       <sake/core/utility/emplacer.hpp>
 #include BOOST_PP_ITERATE()
 
@@ -236,6 +438,47 @@ public:
 #undef traits_Un_cast_yn
 
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+/*******************************************************************************
+ * emplacer_construct<T>(emplacer< Signature > e, void* p) -> void
+ * emplacer_construct<T>(emplacer< Signature > e) -> T [qualified]
+ * emplacer_assign(T& x, emplacer< Signature > e) -> T&
+ ******************************************************************************/
+
+template< class T, class Signature >
+inline typename boost::enable_if_c<
+    boost::is_void< typename sake::emplacer< Signature >::value_type >::value
+>::type
+emplacer_construct(sake::emplacer< Signature > e, void* const p)
+{ e.template construct<T>(p); }
+
+template< class T, class Signature >
+inline typename boost::enable_if_c<
+    boost::is_same< T, typename sake::emplacer< Signature >::value_type >::value
+>::type
+emplacer_construct(sake::emplacer< Signature > e, void* const p)
+{ e.construct(p); }
+
+template< class T, class Signature >
+inline typename boost::enable_if_c<
+    boost::is_void< typename sake::emplacer< Signature >::value_type >::value,
+    typename boost::result_of< sake::emplacer< Signature > const ( T ) >::type
+>::type
+emplacer_construct(sake::emplacer< Signature > e)
+{ return e.template construct<T>(); }
+
+template< class T, class Signature >
+inline typename boost::enable_if_c<
+    boost::is_same< T, typename sake::emplacer< Signature >::value_type >::value,
+    typename sake::emplacer< Signature >::result_type
+>::type
+emplacer_construct(sake::emplacer< Signature > e)
+{ return e.construct(); }
+
+template< class T, class Signature >
+inline T&
+emplacer_assign(T& x, sake::emplacer< Signature > e)
+{ return e.assign(x); }
 
 /*******************************************************************************
  * make_emplacer(U0&& y0, ...) -> emplacer< void ( U0, ... ) >
@@ -246,45 +489,45 @@ public:
  && !defined( BOOST_NO_VARIADIC_TEMPLATES )
 
 template< class... U >
-inline emplacer< void ( U... ) >
+inline sake::emplacer< void ( U... ) >
 make_emplacer(U&&... y)
-{ return emplacer< void ( U... ) >(sake::forward<U>(y)...); }
+{ return sake::emplacer< void ( U... ) >(sake::forward<U>(y)...); }
 
 template< class T, class... U >
-inline emplacer< T ( U... ) >
+inline sake::emplacer< T ( U... ) >
 make_typed_emplacer(U&&... y)
-{ return emplacer< T ( U... ) >(sake::forward<U>(y)...); }
+{ return sake::emplacer< T ( U... ) >(sake::forward<U>(y)...); }
 
 #else // #if !defined( ... ) && !defined( ... )
 
-inline emplacer< void ( ) >
+inline sake::emplacer< void ( ) >
 make_emplacer()
-{ return emplacer< void ( ) >(); }
+{ return sake::emplacer< void ( ) >(); }
 
 #define SAKE_OVERLOAD_RESULT( n, U_tuple ) \
-    boost::mpl::identity< emplacer< void U_tuple > >
+    boost::mpl::identity< sake::emplacer< void U_tuple > >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     make_emplacer
 #define SAKE_OVERLOAD_BODY( n, U_tuple, y_tuple, forward_y_tuple ) \
-    return emplacer< void U_tuple > forward_y_tuple ;
+    return sake::emplacer< void U_tuple > forward_y_tuple ;
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_EMPLACER_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_EMPLACER_FWD_MAX_ARITY
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY    SAKE_EMPLACER_FWD2_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
 
 template< class T >
-inline emplacer< T ( ) >
+inline sake::emplacer< T ( ) >
 make_typed_emplacer()
-{ return emplacer< T ( ) >(); }
+{ return sake::emplacer< T ( ) >(); }
 
 #define SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( n, classU_tuple ) \
     class T, BOOST_PP_TUPLE_REM_CTOR( n, classU_tuple )
 #define SAKE_OVERLOAD_RESULT( n, U_tuple ) \
-    boost::mpl::identity< emplacer< T U_tuple > >
+    boost::mpl::identity< sake::emplacer< T U_tuple > >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     make_typed_emplacer
 #define SAKE_OVERLOAD_BODY( n, U_tuple, y_tuple, forward_y_tuple ) \
-    return emplacer< T U_tuple > forward_y_tuple ;
+    return sake::emplacer< T U_tuple > forward_y_tuple ;
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_EMPLACER_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_EMPLACER_FWD_MAX_ARITY
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY    SAKE_EMPLACER_FWD2_MAX_ARITY
@@ -297,34 +540,56 @@ make_typed_emplacer()
  * typed_emplacer_wrap<T>(U&& y) -> result_of::typed_emplacer_wrap<T,U>::type
  ******************************************************************************/
 
+namespace emplacer_private
+{
+
+template<
+    class U,
+    class U_ = typename boost_ext::remove_qualifiers<U>::type,
+    bool = sake::is_emplacer<U_>::value
+>
+struct wrap_dispatch;
+
+template<
+    class T, class U,
+    class U_ = typename boost_ext::remove_qualifiers<U>::type,
+    bool = sake::is_emplacer<
+               U_, boost::mpl::quote1< boost::is_void >
+           >::value,
+    bool = sake::is_emplacer<
+               U_, boost::mpl::not_< boost::is_void< boost::mpl::_1 > >
+           >::value
+>
+struct typed_wrap_dispatch;
+
+} // namespace emplacer_private
+
 namespace result_of
 {
 
 template< class U >
 struct emplacer_wrap
-{ typedef typename emplacer_private::wrap_dispatch<U>::result_type type; };
+    : emplacer_private::wrap_dispatch<U>
+{ };
 
 template< class T, class U >
 struct typed_emplacer_wrap
-{ typedef typename emplacer_private::typed_wrap_dispatch<T,U>::result_type type; };
+    : emplacer_private::typed_wrap_dispatch<T,U>
+{ };
 
 } // namespace result_of
 
 template< class U >
 inline typename result_of::emplacer_wrap< SAKE_FWD2_PARAM( U ) >::type
 emplacer_wrap(SAKE_FWD2_REF( U ) x)
-{
-    return emplacer_private::wrap_dispatch< SAKE_FWD2_PARAM( U ) >::
-        apply(sake::forward<U>(x));
-}
+{ return emplacer_private::wrap_dispatch< SAKE_FWD2_PARAM( U ) >::
+        apply(sake::forward<U>(x)); }
 
 template< class T, class U >
 inline typename result_of::typed_emplacer_wrap< T, SAKE_FWD2_PARAM( U ) >::type
 typed_emplacer_wrap(SAKE_FWD2_REF( U ) x)
-{
-    return emplacer_private::typed_wrap_dispatch< T, SAKE_FWD2_PARAM( U ) >::
-        apply(sake::forward<U>(x));
-}
+{ return emplacer_private::typed_wrap_dispatch< T, SAKE_FWD2_PARAM( U ) >::
+        apply(sake::forward<U>(x)); }
 
 /*******************************************************************************
  * namespace emplacer_private
@@ -333,107 +598,44 @@ typed_emplacer_wrap(SAKE_FWD2_REF( U ) x)
 namespace emplacer_private
 {
 
-template< class U >
-struct traits< U, false >
+template< class U, class U_ >
+struct wrap_dispatch< U, U_, false >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<U>::value));
-    typedef typename boost_ext::add_reference_add_const<
-        typename boost_ext::add_rvalue_reference<U>::type
-    >::type type;
-    template< class V >
-    static type cast(V& x)
-    { return static_cast< type >(x); }
+    typedef sake::emplacer< void ( U ) > type;
+    static type apply(typename traits<U>::type x)
+    { return type(traits<U>::cast(x)); }
 };
 
-template< class U >
-struct traits< U, true >
+template< class U, class U_ >
+struct wrap_dispatch< U, U_, true >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference<U>::value));
-    typedef typename boost::remove_cv<U>::type type;
-    static type cast(type x)
-    { return x; }
+    typedef U_ type;
+    static type apply(type e)
+    { return e; }
 };
 
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-
-template< class U0, class... U >
-struct base< void ( U0, U... ) >
-    : base< void ( U... ) >
+template< class T, class U, class U_ >
+struct typed_wrap_dispatch< T, U, U_, false, false >
 {
-    base(traits< U0 >::type y0, traits<U>::type... y)
-        : base< void ( U... ) >(traits<U>::cast(y)...),
-          m_y0(traits< U0 >::cast(y0))
-    { }
-
-protected:
-    template< unsigned int K, class = void >
-    struct at_c_impl
-        : base< void ( U... ) >::template at_c_impl< K-1 >
-    { };
-    template< class _ >
-    struct at_c_impl< 0, _ >
-    {
-        typedef typename traits< U0 >::type type;
-        static type apply(base const & this_)
-        { return traits< U0 >::cast(this_.m_y0); }
-    };
-    template< unsigned int, class > friend struct at_c_impl;
-public:
-    template< unsigned int K >
-    typename at_c_impl<K>::type
-    at_c() const
-    { return at_c_impl<K>::apply(*this); }
-
-private:
-    typename traits< U0 >::type m_y0;
+    typedef sake::emplacer< T ( U ) > type;
+    static type apply(typename traits<U>::type x)
+    { return type(traits<U>::cast(x)); }
 };
 
-#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-
-template< class U >
-struct wrap_dispatch< U, false >
+template< class T, class U, class U_ >
+struct typed_wrap_dispatch< T, U, U_, true, false >
 {
-    typedef emplacer< void ( U ) > result_type;
-    static result_type
-    apply(typename traits<U>::type x)
-    { return result_type(traits<U>::cast(x)); }
+    typedef typename U_::result_of::template as_typed<T>::type type;
+    static type apply(U_ e)
+    { return e.template as_typed<T>(); }
 };
 
-template< class U >
-struct wrap_dispatch< U, true >
+template< class T, class U, class U_ >
+struct typed_wrap_dispatch< T, U, U_, false, true >
 {
-    typedef typename boost_ext::remove_qualifiers<U>::type result_type;
-    static result_type
-    apply(result_type x)
-    { return x; }
-};
-
-template< class T, class U >
-struct typed_wrap_dispatch< T, U, false, false >
-{
-    typedef emplacer< T ( U ) > result_type;
-    static result_type
-    apply(typename traits<U>::type x)
-    { return result_type(traits<U>::cast(x)); }
-};
-
-template< class T, class U >
-struct typed_wrap_dispatch< T, U, true, false >
-{
-    typedef typename boost_ext::remove_qualifiers<U>::type::
-        result_of::template as_typed<T>::type result_type;
-    static result_type
-    apply(typename boost_ext::remove_qualifiers<U>::type const x)
-    { return x.template as_typed<T>(); }
-};
-
-template< class T, class U >
-struct typed_wrap_dispatch< T, U, false, true >
-{
-    typedef typename boost_ext::remove_qualifiers<U>::type result_type;
-    static result_type
-    apply(result_type x)
-    { return x; }
+    typedef U_ type;
+    static type apply(type e)
+    { return e; }
 };
 
 } // namespace emplacer_private
@@ -453,59 +655,6 @@ struct typed_wrap_dispatch< T, U, false, true >
 #define traits_U0N_type_y0N BOOST_PP_ENUM( N, traits_Un_type_yn, ~ )
 #define traits_U0N_cast_y0N BOOST_PP_ENUM( N, traits_Un_cast_yn, ~ )
 
-#if N != 0
-
-#define U1N BOOST_PP_ENUM_SHIFTED_PARAMS( N, U )
-
-#define traits_U1N_cast_y1N BOOST_PP_ENUM_SHIFTED( N, traits_Un_cast_yn, ~ )
-
-namespace emplacer_private
-{
-
-template< class_U0N >
-struct base< void ( U0N ) >
-    : base< void ( U1N ) >
-{
-    base(traits_U0N_type_y0N)
-        : base< void ( U1N ) >(traits_U1N_cast_y1N),
-          m_y0(traits< U0 >::cast(y0))
-    { }
-
-protected:
-    template< unsigned int K, class = void >
-    struct at_c_impl
-#if N == 1
-        : base< void ( ) >::at_c_impl< K-1 >
-#else // #if N == 1
-        : base< void ( U1N ) >::template at_c_impl< K-1 >
-#endif // #if N == 1
-    { };
-    template< class _ >
-    struct at_c_impl< 0, _ >
-    {
-        typedef typename traits< U0 >::type type;
-        static type apply(base const & this_)
-        { return traits< U0 >::cast(this_.m_y0); }
-    };
-    template< unsigned int, class > friend struct at_c_impl;
-public:
-    template< unsigned int K >
-    typename at_c_impl<K>::type
-    at_c() const
-    { return at_c_impl<K>::apply(*this); }
-
-private:
-    typename traits< U0 >::type m_y0;
-};
-
-} // namespace emplacer_private
-
-#undef traits_U1N_cast_y1N
-
-#undef U1N
-
-#endif // #if N != 0
-
 /*******************************************************************************
  * class emplacer< void ( U0, ... ) >
  ******************************************************************************/
@@ -520,26 +669,24 @@ public:
 
     typedef void value_type;
 
-#if N != 0
-#if N == 1
-    explicit
-#endif // #if N == 1
     emplacer(traits_U0N_type_y0N)
         : base_(traits_U0N_cast_y0N)
     { }
-#endif // #if N != 0
 
     template< class T >
-    void construct(void* const p)
+    void
+    construct(void* const p)
     { emplacer_access::construct<T>(p, *this); }
 
     template< class T >
-    T construct()
+    T
+    construct()
     { return emplacer_access::construct<T>(*this); }
 
     template< class T >
-    void assign(T& x)
-    { emplacer_access::assign(x, *this); }
+    T&
+    assign(T& x)
+    { return emplacer_access::assign(x, *this); }
 
     struct result_of
     {
@@ -567,11 +714,13 @@ public:
     { };
 
     template< class T >
-    void operator()(void* const p, sake::type_tag<T>) const
+    void
+    operator()(void* const p, sake::type_tag<T>) const
     { construct<T>(p); }
 
     template< class T >
-    T operator()(sake::type_tag<T>) const
+    T
+    operator()(sake::type_tag<T>) const
     { return construct<T>(); }
 };
 
@@ -583,35 +732,43 @@ template< class T comma_class_U0N >
 class emplacer< T ( U0N ) >
     : public emplacer_private::base< void ( U0N ) >
 {
+    BOOST_STATIC_ASSERT((boost::is_object<T>::value));
+    BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
+    BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
     typedef emplacer_private::base< void ( U0N ) > base_;
 public:
-
     SAKE_NON_COPY_ASSIGNABLE( emplacer )
 
     typedef T value_type;
+    typedef T result_type;
 
-#if N != 0
-#if N == 1
-    explicit
-#endif // #if N == 1
     emplacer(traits_U0N_type_y0N)
         : base_(traits_U0N_cast_y0N)
     { }
-#endif // #if N != 0
 
-    void construct(void* const p)
+    explicit emplacer(base_ e)
+        : base_(e)
+    { }
+
+    void
+    construct(void* const p) const
     { emplacer_access::construct<T>(p, *this); }
 
-    T construct()
+    result_type
+    construct() const
     { return emplacer_access::construct<T>(*this); }
 
-    void assign(typename boost_ext::add_reference<T>::type x)
-    { emplacer_access::assign(x, *this); }
+    template< class V >
+    V&
+    assign(V& x) const
+    { return emplacer_access::assign(x, *this); }
 
-    typedef T result_type;
-    T operator()() const
+    result_type
+    operator()() const
     { return construct(); }
-    void operator()(void* const p) const
+
+    void
+    operator()(void* const p) const
     { construct(p); }
 };
 
