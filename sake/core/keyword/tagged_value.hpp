@@ -23,13 +23,16 @@ template< class Tag, class T >
 struct tagged_value
 {
     BOOST_STATIC_ASSERT((boost_ext::is_reference<T>::value));
+
     typedef Tag tag;
     typedef T value_type;
-    tagged_value(T value_)
-        : m_value(value_)
-    { }
+
+    // implicit on purpose
+    tagged_value(T value_) : m_value(value_) { }
+
     T value() const
     { return static_cast<T>(m_value); }
+
 private:
     T m_value;
 };

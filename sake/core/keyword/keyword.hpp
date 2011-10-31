@@ -33,43 +33,43 @@ struct keyword_
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    tagged_value< Tag, T&& >
+    keyword::tagged_value< Tag, T&& >
     operator=(T&& value) const
-    { return tagged_value< Tag, T&& >(value); }
+    { return static_cast< T&& >(value); }
 
     template< class T >
-    tagged_value< Tag, T&& >
+    keyword::tagged_value< Tag, T&& >
     operator|(T&& value) const
-    { return tagged_value< Tag, T&& >(value); }
+    { return static_cast< T&& >(value); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    tagged_value< Tag, T& >
+    keyword::tagged_value< Tag, T& >
     operator=(T& value) const
-    { return tagged_value< Tag, T& >(value); }
+    { return value; }
 
     template< class T >
-    tagged_value< Tag, T const & >
+    keyword::tagged_value< Tag, T const & >
     operator=(T const & value) const
-    { return tagged_value< Tag, T const & >(value); }
+    { return value; }
 
     template< class T >
-    tagged_value< Tag, T& >
+    keyword::tagged_value< Tag, T& >
     operator|(T& value) const
-    { return tagged_value< Tag, T& >(value); }
+    { return value; }
 
     template< class T >
-    tagged_value< Tag, T const & >
+    keyword::tagged_value< Tag, T const & >
     operator|(T const & value) const
-    { return tagged_value< Tag, T const & >(value); }
+    { return value; }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    tagged_lazy< Tag, T >
+    keyword::tagged_lazy< Tag, T >
     operator||(T const & value) const
-    { return tagged_lazy< Tag, T >(value); }
+    { return keyword::tagged_lazy< Tag, T >(value); }
 };
 
 } // namespace keyword

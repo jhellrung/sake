@@ -50,7 +50,8 @@ struct arg_packer
     struct enable
     {
         typedef typename keyword::tag_args<
-            boost_ext::mpl::vector< A... >, P >::type tagged_args;
+            boost_ext::mpl::vector< A... >, P
+        >::type tagged_args;
         static bool const value = keyword::satisfies< tagged_args, P >::value;
         typedef enable type;
     };
@@ -61,7 +62,8 @@ struct arg_packer
     struct result< This ( A... ) >
     {
         typedef typename keyword::tag_args<
-            boost_ext::mpl::vector< A... >, P >::type tagged_args;
+            boost_ext::mpl::vector< A... >, P
+        >::type tagged_args;
         BOOST_STATIC_ASSERT((!boost::is_void< tagged_args >::value));
         BOOST_STATIC_ASSERT((keyword::satisfies< tagged_args, P >::value));
         typedef typename keyword::arg_pack_from_mpl_vector< tagged_args >::type type;
@@ -71,7 +73,9 @@ struct arg_packer
     typename result< arg_packer const ( SAKE_FWD2_PARAM( A )... ) >::type
     operator()(SAKE_FWD2_REF( A )... a) const
     {
-        typedef typename result< arg_packer const ( SAKE_FWD2_PARAM( A )... ) >::type result_type;
+        typedef typename result<
+            arg_packer const ( SAKE_FWD2_PARAM( A )... )
+        >::type result_type;
         return result_type(sake::forward<A>(a)...);
     }
 
