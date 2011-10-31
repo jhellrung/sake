@@ -155,6 +155,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\compressed_pair_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\compressed_tuple_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\declare_once_test.cpp"
 			>
 		</File>
