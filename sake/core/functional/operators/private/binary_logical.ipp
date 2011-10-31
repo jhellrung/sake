@@ -13,7 +13,7 @@
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/expr_traits/best_conversion.hpp>
-#include <sake/core/functional/operators/private/comparison_common.hpp>
+#include <sake/core/functional/operators/private/logical_common.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
