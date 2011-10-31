@@ -41,8 +41,8 @@ struct iec559_traits
     static int const sign_bits = 1;
     static int const exponent_bits =
         iec559_traits_private::exponent_bits< std::numeric_limits<T>::max_exponent >::value;
-    static int const fraction_bits = std::numeric_limits<T>::digits - 1;
-    static int const bits = sign_bits + exponent_bits + fraction_bits;
+    static int const significand_bits = std::numeric_limits<T>::digits - 1;
+    static int const bits = sign_bits + exponent_bits + significand_bits;
 
     static int const exponent_min = -((1 << (exponent_bits - 1)) - 2);
     static int const exponent_max = (1 << (exponent_bits - 1)) - 1;

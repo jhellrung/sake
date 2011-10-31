@@ -384,11 +384,11 @@ float_impl(T const x)
 {
     typedef typename boost::uint_t< sake::iec559_traits<T>::bits >::fast uint;
     union { T x; uint i; } u = { x };
-    int const biased_exponent = static_cast< int >(u.i >> iec559_traits<T>::fraction_bits);
+    int const biased_exponent = static_cast< int >(u.i >> iec559_traits<T>::significand_bits);
     return biased_exponent != 0 ?
            biased_exponent - sake::iec559_traits<T>::exponent_bias :
            static_cast< int >(intlog2_private::uint_impl(u.i))
-               - (sake::iec559_traits<T>::exponent_bias + iec559_traits<T>::fraction_bits - 1);
+               - (sake::iec559_traits<T>::exponent_bias + iec559_traits<T>::significand_bits - 1);
 }
 
 #ifdef SAKE_DEBUG
