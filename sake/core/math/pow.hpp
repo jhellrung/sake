@@ -71,7 +71,10 @@ struct pow
 
 template< class B, int P, class I = void >
 struct pow_c
-    : pow_private::dispatch_c<B,P>
+    : pow_private::dispatch_c<
+          typename boost_ext::remove_qualifiers<B>::type,
+          P
+      >
 { };
 
 } // namespace result_of
@@ -200,7 +203,7 @@ struct dispatch<B,P,1>
     typedef B type;
     static type apply(B& b, P& p)
     {
-        B r(1);
+        B r = sake::one.as<B>();
         return apply(b,p,r);
     }
     template< class I >
@@ -220,7 +223,7 @@ struct dispatch<B,P,0>
     typedef B type;
     static type apply(B& b, P& p)
     {
-        B r(1);
+        B r = sake::one.as<B>();
         return apply(b,p,r);
     }
     template< class I >
@@ -329,7 +332,7 @@ struct dispatch_c< B, 0, false, false >
 {
     typedef B type;
     static type apply(B& /*b*/)
-    { return B(1); }
+    { return sake::one.as<B>(); }
     template< class I >
     static type apply(B& /*b*/, I& i)
     { return B(sake::move(i)); }

@@ -13,7 +13,11 @@ namespace sake
 {
 
 struct zero_t
-{ };
+{
+    template< class T >
+    static T
+    as();
+};
 
 zero_t const zero = { };
 

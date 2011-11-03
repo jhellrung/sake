@@ -12,7 +12,12 @@
 namespace sake
 {
 
-struct one_t { };
+struct one_t
+{
+    template< class T >
+    static T
+    as();
+};
 
 one_t const one = { };
 

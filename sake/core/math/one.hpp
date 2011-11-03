@@ -30,11 +30,14 @@
 #include <ostream>
 
 #include <boost/config.hpp>
+#include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/mpl/uint.hpp>
+#include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
@@ -44,10 +47,31 @@
 #include <sake/core/functional/operators/shift_right.hpp>
 #include <sake/core/math/inv.hpp>
 #include <sake/core/math/one_fwd.hpp>
+#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/move/forward.hpp>
 
 namespace sake
 {
+
+namespace one_private
+{
+
+template< class T >
+struct as_dispatch_index;
+
+template<
+    class T,
+    unsigned int = as_dispatch_index<T>::value
+>
+struct as_dispatch;
+
+} // namespace one_private
+
+template< class T >
+inline T
+one_t::
+as()
+{ return one_private::as_dispatch<T>::apply(); }
 
 inline std::ostream&
 operator<<(std::ostream& o, sake::one_t)
@@ -154,6 +178,50 @@ inline typename boost::enable_if_c<
 >::type
 operator&(T const x, sake::one_t)
 { return (x & 1) != 0; }
+
+namespace one_private
+{
+
+template< class T >
+struct as_dispatch_index
+{
+    static unsigned int const _ =
+        (1 << 3) * boost_ext::is_convertible< sake::one_t, T >::value
+      | (1 << 2) * boost_ext::is_convertible< boost_ext::mpl::uint<1>, T >::value
+      | (1 << 1) * boost_ext::is_convertible< boost::mpl::int_<1>, T >::value
+      | (1 << 0);
+    static unsigned int const value = sake::static_intlog2_c<_>::value;
+};
+
+template< class T >
+struct as_dispatch<T,3>
+{
+    static T apply()
+    { return T(sake::one); }
+};
+
+template< class T >
+struct as_dispatch<T,2>
+{
+    static T apply()
+    { return T(boost_ext::mpl::uint<1>()); }
+};
+
+template< class T >
+struct as_dispatch<T,1>
+{
+    static T apply()
+    { return T(boost::mpl::int_<1>()); }
+};
+
+template< class T >
+struct as_dispatch<T,0>
+{
+    static T apply()
+    { return T(1); }
+};
+
+} // namespace one_private
 
 } // namespace sake
 
