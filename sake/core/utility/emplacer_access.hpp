@@ -138,7 +138,7 @@ class emplacer_access
         >::type range_c_type;
         construct(p, e, range_c_type());
     }
-    template< class T, class V, class... U, class... N >
+    template< class T, class V, class... U, unsigned int... N >
     static void
     construct(void* const p, sake::emplacer< V ( U... ) > e,
         boost_ext::mpl::vector< boost::mpl::integral_c< unsigned int, N >... >)
@@ -159,7 +159,7 @@ class emplacer_access
         >::type range_c_type;
         return construct(e, range_c_type());
     }
-    template< class T, class V, class... U, class... N >
+    template< class T, class V, class... U, unsigned int... N >
     static T
     construct(sake::emplacer< V ( U... ) > e,
         boost_ext::mpl::vector< boost::mpl::integral_c< unsigned int, N >... >)
