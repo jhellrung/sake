@@ -86,7 +86,7 @@ struct construct
     template< class U >
     T
     operator()(U&& x) const
-    { return T(sake::forward<U>(x)); }
+    { return static_cast<T>(sake::forward<U>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -100,11 +100,11 @@ public:
     template< class U >
     T
     operator()(U& x) const
-    { return T(x); }
+    { return static_cast<T>(x); }
     // rvalues to T
     T
     operator()(rparam_type x) const
-    { return T(x); }
+    { return static_cast<T>(x); }
     // movable rvalues
     T
     operator()(rv_sink_type x) const
@@ -116,7 +116,7 @@ public:
         T
     >::type
     operator()(U const & x) const
-    { return T(x); }
+    { return static_cast<T>(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
