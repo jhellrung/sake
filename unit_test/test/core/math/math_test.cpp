@@ -13,6 +13,7 @@ namespace sake_unit_test
 
 void abs_test(sake::test::environment& env);
 void abs_ip_test(sake::test::environment& env);
+void binom_test(sake::test::environment& env);
 void clamp_test(sake::test::environment& env);
 void clamp_ip_test(sake::test::environment& env);
 void compare_test(sake::test::environment& env);
@@ -28,6 +29,7 @@ void math_test(sake::test::environment& env)
 {
     env("abs", &abs_test);
     env("abs_ip", &abs_ip_test);
+    env("binom", &binom_test);
     env("clamp", &clamp_test);
     env("clamp_ip", &clamp_ip_test);
     env("compare", &compare_test);

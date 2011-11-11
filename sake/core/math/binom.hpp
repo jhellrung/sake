@@ -44,7 +44,7 @@ template<
 >
 struct dispatch;
 
-template< class N, unsigned int K, class I = N >
+template< class N, unsigned int K >
 struct dispatch_c;
 
 } // namespace binom_private
@@ -183,7 +183,11 @@ struct dispatch< N, K, false >
     }
     static type apply(N& n, K& k, N& r)
     {
-        SAKE_ASSERT_RELATION_ALL( (( sake::zero, <=, k )) (( k, <=, n )) );
+        SAKE_ASSERT_RELATION_ALL(
+            (( sake::zero, <=, n ))
+            (( sake::zero, <=, k ))
+            (( k, <=, n ))
+        );
         if((n >> sake::one) < k) {
             K nmk = n - sake::move(k);
             k = sake::move(nmk);
@@ -215,10 +219,16 @@ struct dispatch_c<N,0>
 {
     typedef N type;
     static type apply(N& n)
-    { return sake::one.as<N>(); }
+    {
+        SAKE_ASSERT_RELATION( n, >=, sake::zero );
+        return sake::one.as<N>();
+    }
     template< class I >
-    static type apply(N& /*n*/, I& i)
-    { return N(sake::move(i)); }
+    static type apply(N& n, I& i)
+    {
+        SAKE_ASSERT_RELATION( n, >=, sake::zero );
+        return N(sake::move(i));
+    }
 };
 
 template< class N >
@@ -226,7 +236,10 @@ struct dispatch_c<N,1>
 {
     typedef N type;
     static type apply(N& n)
-    { return sake::move(n); }
+    {
+        SAKE_ASSERT_RELATION( n, >=, sake::zero );
+        return sake::move(n);
+    }
     template< class I >
     static type apply(N& n, I& /*i*/)
     { return apply(n); }
@@ -238,6 +251,7 @@ struct dispatch_c
     typedef typename iterate_c<N,N,K,2>::type type;
     static type apply(N& n)
     {
+        SAKE_ASSERT_RELATION( n, >=, sake::zero );
         n -= boost_ext::mpl::uint< K-1 >();
         N x = n;
         return iterate_c<N,N,K,2>::apply(x, ++n);

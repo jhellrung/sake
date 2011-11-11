@@ -151,6 +151,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\binom_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\clamp_ip_test.cpp"
 			>
 		</File>
