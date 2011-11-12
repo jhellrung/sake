@@ -392,9 +392,9 @@
  ******************************************************************************/
 
 #define SAKE_ASSERT_EXT_RELATION( lhs, op, rhs, failure_macro, data ) \
-    static_cast< void >( lhs op rhs ? 0 : ( failure_macro( \
+    static_cast< void >( (lhs) op (rhs) ? 0 : ( failure_macro( \
         data, \
-        ( BOOST_PP_STRINGIZE( lhs op rhs ) ) \
+        ( BOOST_PP_STRINGIZE( (lhs) op (rhs) ) ) \
         ( BOOST_PP_STRINGIZE( __FILE__ ) ) \
         ( BOOST_CURRENT_FUNCTION ) \
         ( __LINE__ ) \
@@ -424,14 +424,14 @@
         BOOST_PP_TUPLE_ELEM( 3, 2, elem ) \
     )
 #define SAKE_ASSERT_RELATION_ALL_and_subexpression_fail_impl( r, data, i, lhs, op, rhs ) \
-    && ( lhs op rhs ? true : ( BOOST_PP_TUPLE_ELEM( 3, 0, data ) ( \
+    && ( (lhs) op (rhs) ? true : ( BOOST_PP_TUPLE_ELEM( 3, 0, data ) ( \
         BOOST_PP_TUPLE_ELEM( 3, 1, data ), \
         ( BOOST_PP_TUPLE_ELEM( 3, 2, data ) ) \
         ( BOOST_PP_STRINGIZE( __FILE__ ) ) \
         ( BOOST_CURRENT_FUNCTION ) \
         ( __LINE__ ) \
         ( i ) \
-        ( BOOST_PP_STRINGIZE( lhs op rhs ) ) \
+        ( BOOST_PP_STRINGIZE( (lhs) op (rhs) ) ) \
         ( lhs ) \
         ( BOOST_PP_STRINGIZE( op ) ) \
         ( rhs ) \
@@ -469,12 +469,12 @@
  ******************************************************************************/
 
 #define SAKE_ASSERT_andor_subexpression( r, data, i, elem ) \
-    BOOST_PP_EXPR_IF( i, data ) elem
+    BOOST_PP_EXPR_IF( i, data ) (elem)
 #define SAKE_ASSERT_andor_lhs_op_rhs( r, data, i, elem ) \
     BOOST_PP_EXPR_IF( i, data ) \
-    BOOST_PP_TUPLE_ELEM( 3, 0, elem ) \
-    BOOST_PP_TUPLE_ELEM( 3, 1, elem ) \
-    BOOST_PP_TUPLE_ELEM( 3, 2, elem )
+    ((BOOST_PP_TUPLE_ELEM( 3, 0, elem )) \
+      BOOST_PP_TUPLE_ELEM( 3, 1, elem ) \
+     (BOOST_PP_TUPLE_ELEM( 3, 2, elem )))
 #define SAKE_ASSERT_comma_lhs_op_rhs( r, data, elem ) \
     , BOOST_PP_TUPLE_ELEM( 3, 0, elem ) \
     , BOOST_PP_STRINGIZE( BOOST_PP_TUPLE_ELEM( 3, 1, elem ) ) \
