@@ -26,7 +26,7 @@ typedef boost::uint_t<
     sizeof( void* ) * std::numeric_limits< unsigned char >::digits
 >::exact uintptr_t;
 
-BOOST_MPL_ASSERT_RELATION( sizeof( void* ), ==, sizeof( uintptr_t ) );
+BOOST_STATIC_ASSERT((sizeof( void* ) == sizeof( uintptr_t )));
 
 } // namespace sake
 
