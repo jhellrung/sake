@@ -27,7 +27,7 @@
 #include <boost/preprocessor/repetition/deduce_r.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
 
-#include <sake/boost_ext/fusion/sequence/intrinsic/at_c.hpp>
+#include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
 
 #include <sake/core/expr_traits/type_tag_of.hpp>
 #include <sake/core/utility/auto_any.hpp>
