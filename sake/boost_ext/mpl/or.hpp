@@ -20,6 +20,7 @@
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 #ifndef SAKE_BOOST_EXT_MPL_LIMIT_NUMBERED_METAFUNCTION_ARITY
