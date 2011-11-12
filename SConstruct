@@ -142,6 +142,13 @@ if platform == 'posix':
 
 prog_suffix = '_' + plat_arch + '_' + build_config
 
+## Recursively search for cpp files starting from root.
+def rglob(root, pattern):
+    result = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        result.extend(fnmatch.filter(filenames, pattern))
+    return result
+
 ## env.Library + env.Install
 def LibraryInstall(env, target, source):
     lib = env.Library(target, source)
@@ -159,6 +166,6 @@ def find_SConscripts(root):
             print(os.path.join(variant_dir, dirpath, f))
             SConscript(os.path.join(variant_dir, dirpath, f))
 
-Export('env', 'LibraryInstall', 'ProgramInstall')
+Export('env', 'rglob', 'LibraryInstall', 'ProgramInstall')
 find_SConscripts('libs')
 find_SConscripts('unit_test')

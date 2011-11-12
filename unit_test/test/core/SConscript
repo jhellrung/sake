@@ -6,5 +6,5 @@
 ## file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ################################################################################
 
-Import('env', 'LibraryInstall')
-LibraryInstall(env, target='sake_core_test', source=Glob('*.cpp') + Glob('*/*.cpp'))
+Import('env', 'rglob', 'LibraryInstall')
+LibraryInstall(env, target='sake_core_test', source=rglob('.', '*.cpp'))
