@@ -49,8 +49,8 @@ namespace vmem
 inline sake::tuple< void*, std::size_t >
 reserve(std::size_t size)
 {
-    static std::size_t const gm1 = vmem::get_granularity() - 1;
     SAKE_ASSERT_RELATION( size, !=, sake::zero );
+    std::size_t const gm1 = vmem::get_granularity() - 1;
     size = (size + gm1) & ~gm1;
 
 #ifdef BOOST_WINDOWS

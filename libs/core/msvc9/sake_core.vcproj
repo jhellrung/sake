@@ -153,6 +153,42 @@
 				RelativePath="..\utility\onstream.cpp"
 				>
 			</File>
+			<Filter
+				Name="windows"
+				>
+				<File
+					RelativePath="..\utility\windows\get_system_info.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="memory"
+			>
+			<Filter
+				Name="vmem"
+				>
+				<File
+					RelativePath="..\memory\vmem\get_granularity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\memory\vmem\get_page_size.cpp"
+					>
+				</File>
+				<Filter
+					Name="windows"
+					>
+					<File
+						RelativePath="..\memory\vmem\windows\contract_helper.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\memory\vmem\windows\unreserve_helper.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

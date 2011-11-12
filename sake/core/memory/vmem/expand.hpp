@@ -50,7 +50,6 @@ namespace vmem
 inline std::size_t
 expand(void* p, std::size_t const reserved_size, std::size_t new_size)
 {
-    static std::size_t const gm1 = vmem::get_granularity() - 1;
     SAKE_ASSERT_RELATION_ALL(
         (( reinterpret_cast< sake::uintptr_t >(p) % vmem::get_granularity(), ==, sake::zero ))
         (( reserved_size, !=, sake::zero ))
@@ -58,6 +57,7 @@ expand(void* p, std::size_t const reserved_size, std::size_t new_size)
     );
     if(new_size <= reserved_size)
         return reserved_size;
+    std::size_t const gm1 = vmem::get_granularity() - 1;
     new_size = (new_size + gm1) & ~gm1;
 #ifdef BOOST_WINDOWS
     p = static_cast< unsigned char* >(p) + reserved_size;
