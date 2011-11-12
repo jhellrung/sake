@@ -158,7 +158,7 @@ make_tuple(T&&... x)
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     make_tuple
 #define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
-    return typename SAKE_OVERLOAD_RESULT( n, T_tuple ) forward_x_tuple ;
+    return typename SAKE_OVERLOAD_RESULT( n, T_tuple ) ::type forward_x_tuple ;
 #define SAKE_OVERLOAD_FWD_MAX_ARITY SAKE_TUPLE_MAX_SIZE
 #include SAKE_OVERLOAD_GENERATE()
 
