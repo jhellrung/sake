@@ -1,5 +1,5 @@
 /*******************************************************************************
- * libs/core/utility/private/assert.ipp
+ * libs/core/utility/private/assert/define_failure_action_apply.ipp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying

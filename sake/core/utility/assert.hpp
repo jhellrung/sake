@@ -117,14 +117,15 @@
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 #include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/is_void.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 
+#include <sake/core/math/zero_fwd.hpp>
 #include <sake/core/utility/debug.hpp>
 #include <sake/core/utility/ostreamable.hpp>
 
@@ -137,15 +138,15 @@
 
 
 #ifndef SAKE_ASSERT_FAILURE_ACTION
-#if defined( SAKE_ASSERT_ON_FAILURE_ABORT )
+#if   defined( SAKE_ASSERT_ON_FAILURE_ABORT )
 #define SAKE_ASSERT_FAILURE_ACTION ::sake::assert_failure_action::abort
 #elif defined( SAKE_ASSERT_ON_FAILURE_TERMINATE )
 #define SAKE_ASSERT_FAILURE_ACTION ::sake::assert_failure_action::terminate
 #elif defined( SAKE_ASSERT_ON_FAILURE_EXIT )
 #define SAKE_ASSERT_FAILURE_ACTION ::sake::assert_failure_action::exit
-#else
+#else // #if defined( ... )
 #define SAKE_ASSERT_FAILURE_ACTION ::sake::assert_failure_action::abort
-#endif
+#endif // #if defined( ... )
 #endif // #ifndef SAKE_ASSERT_FAILURE_ACTION
 
 
@@ -492,24 +493,14 @@ namespace functional
 namespace print_private
 {
 
-template< class LHS, class RHS >
-struct dispatch_long;
-template< class LHS, class RHS >
-struct dispatch_ulong;
-template< class LHS, class RHS >
-struct dispatch_ldouble;
+template< class T, class Enable = void >
+struct dispatch_special
+{ typedef void type; };
 
 template<
     class LHS, class RHS,
-    bool = dispatch_long< LHS, RHS >::value,
-    bool = dispatch_ulong< LHS, RHS >::value,
-    bool = dispatch_ldouble< LHS, RHS >::value
->
-struct dispatch_builtin_type;
-
-template<
-    class LHS, class RHS,
-    class T = typename dispatch_builtin_type< LHS, RHS >::type
+    bool = boost::is_void< typename dispatch_special< LHS >::type >::value
+        || boost::is_void< typename dispatch_special< RHS >::type >::value
 >
 struct dispatch;
 
@@ -575,70 +566,78 @@ struct print
 namespace print_private
 {
 
-template< class T >
+template< class LHS, class RHS >
 void
-apply_builtin(
+apply_special(
     std::ostream& o,
     char const * const macro, char const * const expression,
     char const * const filename, char const * const function, unsigned int const line_number,
-    T const lhs, char const * op, T const rhs);
+    LHS const lhs, char const * const op, RHS const rhs);
 
-template< class T >
+template< class LHS, class RHS >
 void
-apply_builtin(
+apply_special(
     std::ostream& o,
     char const * const macro, char const * const expression,
     char const * const filename, char const * const function, unsigned int const line_number,
     unsigned int const subexpression_index, char const * const subexpression,
-    T const lhs, char const * const op, T const rhs);
+    LHS const lhs, char const * const op, RHS const rhs);
 
-template< class LHS, class RHS >
+template< class T, std::size_t N >
+struct sizeof_less_equal
+{
+    static bool const value = sizeof( T ) <= N;
+    typedef sizeof_less_equal type;
+};
+
+template< class T >
 struct dispatch_long
-    : boost_ext::mpl::and6<
-          boost::integral_constant< bool, (sizeof( LHS ) <= sizeof( long )) >,
-          boost::integral_constant< bool, (sizeof( RHS ) <= sizeof( long )) >,
-          boost::is_integral< LHS >,
-          boost::is_integral< RHS >,
-          boost::is_signed< LHS >,
-          boost::is_signed< RHS >
+    : boost_ext::mpl::and3<
+          boost::is_integral<T>,
+          boost::is_signed<T>,
+          sizeof_less_equal< T, sizeof( long ) >
       >
 { };
 
-template< class LHS, class RHS >
+template< class T >
 struct dispatch_ulong
-    : boost_ext::mpl::and6<
-          boost::integral_constant< bool, (sizeof( LHS ) <= sizeof( unsigned long )) >,
-          boost::integral_constant< bool, (sizeof( RHS ) <= sizeof( unsigned long )) >,
-          boost::is_integral< LHS >,
-          boost::is_integral< RHS >,
-          boost::mpl::not_< boost::is_signed< LHS > >,
-          boost::mpl::not_< boost::is_signed< RHS > >
+    : boost_ext::mpl::and3<
+          boost::is_integral<T>,
+          boost::mpl::not_< boost::is_signed<T> >,
+          sizeof_less_equal< T, sizeof( unsigned long ) >
       >
 { };
 
-template< class LHS, class RHS >
+template< class T >
 struct dispatch_ldouble
-    : boost_ext::mpl::and2<
-          boost::is_floating_point< LHS >,
-          boost::is_floating_point< RHS >
-      >
+    : boost::is_floating_point<T>
 { };
 
-template< class LHS, class RHS >
-struct dispatch_builtin_type< LHS, RHS, false, false, false >
-{ typedef void type; };
-template< class LHS, class RHS >
-struct dispatch_builtin_type< LHS, RHS, true, false, false >
+template< class T >
+struct dispatch_special< T,
+    typename boost::enable_if_c< dispatch_long<T>::value >::type >
 { typedef long type; };
-template< class LHS, class RHS >
-struct dispatch_builtin_type< LHS, RHS, false, true, false >
+
+template< class T >
+struct dispatch_special< T,
+    typename boost::enable_if_c< dispatch_ulong<T>::value >::type >
 { typedef unsigned long type; };
-template< class LHS, class RHS >
-struct dispatch_builtin_type< LHS, RHS, false, false, true >
+
+template< class T >
+struct dispatch_special< T,
+    typename boost::enable_if_c< dispatch_ldouble<T>::value >::type >
 { typedef long double type; };
 
+template< class T >
+struct dispatch_special< T* >
+{ typedef void const * type; };
+
+template<>
+struct dispatch_special< sake::zero_t >
+{ typedef sake::zero_t type; };
+
 template< class LHS, class RHS >
-struct dispatch< LHS, RHS, void >
+struct dispatch< LHS, RHS, true >
 {
     static void apply(
         std::ostream& o,
@@ -677,8 +676,8 @@ struct dispatch< LHS, RHS, void >
     }
 };
 
-template< class LHS, class RHS, class T >
-struct dispatch
+template< class LHS, class RHS >
+struct dispatch< LHS, RHS, false >
 {
     static void apply(
         std::ostream& o,
@@ -686,9 +685,11 @@ struct dispatch
         char const * const filename, char const * const function, unsigned int const line_number,
         LHS const lhs, char const * const op, RHS const rhs)
     {
-        apply_builtin<T>(o,
+        print_private::apply_special(o,
             macro, expression, filename, function, line_number,
-            lhs, op, rhs
+            static_cast< typename dispatch_special< LHS >::type >(lhs),
+            op,
+            static_cast< typename dispatch_special< RHS >::type >(rhs)
         );
     }
 
@@ -699,10 +700,12 @@ struct dispatch
         unsigned int const subexpression_index, char const * const subexpression,
         LHS const lhs, char const * const op, RHS const rhs)
     {
-        apply_builtin<T>(o,
+        print_private::apply_special(o,
             macro, expression, filename, function, line_number,
             subexpression_index, subexpression,
-            lhs, op, rhs
+            static_cast< typename dispatch_special< LHS >::type >(lhs),
+            op,
+            static_cast< typename dispatch_special< RHS >::type >(rhs)
         );
     }
 };
