@@ -19,6 +19,8 @@
 #include <boost/mpl/integral_c.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_empty.hpp>
+#include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/make_unsigned.hpp>
 
 #include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -104,11 +106,11 @@ struct binom< void >
     template< class N, class K >
     typename result_of::binom<N,K>::value
     operator()(N n, K k) const
-    { return pow_private::dispatch<N,K>::apply(n,k); }
+    { return binom_private::dispatch<N,K>::apply(n,k); }
     template< class N, class K, class I >
     typename result_of::binom<N,K>::value
     operator()(N n, K k, I i) const
-    { return pow_private::dispatch<N,K>::apply(n,k,i); }
+    { return binom_private::dispatch<N,K>::apply(n,k,i); }
 };
 
 template< unsigned int K >
@@ -166,8 +168,86 @@ binom_c(N n, I i)
 namespace binom_private
 {
 
+// The whole purpose of dispatch_0 is to intelligently cast arguments to
+// unsigned integral types to avoid signed/unsigned comparison warnings.
+template<
+    class N, class K,
+    bool = boost::is_signed<N>::value,
+    bool = boost::is_signed<K>::value
+>
+struct dispatch_0;
+
 template< class N, class K >
-struct dispatch< N, K, false >
+struct dispatch_0< N, K, true, true >
+{
+    typedef N type;
+    typedef typename boost::make_unsigned<N>::type uN;
+    typedef typename boost::make_unsigned<K>::type uK;
+    static type apply(N const n, K const k)
+    {
+        SAKE_ASSERT_RELATION_ALL(
+            (( n, >=, sake::zero ))
+            (( k, >=, sake::zero ))
+        );
+        uN un = static_cast< uN >(n);
+        uK uk = static_cast< uK >(k);
+        return static_cast< type >(dispatch_0<uN,uK>::apply(un, uk));
+    }
+    template< class I >
+    static type apply(N const n, K const k, I& i)
+    {
+        SAKE_ASSERT_RELATION_ALL(
+            (( n, >=, sake::zero ))
+            (( k, >=, sake::zero ))
+        );
+        uN un = static_cast< uN >(n);
+        uK uk = static_cast< uK >(k);
+        return static_cast< type >(dispatch_0<uN,uK>::apply(un, uk, i));
+    }
+};
+
+template< class N, class K >
+struct dispatch_0< N, K, true, false >
+{
+    typedef N type;
+    typedef typename boost::make_unsigned<N>::type uN;
+    static type apply(N const n, K& k)
+    {
+        SAKE_ASSERT_RELATION( n, >=, sake::zero );
+        uN un = static_cast< uN >(n);
+        return static_cast< type >(dispatch_0<uN,K>::apply(un, k));
+    }
+    template< class I >
+    static type apply(N const n, K& k, I& i)
+    {
+        SAKE_ASSERT_RELATION( n, >=, sake::zero );
+        uN un = static_cast< uN >(n);
+        return static_cast< type >(dispatch_0<uN,K>::apply(un, k, i));
+    }
+};
+
+template< class N, class K >
+struct dispatch_0< N, K, false, true >
+{
+    typedef N type;
+    typedef typename boost::make_unsigned<K>::type uK;
+    static type apply(N& n, K const k)
+    {
+        SAKE_ASSERT_RELATION( k, >=, sake::zero );
+        uK uk = static_cast< uK >(k);
+        return dispatch_0<N,uK>::apply(n, uk);
+    }
+    template< class I >
+    static type apply(N& n, K const k, I& i)
+    {
+        SAKE_ASSERT_RELATION( k, >=, sake::zero );
+        uK uk = static_cast< uK >(k);
+        return dispatch_0<N,uK>::apply(n, uk, i);
+    }
+};
+
+template< class N, class K >
+struct dispatch_0< N, K, false, false >
 {
     typedef N type;
     static type apply(N& n, K& k)
@@ -184,8 +264,8 @@ struct dispatch< N, K, false >
     static type apply(N& n, K& k, N& r)
     {
         SAKE_ASSERT_RELATION_ALL(
-            (( sake::zero, <=, n ))
-            (( sake::zero, <=, k ))
+            (( n, >=, sake::zero ))
+            (( k, >=, sake::zero ))
             (( k, <=, n ))
         );
         if((n >> sake::one) < k) {
@@ -198,6 +278,11 @@ struct dispatch< N, K, false >
         return sake::move(r);
     }
 };
+
+template< class N, class K >
+struct dispatch< N, K, false >
+    : dispatch_0<N,K>
+{ };
 
 template< class N, class K >
 struct dispatch< N, K, true >
