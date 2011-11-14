@@ -46,9 +46,16 @@ inline sake::type_tag< T const & >
 deduce(T const &, U&)
 { return sake::type_tag< T const & >(); }
 
+struct rvalue_detector
+{
+    template< class T >
+    rvalue_detector(T const &)
+    { }
+};
+
 template< class T >
 inline sake::type_tag<T>
-deduce(T const &, ...)
+deduce(T const &, rvalue_detector)
 { return sake::type_tag<T>(); }
 
 namespace
