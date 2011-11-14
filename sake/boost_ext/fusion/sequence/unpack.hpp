@@ -40,14 +40,16 @@
 #define SAKE_BOOST_EXT_FUSION_UNPACK_R( r, vars, expr ) \
     SAKE_BOOST_EXT_FUSION_UNPACK_impl( \
         r, vars, expr, \
-        SAKE_UNIQUE_NAME( _sake_boost_ext_fusion_unpack_ ) )
+        SAKE_UNIQUE_NAME( _sake_boost_ext_fusion_unpack_ ) \
+    )
 
 #define SAKE_BOOST_EXT_FUSION_UNPACK_impl( r, vars, expr, name ) \
     ::sake::auto_any_t name = ::sake::auto_capture( SAKE_EXPR_TYPE_TAG_OF( expr ), expr ); \
     BOOST_PP_SEQ_FOR_EACH_I_R( r, \
         SAKE_BOOST_EXT_FUSION_UNPACK_init_var, \
         ( SAKE_EXPR_TYPE_TAG_OF( expr ), name ), \
-        vars )
+        vars \
+    )
 
 #define SAKE_BOOST_EXT_FUSION_UNPACK_init_var( r, data, i, elem ) \
     elem = ::sake::boost_ext::fusion::unpack_private::at_c< i > data ;
