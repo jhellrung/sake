@@ -191,7 +191,7 @@
 #else // #ifdef SAKE_DEBUG
 
 #define SAKE_ASSERT( expression )            static_cast< void >(sizeof( expression ? 0 : 0 ))
-#define SAKE_ASSERT_RELATION( lhs, op, rhs ) static_cast< void >(sizeof( lhs op rhs ? 0 : 0 ))
+#define SAKE_ASSERT_RELATION( lhs, op, rhs ) static_cast< void >(sizeof( (lhs) op (rhs) ? 0 : 0 ))
 
 #endif // #ifdef SAKE_DEBUG
 
