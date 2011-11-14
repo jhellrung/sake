@@ -140,7 +140,7 @@ struct sprintf_dispatch< long >
     {
         int const n = std::sprintf(buffer, "%li", x);
         static_cast< void >(n);
-        assert(0 < n && n <= max_length);
+        assert(0 < n && n <= static_cast< int >(max_length));
     }
 };
 
@@ -152,7 +152,7 @@ struct sprintf_dispatch< unsigned long >
     {
         int const n = std::sprintf(buffer, "%lu", x);
         static_cast< void >(n);
-        assert(0 < n && n <= max_length);
+        assert(0 < n && n <= static_cast< int >(max_length));
     }
 };
 
@@ -165,7 +165,7 @@ struct sprintf_dispatch< long double >
     {
         int const n = std::sprintf(buffer, "%Lf", x);
         static_cast< void >(n);
-        assert(0 < n && n <= max_length);
+        assert(0 < n && n <= static_cast< int >(max_length));
     }
 };
 
@@ -179,7 +179,7 @@ struct sprintf_dispatch< void const * >
     {
         int const n = std::sprintf(buffer, "%p", x);
         static_cast< void >(n);
-        assert(0 < n && n <= max_length);
+        assert(0 < n && n <= static_cast< int >(max_length));
     }
 };
 
