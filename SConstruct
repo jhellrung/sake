@@ -145,8 +145,12 @@ prog_suffix = '_' + plat_arch + '_' + build_config
 ## Recursively search for cpp files starting from root.
 def rglob(root, pattern):
     result = []
-    for dirpath, dirnames, filenames in os.walk(root):
-        result.extend(fnmatch.filter(filenames, pattern))
+    ## Somewhat complicated by the use of variant builds...
+    scons_root = Dir('#').abspath
+    abs_root = os.path.join(scons_root, Dir(root).srcnode().path)
+    for dirpath, dirnames, filenames in os.walk(abs_root):
+        result.extend(os.path.join(os.path.relpath(dirpath, abs_root), f)
+            for f in fnmatch.filter(filenames, pattern))
     return result
 
 ## env.Library + env.Install
