@@ -59,7 +59,7 @@ decommit(void* const p, std::size_t const size)
 #ifdef BOOST_WINDOWS
     SAKE_REQUIRE_RELATION( VirtualFree(p, size, MEM_DECOMMIT), !=, sake::zero );
 #else // #ifdef BOOST_WINDOWS
-    SAKE_REQUIRE_RELATION( madvise_(p, size), ==, sake::zero )
+    SAKE_REQUIRE_RELATION( madvise_(p, size), ==, sake::zero );
 #endif // #ifdef BOOST_WINDOWS
 }
 
