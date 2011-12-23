@@ -23,10 +23,10 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/sizeof.hpp>
 #include <boost/type_traits/alignment_of.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/boost_ext/mpl/gcd_lcm.hpp>
-
-#include <sake/core/utility/aligned_storage.hpp>
+#include <sake/boost_ext/mpl/lcm.hpp>
+#include <sake/boost_ext/type_traits/aligned_storage.hpp>
 
 namespace sake
 {
@@ -36,19 +36,19 @@ struct union_storage
 {
     BOOST_MPL_ASSERT((boost::mpl::is_sequence< Sequence >));
 
-    static const std::size_t size = boost::mpl::fold<
+    static std::size_t const size = boost::mpl::fold<
         Sequence,
         boost::integral_constant< std::size_t, 0 >,
         boost::mpl::max< boost::mpl::_1, boost::mpl::sizeof_< boost::mpl::_2 > >
     >::type::value;
 
-    static const std::size_t alignment = boost::mpl::fold<
+    static std::size_t const align = boost::mpl::fold<
         Sequence,
         boost::integral_constant< std::size_t, 1 >,
         boost_ext::mpl::lcm< boost::mpl::_1, boost::alignment_of< boost::mpl::_2 > >
     >::type::value;
 
-    typedef typename sake::aligned_storage< size, alignment >::type type;
+    typedef typename boost_ext::aligned_storage< size, align >::type type;
 };
 
 } // namespace sake

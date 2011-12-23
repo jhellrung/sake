@@ -30,7 +30,7 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
 #include <sake/core/utility/implicitly_defined/mem_fun.hpp>
-#include <sake/core/utility/using_typename.hpp>
+#include <sake/core/utility/using_typedef.hpp>
 #include <sake/core/utility/void.hpp>
 
 namespace sake
@@ -59,7 +59,7 @@ class nullary_base
     typedef nullary_base_private::impl< Derived, Params > impl_;
     SAKE_BASIC_MOVABLE_COPYABLE( nullary_base )
 protected:
-    SAKE_USING_TYPENAME( typename impl_, chained_base_type );
+    SAKE_USING_TYPEDEF( typename impl_, chained_base_type );
     SAKE_IMPLICITLY_DEFINED_MEM_FUN(
         nullary_base,
         ( default_ctor ) ( move_ctor ) ( move_assign ),

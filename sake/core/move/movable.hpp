@@ -110,7 +110,7 @@
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/non_copyable.hpp>
-#include <sake/core/utility/using_typename.hpp>
+#include <sake/core/utility/using_typedef.hpp>
 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE( T, U_seq ) \
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE_R( BOOST_PP_DEDUCE_R(), T, U_seq )
@@ -184,7 +184,7 @@ struct non_movable_traits
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( typename_, T, c ) \
     private: \
     typedef ::sake::movable_private::traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPENAME( typename_() _sake_movable_traits, this_rvalue_param_type ); \
+    SAKE_USING_TYPEDEF( typename_() _sake_movable_traits, this_rvalue_param_type ); \
     typedef T const & this_copy_assign_param_type; \
     public:
 
@@ -200,7 +200,7 @@ struct non_movable_traits
 #define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( typename_, T, c ) \
     private: \
     typedef ::sake::movable_private::traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPENAME( typename_() _sake_movable_traits, this_rvalue_param_type ); \
+    SAKE_USING_TYPEDEF( typename_() _sake_movable_traits, this_rvalue_param_type ); \
     public: \
     T& operator=(T const & other) \
     { return copy_assign_impl(other); }
@@ -279,7 +279,7 @@ struct traits< T, true >
 
 #define SAKE_MOVABLE_COPYABLE_IF_C_common( typename_, T, c ) \
     typedef typename_() _sake_movable_traits::rv_conv_type _sake_rv_conv_type; \
-    SAKE_USING_TYPENAME( typename_() _sake_movable_traits, this_rvalue_param_type ); \
+    SAKE_USING_TYPEDEF( typename_() _sake_movable_traits, this_rvalue_param_type ); \
     public: \
     operator _sake_rv_conv_type& () \
     { return *static_cast< _sake_rv_conv_type* >(this); } \
@@ -301,7 +301,7 @@ struct traits< T, true >
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( typename_, T, c ) \
     private: \
     typedef ::sake::movable_private::optimal_traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPENAME( typename_() _sake_movable_traits, this_copy_assign_param_type ); \
+    SAKE_USING_TYPEDEF( typename_() _sake_movable_traits, this_copy_assign_param_type ); \
     typedef typename_() _sake_movable_traits::enable_optimal_move_assign_param_type \
         _sake_enable_move_assign_param_type; \
     SAKE_MOVABLE_COPYABLE_IF_C_common( typename_, T, c ) \

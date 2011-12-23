@@ -8,8 +8,14 @@
  * struct rv_sink<
  *     Visitor,
  *     Result = default_tag,
- *     Pred = boost::mpl::always< boost::true_type >
+ *     Pred = boost::mpl::always< boost::true_type >,
+ *     Enable = true
  * >
+ *
+ * struct rv_sink_traits::rv_param<T>
+ * struct rv_sink_visitors::init<T>
+ * struct rv_sink_visitors::operator_assign<T>
+ * struct rv_sink_predicates::not_is_same_as<T>
  *
  * rv_sink, when used as a function parameter, allows capturing of arbitrary
  * rvalues of types with rvalue reference emulation.
@@ -56,15 +62,27 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <sake/boost_ext/mpl/result_type.hpp>
 
+#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/move.hpp>
+#include <sake/core/move/rv.hpp>
 #include <sake/core/introspection/has_type_result_type.hpp>
 #include <sake/core/utility/default_tag.hpp>
 
 namespace sake
 {
+
+/*******************************************************************************
+ * struct rv_sink<
+ *     Visitor,
+ *     Result = default_tag,
+ *     Pred = boost::mpl::always< boost::true_type >,
+ *     Enable = true
+ * >
+ ******************************************************************************/
 
 template<
     class Visitor,
@@ -102,6 +120,98 @@ private:
     result_type (&m_apply)(Visitor, void*);
     void* const mp;
 };
+
+/*******************************************************************************
+ * struct rv_sink_traits::rv_param<T>
+ ******************************************************************************/
+
+namespace rv_sink_traits
+{
+
+namespace private_
+{
+
+template< class T >
+struct disabler;
+
+template< class T, bool = sake::is_movable<T>::value >
+struct rv_param_dispatch;
+template< class T >
+struct rv_param_dispatch< T, true >
+{ typedef SAKE_RV_REF( T ) type; };
+template< class T >
+struct rv_param_dispatch< T, false >
+{ typedef disabler<T> type; };
+
+} // namespace private_
+
+template< class T >
+struct rv_param
+    : private_::rv_param_dispatch<T>
+{ };
+
+} // namespace rv_sink_traits
+
+/*******************************************************************************
+ * struct rv_sink_visitors::init<T>
+ * struct rv_sink_visitors::operator_assign<T>
+ ******************************************************************************/
+
+namespace rv_sink_visitors
+{
+
+template< class T >
+struct init
+{
+    explicit init(T& this_) : m_this(this_) { }
+    typedef void result_type;
+    template< class U >
+    void operator()(U& x) const
+    { m_this.init(x); }
+private:
+    T& m_this;
+};
+
+template< class T >
+struct operator_assign
+{
+    explicit operator_assign(T& this_) : m_this(this_) { }
+    typedef T& result_type;
+    template< class U >
+    result_type operator()(U& x) const
+    { return m_this = x; }
+private:
+    T& m_this;
+};
+
+} // namespace rv_sink_visitors
+
+/*******************************************************************************
+ * struct rv_sink_predicates::not_is_same_as<T>
+ ******************************************************************************/
+
+namespace rv_sink_predicates
+{
+
+template< class T >
+struct not_is_same_as
+{
+    struct type
+    {
+        template< class U >
+        struct apply
+        {
+            static bool const value = !boost::is_same<U,T>::value;
+            typedef apply type;
+        };
+    };
+    template< class U >
+    struct apply
+        : type::template apply<U>
+    { };
+};
+
+} // namespace rv_sink_predicates
 
 namespace rv_sink_private
 {

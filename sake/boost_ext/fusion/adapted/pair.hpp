@@ -11,7 +11,7 @@
 
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>
 
-#include <sake/core/container/pair_fwd.hpp>
+#include <sake/core/data_structures/pair_fwd.hpp>
 
 BOOST_FUSION_ADAPT_TPL_STRUCT(
     ( T0 ) ( T1 ),

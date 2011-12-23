@@ -194,7 +194,7 @@ template<
     class T, class Result, class ResultPred, class LiteralResult,
     bool = ::sake::boost_ext::mpl::and2<
                ::sake::boost_ext::is_convertible< LiteralResult, Result >,
-               ::boost::mpl::apply1< ResultPred, Result >
+               ::boost::mpl::apply1< ResultPred, LiteralResult >
            >::value
 >
 struct has_nullary;
@@ -258,15 +258,19 @@ struct has_nullary< T, Result, ResultPred, LiteralResult, false >
 
 template< class T, class Result, class ResultPred, class LiteralResult >
 struct has_nullary< T, Result, ResultPred, LiteralResult, true >
-    : ::sake::boost_ext::mpl::or2<
+    : ::sake::boost_ext::mpl::or3<
           has_nullary_helper< T, LiteralResult (T::*)( ) >,
-          has_nullary_helper< T const, LiteralResult (T::*)( ) const >
+          has_nullary_helper< T const, LiteralResult (T::*)( ) const >,
+          has_nullary_helper< T, LiteralResult (*)( ) >
       >
 { };
 
 template< class T, class Result, class ResultPred, class LiteralResult >
 struct has_nullary< T const, Result, ResultPred, LiteralResult, true >
-    : has_nullary_helper< T const, LiteralResult (T::*)( ) const >
+    : ::sake::boost_ext::mpl::or2<
+          has_nullary_helper< T const, LiteralResult (T::*)( ) const >,
+          has_nullary_helper< T, LiteralResult (*)( ) >
+      >
 { };
 
 #endif // #if min_arity == 0

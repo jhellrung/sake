@@ -52,7 +52,7 @@
 #include <sake/core/utility/non_copy_assignable.hpp>
 #include <sake/core/utility/nullptr.hpp>
 #include <sake/core/utility/overload.hpp>
-#include <sake/core/utility/using_typename.hpp>
+#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
 {

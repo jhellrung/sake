@@ -28,7 +28,7 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/implicitly_defined/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
-#include <sake/core/utility/using_typename.hpp>
+#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
 {
@@ -110,7 +110,7 @@ public:
 #endif // #if !defined( ... ) && !defined( ... )
 
 protected:
-    SAKE_USING_TYPENAME( typename nullary_base_, chained_base_type );
+    SAKE_USING_TYPEDEF( typename nullary_base_, chained_base_type );
     using nullary_base_::derived;
 
     SAKE_IMPLICITLY_DEFINED_MEM_FUN(

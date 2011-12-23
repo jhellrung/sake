@@ -17,6 +17,7 @@
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
@@ -91,9 +92,7 @@ struct construct
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    typedef typename sake::call_traits<
-        typename boost_ext::add_rvalue_reference<T>::type
-    >::param_type rparam_type;
+    typedef typename rv_sink_traits::rv_param<T>::type rv_param_type;
     typedef typename construct_private::rv_sink<T>::type rv_sink_type;
 public:
     // lvalues
@@ -103,7 +102,7 @@ public:
     { return static_cast<T>(x); }
     // rvalues to T
     T
-    operator()(rparam_type x) const
+    operator()(rv_param_type x) const
     { return static_cast<T>(x); }
     // movable rvalues
     T
@@ -178,8 +177,7 @@ construct(U& x)
 
 template< class T >
 inline T
-construct(typename sake::call_traits<
-    typename boost_ext::add_rvalue_reference<T>::type >::param_type x)
+construct(typename rv_sink_traits::rv_param<T>::type x)
 { return functional::construct<T>()(x); }
 
 template< class T >
@@ -219,23 +217,24 @@ namespace construct_private
 template< class T >
 struct rv_sink
 {
-    template< class U >
-    struct apply
-    {
-        static bool const value = !boost_ext::is_same_sans_qualifiers<T,U>::value;
-        typedef apply type;
-    };
-    typedef sake::rv_sink< functional::construct<T>, T, rv_sink > type;
+    typedef sake::rv_sink<
+        construct, // Visitor
+        T, // Result
+        typename rv_sink_predicates::not_is_same_as<T>::type // Pred
+    > type;
 };
 
 template< class T, class U >
 struct disable_cref_cond
-{
-    static bool const value =
-        boost_ext::is_same_sans_qualifiers<U,T>::value
-     || boost_ext::is_convertible< U&, typename rv_sink<T>::type >::value;
-    typedef disable_cref_cond type;
-};
+    : boost_ext::mpl::or2<
+          boost_ext::is_convertible<
+              U&, typename rv_sink_traits::rv_param<T>::type
+          >,
+          boost_ext::is_convertible<
+              U&, typename construct_private::rv_sink<T>::type
+          >
+      >
+{ };
 
 } // namespace construct_private
 
