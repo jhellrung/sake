@@ -1,0 +1,91 @@
+/*******************************************************************************
+ * docs/building_boost_for_windows.txt
+ *
+ * Copyright 2012, Jeffrey Hellrung.
+ * Distributed under the Boost Software License, Version 1.0.  (See accompanying
+ * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ ******************************************************************************/
+
+================================
+Building Boost for Windows
+================================
+
+Note:  It is assumed you know basic system navigation, e.g., creating/changing
+environment variables and running commands from a console window.
+
+Required libraries to download:
+- Boost (http://www.boost.org) [1.49.0+]
+
+Optional libraries to download:
+- zlib (http://www.zlib.net/) [1.2.5+]
+- bzip2 (http://www.bzip.org) [1.0.6+]
+
+Optional additional reading:
+- http://www.boost.org/more/getting_started/windows.html
+- http://www.boost.org/doc/tools/jam/jam/usage.html
+- http://www.boost.org/libs/iostreams/doc/installation.html
+- http://www.boost.org/libs/python/doc/building.html
+
+Unpack Boost into some directory (e.g., C:\boost_1_xy_z"), which should contain,
+e.g., "index.html" and the "boost" folder containing all the headers.  It is
+recommended to set the environment variable BOOST_ROOT to "[...]/boost_1_xy_z",
+and reference %BOOST_ROOT% in all your projects, so that using a newer version
+of Boost in your projects is just a matter of changing the BOOST_ROOT
+environment variable.
+
+As described in Boost's "Getting Started" guide for Windows, the bootstrap batch
+file simply builds b2 (formally bjam) via MSVC, after which you can invoke b2 to
+build the Boost libraries.  If this doesn't work, or if you're not using MSVC,
+you must either acquire a prebuilt b2 executable, or build b2 yourself, as
+described in Boost's "Getting Started" guide for Windows.
+
+Once you have b2, you have to make some decisions on whether and how you want
+to build some of the Boost libraries.
+- Boost.Python: You're on your own, at least until it works with Python 3.
+- Boost.MPI: I'm assuming you need an MPI installation, but I haven't tried to
+get this working yet.
+- Boost.Iostreams can be built with or without zlib and/or with or without
+bzip2.  We'll assume you want to build Boost.Iostreams with both zlib and bzip2,
+since it isn't very difficult.  Download the full zlib and bzip2 sources and
+unpack them into some appropriate directories, e.g., "C:\zlib-x.y.z" and
+"C:\bzip2-x.y.z".  If you prefer, you can remove these directories once
+Boost.Iostreams is built; however, you'll need them again if you decide to build
+Boost.Iostreams again.
+
+Now invoke b2 as follows (assuming without Boost.MPI and Boost.Python; with
+Boost.Iostreams):
+
+b2 ^
+    --stagedir=. ^
+    --build-type=complete ^
+    --build-dir=./build ^
+    --without-mpi ^
+    --without-python ^
+    toolset=msvc ^
+    -sBZIP2_SOURCE=[...]\bzip2-x.y.z ^
+    -sZLIB_SOURCE=[...]\zlib-x.y.z ^
+    stage
+
+Information on the various options can be found by invoking "b2 --help".  In
+particular, the last parameter to b2 is either "install", "stage", or (empty).
+"install" copies all the binaries and headers into a given directory, which is
+*not* what we want.  "stage" will copy just the compiled library files into a
+given directory, which turns out to be precisely what we want.  (empty) would
+leave all the compiled library files in an extremely granular directory
+structure within the build directory.
+
+Once all the Boost libraries have finished building, you may remove the build
+directory.
+
+Your projects should now just:
+- Add %BOOST_ROOT% to the compiler's include path.
+- Add %BOOST_ROOT%/lib to the linker's library path (if you need to link to a
+  compiled Boost library).
+Specifically, for Microsoft Visual Studio projects, you should add
+"$(BOOST_ROOT)" to Project Properties-> Configuration Properties -> C/C++ ->
+General -> Additional Include Directories.  If you need to link to a compiled
+Boost library, add $(BOOST_ROOT)/lib to Project Properties -> Configuration
+Properties -> Linker -> General -> Additional Library Directories.  Boost has
+special compiler hooks to know which static library to link to based on your
+project's compilation settings (which is the reason for the name-mangling), so
+it is designed to "just work".
