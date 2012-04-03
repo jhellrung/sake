@@ -60,7 +60,7 @@ namespace sake
 
 /*******************************************************************************
  * struct pair< T0, T1 >
- ******************************************************************************/\
+ ******************************************************************************/
 
 namespace pair_adl
 {
@@ -219,7 +219,7 @@ public:
     }
 };
 
-} // namespace tuple_adl
+} // namespace pair_adl
 
 /*******************************************************************************
  * make_pair(T0&& x0, T1&& x1) -> result_of::make_pair< T0, T1 >::type
@@ -251,7 +251,7 @@ make_pair(SAKE_FWD_REF( T0 ) x0, SAKE_FWD_REF( T1 ) x1)
     return result_type(sake::forward< T0 >(x0), sake::forward< T1 >(x1));
 }
 
-namespace tuple_adl
+namespace pair_adl
 {
 
 /*******************************************************************************
@@ -261,12 +261,12 @@ namespace tuple_adl
 
 template< class T0, class T1 >
 inline void
-swap(pair< T0, T1 >& x, pair< T0, T1 >& y)
+swap(sake::pair< T0, T1 >& x, sake::pair< T0, T1 >& y)
 { x.swap(y); }
 
 template< class T0, class T1 >
 inline std::size_t
-hash_value(pair< T0, T1 > const & x)
+hash_value(sake::pair< T0, T1 > const & x)
 { return x.hash_value(); }
 
 /*******************************************************************************
@@ -347,7 +347,7 @@ compare(sake::pair< T0, T1 > const & x, sake::pair< U0, U1 > const & y)
     return s0 == sake::zero ? sake::compare(x.second, y.second) : s0;
 }
 
-} // namespace tuple_adl
+} // namespace pair_adl
 
 } // namespace sake
 
