@@ -71,6 +71,6 @@
         ) ( 2, 1, elem ) \
     )
 #define SAKE_IMPLICITLY_DEFINED_init_member_impl( member ) \
-    member(::sake::move(member))
+    member(::sake::move(other.member))
 
 #endif // #ifndef SAKE_CORE_UTILITY_IMPLICITLY_DEFINED_PRIVATE_CTOR_INIT_HPP
