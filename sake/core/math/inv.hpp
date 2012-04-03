@@ -191,7 +191,7 @@ template< class T >
 struct adl< T, void >
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
-        inv(::sake::declval<T>()),
+        typename inv(::sake::declval<T>()),
         typename ::sake::result_of::default_impl::inv_result_types<
             typename ::sake::boost_ext::remove_qualifiers<T>::type
         >::type,
@@ -250,7 +250,7 @@ template< class T >
 struct dispatch< T, void, 6 >
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
-        sake::declval<T>().inv(),
+        typename sake::declval<T>().inv(),
         typename result_of::default_impl::inv_result_types<
             typename boost_ext::remove_qualifiers<T>::type
         >::type,

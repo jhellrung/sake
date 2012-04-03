@@ -28,7 +28,7 @@ template< class T, class Sequence >
 struct best_conversion
 {
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Sequence >::value));
-    SAKE_EXPR_BEST_CONVERSION_TYPEDEF( sake::declval<T>(), Sequence, type );
+    SAKE_EXPR_BEST_CONVERSION_TYPEDEF( typename sake::declval<T>(), Sequence, type );
 };
 
 } // namespace sake

@@ -199,7 +199,7 @@ template< class T >
 struct adl< T, void >
 {
     SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
-        intlog2_nothrow(::sake::declcref<T>()),
+        typename intlog2_nothrow(::sake::declcref<T>()),
         ::sake::result_of::default_impl::intlog2_result_types,
         type
     );
@@ -494,7 +494,7 @@ template< class T >
 struct dispatch< T, void, 2 >
 {
     SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
-        sake::declcref<T>().intlog2_nothrow(),
+        typename sake::declcref<T>().intlog2_nothrow(),
         result_of::default_impl::intlog2_result_types,
         type
     );

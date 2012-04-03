@@ -169,7 +169,7 @@ template< class T >
 struct adl< T, void >
 {
     SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
-        sign(::sake::declcref<T>()),
+        typename sign(::sake::declcref<T>()),
         ::sake::result_of::default_impl::sign_result_types,
         nominal_type
     );
@@ -208,7 +208,7 @@ template< class T >
 struct dispatch< T, void, 2 >
 {
     SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
-        sake::declcref<T>().sign(),
+        typename sake::declcref<T>().sign(),
         result_of::default_impl::sign_result_types,
         nominal_type
     );

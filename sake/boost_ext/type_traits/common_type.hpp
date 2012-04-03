@@ -158,10 +158,10 @@ template< class T0, class T1, class Candidates >
 struct deduce_from_candidates
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
-        sake::declval< bool >() ? sake::declval< T0 >() : sake::declval< T1 >(),
+        typename sake::declval< bool >() ? sake::declval< T0 >() : sake::declval< T1 >(),
         Candidates,
         type
-    )
+    );
 private:
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
         typename SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, type > )),

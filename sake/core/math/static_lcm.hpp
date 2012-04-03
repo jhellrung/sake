@@ -21,9 +21,9 @@ namespace sake
 template< int N0, int N1 >
 struct static_lcm_c
 {
-    static const int N0_ = sake::static_abs_c< N0 >::value;
-    static const int N1_ = sake::static_abs_c< N1 >::value;
-    static const int value = (N0_ / sake::static_gcd_c< N0_, N1_ >::value) * N1_;
+    static int const N0_ = sake::static_abs_c< N0 >::value;
+    static int const N1_ = sake::static_abs_c< N1 >::value;
+    static int const value = (N0_ / sake::static_gcd_c< N0_, N1_ >::value) * N1_;
     typedef static_lcm_c type;
 };
 

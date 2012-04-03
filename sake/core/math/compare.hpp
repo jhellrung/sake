@@ -179,7 +179,7 @@ template< class T0, class T1 >
 struct adl< T0, T1, void >
 {
     SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
-        compare(::sake::declcref< T0 >(), ::sake::declcref< T1 >()),
+        typename compare(::sake::declcref< T0 >(), ::sake::declcref< T1 >()),
         ::sake::result_of::default_impl::compare_result_types,
         nominal_type
     );
@@ -220,7 +220,7 @@ template< class T0, class T1 >
 struct dispatch< T0, T1, void, 4 >
 {
     SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
-        sake::declcref< T0 >().compare(sake::declcref< T1 >()),
+        typename sake::declcref< T0 >().compare(sake::declcref< T1 >()),
         result_of::default_impl::compare_result_types,
         nominal_type
     );

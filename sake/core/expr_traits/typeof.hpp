@@ -24,7 +24,7 @@
 #include <boost/preprocessor/cat.hpp>
 
 #include <sake/boost_ext/mpl/at_c.hpp>
-#include <sake/boost_ext/preprocessor/keyword/access.hpp>
+#include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
 #include <sake/core/expr_traits/typeof_index.hpp>
 
@@ -41,13 +41,16 @@
     >
 
 #define SAKE_EXPR_TYPEOF_TYPEDEF( expression, candidate_types, type_ ) \
-    static const int BOOST_PP_CAT( _sake_expr_typeof_index_for_, type_ ) = \
-        SAKE_EXPR_TYPEOF_INDEX( expression, candidate_types ); \
-    SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_ACCESS_COLON( type_ ) \
-    typedef typename ::sake::boost_ext::mpl::at_c< \
-        candidate_types, \
-        BOOST_PP_CAT( _sake_expr_typeof_index_for_, type_ ), \
-        void \
-    >::type type_;
+    static int const BOOST_PP_CAT( _sake_expr_typeof_index_for_, type_ ) = \
+        SAKE_EXPR_TYPEOF_INDEX( \
+            SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( expression ), \
+            candidate_types \
+        ); \
+    typedef SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( expression ) \
+        ::sake::boost_ext::mpl::at_c< \
+            candidate_types, \
+            BOOST_PP_CAT( _sake_expr_typeof_index_for_, type_ ), \
+            void \
+        >::type type_
 
 #endif // #ifndef SAKE_CORE_EXPR_TRAITS_TYPEOF_HPP

@@ -92,7 +92,7 @@ template< class T0, class T1 >
 struct SAKE_OPERATORS_NAME
 {
     SAKE_EXPR_BEST_CONVERSION_TYPEDEF(
-        sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >(),
+        typename sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >(),
         default_impl::logical_result_types,
         type
     );
