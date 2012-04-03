@@ -1,0 +1,36 @@
+sake/core/math/abs_fwd.hpp
+    sake::result_of::extension::abs< T, Enable = void >
+sake/core/math/compare_fwd.hpp
+    sake::result_of::extension::compare< T0, T1, Enable = void >
+sake/core/math/integer_difference_fwd.hpp
+    sake::result_of::extension::integer_difference< T, Enable = void >
+sake/core/math/intlog2_fwd.hpp
+    sake::result_of::extension::intlog2< T, Enable = void >
+sake/core/math/inv_fwd.hpp
+    sake::result_of::extension::inv< T, Enable = void >
+sake/core/math/sign_fwd.hpp
+    sake::result_of::extension::sign< T, Enable = void >
+sake/core/math/sqr_fwd.hpp
+    sake::result_of::extension::sqr< T, Enable = void >
+
+sake/core/memory/alloc/rebind_fwd.hpp
+    sake::alloc::extension::rebind< A, T, Enable = void >
+sake/core/memory/alloc/traits_fwd.hpp
+    sake::alloc::extension::traits< A, Enable = void >
+
+sake/core/ref/fwd.hpp
+    sake::extension::unwrap_reference< T, Enable = void >
+    sake::extension::is_wrapped_parameter< T, Enable = void >
+
+sake/core/utility/has_default_constructor_fwd.hpp
+    sake::extension::has_default_constructor< T, Enable = void >
+sake/core/utility/has_private_operator_assign_fwd.hpp
+    sake::extension::has_private_operator_assign< T, Enable = void >
+sake/core/utility/is_by_value_optimal_fwd.hpp
+    sake::extension::is_by_value_optimal< T, Enable = void >
+sake/core/utility/is_convertible_wnrbt_fwd.hpp
+    sake::extension::is_convertible_wnrbt< From, To, Enable = void >
+sake/core/utility/pointee_fwd.hpp
+    sake::extension::pointee< P, Enable = void >
+sake/core/utility/rebind_pointer_fwd.hpp
+    sake::extension::rebind_pointer< P, T, Enable = void >
