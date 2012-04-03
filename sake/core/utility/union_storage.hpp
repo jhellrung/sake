@@ -48,7 +48,7 @@ struct union_storage
         boost_ext::mpl::lcm< boost::mpl::_1, boost::alignment_of< boost::mpl::_2 > >
     >::type::value;
 
-    typedef typename boost_ext::aligned_storage< size, align >::type type;
+    typedef typename boost_ext::aligned_storage_c< size, align >::type type;
 };
 
 } // namespace sake
