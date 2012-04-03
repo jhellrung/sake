@@ -24,7 +24,7 @@ using sake::no_tag;
 
 struct X { };
 struct X_type { struct x; };
-struct X_isc { static const int x = 0; };
+struct X_isc { static int const x = 0; };
 struct X_class_template { template< class > struct x; };
 struct X_mem_obj { int x; };
 struct X_mem_fn { void x(); };

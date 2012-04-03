@@ -29,7 +29,7 @@ BOOST_MPL_ASSERT_NOT((is_callable_mem_fun_x< no_x0 >));
 
 struct no_x1 { struct x; };
 BOOST_MPL_ASSERT_NOT((is_callable_mem_fun_x< no_x1 >));
-struct no_x2 { static const int x = 0; };
+struct no_x2 { static int const x = 0; };
 //BOOST_MPL_ASSERT_NOT((is_callable_mem_fun_x< no_x2 >));
 struct no_x3 { template< class > struct x; };
 //BOOST_MPL_ASSERT_NOT((is_callable_mem_fun_x< no_x3 >));

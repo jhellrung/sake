@@ -28,7 +28,7 @@ template< class T, class Sequence >
 struct best_conversion_index
 {
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Sequence >::value));
-    static const int value = SAKE_EXPR_BEST_CONVERSION_INDEX( sake::declval<T>(), Sequence );
+    static int const value = SAKE_EXPR_BEST_CONVERSION_INDEX( sake::declval<T>(), Sequence );
     typedef best_conversion_index type;
 };
 

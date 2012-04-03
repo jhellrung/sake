@@ -80,7 +80,7 @@ struct declared
 
 template< class T >
 struct declared< T, false >
-{ static const int value = 0; };
+{ static int const value = 0; };
 
 sake::no_tag
 is_declared(undeclared);
@@ -93,7 +93,7 @@ struct switch_on_declared;
 
 template<>
 struct switch_on_declared< SAKE_SIZEOF_YES_TAG >
-{ static const int template_or_value = 0; };
+{ static int const template_or_value = 0; };
 
 template<>
 struct switch_on_declared< SAKE_SIZEOF_NO_TAG >
