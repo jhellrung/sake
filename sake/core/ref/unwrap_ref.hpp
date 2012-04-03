@@ -20,7 +20,7 @@ namespace sake
 {
 
 template< class T >
-inline typename sake::unwrap_reference<T>::type&
+inline typename sake::unwrap_reference<T>::type &
 unwrap_ref(T& x)
 { return x; }
 
