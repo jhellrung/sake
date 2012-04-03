@@ -25,6 +25,7 @@
 #ifndef SAKE_CORE_UTILITY_DECLVAL_HPP
 #define SAKE_CORE_UTILITY_DECLVAL_HPP
 
+#include <boost/config.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_cv.hpp>
 #include <boost/type_traits/add_volatile.hpp>
@@ -33,15 +34,39 @@
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_cv.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_volatile.hpp>
+#include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 
 namespace sake
 {
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+
+template< class T >
+typename boost_ext::add_rvalue_reference<T>::type
+declval();
+
+template< class T >
+typename boost_ext::add_rvalue_reference<
+    typename boost::add_const<T>::type >::type
+declcval();
+template< class T >
+typename boost_ext::add_rvalue_reference<
+    typename boost::add_volatile<T>::type >::type
+declvval();
+template< class T >
+typename boost_ext::add_rvalue_reference<
+    typename boost::add_cv<T>::type >::type
+declcvval();
+
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T > T declval();
 
 template< class T > typename boost::add_const<T>::type declcval();
 template< class T > typename boost::add_volatile<T>::type declvval();
 template< class T > typename boost::add_cv<T>::type declcvval();
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T > typename boost_ext::add_reference<T>::type declref();
 template< class T > typename boost_ext::add_reference_add_const<T>::type declcref();
