@@ -32,12 +32,12 @@
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/default_tag.hpp>
+#include <sake/core/utility/is_convertible_wnrbt.hpp>
 
 #ifndef SAKE_EMPLACER_PERFECT_MAX_ARITY
 #define SAKE_EMPLACER_PERFECT_MAX_ARITY 4
@@ -187,7 +187,7 @@ emplacer_construct(SAKE_FWD2_REF( U ) y)
     BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
     BOOST_STATIC_ASSERT((
        !boost_ext::is_reference<T>::value
-     || boost_ext::is_convertible_wnrbt< SAKE_FWD2_PARAM( U ), T >::value
+     || sake::is_convertible_wnrbt< SAKE_FWD2_PARAM( U ), T >::value
     ));
     return static_cast<T>(sake::forward<U>(y));
 }

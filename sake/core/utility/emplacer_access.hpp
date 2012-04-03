@@ -34,7 +34,6 @@
 
 #include <sake/boost_ext/mpl/range_c.hpp>
 #include <sake/boost_ext/mpl/vector.hpp>
-#include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_cv.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
@@ -42,6 +41,7 @@
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
+#include <sake/core/utility/is_convertible_wnrbt.hpp>
 #include <sake/core/utility/private/emplacer/traits.hpp>
 
 namespace sake
@@ -117,7 +117,7 @@ class emplacer_access
         BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         BOOST_STATIC_ASSERT((
            !boost_ext::is_reference<T>::value
-         || boost_ext::is_convertible_wnrbt< U0, T >::value
+         || sake::is_convertible_wnrbt< U0, T >::value
         ));
         return static_cast<T>(e.template at_c<0>());
     }

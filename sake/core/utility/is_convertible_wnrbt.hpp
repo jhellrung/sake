@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/boost_ext/type_traits/is_convertible_wnrbt.hpp
+ * sake/core/utility/is_convertible_wnrbt.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct boost_ext::is_convertible_wnrbt< From, To >
- * struct boost_ext::extension::is_convertible_wnrbt< From, To, Enable = void >
- * struct boost_ext::default_impl::is_convertible_wnrbt< From, To >
+ * struct is_convertible_wnrbt< From, To >
+ * struct extension::is_convertible_wnrbt< From, To, Enable = void >
+ * struct default_impl::is_convertible_wnrbt< From, To >
  *
  * WNRBT = With No Reference-Bound Temporary
  *
@@ -23,8 +23,8 @@
  * local variables.
  ******************************************************************************/
 
-#ifndef SAKE_BOOST_EXT_TYPE_TRAITS_IS_CONVERTIBLE_WNRBT_HPP
-#define SAKE_BOOST_EXT_TYPE_TRAITS_IS_CONVERTIBLE_WNRBT_HPP
+#ifndef SAKE_CORE_UTILITY_IS_CONVERTIBLE_WNRBT_HPP
+#define SAKE_CORE_UTILITY_IS_CONVERTIBLE_WNRBT_HPP
 
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/remove_cv.hpp>
@@ -32,18 +32,15 @@
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/is_convertible_wnrbt_fwd.hpp>
 
 #include <sake/core/introspection/has_mem_fun_operator.hpp>
+#include <sake/core/utility/is_convertible_wnrbt_fwd.hpp>
 
 namespace sake
 {
 
-namespace boost_ext
-{
-
 /*******************************************************************************
- * struct boost_ext::is_convertible_wnrbt< From, To >
+ * struct is_convertible_wnrbt< From, To >
  ******************************************************************************/
 
 template< class From, class To >
@@ -55,7 +52,7 @@ template< class From, class To >
 struct is_convertible_wnrbt< From, To& >
     : boost_ext::mpl::and2<
           boost_ext::is_convertible< From, To& >,
-          boost_ext::extension::is_convertible_wnrbt<
+          sake::extension::is_convertible_wnrbt<
               typename boost::remove_cv< From >::type,
               To&
           >
@@ -63,7 +60,7 @@ struct is_convertible_wnrbt< From, To& >
 { };
 
 /*******************************************************************************
- * struct boost_ext::extension::is_convertible_wnrbt< From, To, Enable = void >
+ * struct extension::is_convertible_wnrbt< From, To, Enable = void >
  ******************************************************************************/
 
 namespace extension
@@ -71,13 +68,13 @@ namespace extension
 
 template< class From, class To, class Enable /*= void*/ >
 struct is_convertible_wnrbt
-    : boost_ext::default_impl::is_convertible_wnrbt< From, To >
+    : sake::default_impl::is_convertible_wnrbt< From, To >
 { };
 
 } // namespace extension
 
 /*******************************************************************************
- * struct boost_ext::default_impl::is_convertible_wnrbt< From, To >
+ * struct default_impl::is_convertible_wnrbt< From, To >
  ******************************************************************************/
 
 namespace default_impl
@@ -169,8 +166,6 @@ struct is_convertible_wnrbt< From&, To& >
 
 } // namespace default_impl
 
-} // namespace boost_ext
-
 } // namespace sake
 
-#endif // #ifndef SAKE_BOOST_EXT_TYPE_TRAITS_IS_CONVERTIBLE_WNRBT_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_IS_CONVERTIBLE_WNRBT_HPP

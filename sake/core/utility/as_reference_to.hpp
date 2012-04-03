@@ -36,7 +36,6 @@
 #include <boost/type_traits/is_volatile.hpp>
 
 #include <sake/boost_ext/type_traits/add_cv_if.hpp>
-#include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
@@ -47,6 +46,7 @@
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/utility/declval.hpp>
+#include <sake/core/utility/is_convertible_wnrbt.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
@@ -194,8 +194,8 @@ struct dispatch_index
 {
     static unsigned int const n =
         (1u << 3) * sake_as_reference_to_private::is_callable< void ( From&, sake::type_tag< To > ) >::value
-      | (1u << 2) * boost_ext::is_convertible_wnrbt< From&, To const & >::value
-      | (1u << 2) * boost_ext::is_convertible_wnrbt< From&, To const volatile & >::value
+      | (1u << 2) * sake::is_convertible_wnrbt< From&, To const & >::value
+      | (1u << 2) * sake::is_convertible_wnrbt< From&, To const volatile & >::value
       | (1u << 1) * sake::has_operator_star< From& >::value
       | (1u << 0);
     static unsigned int const value = sake::static_intlog2_c<n>::value;

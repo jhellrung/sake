@@ -18,7 +18,8 @@
 
 #include <sake/boost_ext/mpl/all.hpp>
 #include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
+
+#include <sake/core/utility/is_convertible_wnrbt.hpp>
 
 namespace sake
 {
@@ -38,7 +39,7 @@ struct sequence_is_convertible_wnrbt
           >,
           boost_ext::mpl::all<
               boost::mpl::zip_view< boost::mpl::vector2< FromSequence, ToSequence > >,
-              boost::mpl::unpack_args< boost::mpl::quote2< boost_ext::is_convertible_wnrbt > >
+              boost::mpl::unpack_args< boost::mpl::quote2< sake::is_convertible_wnrbt > >
           >
       >
 { };

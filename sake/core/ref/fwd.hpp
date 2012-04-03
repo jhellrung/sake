@@ -12,11 +12,11 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <sake/boost_ext/type_traits/is_convertible_wnrbt_fwd.hpp>
 //#include <sake/core/range/cursor_fwd.hpp>
 //#include <sake/core/range/is_view_fwd.hpp>
 //#include <sake/core/range/static_size_fwd.hpp>
 #include <sake/core/ref/ref_tag.hpp>
+#include <sake/core/utility/is_convertible_wnrbt_fwd.hpp>
 
 namespace sake
 {
@@ -96,11 +96,8 @@ struct range_static_size<
 #endif // #if 0
 
 /*******************************************************************************
- * struct boost_ext::extension::is_convertible_wnrbt< T, U, ... >
+ * struct extension::is_convertible_wnrbt< T, U, ... >
  ******************************************************************************/
-
-namespace boost_ext
-{
 
 namespace extension
 {
@@ -110,15 +107,13 @@ struct is_convertible_wnrbt<
     T, U,
     typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type
 >
-    : boost_ext::is_convertible_wnrbt<
+    : sake::is_convertible_wnrbt<
           typename sake::unwrap_reference<T>::type &,
           U
       >
 { };
 
 } // namespace extension
-
-} // namespace boost_ext
 
 } // namespace sake
 
