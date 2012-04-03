@@ -8,12 +8,13 @@
  * struct rv_sink<
  *     Visitor,
  *     Result = default_tag,
- *     Pred = boost::mpl::always< boost::true_type >,
- *     Enable = true
+ *     Pred = boost::mpl::always< boost::true_type >
  * >
  *
  * struct rv_sink_traits::rv_param<T>
- * struct rv_sink_visitors::init<T>
+ * struct rv_sink_traits::enable_clv< T, U, Result = void >
+ * struct rv_sink_traits::lazy_enable_clv< T, U, Result >
+ * struct rv_sink_visitors::ctor_impl<T>
  * struct rv_sink_visitors::operator_assign<T>
  * struct rv_sink_predicates::not_is_same_as<T>
  *
@@ -60,9 +61,9 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/result_type.hpp>
 
@@ -70,30 +71,39 @@
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/introspection/has_type_result_type.hpp>
+#include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/default_tag.hpp>
 
 namespace sake
 {
 
+namespace rv_sink_private
+{
+
+// MSVC9 tends to ICE without this...
+template<
+    class Pred, class T,
+    bool = sake::is_movable<T>::value
+>
+struct enable_ctor;
+
+} // namespace rv_sink_private
+
 /*******************************************************************************
  * struct rv_sink<
  *     Visitor,
  *     Result = default_tag,
- *     Pred = boost::mpl::always< boost::true_type >,
- *     Enable = true
+ *     Pred = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 
 template<
     class Visitor,
     class Result = sake::default_tag,
-    class Pred = boost::mpl::always< boost::true_type >,
-    bool Enable = true
+    class Pred = boost::mpl::always< boost::true_type >
 >
 struct rv_sink
 {
-    BOOST_STATIC_ASSERT((Enable));
-
     typedef typename sake::lazy_replace_default_tag<
         Result,
         boost::mpl::eval_if<
@@ -103,11 +113,13 @@ struct rv_sink
         >
     >::type result_type;
 
+    // implicit on purpose
     template< class T >
-    explicit rv_sink(T* const p)
+    rv_sink(T const & x,
+        typename rv_sink_private::enable_ctor< Pred, T >::type* = 0)
         : m_apply(apply<T>),
-          mp(static_cast< void* >(p))
-    { BOOST_STATIC_ASSERT((boost::mpl::apply1< Pred, T >::type::value)); }
+          mp(static_cast< void* >(sake::address_of(const_cast< T& >(x)))
+    { }
 
     result_type operator()(Visitor visitor) const
     { return m_apply(visitor, mp); }
@@ -123,6 +135,8 @@ private:
 
 /*******************************************************************************
  * struct rv_sink_traits::rv_param<T>
+ * struct rv_sink_traits::enable_clv<T,U>
+ * struct rv_sink_traits::lazy_enable_clv<T,U>
  ******************************************************************************/
 
 namespace rv_sink_traits
@@ -150,10 +164,57 @@ struct rv_param
     : private_::rv_param_dispatch<T>
 { };
 
+namespace private_
+{
+
+template<
+    class T, class U, class Result,
+    bool = boost_ext::is_convertible<
+               U&, typename rv_sink_traits::rv_param<T>::type >::value
+        || sake::is_movable<U>::value
+>
+struct enable_clv_dispatch;
+
+template< class T, class U, class Result >
+struct enable_clv_dispatch< T, U, Result, true >
+{ };
+
+template< class T, class U, class Result >
+struct enable_clv_dispatch< T, U, Result, false >
+{ typedef Result type; };
+
+template<
+    class T, class U, class Result,
+    bool = boost_ext::is_convertible<
+               U&, typename rv_sink_traits::rv_param<T>::type >::value
+        || sake::is_movable<U>::value
+>
+struct lazy_enable_clv_dispatch;
+
+template< class T, class U, class Result >
+struct lazy_enable_clv_dispatch< T, U, Result, true >
+{ };
+
+template< class T, class U, class Result >
+struct lazy_enable_clv_dispatch< T, U, Result, false >
+{ typedef typename Result::type type; };
+
+} // namespace private_
+
+template< class T, class U, class Result = void >
+struct enable_clv
+    : private_::enable_clv_dispatch< T, U, Result >
+{ };
+
+template< class T, class U, class Result >
+struct lazy_enable_clv
+    : private_::lazy_enable_clv_dispatch< T, U, Result >
+{ };
+
 } // namespace rv_sink_traits
 
 /*******************************************************************************
- * struct rv_sink_visitors::init<T>
+ * struct rv_sink_visitors::ctor_impl<T>
  * struct rv_sink_visitors::operator_assign<T>
  ******************************************************************************/
 
@@ -161,13 +222,13 @@ namespace rv_sink_visitors
 {
 
 template< class T >
-struct init
+struct ctor_impl
 {
-    explicit init(T& this_) : m_this(this_) { }
+    explicit ctor_impl(T& this_) : m_this(this_) { }
     typedef void result_type;
     template< class U >
     void operator()(U& x) const
-    { m_this.init(x); }
+    { m_this.ctor_impl(x); }
 private:
     T& m_this;
 };
@@ -196,19 +257,12 @@ namespace rv_sink_predicates
 template< class T >
 struct not_is_same_as
 {
-    struct type
-    {
-        template< class U >
-        struct apply
-        {
-            static bool const value = !boost::is_same<U,T>::value;
-            typedef apply type;
-        };
-    };
     template< class U >
     struct apply
-        : type::template apply<U>
-    { };
+    {
+        static bool const value = !boost::is_same<U,T>::value;
+        typedef apply type;
+    };
 };
 
 } // namespace rv_sink_predicates
@@ -216,34 +270,15 @@ struct not_is_same_as
 namespace rv_sink_private
 {
 
-// These helper structs are necessary to prevent MSVC9 from ICE'ing on
-// expressions like
-//
-// template< class V, class R, class P >
-// operator rv_sink< V,R,P, boost::mpl::apply1< Pred, T >::type::value >()
-// { return rv_sink< V,R,P, boost::mpl::apply1< Pred, T >::type::value >(this); }
-//
-// Instead, use
-//
-// template< class V, class R, class P >
-// operator rv_sink< V,R,P, apply1_pred< Pred, T >::value >()
-// { return rv_sink< V,R,P, apply1_pred< Pred, T >::value >(this); }
-
+// MSVC9 tends to ICE without this...
 template< class Pred, class T >
-struct apply1_pred
-{ static bool const value = boost::mpl::apply1< Pred, T >::type::value; };
-
-template< bool C, class Pred, class T >
-struct apply1_pred_if_c;
-
-template< class Pred, class T >
-struct apply1_pred_if_c< true, Pred, T >
-    : apply1_pred< Pred, T >
+struct enable_ctor< Pred, T, false >
 { };
 
 template< class Pred, class T >
-struct apply1_pred_if_c< false, Pred, T >
-{ static bool const value = false; };
+struct enable_ctor< Pred, T, true >
+    : boost::enable_if_c< boost::mpl::apply1< Pred, T >::type::value >
+{ };
 
 } // namespace rv_sink_private
 

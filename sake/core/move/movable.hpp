@@ -105,7 +105,6 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
-#include <sake/core/move/rv_sink.hpp>
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
@@ -206,10 +205,12 @@ struct non_movable_traits
     { return copy_assign_impl(other); }
 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE_R( r, T, U_seq ) \
-    SAKE_OPTIMAL_MOVABLE_COPYABLE( T )
+    SAKE_OPTIMAL_MOVABLE_COPYABLE( \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) )
 
 #define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_MOVABLE_R( r, T, U_seq ) \
-    SAKE_FRIENDLY_MOVABLE_COPYABLE( T )
+    SAKE_FRIENDLY_MOVABLE_COPYABLE( \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) )
 
 namespace sake
 {
@@ -245,9 +246,6 @@ struct traits< T, true >
     { return *static_cast< ::boost::rv<T>* >(this); } \
     operator ::boost::rv<T> const & () const \
     { return *static_cast< ::boost::rv<T> const * >(this); } \
-    template< class V, class R, class P > \
-    operator ::sake::rv_sink< V,R,P, ::sake::rv_sink_private::apply1_pred<P,T>::value >() \
-    { return ::sake::rv_sink< V,R,P, ::sake::rv_sink_private::apply1_pred<P,T>::value >(this); }
 
 #define SAKE_MOVABLE_NONCOPYABLE( T ) \
     private: \
@@ -285,10 +283,7 @@ struct traits< T, true >
     { return *static_cast< _sake_rv_conv_type* >(this); } \
     operator _sake_rv_conv_type const & () const \
     { return *static_cast< _sake_rv_conv_type const * >(this); } \
-    template< class V, class R, class P > \
-    operator ::sake::rv_sink< V,R,P, ::sake::rv_sink_private::apply1_pred_if_c<c,P,T>::value >() \
-    { return ::sake::rv_sink< V,R,P, ::sake::rv_sink_private::apply1_pred_if_c<c,P,T>::value >(this); }
-
+ 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C( T, c ) \
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( \
         BOOST_PP_EXPR_IIF( \

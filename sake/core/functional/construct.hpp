@@ -15,14 +15,13 @@
 #include <boost/config.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
-#include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/call_traits.hpp>
 #include <sake/core/utility/overload.hpp>
@@ -110,10 +109,7 @@ public:
     { return x(*this); }
     // const lvalues + non-movable rvalues
     template< class U >
-    typename boost::disable_if_c<
-        construct_private::disable_cref_cond<T,U>::value,
-        T
-    >::type
+    typename rv_sink_traits::enable_clv<T,U,T>::type
     operator()(U const & x) const
     { return static_cast<T>(x); }
 
@@ -186,10 +182,7 @@ construct(typename construct_private::rv_sink<T>::type x)
 { return x(functional::construct<T>()); }
 
 template< class T, class U >
-inline typename boost::disable_if_c<
-    construct_private::disable_cref_cond<T,U>::value,
-    T
->::type
+inline typename rv_sink_traits::enable_clv<T,U,T>::type
 construct(U const & x)
 { return functional::construct<T>()(x); }
 
@@ -220,21 +213,9 @@ struct rv_sink
     typedef sake::rv_sink<
         construct, // Visitor
         T, // Result
-        typename rv_sink_predicates::not_is_same_as<T>::type // Pred
+        rv_sink_predicates::not_is_same_as<T> // Pred
     > type;
 };
-
-template< class T, class U >
-struct disable_cref_cond
-    : boost_ext::mpl::or2<
-          boost_ext::is_convertible<
-              U&, typename rv_sink_traits::rv_param<T>::type
-          >,
-          boost_ext::is_convertible<
-              U&, typename construct_private::rv_sink<T>::type
-          >
-      >
-{ };
 
 } // namespace construct_private
 
