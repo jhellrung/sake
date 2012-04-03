@@ -16,9 +16,7 @@
 #include <boost/mpl/not.hpp>
 #include <boost/type_traits/is_object.hpp>
 #include <boost/type_traits/remove_const.hpp>
-#include <boost/utility/enable_if.hpp>
 
-#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
@@ -109,8 +107,8 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         typedef sake::rv_sink<
             rv_sink_visitors::operator_assign< proxy const >, // Visitor
             proxy const &, // Result
-            typename rv_sink_predicates::not_is_same_as< value_type >::type // Pred
-        > rv_sink_type;
+            rv_sink_predicates::not_is_same_as< value_type > // Pred
+        > operator_assign_rv_sink_type;
     public:
         // lvalues
         template< class T >
@@ -123,17 +121,11 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         { *m_i = x; return *this; }
         // movable rvalues
         proxy const &
-        operator=(rv_sink_type x) const
+        operator=(operator_assign_rv_sink_type const x) const
         { return x(rv_sink_visitors::operator_assign< proxy const >(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
-        typename boost::disable_if_c<
-            boost_ext::mpl::or2<
-                boost_ext::is_convertible< T&, rv_param_type >,
-                boost_ext::is_convertible< T&, rv_sink_type >
-            >::value,
-            proxy const &
-        >::type
+        typename rv_sink_traits::enable_clv< value_type, T, proxy const & >::type
         operator=(T const & x) const
         { *m_i = x; return *this; }
 

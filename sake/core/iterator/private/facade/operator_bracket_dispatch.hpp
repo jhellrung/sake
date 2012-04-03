@@ -11,10 +11,6 @@
 
 #include <boost/config.hpp>
 #include <boost/type_traits/has_trivial_copy.hpp>
-#include <boost/utility/enable_if.hpp>
-
-#include <sake/boost_ext/mpl/or.hpp>
-#include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/rv_sink.hpp>
@@ -68,7 +64,7 @@ struct operator_bracket_dispatch
         typedef sake::rv_sink<
             rv_sink_visitors::operator_assign< proxy const >, // Visitor
             proxy const &, // Result
-            typename rv_sink_predicates::not_is_same_as< Value >::type // Pred
+            rv_sink_predicates::not_is_same_as< Value > // Pred
         > rv_sink_type;
     public:
         // lvalues
@@ -86,13 +82,7 @@ struct operator_bracket_dispatch
         { return x(rv_sink_visitors::operator_assign< proxy const >(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
-        typename boost::disable_if_c<
-            boost_ext::mpl::or2<
-                boost_ext::is_convertible< T&, rv_param_type >,
-                boost_ext::is_convertible< T&, rv_sink_type >
-            >::value,
-            proxy const &
-        >::type
+        typename rv_sink_traits::enable_clv< Value, T, proxy const & >::type
         operator=(T const & x) const
         { *m_i = x; return *this; }
 
