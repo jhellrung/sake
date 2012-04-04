@@ -72,7 +72,7 @@
     return ::sake::hash_value(BOOST_PP_APPLY( member_seq ));
 
 #define SAKE_DEFINE_NATURAL_HASH_VALUE_dispatch11( r, T, base_seq, member_seq ) \
-    return 0;
+    return static_cast< std::size_t >(0);
 
 #define SAKE_DEFINE_NATURAL_HASH_VALUE_base( r, data, elem ) \
     ::boost::hash_combine(result, static_cast< elem const & >(*this));
