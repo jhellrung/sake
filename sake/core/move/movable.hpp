@@ -180,10 +180,10 @@ struct non_movable_traits
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         c \
     )
-#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( typename_, T, c ) \
+#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( typename, T, c ) \
     private: \
     typedef ::sake::movable_private::traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPEDEF( typename_() _sake_movable_traits, this_rvalue_param_type ); \
+    SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_rvalue_param_type ); \
     typedef T const & this_copy_assign_param_type; \
     public:
 
@@ -196,10 +196,10 @@ struct non_movable_traits
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         c \
     )
-#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( typename_, T, c ) \
+#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( typename, T, c ) \
     private: \
     typedef ::sake::movable_private::traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPEDEF( typename_() _sake_movable_traits, this_rvalue_param_type ); \
+    SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_rvalue_param_type ); \
     public: \
     T& operator=(T const & other) \
     { return copy_assign_impl(other); }
@@ -275,9 +275,9 @@ struct traits< T, true >
     T& operator=(T other) \
     { return operator=(::sake::move(other)); }
 
-#define SAKE_MOVABLE_COPYABLE_IF_C_common( typename_, T, c ) \
-    typedef typename_() _sake_movable_traits::rv_conv_type _sake_rv_conv_type; \
-    SAKE_USING_TYPEDEF( typename_() _sake_movable_traits, this_rvalue_param_type ); \
+#define SAKE_MOVABLE_COPYABLE_IF_C_common( typename, T, c ) \
+    typedef typename() _sake_movable_traits::rv_conv_type _sake_rv_conv_type; \
+    SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_rvalue_param_type ); \
     public: \
     operator _sake_rv_conv_type& () \
     { return *static_cast< _sake_rv_conv_type* >(this); } \
@@ -293,13 +293,13 @@ struct traits< T, true >
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         c \
     )
-#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( typename_, T, c ) \
+#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( typename, T, c ) \
     private: \
     typedef ::sake::movable_private::optimal_traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPEDEF( typename_() _sake_movable_traits, this_copy_assign_param_type ); \
-    typedef typename_() _sake_movable_traits::enable_optimal_move_assign_param_type \
+    SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_copy_assign_param_type ); \
+    typedef typename() _sake_movable_traits::enable_optimal_move_assign_param_type \
         _sake_enable_move_assign_param_type; \
-    SAKE_MOVABLE_COPYABLE_IF_C_common( typename_, T, c ) \
+    SAKE_MOVABLE_COPYABLE_IF_C_common( typename, T, c ) \
     T& operator=(_sake_enable_move_assign_param_type other) \
     { return operator=(const_cast< T const & >(other)); }
 
@@ -312,14 +312,14 @@ struct traits< T, true >
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         c \
     )
-#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( typename_, T, c ) \
+#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( typename, T, c ) \
     private: \
     typedef ::sake::boost_ext::movable_private::friendly_traits< T, c > _sake_movable_traits; \
-    typedef typename_() _sake_movable_traits::enable_friendly_move_assign_param_type \
+    typedef typename() _sake_movable_traits::enable_friendly_move_assign_param_type \
         _sake_enable_move_assign_param_type; \
-    typedef typename_() _sake_movable_traits::disable_friendly_move_assign_param_type \
+    typedef typename() _sake_movable_traits::disable_friendly_move_assign_param_type \
         _sake_disable_move_assign_param_type; \
-    SAKE_MOVABLE_COPYABLE_IF_C_common( typename_, T, c ) \
+    SAKE_MOVABLE_COPYABLE_IF_C_common( typename, T, c ) \
     T& operator=(_sake_enable_move_assign_param_type other) \
     { return operator=(::sake::boost_ext::move(other)); } \
     T& operator=(_sake_disable_move_assign_param_type other) \
