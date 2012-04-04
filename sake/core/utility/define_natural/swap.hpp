@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/utility/define_natural/swap.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -11,7 +11,7 @@
 #ifndef SAKE_CORE_UTILITY_DEFINE_NATURAL_SWAP_HPP
 #define SAKE_CORE_UTILITY_DEFINE_NATURAL_SWAP_HPP
 
-#include <boost/config.hpp>
+#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/detail/is_binary.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
