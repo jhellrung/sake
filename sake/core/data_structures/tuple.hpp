@@ -25,7 +25,6 @@
 #include <cstddef>
 
 #include <boost/config.hpp>
-#include <boost/functional/hash.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/vector/vector0.hpp>
 #include <boost/mpl/vector/vector10.hpp>
@@ -67,7 +66,6 @@
 #include <sake/core/utility/emplacer.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
-#include <sake/core/utility/swap.hpp>
 
 namespace sake
 {
@@ -270,10 +268,6 @@ struct at_c_dispatch;
     sake::emplacer_assign(_ ## n, sake::forward< U ## n >(x ## n));
 #define _n_assign_at_c_n_forward_Sequence_s( z, n, data ) \
     _ ## n = boost_ext::fusion::at_c<n>(sake::forward< Sequence >(s));
-#define swap_n_other_n( z, n, data ) \
-    sake::swap(_ ## n, other._ ## n);
-#define hash_combine_x_n( z, n, data ) \
-    boost::hash_combine(x, _ ## n);
 #define wrapped_parameter_to_reference_remove_qualifiers_Tn( z, n, data ) \
     typename sake::wrapped_parameter_to_reference< \
         typename boost_ext::remove_qualifiers< T ## n >::type >::type
@@ -289,8 +283,6 @@ struct at_c_dispatch;
 #undef fwd_ref_Un_xn
 #undef emplacer_assign_n_forward_Un_xn
 #undef _n_assign_at_c_n_forward_Sequence_s
-#undef swap_n_other_n
-#undef hash_combine_x_n
 #undef wrapped_parameter_to_reference_remove_qualifiers_Tn
 
 } // namespace sake
@@ -346,7 +338,10 @@ struct tuple< T0N >
 
     SAKE_DEFINE_NATURAL_MEM_FUN(
         tuple,
-        ( default_ctor ) ( move_ctor ) ( copy_assign ) ( move_assign ),
+        ( default_ctor ) ( move_ctor )
+        ( copy_assign ) ( move_assign )
+        ( swap )
+        ( hash_value ),
         BOOST_PP_SEQ_NIL, _0N_seq
     )
 
@@ -492,17 +487,6 @@ struct tuple< T0N >
     {
         BOOST_PP_REPEAT( N, _n_assign_at_c_n_forward_Sequence_s, ~ )
         return *this;
-    }
-
-    void swap(tuple& other)
-    { BOOST_PP_REPEAT( N, swap_n_other_n, ~ ) }
-
-    std::size_t
-    hash_value() const
-    {
-        std::size_t x = 0;
-        BOOST_PP_REPEAT( N, hash_combine_x_n, ~ )
-        return x;
     }
 };
 

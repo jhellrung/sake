@@ -25,7 +25,6 @@
 
 #include <cstddef>
 
-#include <boost/functional/hash.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/preprocessor/seq/seq.hpp>
@@ -53,7 +52,6 @@
 #include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
-#include <sake/core/utility/swap.hpp>
 
 namespace sake
 {
@@ -79,7 +77,10 @@ struct pair
 
     SAKE_DEFINE_NATURAL_MEM_FUN(
         typename pair,
-        ( default_ctor ) ( move_ctor ) ( copy_assign ) ( move_assign ),
+        ( default_ctor ) ( move_ctor )
+        ( copy_assign ) ( move_assign )
+        ( swap )
+        ( hash_value ),
         BOOST_PP_SEQ_NIL, ( first ) ( second )
     )
 
@@ -201,21 +202,6 @@ public:
         first  = boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s));
         second = boost_ext::fusion::at_c<1>(sake::forward< Sequence >(s));
         return *this;
-    }
-
-    void swap(pair& other)
-    {
-        sake::swap(first,  other.first);
-        sake::swap(second, other.second);
-    }
-
-    std::size_t
-    hash_value() const
-    {
-        std::size_t x = 0;
-        boost::hash_combine(x, first);
-        boost::hash_combine(x, second);
-        return x;
     }
 };
 
