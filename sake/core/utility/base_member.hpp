@@ -52,7 +52,9 @@ protected:
 
     SAKE_DEFINE_NATURAL_MEM_FUN(
         typename base_member,
-        ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
+        ( default_ctor ) ( move_ctor )
+        ( copy_assign_if_any_umc ) ( move_assign )
+        ( swap ),
         BOOST_PP_SEQ_NIL, (( T, m_member ))
     )
 
@@ -88,7 +90,9 @@ protected:
 
     SAKE_DEFINE_NATURAL_MEM_FUN(
         typename base_member,
-        ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
+        ( default_ctor ) ( move_ctor )
+        ( copy_assign_if_any_umc ) ( move_assign )
+        ( swap ),
         ( T ), BOOST_PP_SEQ_NIL
     )
 
