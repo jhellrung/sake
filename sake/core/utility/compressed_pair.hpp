@@ -186,9 +186,9 @@ struct compressed_pair
     std::size_t
     hash_value() const
     {
-        std::size_t x = 0;
-        boost::hash_combine(x, first());
-        boost::hash_combine(x, second());
+        std::size_t result = 0;
+        boost::hash_combine(result, first());
+        boost::hash_combine(result, second());
         return x;
     }
 
