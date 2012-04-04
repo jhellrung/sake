@@ -21,6 +21,7 @@
 #include <sake/core/utility/define_natural/copy_assign.hpp>
 #include <sake/core/utility/define_natural/default_ctor.hpp>
 #include <sake/core/utility/define_natural/dtor.hpp>
+#include <sake/core/utility/define_natural/hash_value.hpp>
 #include <sake/core/utility/define_natural/move_assign.hpp>
 #include <sake/core/utility/define_natural/move_ctor.hpp>
 #include <sake/core/utility/define_natural/swap.hpp>
@@ -56,6 +57,9 @@
 #define SAKE_DEFINE_NATURAL_MEM_FUN_dtor( r, T, base_seq, member_seq ) \
     SAKE_DEFINE_NATURAL_DTOR( \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) )
+#define SAKE_DEFINE_NATURAL_MEM_FUN_hash_value( r, T, base_seq, member_seq ) \
+    SAKE_DEFINE_NATURAL_HASH_VALUE( r, \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), base_seq, member_seq )
 #define SAKE_DEFINE_NATURAL_MEM_FUN_move_assign( r, T, base_seq, member_seq ) \
     SAKE_DEFINE_NATURAL_MOVE_ASSIGN_R( r, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), base_seq, member_seq )
