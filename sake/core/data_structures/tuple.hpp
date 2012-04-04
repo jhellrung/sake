@@ -62,9 +62,9 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/ref/wrapped_parameter_to_reference.hpp>
+#include <sake/core/utility/define_natural/default_ctor.hpp>
+#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
-#include <sake/core/utility/implicitly_defined/default_ctor.hpp>
-#include <sake/core/utility/implicitly_defined/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
 #include <sake/core/utility/swap.hpp>
@@ -89,7 +89,7 @@ struct tuple<>
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
-    SAKE_IMPLICITLY_DEFINED_DEFAULT_CTOR( tuple )
+    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( tuple )
 
     template< class Sequence >
     tuple(Sequence const &,
@@ -344,7 +344,7 @@ struct tuple< T0N >
 
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE( typename tuple, T0N_seq )
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         tuple,
         ( default_ctor ) ( move_ctor ) ( copy_assign ) ( move_assign ),
         BOOST_PP_SEQ_NIL, _0N_seq

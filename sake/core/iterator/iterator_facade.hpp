@@ -47,7 +47,7 @@
 #include <sake/core/math/sign.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
-#include <sake/core/utility/implicitly_defined/default_ctor.hpp>
+#include <sake/core/utility/define_natural/default_ctor.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
 #include <sake/core/utility/void.hpp>
 
@@ -295,7 +295,7 @@ public:
 protected:
     typedef ChainedBase chained_base_type;
 
-    SAKE_IMPLICITLY_DEFINED_DEFAULT_CTOR( iterator_facade )
+    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( iterator_facade )
 
     template< class ChainedBaseConstruct >
     explicit iterator_facade(ChainedBaseConstruct const & chained_base_construct,

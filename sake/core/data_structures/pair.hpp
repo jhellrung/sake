@@ -50,8 +50,8 @@
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/ref/wrapped_parameter_to_reference.hpp>
+#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
-#include <sake/core/utility/implicitly_defined/mem_fun.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
 #include <sake/core/utility/swap.hpp>
 
@@ -77,7 +77,7 @@ struct pair
 
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE( typename pair, ( T0 ) ( T1 ) )
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         typename pair,
         ( default_ctor ) ( move_ctor ) ( copy_assign ) ( move_assign ),
         BOOST_PP_SEQ_NIL, ( first ) ( second )
@@ -268,6 +268,56 @@ template< class T0, class T1 >
 inline std::size_t
 hash_value(sake::pair< T0, T1 > const & x)
 { return x.hash_value(); }
+
+} // namespace pair_adl
+
+#if 0
+namespace operators
+{
+
+namespace result_of
+{
+
+namespace extension
+{
+
+template< class T0, class T1, class U0, class U1 >
+struct equal< sake::pair< T0, T1 >, sake::pair< U0, U1 >, void >
+    : operators::result_of::and_<
+          typename operators::result_of::equal<
+              typename boost_ext::add_reference_add_const< T0 >::type,
+              typename boost_ext::add_reference_add_const< U0 >::type
+          >::type,
+          typename operators::result_of::equal<
+              typename boost_ext::add_reference_add_const< T1 >::type,
+              typename boost_ext::add_reference_add_const< U1 >::type
+          >::type
+      >
+{ };
+
+template< class P, class Q >
+struct equal<
+    P, Q,
+    typename boost::enable_if_c<
+        sake::is_pair< typename boost_ext::remove_qualifiers<P>::type >::value
+     && sake::is_pair< typename boost_ext::remove_qualifiers<Q>::type >::value
+    >::type
+>
+    : operators::result_of::equal<
+          typename boost_ext::remove_qualifiers<P>::type,
+          typename boost_ext::remove_qualifiers<Q>::type
+      >
+{ };
+
+} // namespace extension
+
+} // namespace result_of
+
+} // namespace operators
+#endif
+
+namespace pair_adl
+{
 
 /*******************************************************************************
  * operator==(pair< T0, T1 > const & x, pair< U0, U1 > const & y) -> ...

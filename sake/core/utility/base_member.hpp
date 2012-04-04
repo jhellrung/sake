@@ -32,8 +32,8 @@
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
+#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
-#include <sake/core/utility/implicitly_defined/mem_fun.hpp>
 
 namespace sake
 {
@@ -50,7 +50,7 @@ struct base_member< T, Tag,
 protected:
     friend class emplacer_access;
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         typename base_member,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         BOOST_PP_SEQ_NIL, (( T, m_member ))
@@ -86,7 +86,7 @@ struct base_member< T, Tag,
 protected:
     friend class emplacer_access;
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         typename base_member,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( T ), BOOST_PP_SEQ_NIL

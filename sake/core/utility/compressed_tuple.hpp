@@ -81,9 +81,9 @@
 #include <sake/core/utility/base_member.hpp>
 #include <sake/core/utility/compressed_pair.hpp>
 #include <sake/core/utility/compressed_tuple_fwd.hpp>
+#include <sake/core/utility/define_natural/default_ctor.hpp>
+#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
-#include <sake/core/utility/implicitly_defined/default_ctor.hpp>
-#include <sake/core/utility/implicitly_defined/mem_fun.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
 #include <sake/core/utility/swap.hpp>
 
@@ -107,7 +107,7 @@ struct compressed_tuple<>
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
-    SAKE_IMPLICITLY_DEFINED_DEFAULT_CTOR( compressed_tuple )
+    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( compressed_tuple )
 
     template< class Sequence >
     explicit compressed_tuple(Sequence const &,
@@ -285,7 +285,7 @@ struct storage< boost::mpl::vector2< T0, T1 >, _ >
 
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         storage,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         BOOST_PP_SEQ_NIL, ( m_pair )
@@ -460,7 +460,7 @@ struct compressed_tuple< T0N >
 private:
     typedef sake::base_member< T0 > base_member_;
 public:
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         compressed_tuple,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         ( base_member_ ), BOOST_PP_SEQ_NIL
@@ -498,7 +498,7 @@ public:
 
 #else // #if N == 1
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         compressed_tuple,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         BOOST_PP_SEQ_NIL, ( m_storage )
@@ -675,7 +675,7 @@ struct storage< boost::mpl::BOOST_PP_CAT( vector, N )< T0N >, false >
 private:
     typedef sake::tuple< T0N > tuple_;
 public:
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         typename storage,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( tuple_ ), BOOST_PP_SEQ_NIL
@@ -702,7 +702,7 @@ struct storage< boost::mpl::BOOST_PP_CAT( vector, N )< T0N >, true >
 
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         storage,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         BOOST_PP_SEQ_NIL, ( m_storage )

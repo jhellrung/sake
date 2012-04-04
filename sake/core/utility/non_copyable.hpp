@@ -18,7 +18,7 @@
 
 #include <boost/config.hpp>
 
-#include <sake/core/utility/implicitly_defined/default_ctor.hpp>
+#include <sake/core/utility/define_natural/default_ctor.hpp>
 
 #ifndef BOOST_NO_DELETED_FUNCTIONS
 
@@ -41,7 +41,7 @@ namespace sake
 struct non_copyable_base
 {
 protected:
-    SAKE_IMPLICITLY_DEFINED_DEFAULT_CTOR( non_copyable_base )
+    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( non_copyable_base )
     SAKE_NON_COPYABLE( non_copyable_base )
 };
 

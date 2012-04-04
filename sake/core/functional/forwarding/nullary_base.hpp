@@ -28,8 +28,8 @@
 #include <sake/core/functional/forwarding/keyword.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
+#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
-#include <sake/core/utility/implicitly_defined/mem_fun.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 #include <sake/core/utility/void.hpp>
 
@@ -60,7 +60,7 @@ class nullary_base
     SAKE_BASIC_MOVABLE_COPYABLE( nullary_base )
 protected:
     SAKE_USING_TYPEDEF( typename impl_, chained_base_type );
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         nullary_base,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         ( impl_ ), BOOST_PP_SEQ_NIL
@@ -148,7 +148,7 @@ protected:
         Params, keyword::tag::chained_base, sake::void_
     >::type chained_base_type;
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         typename impl,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( chained_base_type ), BOOST_PP_SEQ_NIL

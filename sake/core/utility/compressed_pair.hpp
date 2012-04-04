@@ -49,8 +49,8 @@
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/compressed_pair_fwd.hpp>
+#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
-#include <sake/core/utility/implicitly_defined/mem_fun.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
 #include <sake/core/utility/swap.hpp>
 
@@ -85,7 +85,7 @@ struct compressed_pair
 
     SAKE_BASIC_MOVABLE_COPYABLE( compressed_pair )
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         compressed_pair,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         BOOST_PP_SEQ_NIL, ( m_storage )
@@ -311,7 +311,7 @@ struct storage< T0, T1, false, false >
 {
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         typename storage,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         BOOST_PP_SEQ_NIL, (( T0, m_x0 )) (( T1, m_x1 ))
@@ -361,7 +361,7 @@ struct storage< T0, T1, true, _ >
 {
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         typename storage,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( T0 ), (( T1, m_x1 ))
@@ -410,7 +410,7 @@ struct storage< T0, T1, false, true >
 {
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
-    SAKE_IMPLICITLY_DEFINED_MEM_FUN(
+    SAKE_DEFINE_NATURAL_MEM_FUN(
         typename storage,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( T1 ), (( T0, m_x0 ))
