@@ -19,6 +19,8 @@
 #ifndef SAKE_CORE_UTILITY_HAS_PRIVATE_ASSIGN_HPP
 #define SAKE_CORE_UTILITY_HAS_PRIVATE_ASSIGN_HPP
 
+#include <boost/mpl/identity.hpp>
+#include <boost/mpl/quote.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/core/introspection/has_isc.hpp>
@@ -62,32 +64,10 @@ struct has_private_operator_assign
 namespace default_impl
 {
 
-namespace has_private_operator_assign_private
-{
-
-template<
-    class T,
-    bool = sake::has_isc_has_private_operator_assign<T>::value
->
-struct dispatch;
-
-template< class T >
-struct dispatch< T, false >
-    : boost::false_type
-{ };
-
-template< class T >
-struct dispatch< T, true >
-{
-    static bool const value = T::has_private_operator_assign;
-    typedef dispatch type;
-};
-
-} // namespace has_private_operator_assign_private
-
 template< class T >
 struct has_private_operator_assign
-    : has_private_operator_assign_private::dispatch<T>
+    : sake::has_isc_has_private_operator_assign<
+          T, boost::mpl::quote1< boost::mpl::identity > >
 { };
 
 } // namespace default_impl
