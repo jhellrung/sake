@@ -157,7 +157,7 @@ struct is_convertible_wnrbt< From&, To& >
     : boost_ext::mpl::or3<
           boost_ext::is_convertible< From*, To* >,
           is_convertible_wnrbt_private::helper0< From, To >,
-          boost_ext::is_convertible_wnrbt<
+          sake::is_convertible_wnrbt<
               typename boost::remove_cv< From >::type,
               To&
           >
