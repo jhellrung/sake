@@ -27,16 +27,17 @@
 #include <boost/type_traits/remove_volatile.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 
-#include <sake/core/introspection/has_isc.hpp>
+#include <sake/core/introspection/has_type.hpp>
 #include <sake/core/utility/has_default_constructor_fwd.hpp>
 
 namespace sake
 {
 
-SAKE_INTROSPECTION_DEFINE_HAS_ISC(
-    has_isc_has_default_constructor,
-    has_default_constructor
+SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
+   has_type_has_default_constructor,
+   has_default_constructor
 )
 
 /*******************************************************************************
@@ -65,8 +66,8 @@ struct has_default_constructor< T const >
 namespace extension
 {
 
-template< class T, class Enable >
-struct has_default_constructor< T, Enable /*= void*/ >
+template< class T, class Enable /*= void*/ >
+struct has_default_constructor
     : default_impl::has_default_constructor<T>
 { };
 
@@ -85,7 +86,7 @@ struct has_default_constructor
           boost::has_trivial_constructor<
               typename boost::remove_cv<T>::type
           >,
-          sake::has_isc_has_default_constructor<
+          sake::has_type_has_default_constructor<
               T, boost::mpl::quote1< boost::mpl::identity >
           >
       >
