@@ -43,7 +43,7 @@
  * typename X<T>:: SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF Y<U>::type
  * X<T>::
  * f(U)
- * { /*...*/ }
+ * { [...] }
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_WORKAROUND_HPP
