@@ -32,8 +32,8 @@
 
 #define SAKE_DEFINE_NATURAL_HASH_VALUE_R( r, T, base_seq, member_seq ) \
     BOOST_PP_SEQ_CAT( \
-        ( SAKE_DEFINE_NATURAL_HASH_VALUE_dispatch ), \
-        ( SAKE_BOOST_EXT_PP_SEQ_IS_NIL( base_seq ) ), \
+        ( SAKE_DEFINE_NATURAL_HASH_VALUE_dispatch ) \
+        ( SAKE_BOOST_EXT_PP_SEQ_IS_NIL( base_seq ) ) \
         ( SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_seq ) ) \
     ) ( r, T, base_seq, member_seq )
 
@@ -51,7 +51,7 @@
     { \
         BOOST_PP_CAT( \
             SAKE_DEFINE_NATURAL_HASH_VALUE_dispatch01_, \
-            BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( base_seq ) ), \
+            BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( base_seq ) ) \
         ) ( r, T, base_seq ) \
     }
 #define SAKE_DEFINE_NATURAL_HASH_VALUE_dispatch01_0( r, T, base_seq ) \
@@ -66,7 +66,7 @@
     { \
         BOOST_PP_CAT( \
             SAKE_DEFINE_NATURAL_HASH_VALUE_dispatch10_, \
-            BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( member_seq ) ), \
+            BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( member_seq ) ) \
         ) ( r, T, member_seq ) \
     }
 #define SAKE_DEFINE_NATURAL_HASH_VALUE_dispatch10_0( r, T, member_seq ) \
