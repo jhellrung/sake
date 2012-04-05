@@ -35,14 +35,15 @@
  *     template< class U >
  *     struct Y { typedef void type; };
  *     template< class U >
- *     Y<T>::type f(U);
+ *     Y<U>::type f(U);
  * };
  *
  * template< class T >
  * template< class U >
  * typename X<T>:: SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF Y<U>::type
+ * X<T>::
  * f(U)
- * { }
+ * { /*...*/ }
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_WORKAROUND_HPP
