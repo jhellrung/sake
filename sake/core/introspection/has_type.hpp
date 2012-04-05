@@ -33,16 +33,16 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
+#include <sake/core/utility/sizeof_t.hpp>
 #include <sake/core/utility/yes_no_tag.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_HAS_TYPE( trait, name ) \
 template< class T, class Pred = boost::mpl::always< boost::true_type > > \
 class trait \
 { \
-    template< class U, bool = ::boost::mpl::apply1< Pred, U >::type::value > struct sfinae; \
-    template< class U > struct sfinae< U, true > { typedef ::sake::yes_tag type; }; \
-    template< class U > struct sfinae< U, false > { typedef ::sake::no_tag type; }; \
-    template< class T_ > static sfinae< typename T_::name >::type test(int); \
+    template< class U > struct sfinae \
+        : ::sake::sizeof_t< 1 + ::boost::mpl::apply1< Pred, U >::type::value > { }; \
+    template< class T_ > static sfinae< typename T_::name > test(int); \
     template< class T_ > static ::sake::no_tag test(...); \
 public: \
     static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
