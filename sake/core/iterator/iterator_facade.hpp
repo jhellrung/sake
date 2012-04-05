@@ -28,6 +28,7 @@
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/quote.hpp>
+#include <boost/preprocessor/seq/seq.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/remove_const.hpp>
@@ -295,7 +296,10 @@ public:
 protected:
     typedef ChainedBase chained_base_type;
 
-    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( iterator_facade )
+    SAKE_DEFINE_NATURAL_DEFAULT_CTOR(
+        iterator_facade,
+        BOOST_PP_SEQ_NIL, BOOST_PP_SEQ_NIL
+    )
 
     template< class ChainedBaseConstruct >
     explicit iterator_facade(ChainedBaseConstruct const & chained_base_construct,

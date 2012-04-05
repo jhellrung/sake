@@ -61,7 +61,6 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/ref/wrapped_parameter_to_reference.hpp>
-#include <sake/core/utility/define_natural/default_ctor.hpp>
 #include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
 #include <sake/core/utility/overload.hpp>
@@ -87,7 +86,13 @@ struct tuple<>
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
-    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( tuple )
+    SAKE_DEFINE_NATURAL_MEM_FUN(
+        tuple,
+        ( default_ctor )
+        ( swap )
+        ( hash_value ),
+        BOOST_PP_SEQ_NIL, BOOST_PP_SEQ_NIL
+    )
 
     template< class Sequence >
     tuple(Sequence const &,
@@ -105,14 +110,6 @@ struct tuple<>
     >::type
     operator=(Sequence const &)
     { return *this; }
-
-    static void
-    swap(tuple&)
-    { }
-
-    static std::size_t
-    hash_value()
-    { return static_cast< std::size_t >(0); }
 };
 
 } // namespace tuple_adl

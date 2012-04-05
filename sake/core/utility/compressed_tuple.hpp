@@ -81,7 +81,6 @@
 #include <sake/core/utility/base_member.hpp>
 #include <sake/core/utility/compressed_pair.hpp>
 #include <sake/core/utility/compressed_tuple_fwd.hpp>
-#include <sake/core/utility/define_natural/default_ctor.hpp>
 #include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
@@ -107,7 +106,13 @@ struct compressed_tuple<>
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
-    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( compressed_tuple )
+    SAKE_DEFINE_NATURAL_MEM_FUN(
+        compressed_tuple,
+        ( default_ctor )
+        ( swap )
+        ( hash_value ),
+        BOOST_PP_SEQ_NIL, BOOST_PP_SEQ_NIL
+    )
 
     template< class Sequence >
     explicit compressed_tuple(Sequence const &,
@@ -123,14 +128,6 @@ struct compressed_tuple<>
     >::type
     operator=(Sequence const &)
     { return *this; }
-
-    static void
-    swap(compressed_tuple const &)
-    { }
-
-    static std::size_t
-    hash_value()
-    { return static_cast< std::size_t >(0); }
 };
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES

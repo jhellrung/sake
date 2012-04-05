@@ -13,20 +13,17 @@
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
-#include <boost/preprocessor/control/iif.hpp>
-#include <boost/preprocessor/detail/is_binary.hpp>
 #include <boost/preprocessor/facilities/apply.hpp>
 #include <boost/preprocessor/logical/bitand.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/stringize.hpp>
-#include <boost/preprocessor/tuple/eat.hpp>
-#include <boost/preprocessor/tuple/elem.hpp>
 
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
 #include <sake/core/move/move.hpp>
+#include <sake/core/utility/define_natural/private/member_name.hpp>
 #include <sake/core/utility/inherit_cast.hpp>
 
 #define SAKE_DEFINE_NATURAL_assign_body( r, T, base_seq, member_seq ) \
@@ -65,13 +62,7 @@
     BOOST_PP_SEQ_FOR_EACH_R( r, SAKE_DEFINE_NATURAL_assign_member, T, member_seq )
 #define SAKE_DEFINE_NATURAL_assign_member( r, data, elem ) \
     SAKE_DEFINE_NATURAL_assign_member_impl( \
-        data, \
-        BOOST_PP_IIF( \
-            BOOST_PP_IS_BINARY( elem ), \
-            BOOST_PP_TUPLE_ELEM, \
-            elem BOOST_PP_TUPLE_EAT(3) \
-        ) ( 2, 1, elem ) \
-    )
+        data, SAKE_DEFINE_NATURAL_member_name( elem ) )
 #define SAKE_DEFINE_NATURAL_assign_member_impl( T, member ) \
     static_cast< void >(("assert " BOOST_PP_STRINGIZE( member ) " is non-reference", sizeof( &T::member ))); \
     member = ::sake::move(other.member);
