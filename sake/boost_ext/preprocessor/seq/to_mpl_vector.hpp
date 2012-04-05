@@ -23,6 +23,8 @@
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
+#include <boost/mpl/vector/vector0.hpp>
+#include <boost/mpl/vector/vector10.hpp>
 #include <boost/mpl/vector/vector20.hpp>
 #include <boost/preprocessor/cat.hpp>
 
@@ -30,7 +32,8 @@
 #include <sake/boost_ext/preprocessor/seq/size.hpp>
 
 #define SAKE_BOOST_EXT_PP_SEQ_TO_MPL_VECTOR( seq ) \
-    ::boost::mpl::BOOST_PP_CAT( vector, SAKE_BOOST_EXT_PP_SEQ_SIZE( seq ) )< SAKE_BOOST_EXT_PP_SEQ_ENUM( seq ) >
+    ::boost::mpl::BOOST_PP_CAT( vector, SAKE_BOOST_EXT_PP_SEQ_SIZE( seq ) ) \
+        < SAKE_BOOST_EXT_PP_SEQ_ENUM( seq ) >
 
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
