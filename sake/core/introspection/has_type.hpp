@@ -16,10 +16,12 @@
  *
  * expands to a metafunction definition equivalent to
  *
- * template< class T >
+ * template< class T, class Pred = boost::mpl::always< boost::true_type > >
  * struct has_type_xxx
  * {
- *     static bool const value = [true iff T has a nested type named xxx];
+ *     static bool const value = [true iff T has a nested type named xxx and
+ *                                T::xxx satisfies the Boost.MPL metafunction
+ *                                Pred];
  *     typedef has_type_xxx type;
  * };
  ******************************************************************************/
@@ -27,6 +29,27 @@
 #ifndef SAKE_CORE_INTROSPECTION_HAS_TYPE_HPP
 #define SAKE_CORE_INTROSPECTION_HAS_TYPE_HPP
 
+#include <boost/mpl/always.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+
+#include <sake/core/utility/yes_no_tag.hpp>
+
+#define SAKE_INTROSPECTION_DEFINE_HAS_TYPE( trait, name ) \
+template< class T, class Pred = boost::mpl::always< boost::true_type > > \
+class trait \
+{ \
+    template< class U, bool = ::boost::mpl::apply1< Pred, U >::type::value > struct sfinae; \
+    template< class U > struct sfinae< U, true > { typedef ::sake::yes_tag type; }; \
+    template< class U > struct sfinae< U, false > { typedef ::sake::no_tag type; }; \
+    template< class T_ > static sfinae< typename T_::name >::type test(int); \
+    template< class T_ > static ::sake::no_tag test(...); \
+public: \
+    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
+    typedef trait type; \
+};
+
+#if 0 // old implementation
 #include <sake/core/utility/yes_no_tag.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_HAS_TYPE( trait, name ) \
@@ -40,5 +63,6 @@ public: \
     static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
     typedef trait type; \
 };
+#endif // #if 0
 
 #endif // #ifndef SAKE_CORE_INTROSPECTION_HAS_TYPE_HPP
