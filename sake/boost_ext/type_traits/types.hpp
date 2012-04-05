@@ -8,7 +8,6 @@
  * #define SAKE_BOOST_EXT_INTEGRAL_TYPES
  * #define SAKE_BOOST_EXT_FLOATING_POINT_TYPES
  * #define SAKE_BOOST_EXT_POINTER_TYPES
- * #define SAKE_BOOST_EXT_BUILTIN_TYPES
  * #define SAKE_BOOST_EXT_ALIGNMENT_TYPES
  *
  * (Largely borrowed from Boost.TypeTrait's type_with_alignment.)
@@ -21,19 +20,30 @@
 #include <boost/preprocessor/seq/transform.hpp>
 
 #ifndef BOOST_NO_LONG_LONG
-#define SAKE_BOOST_EXT_INTEGRAL_TYPES \
-    ( unsigned char ) \
-    ( unsigned short ) \
-    ( unsigned int ) \
-    ( unsigned long ) \
-    ( unsigned long long )
+#define SAKE_BOOST_EXT_LONG_LONG_SEQ_ELEM ( long long int )
+#define SAKE_BOOST_EXT_UNSIGNED_LONG_LONG_SEQ_ELEM ( unsigned long long int )
 #else // #ifndef BOOST_NO_LONG_LONG
-#define SAKE_BOOST_EXT_INTEGRAL_TYPES \
-    ( unsigned char ) \
-    ( unsigned short ) \
-    ( unsigned int ) \
-    ( unsigned long )
+#define SAKE_BOOST_EXT_LONG_LONG_SEQ_ELEM
+#define SAKE_BOOST_EXT_UNSIGNED_LONG_LONG_SEQ_ELEM
 #endif // #ifndef BOOST_NO_LONG_LONG
+
+#define SAKE_BOOST_EXT_SIGNED_INTEGRAL_TYPES \
+    ( signed char ) \
+    ( short int ) \
+    ( int ) \
+    ( long int ) \
+    SAKE_BOOST_EXT_LONG_LONG_SEQ_ELEM
+#define SAKE_BOOST_EXT_UNSIGNED_INTEGRAL_TYPES \
+    ( unsigned char ) \
+    ( unsigned short int ) \
+    ( unsigned int ) \
+    ( unsigned long int ) \
+    SAKE_BOOST_EXT_UNSIGNED_LONG_LONG_SEQ_ELEM
+#define SAKE_BOOST_EXT_INTEGRAL_TYPES \
+    ( bool ) \
+    ( char ) \
+    SAKE_BOOST_EXT_SIGNED_INTEGRAL_TYPES \
+    SAKE_BOOST_EXT_UNSIGNED_INTEGRAL_TYPES
 
 #define SAKE_BOOST_EXT_FLOATING_POINT_TYPES \
     ( float ) \
@@ -58,11 +68,15 @@
     SAKE_BOOST_EXT_POINTER_TYPES
 
 #define SAKE_BOOST_EXT_ALIGNMENT_TYPES \
-    SAKE_BOOST_EXT_BUILTIN_TYPES \
+    SAKE_BOOST_EXT_UNSIGNED_INTEGRAL_TYPES \
+    SAKE_BOOST_EXT_FLOATING_POINT_TYPES \
+    SAKE_BOOST_EXT_POINTER_TYPES \
     BOOST_PP_SEQ_TRANSFORM( \
         SAKE_BOOST_EXT_TYPE_TRAITS_PRIVATE_struct_with_member, \
         ~, \
-        SAKE_BOOST_EXT_BUILTIN_TYPES \
+        SAKE_BOOST_EXT_UNSIGNED_INTEGRAL_TYPES \
+        SAKE_BOOST_EXT_FLOATING_POINT_TYPES \
+        SAKE_BOOST_EXT_POINTER_TYPES \
     )
 
 #define SAKE_BOOST_EXT_TYPE_TRAITS_PRIVATE_struct_with_member( s, data, elem ) \
