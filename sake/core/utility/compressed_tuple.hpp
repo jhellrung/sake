@@ -282,10 +282,13 @@ struct storage< boost::mpl::vector2< T0, T1 >, _ >
 
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
+private:
+    typedef sake::compressed_pair< T0, T1 > m_pair_type;
+public:
     SAKE_DEFINE_NATURAL_MEM_FUN(
         storage,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
-        BOOST_PP_SEQ_NIL, ( m_pair )
+        BOOST_PP_SEQ_NIL, (( m_pair_type, m_pair ))
     )
 
     template< class U0, class U1 >
@@ -308,7 +311,7 @@ struct storage< boost::mpl::vector2< T0, T1 >, _ >
     { return boost_ext::fusion::at_c<I>(m_pair); }
 
 private:
-    sake::compressed_pair< T0, T1 > m_pair;
+    m_pair_type m_pair;
 };
 
 /*******************************************************************************
@@ -495,10 +498,13 @@ public:
 
 #else // #if N == 1
 
+private:
+    typedef private_::storage< values_type > m_storage_type;
+public:
     SAKE_DEFINE_NATURAL_MEM_FUN(
         compressed_tuple,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
-        BOOST_PP_SEQ_NIL, ( m_storage )
+        BOOST_PP_SEQ_NIL, (( m_storage_type, m_storage ))
     )
 
     // template< class U0, ... >
@@ -650,7 +656,7 @@ public:
 
 private:
 #if N != 1
-    private_::storage< values_type > m_storage;
+    m_storage_type m_storage;
 #endif // #if N != 1
 };
 
@@ -699,12 +705,6 @@ struct storage< boost::mpl::BOOST_PP_CAT( vector, N )< T0N >, true >
 
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
-        storage,
-        ( default_ctor ) ( move_ctor ) ( move_assign ),
-        BOOST_PP_SEQ_NIL, ( m_storage )
-    )
-
 private:
     static std::size_t const j = sake::static_clamp_c<
         0,
@@ -729,7 +729,55 @@ private:
     || !boost::is_empty< typename boost::mpl::at_c< values_type, j+1 >::type >::value
     ||  boost_ext::mpl::all< values_type, boost::mpl::quote1< boost::is_empty > >::value
     ));
+    typedef typename boost::mpl::begin< values_type >::type begin_values_type;
+    typedef typename boost::mpl::end< values_type >::type end_values_type;
+    typedef private_::storage<
+        // candidate for abstracting into a mpl::flatten algorithm?
+        typename boost_ext::mpl::as_vector<
+            // This might *look* complicated, but it's really not too bad.
+            // We just want to form a Boost.MPL sequence consisting of
+            //     T[0], ..., T[j-1],
+            //     compressed_pair< T[j], T[j+1] >,
+            //     T[j+2], ..., T[N-1]
+            typename boost::mpl::copy<
+                // T[j+2], ..., T[N-1]
+                boost::mpl::iterator_range<
+                    typename boost_ext::mpl::advance_c< begin_values_type, j+2 >::type,
+                    end_values_type
+                >,
+                boost::mpl::back_inserter<
+                    typename boost::mpl::push_back<
+                        typename boost::mpl::copy<
+                            // T[0], ..., T[j-1]
+                            boost::mpl::iterator_range<
+                                begin_values_type,
+                                typename boost_ext::mpl::advance_c< begin_values_type, j+0 >::type
+                            >,
+                            boost::mpl::back_inserter<
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+                                boost_ext::mpl::vector<>
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+                                boost::mpl::vector0<>
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+                            >
+                        >::type,
+                        // compressed_pair< T[j], T[j+1] >
+                        sake::compressed_pair<
+                            typename boost::mpl::at_c< values_type, j+0 >::type,
+                            typename boost::mpl::at_c< values_type, j+1 >::type
+                        >
+                    >::type
+                >
+            >::type
+        >::type
+    > m_storage_type;
 public:
+
+    SAKE_DEFINE_NATURAL_MEM_FUN(
+        storage,
+        ( default_ctor ) ( move_ctor ) ( move_assign ),
+        BOOST_PP_SEQ_NIL, (( m_storage_type, m_storage ))
+    )
 
     template< class_U0N >
     storage( BOOST_PP_ENUM( N, fwd2_ref_Un_xn, ~ ) )
@@ -752,51 +800,7 @@ public:
     { return private_::at_c_dispatch<I,j>::apply(m_storage); }
 
 private:
-    private_::storage<
-        typename boost_ext::mpl::as_vector<
-            // This might *look* complicated, but it's really not too bad.
-            // We just want to form a Boost.MPL sequence consisting of
-            //     T[0], ..., T[j-1],
-            //     compressed_pair< T[j], T[j+1] >,
-            //     T[j+2], ..., T[N-1]
-            typename boost::mpl::copy<
-                // T[j+2], ..., T[N-1]
-                boost::mpl::iterator_range<
-                    typename boost_ext::mpl::advance_c<
-                        typename boost::mpl::begin< values_type >::type,
-                        j+2
-                    >::type,
-                    typename boost::mpl::end< values_type >::type
-                >,
-                boost::mpl::back_inserter<
-                    typename boost::mpl::push_back<
-                        typename boost::mpl::copy<
-                            // T[0], ..., T[j-1]
-                            boost::mpl::iterator_range<
-                                typename boost::mpl::begin< values_type >::type,
-                                typename boost_ext::mpl::advance_c<
-                                    typename boost::mpl::begin< values_type >::type,
-                                    j+0
-                                >::type
-                            >,
-                            boost::mpl::back_inserter<
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-                                boost_ext::mpl::vector<>
-#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-                                boost::mpl::vector0<>
-#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-                            >
-                        >::type,
-                        // compressed_pair< T[j], T[j+1] >
-                        sake::compressed_pair<
-                            typename boost::mpl::at_c< values_type, j+0 >::type,
-                            typename boost::mpl::at_c< values_type, j+1 >::type
-                        >
-                    >::type
-                >
-            >::type
-        >::type
-    > m_storage;
+    m_storage_type m_storage;
 };
 
 } // namespace private_

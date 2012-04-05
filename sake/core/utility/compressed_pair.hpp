@@ -85,10 +85,13 @@ struct compressed_pair
 
     SAKE_BASIC_MOVABLE_COPYABLE( compressed_pair )
 
+private:
+    typedef private_::storage< T0, T1 > m_storage_type;
+public:
     SAKE_DEFINE_NATURAL_MEM_FUN(
         compressed_pair,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
-        BOOST_PP_SEQ_NIL, ( m_storage )
+        BOOST_PP_SEQ_NIL, (( m_storage_type, m_storage ))
     )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -207,7 +210,7 @@ struct compressed_pair
     { return m_storage.second(); }
 
 private:
-    private_::storage< T0, T1 > m_storage;
+    m_storage_type m_storage;
 };
 
 /*******************************************************************************

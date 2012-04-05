@@ -250,8 +250,10 @@ struct at_c_dispatch;
 
 } // namespace tuple_adl
 
-#define datan_seq( z, n, data ) \
-    ( data ## n )
+#define Tn_seq( z, n, data ) \
+    ( T ## n )
+#define Tn_n_seq( z, n, data ) \
+    (( T ## n, _ ## n ))
 #define Tn_n( z, n, data ) \
     T ## n _ ## n;
 #define comma_i_emplacer_construct_Ti_elem( r, data, i, elem ) \
@@ -273,7 +275,8 @@ struct at_c_dispatch;
 #define BOOST_PP_FILENAME_1       <sake/core/data_structures/tuple.hpp>
 #include BOOST_PP_ITERATE()
 
-#undef datan_seq
+#undef Tn_seq
+#undef Tn_n_seq
 #undef Tn_n
 #undef comma_i_emplacer_construct_Ti_elem
 #undef _n_at_c_n_data
@@ -293,9 +296,9 @@ struct at_c_dispatch;
 #define class_T0N BOOST_PP_ENUM_PARAMS( N, class T )
 #define T0N       BOOST_PP_ENUM_PARAMS( N, T )
 
-#define T0N_seq BOOST_PP_REPEAT( N, datan_seq, T )
-#define _0N_seq BOOST_PP_REPEAT( N, datan_seq, _ )
-#define T0N_0N  BOOST_PP_REPEAT( N, Tn_n, ~ )
+#define T0N_seq    BOOST_PP_REPEAT( N, Tn_seq, ~ )
+#define T0N_0N_seq BOOST_PP_REPEAT( N, Tn_n_seq, ~ )
+#define T0N_0N     BOOST_PP_REPEAT( N, Tn_n, ~ )
 
 #define class_U0N BOOST_PP_ENUM_PARAMS( N, class U )
 
@@ -339,7 +342,7 @@ struct tuple< T0N >
         ( copy_assign ) ( move_assign )
         ( swap )
         ( hash_value ),
-        BOOST_PP_SEQ_NIL, _0N_seq
+        BOOST_PP_SEQ_NIL, T0N_0N_seq
     )
 
     struct result_of
@@ -508,7 +511,7 @@ struct make_tuple< T0N >
 #undef class_U0N
 
 #undef T0N_seq
-#undef _0N_seq
+#undef T0N_0N_seq
 #undef T0N_0N
 
 #undef class_T0N

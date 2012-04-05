@@ -70,8 +70,8 @@ struct pair
     typedef T1 second_type;
     typedef boost::mpl::vector2< T0, T1 > values_type;
 
-    first_type first;
-    second_type second;
+    T0 first;
+    T1 second;
 
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE( typename pair, ( T0 ) ( T1 ) )
 
@@ -81,7 +81,7 @@ struct pair
         ( copy_assign ) ( move_assign )
         ( swap )
         ( hash_value ),
-        BOOST_PP_SEQ_NIL, ( first ) ( second )
+        BOOST_PP_SEQ_NIL, (( T0, first )) (( T1, second ))
     )
 
     pair(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
