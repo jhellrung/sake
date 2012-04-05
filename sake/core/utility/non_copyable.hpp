@@ -18,6 +18,7 @@
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/seq/seq.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/core/utility/define_natural/default_ctor.hpp>
 
@@ -32,7 +33,7 @@
 #define SAKE_NON_COPYABLE( T ) \
     private: T(T&); \
     private: void operator=(T&); \
-    public: static bool const has_private_operator_assign = true;
+    public: typedef ::boost::true_type has_private_operator_assign;
 
 #endif // #ifndef BOOST_NO_DELETED_FUNCTIONS
 

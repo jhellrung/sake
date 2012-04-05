@@ -17,6 +17,7 @@
 #define SAKE_CORE_UTILITY_NON_COPY_ASSIGNABLE_HPP
 
 #include <boost/config.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
 #ifndef BOOST_NO_DELETED_FUNCTIONS
 
@@ -27,7 +28,7 @@
 
 #define SAKE_NON_COPY_ASSIGNABLE( T ) \
     private: void operator=(T&); \
-    public: static bool const has_private_operator_assign = true;
+    public: typedef ::boost::true_type has_private_operator_assign;
 
 #endif // #ifndef BOOST_NO_DELETED_FUNCTIONS
 

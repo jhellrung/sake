@@ -23,14 +23,14 @@
 #include <boost/mpl/quote.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/core/introspection/has_isc.hpp>
+#include <sake/core/introspection/has_type.hpp>
 #include <sake/core/utility/has_private_operator_assign_fwd.hpp>
 
 namespace sake
 {
 
-SAKE_INTROSPECTION_DEFINE_HAS_ISC(
-    has_isc_has_private_operator_assign,
+SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
+    has_type_has_private_operator_assign,
     has_private_operator_assign
 )
 
@@ -66,7 +66,7 @@ namespace default_impl
 
 template< class T >
 struct has_private_operator_assign
-    : sake::has_isc_has_private_operator_assign<
+    : sake::has_type_has_private_operator_assign<
           T, boost::mpl::quote1< boost::mpl::identity > >
 { };
 
