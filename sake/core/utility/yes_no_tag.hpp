@@ -13,8 +13,8 @@
 
 #include <sake/core/utility/sizeof_t.hpp>
 
-#define SAKE_SIZEOF_YES_TAG 1
-#define SAKE_SIZEOF_NO_TAG  2
+#define SAKE_SIZEOF_YES_TAG 2
+#define SAKE_SIZEOF_NO_TAG  1
 
 namespace sake
 {
