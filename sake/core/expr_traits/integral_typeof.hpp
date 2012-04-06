@@ -22,6 +22,7 @@
 #define SAKE_CORE_EXPR_TRAITS_INTEGRAL_TYPEOF_HPP
 
 #include <sake/boost_ext/preprocessor/seq/to_mpl_vector.hpp>
+#include <sake/boost_ext/type_traits/types.hpp>
 
 #include <sake/core/expr_traits/typeof.hpp>
 
