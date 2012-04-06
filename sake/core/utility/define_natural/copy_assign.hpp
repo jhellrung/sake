@@ -17,7 +17,6 @@
 #define SAKE_CORE_UTILITY_DEFINE_NATURAL_COPY_ASSIGN_HPP
 
 #include <boost/config.hpp>
-#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
@@ -45,7 +44,9 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/seq/cat.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/seq/size.hpp>
@@ -65,7 +66,7 @@
 
 #define SAKE_DEFINE_NATURAL_COPY_ASSIGN_IF_ANY_UMC_R( r, T, base_seq, member_seq ) \
     SAKE_DEFINE_NATURAL_COPY_ASSIGN_IF_ANY_UMC_R_impl( r, \
-        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ), \
+        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) BOOST_PP_EMPTY, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         base_seq, member_seq )
 
@@ -77,10 +78,10 @@
     { SAKE_DEFINE_NATURAL_assign_body( r, T, base_seq, member_seq ) }
 
 #define SAKE_DEFINE_NATURAL_COPY_ASSIGN_any_umc( r, base_seq, member_seq ) \
-    BOOST_PP_CAT( \
-        SAKE_DEFINE_NATURAL_COPY_ASSIGN_any_umc_, \
-        BOOST_PP_CAT( SAKE_BOOST_EXT_PP_SEQ_IS_NIL( base_seq ), \
-                      SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_seq ) ) \
+    BOOST_PP_SEQ_CAT( \
+        ( SAKE_DEFINE_NATURAL_COPY_ASSIGN_any_umc_ ) \
+        ( SAKE_BOOST_EXT_PP_SEQ_IS_NIL( base_seq ) ) \
+        ( SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_seq ) ) \
     ) ( r, base_seq, member_seq )
 #define SAKE_DEFINE_NATURAL_COPY_ASSIGN_any_umc_00( r, base_seq, member_seq ) \
     ::sake::boost_ext::mpl::or2< \
