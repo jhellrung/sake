@@ -1,5 +1,5 @@
 /*******************************************************************************
- * core/iterator/private/adaptor_traits.hpp
+ * sake/core/iterator/private/adaptor_traits.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
