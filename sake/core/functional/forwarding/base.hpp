@@ -66,13 +66,13 @@ public:
 
 #else // #if !defined( ... ) && !defined( ... )
 
-#define SAKE_OVERLOAD_IS_CALLABLE( n, T_tuple ) \
+#define SAKE_OVERLOAD_ENABLE( r, n, T_tuple ) \
     enable< Derived T_tuple >
-#define SAKE_OVERLOAD_RESULT( n, T_tuple ) \
+#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
     result< Derived T_tuple >
-#define SAKE_OVERLOAD_MEMBER_FUNCTION_NAME \
+#define SAKE_OVERLOAD_FUNCTION_NAME \
     operator()
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return core_access::apply( derived(), BOOST_PP_TUPLE_REM_CTOR( n, forward_x_tuple ) );
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_FORWARDING_BASE_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_FORWARDING_BASE_FWD_MAX_ARITY
@@ -94,13 +94,15 @@ public:
 
 #else // #if !defined( ... ) && !defined( ... )
 
-#define SAKE_OVERLOAD_IS_CALLABLE( n, T_tuple ) \
+#define SAKE_OVERLOAD_ENABLE( r, n, T_tuple ) \
     enable< Derived const T_tuple >
-#define SAKE_OVERLOAD_RESULT( n, T_tuple ) \
+#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
     result< Derived const T_tuple >
-#define SAKE_OVERLOAD_CONST_MEMBER_FUNCTION_NAME \
+#define SAKE_OVERLOAD_FUNCTION_NAME \
     operator()
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_DECLARATION_SUFFIX \
+    const
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return core_access::apply( derived(), BOOST_PP_TUPLE_REM_CTOR( n, forward_x_tuple ) );
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_FORWARDING_BASE_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_FORWARDING_BASE_FWD_MAX_ARITY

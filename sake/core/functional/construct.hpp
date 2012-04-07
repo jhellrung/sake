@@ -117,9 +117,11 @@ public:
 
 #define SAKE_OVERLOAD_RESULT_TYPE \
     T
-#define SAKE_OVERLOAD_CONST_MEMBER_FUNCTION_NAME \
+#define SAKE_OVERLOAD_FUNCTION_NAME \
     operator()
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_DECLARATION_SUFFIX \
+    const
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return T forward_x_tuple ;
 #define SAKE_OVERLOAD_MIN_ARITY         2
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_CONSTRUCT_PERFECT_MAX_ARITY
@@ -188,13 +190,13 @@ construct(U const & x)
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-#define SAKE_OVERLOAD_DECLARE_TMPL_PARAMS( n, classT_tuple ) \
+#define SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( r, n, classT_tuple ) \
     class T, BOOST_PP_TUPLE_REM_CTOR( n, classT_tuple )
 #define SAKE_OVERLOAD_RESULT_TYPE \
     T
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     construct
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return functional::construct<T>() forward_x_tuple ;
 #define SAKE_OVERLOAD_MIN_ARITY         2
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_CONSTRUCT_PERFECT_MAX_ARITY

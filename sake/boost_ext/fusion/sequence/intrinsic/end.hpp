@@ -86,13 +86,13 @@ class end< Sequence& >
 // template< class Sequence >
 // inline typename result_of::end< Sequence >::type
 // end(Sequence&& s);
-#define SAKE_OVERLOAD_RESULT( n, T_tuple ) \
+#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
     result_of::end< SAKE_BOOST_EXT_PP_TUPLE_REM1 T_tuple >
-#define SAKE_OVERLOAD_FN_NAME end
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_FUNCTION_NAME \
+    end
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return static_cast< typename SAKE_OVERLOAD_RESULT( n, T_tuple ) ::type >( \
-        boost::fusion::end x_tuple \
-    );
+        boost::fusion::end x_tuple );
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY 1
 #include SAKE_OVERLOAD_GENERATE()
 

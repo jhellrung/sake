@@ -504,11 +504,11 @@ inline sake::emplacer< void ( ) >
 make_emplacer()
 { return sake::emplacer< void ( ) >(); }
 
-#define SAKE_OVERLOAD_RESULT( n, U_tuple ) \
+#define SAKE_OVERLOAD_RESULT( r, n, U_tuple ) \
     boost::mpl::identity< sake::emplacer< void U_tuple > >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     make_emplacer
-#define SAKE_OVERLOAD_BODY( n, U_tuple, y_tuple, forward_y_tuple ) \
+#define SAKE_OVERLOAD_BODY( r, n, U_tuple, y_tuple, forward_y_tuple ) \
     return sake::emplacer< void U_tuple > forward_y_tuple ;
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_EMPLACER_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_EMPLACER_FWD_MAX_ARITY
@@ -520,13 +520,13 @@ inline sake::emplacer< T ( ) >
 make_typed_emplacer()
 { return sake::emplacer< T ( ) >(); }
 
-#define SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( n, classU_tuple ) \
+#define SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( r, n, classU_tuple ) \
     class T, BOOST_PP_TUPLE_REM_CTOR( n, classU_tuple )
-#define SAKE_OVERLOAD_RESULT( n, U_tuple ) \
+#define SAKE_OVERLOAD_RESULT( r, n, U_tuple ) \
     boost::mpl::identity< sake::emplacer< T U_tuple > >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     make_typed_emplacer
-#define SAKE_OVERLOAD_BODY( n, U_tuple, y_tuple, forward_y_tuple ) \
+#define SAKE_OVERLOAD_BODY( r, n, U_tuple, y_tuple, forward_y_tuple ) \
     return sake::emplacer< T U_tuple > forward_y_tuple ;
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_EMPLACER_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_EMPLACER_FWD_MAX_ARITY

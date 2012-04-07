@@ -157,6 +157,7 @@ protected:
     //     const BaseConstruct& base_construct,
     //     MemberConstruct&& member_construct
     //     [, const ChainedBaseConstruct& chained_base_construct]);
+#error Need to fix this!!!
 #define SAKE_OVERLOAD_PARAM_SPEC_SEQ \
     (( cref_tag, BaseConstruct, base_construct )) \
     (( perfect_tag, BOOST_PP_SEQ_NIL, member_construct ))

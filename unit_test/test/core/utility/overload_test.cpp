@@ -52,16 +52,18 @@ struct X
     // operator()(T0&& x0, ... ) const
     // { return f(sake::forward< T0 >(x0), ... ); }
 #define SAKE_OVERLOAD_DEFINE_RESULT
-#define SAKE_OVERLOAD_IS_CALLABLE( n, T_tuple ) \
+#define SAKE_OVERLOAD_ENABLE( r, n, T_tuple ) \
     sake::boost_ext::mpl::all< \
         BOOST_PP_CAT( boost::mpl::vector, n ) < BOOST_PP_TUPLE_REM_CTOR( n, T_tuple ) >, \
         boost::is_convertible< boost::mpl::_1, int > \
     >
-#define SAKE_OVERLOAD_RESULT( n, T_tuple ) \
+#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
     boost::mpl::always< R< n > >::apply< void T_tuple >
-#define SAKE_OVERLOAD_CONST_MEMBER_FUNCTION_NAME \
+#define SAKE_OVERLOAD_FUNCTION_NAME \
     operator()
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_DECLARATION_SUFFIX \
+    const
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return f forward_x_tuple ;
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY 3
 #include SAKE_OVERLOAD_GENERATE()

@@ -148,12 +148,12 @@ make_tuple(T&&... x)
 
 #else // #if !defined( ... ) && ...
 
-#define SAKE_OVERLOAD_RESULT( n, T_tuple ) \
+#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
     result_of::make_tuple< BOOST_PP_TUPLE_REM_CTOR( n, T_tuple ) >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     make_tuple
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
-    return typename SAKE_OVERLOAD_RESULT( n, T_tuple ) ::type forward_x_tuple ;
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
+    return typename SAKE_OVERLOAD_RESULT( r, n, T_tuple ) ::type forward_x_tuple ;
 #define SAKE_OVERLOAD_FWD_MAX_ARITY SAKE_TUPLE_MAX_SIZE
 #include SAKE_OVERLOAD_GENERATE()
 
@@ -424,13 +424,13 @@ struct tuple< T0N >
 #define SAKE_OVERLOAD_T U
 #define SAKE_OVERLOAD_CTOR_NAME \
     tuple
-#define SAKE_OVERLOAD_CTOR_INIT_LIST( n, U_tuple, x_tuple, forward_x_tuple ) \
-    BOOST_PP_SEQ_FOR_EACH_I( \
+#define SAKE_OVERLOAD_CTOR_INIT_LIST( r, n, U_tuple, x_tuple, forward_x_tuple ) \
+    BOOST_PP_SEQ_FOR_EACH_I_R( r, \
         comma_i_emplacer_construct_Ti_elem, \
         ~, \
         BOOST_PP_TUPLE_TO_SEQ( n, forward_x_tuple ) \
     )
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple )
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple )
 #define SAKE_OVERLOAD_MIN_ARITY         N
 #if N <= SAKE_TUPLE_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY N

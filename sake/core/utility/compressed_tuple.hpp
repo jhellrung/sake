@@ -512,9 +512,9 @@ public:
 #define SAKE_OVERLOAD_T U
 #define SAKE_OVERLOAD_CTOR_NAME \
     compressed_tuple
-#define SAKE_OVERLOAD_CTOR_INIT_LIST( n, U_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_CTOR_INIT_LIST( r, n, U_tuple, x_tuple, forward_x_tuple ) \
     m_storage forward_x_tuple
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple )
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple )
 #define SAKE_OVERLOAD_MIN_ARITY         N
 #if N <= SAKE_COMPRESSED_TUPLE_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY N

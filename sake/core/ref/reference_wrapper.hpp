@@ -151,11 +151,13 @@ private:
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
-#define SAKE_OVERLOAD_RESULT( n, T_tuple ) \
+#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
     result_impl< reference_wrapper T_tuple >
-#define SAKE_OVERLOAD_CONST_MEMBER_FUNCTION_NAME \
+#define SAKE_OVERLOAD_FUNCTION_NAME \
     apply_impl
-#define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_DECLARATION_SUFFIX \
+    const
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return (*mp) forward_x_tuple ;
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY SAKE_FORWARDING_BASE_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
