@@ -95,7 +95,6 @@
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
@@ -173,10 +172,7 @@ struct non_movable_traits
 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C( T, c ) \
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( \
-        BOOST_PP_EXPR_IIF( \
-            SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_TYPENAME( T ), \
-            typename \
-        ) BOOST_PP_EMPTY, \
+        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) BOOST_PP_EMPTY, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         c \
     )
@@ -189,10 +185,7 @@ struct non_movable_traits
 
 #define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C( T, c ) \
     SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( \
-        BOOST_PP_EXPR_IIF( \
-            SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_TYPENAME( T ), \
-            typename \
-        ) BOOST_PP_EMPTY, \
+        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) BOOST_PP_EMPTY, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         c \
     )
@@ -286,10 +279,7 @@ struct traits< T, true >
  
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C( T, c ) \
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( \
-        BOOST_PP_EXPR_IIF( \
-            SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_TYPENAME( T ), \
-            typename \
-        ) BOOST_PP_EMPTY, \
+        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) BOOST_PP_EMPTY, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         c \
     )
@@ -305,10 +295,7 @@ struct traits< T, true >
 
 #define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C( T, c ) \
     SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( \
-        BOOST_PP_EXPR_IIF( \
-            SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_TYPENAME( T ), \
-            typename \
-        ) BOOST_PP_EMPTY, \
+        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) BOOST_PP_EMPTY, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         c \
     )
