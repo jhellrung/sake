@@ -2,4 +2,3 @@
 - massively simplify SAKE_OVERLOAD by removing SAKE_OVERLOAD_RV_PARAM_TYPES_SEQ
   and SAKE_OVERLOAD_PARAM_SPEC_SEQ
 - rename yes_tag/no_tag to true_tag/false_tag
-- document and narrow parameter scope for define_natural macros
