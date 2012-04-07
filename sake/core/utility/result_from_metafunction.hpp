@@ -53,7 +53,10 @@
 
 #define SAKE_RESULT_FROM_METAFUNCTION_DZ( d, z, metafunction, n ) \
     template< class > struct result; \
-    BOOST_PP_CAT( SAKE_RESULT_FROM_METAFUNCTION_dispatch, BOOST_PP_IS_BINARY( n ) ) ( d, z, metafunction, n )
+    BOOST_PP_CAT( \
+        SAKE_RESULT_FROM_METAFUNCTION_dispatch, \
+        BOOST_PP_IS_BINARY( n ) \
+    ) ( d, z, metafunction, n )
 #define SAKE_RESULT_FROM_METAFUNCTION_dispatch0( d, z, metafunction, n ) \
     SAKE_RESULT_FROM_METAFUNCTION_result( z, n, metafunction )
 #define SAKE_RESULT_FROM_METAFUNCTION_dispatch1( d, z, metafunction, n ) \
