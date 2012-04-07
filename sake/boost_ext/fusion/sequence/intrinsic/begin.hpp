@@ -22,15 +22,16 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/range_c.hpp>
-#include <boost/preprocessor/facilities/apply.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
 #include <sake/boost_ext/fusion/iterator/move_owned_iterator.hpp>
 #include <sake/boost_ext/mpl/all.hpp>
 #include <sake/boost_ext/mpl/any.hpp>
+#include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
+
 #include <sake/core/utility/overload.hpp>
 
 namespace sake
@@ -85,7 +86,7 @@ class begin< Sequence& >
 // inline typename result_of::begin< Sequence >::type
 // begin(Sequence&& s);
 #define SAKE_OVERLOAD_RESULT( n, T_tuple ) \
-    result_of::begin< BOOST_PP_APPLY( T_tuple ) >
+    result_of::begin< SAKE_BOOST_EXT_PP_TUPLE_REM1 T_tuple >
 #define SAKE_OVERLOAD_FN_NAME begin
 #define SAKE_OVERLOAD_BODY( n, T_tuple, x_tuple, forward_x_tuple ) \
     return static_cast< typename SAKE_OVERLOAD_RESULT( n, T_tuple ) ::type >( \

@@ -11,6 +11,7 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 if exist transform.ipp del transform.ipp
-for /L %%i in ( 0, 1, 255 ) do @echo #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_%%i_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_%%i_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) >> transform.ipp
-for /L %%i in ( 0, 1, 255 ) do @echo #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_%%i_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) >> transform.ipp
 for /L %%i in ( 0, 1, 255 ) do @echo #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_%%i( op, data, seq ) BOOST_PP_TUPLE_ELEM( 3, 0, BOOST_PP_SEQ_FOLD_LEFT_%%i( SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_fold_left_op, ( BOOST_PP_SEQ_NIL, op, data ), seq ) ) >> transform.ipp
+for /L %%i in ( 0, 1, 255 ) do @echo #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_%%i_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_%%i_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) >> transform.ipp
+for /L %%i in ( 0, 1, 255 ) do @echo #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_%%i_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_%%i_fold_left_op_1 x >> transform.ipp
+for /L %%i in ( 0, 1, 255 ) do @echo #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_%%i_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) >> transform.ipp

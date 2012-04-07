@@ -71,11 +71,11 @@
 #include <boost/preprocessor/repetition/deduce_r.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/seq/size.hpp>
-#include <boost/preprocessor/tuple/elem.hpp>
 
 #include <sake/boost_ext/preprocessor/keyword/access.hpp>
 #include <sake/boost_ext/preprocessor/keyword/class.hpp>
 #include <sake/boost_ext/preprocessor/keyword/dependent.hpp>
+#include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
 #include <sake/core/utility/call_traits.hpp>
 #include <sake/core/utility/identity_type.hpp>
@@ -94,20 +94,24 @@
     { }
 
 #define SAKE_DIRECT_INIT_CTOR_comma_member_param_type( r, data, i, elem ) \
-    SAKE_DIRECT_INIT_CTOR_comma_member_param_type_impl( \
-        i, \
-        SAKE_IDENTITY_TYPE( BOOST_PP_TUPLE_ELEM( 2, 0, elem ) ), \
-        BOOST_PP_TUPLE_ELEM( 2, 1, elem ) \
-    )
-#define SAKE_DIRECT_INIT_CTOR_comma_member_param_type_impl( i, type, name ) \
+    SAKE_DIRECT_INIT_CTOR_comma_member_param_type_0(( \
+        i, SAKE_BOOST_EXT_PP_TUPLE_REM2 elem ))
+#define SAKE_DIRECT_INIT_CTOR_comma_member_param_type_0( x ) \
+    SAKE_DIRECT_INIT_CTOR_comma_member_param_type_1 x
+#define SAKE_DIRECT_INIT_CTOR_comma_member_param_type_1( i, type, name ) \
     BOOST_PP_COMMA_IF( i ) \
-    SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_DEPENDENT( type ) \
-    ::sake::call_traits< SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_CLASS( type ) >::param_type \
+    SAKE_DIRECT_INIT_CTOR_param_type( SAKE_IDENTITY_TYPE( type ) ) \
     BOOST_PP_CAT( _ ## i ## _, name )
+#define SAKE_DIRECT_INIT_CTOR_param_type( type ) \
+    SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_DEPENDENT( type ) \
+    ::sake::call_traits< SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_CLASS( type ) >::param_type
 
 #define SAKE_DIRECT_INIT_CTOR_comma_init_member( r, data, i, elem ) \
-    SAKE_DIRECT_INIT_CTOR_comma_init_member_impl( i, BOOST_PP_TUPLE_ELEM( 2, 1, elem ) )
-#define SAKE_DIRECT_INIT_CTOR_comma_init_member_impl( i, name ) \
+    SAKE_DIRECT_INIT_CTOR_comma_init_member_0(( \
+        i, SAKE_BOOST_EXT_PP_TUPLE_REM2 elem ))
+#define SAKE_DIRECT_INIT_CTOR_comma_init_member_0( x ) \
+    SAKE_DIRECT_INIT_CTOR_comma_init_member_1 x
+#define SAKE_DIRECT_INIT_CTOR_comma_init_member_1( i, type, name ) \
     BOOST_PP_COMMA_IF( i ) name ( BOOST_PP_CAT( _ ## i ## _, name ) )
 
 /*******************************************************************************
@@ -119,27 +123,27 @@
 
 #define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_R( r, T, member_seq ) \
     BOOST_PP_CAT( \
-        SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl_, \
+        SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_dispatch, \
         BOOST_PP_IS_UNARY( member_seq ) \
     ) ( r, T, member_seq )
-#define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl_0( r, T, member_seq ) \
+#define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_dispatch0( r, T, member_seq ) \
     SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl( r, \
         T, \
         SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_ACCESS_COLON( member_seq ) BOOST_PP_EMPTY, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_ACCESS( member_seq ) \
     )
-#define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl_1( r, T, member_seq ) \
+#define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_dispatch1( r, T, member_seq ) \
     SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl( r, T, BOOST_PP_EMPTY, member_seq )
 #define SAKE_DIRECT_INIT_CTOR_DECLARE_MEMBERS_impl( r, T, member_access_colon, member_seq ) \
     SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_ACCESS_COLON( T ) \
     SAKE_DIRECT_INIT_CTOR_R( r, SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_ACCESS( T ), member_seq ) \
     member_access_colon() \
-    BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_DIRECT_INIT_CTOR_declare_member, ~, member_seq ) \
+    BOOST_PP_SEQ_FOR_EACH_R( r, SAKE_DIRECT_INIT_CTOR_declare_member, ~, member_seq ) \
     SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_ACCESS_COLON( T )
 
-#define SAKE_DIRECT_INIT_CTOR_declare_member( r, data, i, elem ) \
-    SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_CLASS( \
-        SAKE_IDENTITY_TYPE( BOOST_PP_TUPLE_ELEM( 2, 0, elem ) ) ) \
-    BOOST_PP_TUPLE_ELEM( 2, 1, elem );
+#define SAKE_DIRECT_INIT_CTOR_declare_member( r, data, elem ) \
+    SAKE_DIRECT_INIT_CTOR_declare_member_impl elem
+#define SAKE_DIRECT_INIT_CTOR_declare_member_impl( type, name ) \
+    SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_CLASS( SAKE_IDENTITY_TYPE( type ) ) name;
 
 #endif // #ifndef SAKE_CORE_UTILITY_DIRECT_INIT_CTOR_HPP

@@ -116,7 +116,6 @@
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/stringize.hpp>
-#include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 #include <boost/type_traits/is_signed.hpp>
@@ -124,6 +123,7 @@
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
+#include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
 #include <sake/core/math/zero_fwd.hpp>
 #include <sake/core/utility/debug.hpp>
@@ -159,14 +159,13 @@
 
 #ifndef SAKE_ASSERT_FAILURE_MACRO
 #define SAKE_ASSERT_FAILURE_MACRO( data, info_seq ) \
-    BOOST_PP_TUPLE_ELEM( 3, 0, data ) ( \
-        BOOST_PP_TUPLE_ELEM( 3, 1, data ), \
-        BOOST_PP_TUPLE_ELEM( 3, 2, data ), \
-        BOOST_PP_SEQ_ENUM( info_seq ) \
-    )
+    SAKE_ASSERT_FAILURE_MACRO_0(( \
+        SAKE_BOOST_EXT_PP_TUPLE_REM3 data, info_seq ))
+#define SAKE_ASSERT_FAILURE_MACRO_0( x ) \
+    SAKE_ASSERT_FAILURE_MACRO_1 x
+#define SAKE_ASSERT_FAILURE_MACRO_1( failure_action, o, macro, info_seq ) \
+    failure_action(o, macro, BOOST_PP_SEQ_ENUM( info_seq ))
 #endif // #ifndef SAKE_ASSERT_FAILURE_MACRO
-
-
 
 /*******************************************************************************
  * SAKE_ASSERT( expression )
@@ -367,9 +366,14 @@
         subexpression_seq \
     ) )
 #define SAKE_ASSERT_ALL_and_subexpression_fail( r, data, i, elem ) \
-    && ( elem ? true : ( BOOST_PP_TUPLE_ELEM( 3, 0, data ) ( \
-        BOOST_PP_TUPLE_ELEM( 3, 1, data ), \
-        ( BOOST_PP_TUPLE_ELEM( 3, 2, data ) ) \
+    SAKE_ASSERT_ALL_and_subexpression_fail_0(( \
+        SAKE_BOOST_EXT_PP_TUPLE_REM3 data, i, elem ))
+#define SAKE_ASSERT_ALL_and_subexpression_fail_0( x ) \
+    SAKE_ASSERT_ALL_and_subexpression_fail_1 x
+#define SAKE_ASSERT_ALL_and_subexpression_fail_1( failure_macro, data, expression, i, elem ) \
+    && ( elem ? true : ( failure_macro( \
+        data, \
+        ( expression ) \
         ( BOOST_PP_STRINGIZE( __FILE__ ) ) \
         ( BOOST_CURRENT_FUNCTION ) \
         ( __LINE__ ) \
@@ -418,16 +422,14 @@
         relation_seq \
     ) )
 #define SAKE_ASSERT_RELATION_ALL_and_subexpression_fail( r, data, i, elem ) \
-    SAKE_ASSERT_RELATION_ALL_and_subexpression_fail_impl( \
-        r, data, i, \
-        BOOST_PP_TUPLE_ELEM( 3, 0, elem ), \
-        BOOST_PP_TUPLE_ELEM( 3, 1, elem ), \
-        BOOST_PP_TUPLE_ELEM( 3, 2, elem ) \
-    )
-#define SAKE_ASSERT_RELATION_ALL_and_subexpression_fail_impl( r, data, i, lhs, op, rhs ) \
-    && ( (lhs) op (rhs) ? true : ( BOOST_PP_TUPLE_ELEM( 3, 0, data ) ( \
-        BOOST_PP_TUPLE_ELEM( 3, 1, data ), \
-        ( BOOST_PP_TUPLE_ELEM( 3, 2, data ) ) \
+    SAKE_ASSERT_RELATION_ALL_and_subexpression_fail_0(( \
+        SAKE_BOOST_EXT_PP_TUPLE_REM3 data, i, SAKE_BOOST_EXT_PP_TUPLE_REM3 elem ))
+#define SAKE_ASSERT_RELATION_ALL_and_subexpression_fail_0( x ) \
+    SAKE_ASSERT_RELATION_ALL_and_subexpression_fail_1 x
+#define SAKE_ASSERT_RELATION_ALL_and_subexpression_fail_1( failure_macro, data, expression, i, lhs, op, rhs ) \
+    && ( (lhs) op (rhs) ? true : ( failure_macro( \
+        data, \
+        ( expression ) \
         ( BOOST_PP_STRINGIZE( __FILE__ ) ) \
         ( BOOST_CURRENT_FUNCTION ) \
         ( __LINE__ ) \
@@ -461,9 +463,9 @@
         ) \
     ), 0 ) )
 #define SAKE_ASSERT_RELATION_ANY_lhs_op_rhs( r, data, elem ) \
-    ( BOOST_PP_TUPLE_ELEM( 3, 0, elem ) ) \
-    ( BOOST_PP_STRINGIZE( BOOST_PP_TUPLE_ELEM( 3, 1, elem ) ) ) \
-    ( BOOST_PP_TUPLE_ELEM( 3, 2, elem ) )
+    SAKE_ASSERT_RELATION_ANY_lhs_op_rhs_impl elem
+#define SAKE_ASSERT_RELATION_ANY_lhs_op_rhs_impl( lhs, op, rhs ) \
+    ( lhs ) ( BOOST_PP_STRINGIZE( op ) ) ( rhs )
 
 /*******************************************************************************
  * SAKE_ASSERT helper macros
@@ -472,14 +474,13 @@
 #define SAKE_ASSERT_andor_subexpression( r, data, i, elem ) \
     BOOST_PP_EXPR_IF( i, data ) (elem)
 #define SAKE_ASSERT_andor_lhs_op_rhs( r, data, i, elem ) \
-    BOOST_PP_EXPR_IF( i, data ) \
-    ((BOOST_PP_TUPLE_ELEM( 3, 0, elem )) \
-      BOOST_PP_TUPLE_ELEM( 3, 1, elem ) \
-     (BOOST_PP_TUPLE_ELEM( 3, 2, elem )))
+    BOOST_PP_EXPR_IF( i, data ) SAKE_ASSERT_andor_lhs_op_rhs_helper elem
+#define SAKE_ASSERT_andor_lhs_op_rhs_helper( lhs, op, rhs ) \
+    ((lhs) op (rhs))
 #define SAKE_ASSERT_comma_lhs_op_rhs( r, data, elem ) \
-    , BOOST_PP_TUPLE_ELEM( 3, 0, elem ) \
-    , BOOST_PP_STRINGIZE( BOOST_PP_TUPLE_ELEM( 3, 1, elem ) ) \
-    , BOOST_PP_TUPLE_ELEM( 3, 2, elem )
+    SAKE_ASSERT_comma_lhs_op_rhs_impl elem
+#define SAKE_ASSERT_comma_lhs_op_rhs_impl( lhs, op, rhs ) \
+    , lhs, BOOST_PP_STRINGIZE( op ), rhs
 
 namespace sake
 {

@@ -1,515 +1,3 @@
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_0_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_0_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_1_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_1_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_2_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_2_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_3_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_3_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_4_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_4_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_5_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_5_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_6_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_6_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_7_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_7_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_8_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_8_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_9_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_9_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_10_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_10_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_11_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_11_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_12_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_12_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_13_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_13_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_14_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_14_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_15_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_15_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_16_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_16_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_17_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_17_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_18_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_18_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_19_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_19_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_20_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_20_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_21_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_21_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_22_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_22_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_23_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_23_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_24_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_24_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_25_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_25_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_26_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_26_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_27_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_27_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_28_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_28_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_29_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_29_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_30_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_30_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_31_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_31_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_32_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_32_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_33_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_33_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_34_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_34_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_35_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_35_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_36_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_36_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_37_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_37_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_38_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_38_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_39_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_39_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_40_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_40_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_41_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_41_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_42_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_42_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_43_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_43_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_44_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_44_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_45_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_45_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_46_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_46_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_47_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_47_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_48_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_48_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_49_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_49_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_50_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_50_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_51_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_51_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_52_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_52_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_53_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_53_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_54_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_54_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_55_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_55_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_56_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_56_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_57_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_57_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_58_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_58_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_59_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_59_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_60_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_60_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_61_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_61_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_62_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_62_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_63_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_63_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_64_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_64_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_65_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_65_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_66_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_66_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_67_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_67_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_68_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_68_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_69_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_69_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_70_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_70_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_71_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_71_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_72_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_72_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_73_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_73_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_74_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_74_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_75_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_75_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_76_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_76_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_77_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_77_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_78_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_78_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_79_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_79_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_80_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_80_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_81_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_81_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_82_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_82_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_83_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_83_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_84_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_84_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_85_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_85_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_86_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_86_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_87_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_87_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_88_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_88_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_89_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_89_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_90_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_90_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_91_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_91_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_92_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_92_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_93_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_93_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_94_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_94_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_95_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_95_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_96_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_96_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_97_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_97_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_98_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_98_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_99_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_99_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_100_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_100_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_101_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_101_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_102_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_102_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_103_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_103_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_104_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_104_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_105_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_105_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_106_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_106_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_107_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_107_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_108_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_108_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_109_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_109_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_110_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_110_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_111_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_111_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_112_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_112_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_113_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_113_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_114_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_114_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_115_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_115_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_116_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_116_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_117_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_117_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_118_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_118_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_119_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_119_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_120_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_120_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_121_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_121_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_122_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_122_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_123_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_123_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_124_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_124_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_125_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_125_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_126_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_126_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_127_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_127_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_128_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_128_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_129_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_129_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_130_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_130_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_131_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_131_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_132_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_132_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_133_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_133_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_134_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_134_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_135_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_135_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_136_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_136_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_137_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_137_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_138_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_138_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_139_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_139_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_140_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_140_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_141_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_141_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_142_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_142_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_143_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_143_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_144_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_144_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_145_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_145_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_146_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_146_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_147_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_147_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_148_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_148_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_149_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_149_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_150_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_150_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_151_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_151_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_152_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_152_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_153_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_153_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_154_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_154_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_155_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_155_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_156_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_156_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_157_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_157_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_158_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_158_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_159_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_159_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_160_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_160_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_161_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_161_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_162_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_162_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_163_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_163_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_164_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_164_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_165_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_165_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_166_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_166_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_167_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_167_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_168_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_168_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_169_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_169_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_170_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_170_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_171_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_171_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_172_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_172_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_173_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_173_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_174_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_174_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_175_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_175_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_176_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_176_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_177_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_177_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_178_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_178_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_179_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_179_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_180_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_180_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_181_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_181_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_182_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_182_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_183_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_183_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_184_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_184_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_185_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_185_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_186_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_186_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_187_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_187_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_188_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_188_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_189_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_189_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_190_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_190_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_191_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_191_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_192_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_192_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_193_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_193_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_194_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_194_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_195_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_195_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_196_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_196_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_197_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_197_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_198_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_198_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_199_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_199_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_200_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_200_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_201_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_201_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_202_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_202_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_203_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_203_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_204_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_204_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_205_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_205_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_206_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_206_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_207_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_207_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_208_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_208_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_209_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_209_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_210_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_210_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_211_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_211_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_212_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_212_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_213_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_213_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_214_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_214_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_215_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_215_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_216_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_216_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_217_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_217_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_218_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_218_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_219_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_219_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_220_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_220_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_221_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_221_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_222_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_222_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_223_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_223_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_224_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_224_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_225_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_225_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_226_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_226_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_227_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_227_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_228_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_228_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_229_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_229_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_230_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_230_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_231_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_231_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_232_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_232_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_233_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_233_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_234_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_234_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_235_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_235_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_236_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_236_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_237_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_237_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_238_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_238_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_239_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_239_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_240_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_240_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_241_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_241_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_242_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_242_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_243_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_243_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_244_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_244_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_245_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_245_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_246_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_246_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_247_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_247_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_248_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_248_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_249_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_249_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_250_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_250_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_251_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_251_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_252_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_252_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_253_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_253_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_254_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_254_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_255_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_255_fold_left_op_helper( s, BOOST_PP_TUPLE_ELEM( 3, 0, state ), BOOST_PP_TUPLE_ELEM( 3, 1, state ), BOOST_PP_TUPLE_ELEM( 3, 2, state ), elem ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_0_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_1_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_2_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_3_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_4_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_5_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_6_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_7_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_8_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_9_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_10_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_11_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_12_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_13_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_14_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_15_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_16_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_17_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_18_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_19_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_20_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_21_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_22_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_23_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_24_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_25_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_26_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_27_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_28_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_29_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_30_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_31_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_32_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_33_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_34_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_35_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_36_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_37_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_38_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_39_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_40_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_41_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_42_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_43_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_44_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_45_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_46_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_47_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_48_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_49_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_50_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_51_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_52_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_53_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_54_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_55_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_56_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_57_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_58_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_59_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_60_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_61_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_62_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_63_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_64_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_65_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_66_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_67_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_68_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_69_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_70_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_71_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_72_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_73_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_74_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_75_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_76_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_77_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_78_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_79_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_80_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_81_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_82_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_83_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_84_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_85_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_86_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_87_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_88_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_89_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_90_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_91_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_92_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_93_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_94_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_95_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_96_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_97_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_98_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_99_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_100_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_101_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_102_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_103_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_104_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_105_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_106_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_107_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_108_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_109_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_110_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_111_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_112_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_113_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_114_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_115_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_116_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_117_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_118_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_119_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_120_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_121_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_122_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_123_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_124_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_125_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_126_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_127_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_128_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_129_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_130_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_131_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_132_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_133_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_134_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_135_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_136_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_137_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_138_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_139_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_140_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_141_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_142_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_143_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_144_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_145_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_146_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_147_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_148_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_149_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_150_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_151_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_152_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_153_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_154_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_155_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_156_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_157_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_158_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_159_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_160_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_161_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_162_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_163_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_164_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_165_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_166_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_167_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_168_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_169_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_170_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_171_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_172_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_173_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_174_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_175_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_176_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_177_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_178_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_179_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_180_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_181_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_182_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_183_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_184_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_185_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_186_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_187_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_188_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_189_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_190_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_191_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_192_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_193_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_194_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_195_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_196_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_197_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_198_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_199_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_200_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_201_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_202_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_203_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_204_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_205_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_206_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_207_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_208_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_209_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_210_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_211_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_212_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_213_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_214_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_215_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_216_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_217_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_218_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_219_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_220_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_221_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_222_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_223_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_224_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_225_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_226_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_227_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_228_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_229_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_230_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_231_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_232_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_233_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_234_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_235_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_236_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_237_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_238_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_239_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_240_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_241_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_242_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_243_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_244_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_245_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_246_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_247_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_248_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_249_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_250_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_251_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_252_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_253_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_254_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
-#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_255_fold_left_op_helper( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
 #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_0( op, data, seq ) BOOST_PP_TUPLE_ELEM( 3, 0, BOOST_PP_SEQ_FOLD_LEFT_0( SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_fold_left_op, ( BOOST_PP_SEQ_NIL, op, data ), seq ) ) 
 #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_1( op, data, seq ) BOOST_PP_TUPLE_ELEM( 3, 0, BOOST_PP_SEQ_FOLD_LEFT_1( SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_fold_left_op, ( BOOST_PP_SEQ_NIL, op, data ), seq ) ) 
 #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_2( op, data, seq ) BOOST_PP_TUPLE_ELEM( 3, 0, BOOST_PP_SEQ_FOLD_LEFT_2( SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_fold_left_op, ( BOOST_PP_SEQ_NIL, op, data ), seq ) ) 
@@ -766,3 +254,771 @@
 #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_253( op, data, seq ) BOOST_PP_TUPLE_ELEM( 3, 0, BOOST_PP_SEQ_FOLD_LEFT_253( SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_fold_left_op, ( BOOST_PP_SEQ_NIL, op, data ), seq ) ) 
 #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_254( op, data, seq ) BOOST_PP_TUPLE_ELEM( 3, 0, BOOST_PP_SEQ_FOLD_LEFT_254( SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_fold_left_op, ( BOOST_PP_SEQ_NIL, op, data ), seq ) ) 
 #define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_255( op, data, seq ) BOOST_PP_TUPLE_ELEM( 3, 0, BOOST_PP_SEQ_FOLD_LEFT_255( SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_fold_left_op, ( BOOST_PP_SEQ_NIL, op, data ), seq ) ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_0_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_0_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_1_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_1_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_2_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_2_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_3_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_3_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_4_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_4_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_5_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_5_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_6_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_6_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_7_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_7_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_8_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_8_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_9_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_9_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_10_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_10_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_11_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_11_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_12_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_12_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_13_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_13_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_14_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_14_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_15_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_15_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_16_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_16_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_17_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_17_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_18_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_18_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_19_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_19_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_20_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_20_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_21_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_21_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_22_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_22_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_23_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_23_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_24_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_24_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_25_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_25_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_26_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_26_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_27_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_27_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_28_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_28_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_29_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_29_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_30_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_30_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_31_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_31_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_32_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_32_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_33_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_33_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_34_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_34_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_35_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_35_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_36_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_36_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_37_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_37_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_38_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_38_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_39_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_39_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_40_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_40_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_41_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_41_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_42_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_42_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_43_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_43_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_44_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_44_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_45_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_45_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_46_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_46_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_47_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_47_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_48_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_48_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_49_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_49_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_50_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_50_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_51_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_51_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_52_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_52_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_53_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_53_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_54_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_54_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_55_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_55_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_56_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_56_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_57_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_57_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_58_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_58_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_59_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_59_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_60_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_60_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_61_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_61_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_62_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_62_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_63_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_63_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_64_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_64_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_65_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_65_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_66_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_66_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_67_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_67_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_68_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_68_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_69_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_69_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_70_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_70_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_71_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_71_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_72_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_72_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_73_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_73_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_74_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_74_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_75_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_75_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_76_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_76_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_77_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_77_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_78_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_78_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_79_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_79_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_80_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_80_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_81_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_81_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_82_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_82_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_83_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_83_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_84_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_84_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_85_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_85_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_86_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_86_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_87_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_87_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_88_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_88_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_89_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_89_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_90_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_90_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_91_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_91_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_92_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_92_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_93_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_93_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_94_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_94_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_95_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_95_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_96_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_96_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_97_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_97_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_98_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_98_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_99_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_99_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_100_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_100_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_101_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_101_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_102_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_102_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_103_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_103_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_104_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_104_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_105_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_105_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_106_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_106_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_107_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_107_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_108_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_108_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_109_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_109_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_110_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_110_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_111_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_111_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_112_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_112_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_113_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_113_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_114_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_114_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_115_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_115_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_116_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_116_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_117_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_117_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_118_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_118_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_119_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_119_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_120_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_120_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_121_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_121_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_122_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_122_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_123_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_123_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_124_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_124_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_125_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_125_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_126_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_126_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_127_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_127_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_128_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_128_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_129_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_129_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_130_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_130_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_131_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_131_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_132_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_132_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_133_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_133_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_134_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_134_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_135_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_135_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_136_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_136_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_137_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_137_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_138_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_138_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_139_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_139_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_140_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_140_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_141_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_141_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_142_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_142_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_143_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_143_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_144_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_144_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_145_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_145_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_146_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_146_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_147_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_147_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_148_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_148_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_149_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_149_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_150_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_150_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_151_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_151_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_152_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_152_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_153_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_153_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_154_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_154_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_155_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_155_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_156_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_156_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_157_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_157_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_158_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_158_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_159_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_159_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_160_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_160_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_161_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_161_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_162_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_162_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_163_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_163_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_164_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_164_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_165_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_165_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_166_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_166_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_167_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_167_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_168_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_168_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_169_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_169_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_170_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_170_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_171_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_171_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_172_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_172_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_173_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_173_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_174_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_174_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_175_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_175_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_176_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_176_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_177_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_177_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_178_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_178_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_179_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_179_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_180_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_180_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_181_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_181_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_182_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_182_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_183_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_183_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_184_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_184_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_185_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_185_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_186_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_186_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_187_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_187_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_188_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_188_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_189_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_189_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_190_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_190_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_191_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_191_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_192_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_192_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_193_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_193_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_194_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_194_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_195_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_195_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_196_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_196_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_197_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_197_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_198_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_198_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_199_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_199_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_200_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_200_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_201_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_201_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_202_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_202_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_203_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_203_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_204_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_204_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_205_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_205_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_206_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_206_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_207_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_207_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_208_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_208_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_209_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_209_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_210_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_210_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_211_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_211_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_212_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_212_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_213_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_213_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_214_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_214_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_215_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_215_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_216_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_216_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_217_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_217_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_218_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_218_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_219_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_219_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_220_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_220_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_221_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_221_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_222_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_222_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_223_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_223_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_224_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_224_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_225_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_225_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_226_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_226_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_227_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_227_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_228_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_228_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_229_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_229_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_230_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_230_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_231_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_231_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_232_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_232_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_233_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_233_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_234_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_234_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_235_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_235_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_236_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_236_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_237_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_237_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_238_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_238_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_239_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_239_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_240_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_240_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_241_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_241_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_242_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_242_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_243_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_243_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_244_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_244_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_245_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_245_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_246_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_246_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_247_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_247_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_248_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_248_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_249_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_249_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_250_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_250_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_251_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_251_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_252_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_252_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_253_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_253_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_254_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_254_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_255_fold_left_op( s, state, elem ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_255_fold_left_op_0(( s, SAKE_BOOST_EXT_PP_TUPLE_REM3 state, elem )) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_0_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_0_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_1_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_1_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_2_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_2_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_3_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_3_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_4_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_4_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_5_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_5_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_6_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_6_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_7_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_7_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_8_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_8_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_9_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_9_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_10_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_10_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_11_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_11_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_12_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_12_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_13_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_13_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_14_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_14_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_15_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_15_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_16_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_16_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_17_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_17_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_18_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_18_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_19_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_19_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_20_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_20_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_21_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_21_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_22_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_22_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_23_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_23_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_24_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_24_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_25_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_25_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_26_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_26_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_27_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_27_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_28_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_28_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_29_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_29_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_30_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_30_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_31_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_31_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_32_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_32_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_33_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_33_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_34_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_34_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_35_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_35_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_36_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_36_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_37_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_37_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_38_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_38_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_39_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_39_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_40_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_40_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_41_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_41_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_42_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_42_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_43_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_43_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_44_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_44_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_45_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_45_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_46_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_46_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_47_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_47_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_48_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_48_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_49_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_49_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_50_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_50_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_51_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_51_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_52_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_52_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_53_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_53_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_54_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_54_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_55_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_55_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_56_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_56_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_57_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_57_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_58_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_58_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_59_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_59_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_60_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_60_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_61_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_61_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_62_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_62_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_63_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_63_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_64_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_64_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_65_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_65_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_66_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_66_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_67_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_67_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_68_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_68_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_69_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_69_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_70_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_70_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_71_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_71_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_72_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_72_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_73_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_73_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_74_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_74_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_75_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_75_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_76_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_76_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_77_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_77_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_78_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_78_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_79_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_79_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_80_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_80_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_81_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_81_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_82_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_82_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_83_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_83_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_84_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_84_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_85_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_85_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_86_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_86_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_87_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_87_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_88_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_88_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_89_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_89_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_90_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_90_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_91_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_91_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_92_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_92_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_93_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_93_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_94_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_94_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_95_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_95_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_96_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_96_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_97_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_97_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_98_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_98_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_99_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_99_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_100_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_100_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_101_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_101_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_102_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_102_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_103_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_103_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_104_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_104_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_105_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_105_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_106_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_106_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_107_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_107_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_108_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_108_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_109_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_109_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_110_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_110_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_111_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_111_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_112_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_112_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_113_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_113_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_114_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_114_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_115_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_115_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_116_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_116_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_117_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_117_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_118_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_118_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_119_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_119_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_120_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_120_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_121_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_121_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_122_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_122_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_123_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_123_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_124_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_124_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_125_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_125_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_126_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_126_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_127_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_127_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_128_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_128_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_129_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_129_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_130_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_130_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_131_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_131_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_132_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_132_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_133_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_133_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_134_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_134_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_135_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_135_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_136_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_136_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_137_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_137_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_138_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_138_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_139_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_139_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_140_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_140_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_141_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_141_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_142_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_142_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_143_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_143_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_144_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_144_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_145_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_145_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_146_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_146_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_147_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_147_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_148_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_148_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_149_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_149_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_150_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_150_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_151_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_151_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_152_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_152_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_153_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_153_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_154_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_154_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_155_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_155_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_156_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_156_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_157_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_157_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_158_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_158_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_159_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_159_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_160_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_160_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_161_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_161_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_162_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_162_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_163_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_163_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_164_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_164_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_165_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_165_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_166_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_166_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_167_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_167_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_168_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_168_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_169_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_169_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_170_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_170_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_171_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_171_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_172_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_172_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_173_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_173_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_174_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_174_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_175_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_175_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_176_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_176_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_177_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_177_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_178_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_178_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_179_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_179_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_180_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_180_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_181_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_181_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_182_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_182_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_183_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_183_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_184_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_184_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_185_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_185_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_186_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_186_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_187_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_187_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_188_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_188_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_189_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_189_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_190_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_190_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_191_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_191_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_192_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_192_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_193_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_193_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_194_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_194_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_195_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_195_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_196_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_196_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_197_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_197_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_198_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_198_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_199_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_199_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_200_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_200_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_201_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_201_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_202_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_202_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_203_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_203_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_204_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_204_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_205_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_205_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_206_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_206_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_207_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_207_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_208_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_208_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_209_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_209_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_210_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_210_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_211_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_211_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_212_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_212_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_213_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_213_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_214_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_214_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_215_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_215_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_216_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_216_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_217_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_217_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_218_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_218_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_219_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_219_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_220_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_220_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_221_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_221_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_222_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_222_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_223_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_223_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_224_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_224_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_225_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_225_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_226_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_226_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_227_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_227_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_228_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_228_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_229_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_229_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_230_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_230_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_231_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_231_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_232_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_232_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_233_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_233_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_234_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_234_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_235_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_235_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_236_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_236_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_237_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_237_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_238_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_238_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_239_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_239_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_240_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_240_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_241_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_241_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_242_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_242_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_243_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_243_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_244_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_244_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_245_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_245_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_246_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_246_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_247_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_247_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_248_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_248_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_249_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_249_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_250_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_250_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_251_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_251_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_252_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_252_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_253_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_253_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_254_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_254_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_255_fold_left_op_0( x ) SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_255_fold_left_op_1 x 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_0_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_1_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_2_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_3_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_4_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_5_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_6_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_7_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_8_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_9_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_10_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_11_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_12_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_13_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_14_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_15_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_16_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_17_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_18_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_19_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_20_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_21_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_22_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_23_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_24_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_25_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_26_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_27_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_28_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_29_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_30_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_31_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_32_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_33_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_34_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_35_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_36_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_37_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_38_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_39_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_40_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_41_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_42_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_43_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_44_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_45_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_46_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_47_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_48_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_49_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_50_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_51_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_52_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_53_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_54_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_55_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_56_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_57_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_58_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_59_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_60_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_61_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_62_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_63_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_64_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_65_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_66_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_67_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_68_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_69_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_70_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_71_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_72_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_73_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_74_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_75_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_76_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_77_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_78_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_79_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_80_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_81_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_82_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_83_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_84_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_85_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_86_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_87_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_88_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_89_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_90_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_91_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_92_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_93_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_94_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_95_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_96_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_97_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_98_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_99_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_100_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_101_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_102_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_103_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_104_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_105_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_106_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_107_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_108_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_109_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_110_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_111_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_112_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_113_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_114_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_115_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_116_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_117_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_118_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_119_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_120_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_121_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_122_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_123_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_124_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_125_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_126_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_127_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_128_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_129_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_130_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_131_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_132_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_133_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_134_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_135_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_136_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_137_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_138_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_139_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_140_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_141_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_142_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_143_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_144_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_145_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_146_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_147_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_148_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_149_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_150_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_151_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_152_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_153_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_154_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_155_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_156_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_157_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_158_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_159_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_160_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_161_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_162_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_163_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_164_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_165_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_166_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_167_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_168_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_169_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_170_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_171_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_172_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_173_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_174_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_175_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_176_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_177_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_178_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_179_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_180_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_181_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_182_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_183_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_184_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_185_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_186_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_187_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_188_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_189_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_190_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_191_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_192_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_193_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_194_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_195_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_196_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_197_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_198_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_199_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_200_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_201_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_202_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_203_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_204_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_205_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_206_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_207_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_208_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_209_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_210_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_211_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_212_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_213_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_214_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_215_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_216_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_217_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_218_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_219_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_220_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_221_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_222_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_223_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_224_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_225_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_226_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_227_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_228_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_229_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_230_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_231_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_232_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_233_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_234_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_235_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_236_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_237_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_238_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_239_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_240_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_241_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_242_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_243_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_244_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_245_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_246_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_247_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_248_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_249_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_250_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_251_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_252_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_253_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_254_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 
+#define SAKE_BOOST_EXT_PP_SEQ_TRANSFORM_255_fold_left_op_1( s, seq, op, data, elem ) ( seq ( op( s, data, elem ) ), op, data ) 

@@ -19,5 +19,6 @@
 #include <boost/preprocessor/tuple/elem.hpp>
 
 #include <sake/boost_ext/preprocessor/seq/private/transform.ipp>
+#include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
 #endif // #ifndef SAKE_BOOST_EXT_PREPROCESSOR_SEQ_TRANSFORM_HPP

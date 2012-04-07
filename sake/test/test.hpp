@@ -37,18 +37,22 @@
 #define SAKE_TEST_TEST_HPP
 
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
-#include <boost/preprocessor/tuple/elem.hpp>
+
+#include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
 #include <sake/core/utility/assert.hpp>
 
 #define SAKE_TEST_FAILURE_MACRO( data, info_seq ) \
-    BOOST_PP_TUPLE_ELEM( 3, 0, data ) .fail( \
-        BOOST_PP_CAT( \
-            ::sake::test::environment::fail_level_, \
-            BOOST_PP_TUPLE_ELEM( 3, 1, data ) \
-        ), \
-        BOOST_PP_TUPLE_ELEM( 3, 2, data ), \
+    SAKE_TEST_FAILURE_MACRO_0(( \
+        SAKE_BOOST_EXT_PP_TUPLE_REM3 data, info_seq ))
+#define SAKE_TEST_FAILURE_MACRO_0( x ) \
+    SAKE_TEST_FAILURE_MACRO_1 x
+#define SAKE_TEST_FAILURE_MACRO_1( env, fail_level, macro, info_seq ) \
+    env.fail( \
+        BOOST_PP_CAT( ::sake::test::environment::fail_level_, fail_level ), \
+        macro, \
         BOOST_PP_SEQ_ENUM( info_seq ) \
     )
 

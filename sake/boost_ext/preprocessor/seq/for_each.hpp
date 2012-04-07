@@ -21,13 +21,13 @@
 #include <boost/preprocessor/tuple/elem.hpp>
 
 #include <sake/boost_ext/preprocessor/seq/private/for_each.ipp>
+#include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
 #define SAKE_BOOST_EXT_PP_SEQ_FOR_EACH_for_pred( r, state ) \
     BOOST_PP_TUPLE_ELEM( 4, 0, state )
 #define SAKE_BOOST_EXT_PP_SEQ_FOR_EACH_for_op( r, state ) \
-    ( BOOST_PP_DEC( BOOST_PP_TUPLE_ELEM( 4, 0, state ) ), \
-      BOOST_PP_TUPLE_ELEM( 4, 1, state ), \
-      BOOST_PP_TUPLE_ELEM( 4, 2, state ), \
-      BOOST_PP_SEQ_TAIL( BOOST_PP_TUPLE_ELEM( 4, 3, state ) ) )
+    SAKE_BOOST_EXT_PP_SEQ_FOR_EACH_for_op_impl state
+#define SAKE_BOOST_EXT_PP_SEQ_FOR_EACH_for_op_impl( n, macro, data, seq ) \
+    ( BOOST_PP_DEC( n ), macro, data, BOOST_PP_SEQ_TAIL( seq ) )
 
 #endif // #ifndef SAKE_BOOST_EXT_PREPROCESSOR_SEQ_FOR_EACH_HPP

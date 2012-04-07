@@ -51,9 +51,9 @@
 
 #include <boost/mpl/always.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/facilities/apply.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
+#include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 #include <sake/boost_ext/type_traits/is_builtin_object.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
