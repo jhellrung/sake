@@ -43,10 +43,7 @@ namespace sake
 struct non_copyable_base
 {
 protected:
-    SAKE_DEFINE_NATURAL_DEFAULT_CTOR(
-        non_copyable_base,
-        BOOST_PP_SEQ_NIL, BOOST_PP_SEQ_NIL
-    )
+    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( non_copyable_base, BOOST_PP_SEQ_NIL )
     SAKE_NON_COPYABLE( non_copyable_base )
 };
 

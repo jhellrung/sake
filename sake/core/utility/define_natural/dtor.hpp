@@ -6,6 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * #define SAKE_DEFINE_NATURAL_DTOR( T )
+ * #define SAKE_NATURAL_DTOR_BODY()
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_DEFINE_NATURAL_DTOR_HPP
@@ -13,16 +14,13 @@
 
 #include <boost/config.hpp>
 
+#define SAKE_DEFINE_NATURAL_DTOR( T ) \
+    ~T() SAKE_NATURAL_DTOR_BODY()
+
 #ifndef BOOST_NO_DEFAULTED_FUNCTIONS
-
-#define SAKE_DEFINE_NATURAL_DTOR( T ) \
-    ~T() = default;
-
+#define SAKE_NATURAL_DTOR_BODY() = default;
 #else // #ifndef BOOST_NO_DEFAULTED_FUNCTIONS
-
-#define SAKE_DEFINE_NATURAL_DTOR( T ) \
-    ~T() { }
-
+#define SAKE_NATURAL_DTOR_BODY() { }
 #endif // #ifndef BOOST_NO_DEFAULTED_FUNCTIONS
 
 #endif // #ifndef SAKE_CORE_UTILITY_DEFINE_NATURAL_DTOR_HPP

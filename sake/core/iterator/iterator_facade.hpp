@@ -296,10 +296,7 @@ public:
 protected:
     typedef ChainedBase chained_base_type;
 
-    SAKE_DEFINE_NATURAL_DEFAULT_CTOR(
-        iterator_facade,
-        BOOST_PP_SEQ_NIL, BOOST_PP_SEQ_NIL
-    )
+    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( iterator_facade, BOOST_PP_SEQ_NIL )
 
     template< class ChainedBaseConstruct >
     explicit iterator_facade(ChainedBaseConstruct const & chained_base_construct,
