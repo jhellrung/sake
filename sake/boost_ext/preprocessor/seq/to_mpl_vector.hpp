@@ -12,14 +12,24 @@
 #define SAKE_BOOST_EXT_PREPROCESSOR_SEQ_TO_MPL_VECTOR_HPP
 
 #include <boost/config.hpp>
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/seq/enum.hpp>
+#include <boost/preprocessor/tuple/eat.hpp>
+
+#include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 #include <sake/boost_ext/mpl/vector.hpp>
-#include <sake/boost_ext/preprocessor/seq/enum.hpp>
 
 #define SAKE_BOOST_EXT_PP_SEQ_TO_MPL_VECTOR( seq ) \
-    ::sake::boost_ext::mpl::vector< SAKE_BOOST_EXT_PP_SEQ_ENUM( seq ) >
+    ::sake::boost_ext::mpl::vector< \
+        BOOST_PP_IIF( \
+            SAKE_BOOST_EXT_PP_SEQ_IS_NIL( seq ), \
+            BOOST_PP_TUPLE_EAT(1), \
+            BOOST_PP_SEQ_ENUM \
+        ) ( seq ) \
+    >
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
@@ -28,12 +38,16 @@
 #include <boost/mpl/vector/vector20.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-#include <sake/boost_ext/preprocessor/seq/enum.hpp>
 #include <sake/boost_ext/preprocessor/seq/size.hpp>
 
 #define SAKE_BOOST_EXT_PP_SEQ_TO_MPL_VECTOR( seq ) \
-    ::boost::mpl::BOOST_PP_CAT( vector, SAKE_BOOST_EXT_PP_SEQ_SIZE( seq ) ) \
-        < SAKE_BOOST_EXT_PP_SEQ_ENUM( seq ) >
+    ::boost::mpl::BOOST_PP_CAT( vector, SAKE_BOOST_EXT_PP_SEQ_SIZE( seq ) )< \
+        BOOST_PP_IIF( \
+            SAKE_BOOST_EXT_PP_SEQ_IS_NIL( seq ), \
+            BOOST_PP_TUPLE_EAT(1), \
+            BOOST_PP_SEQ_ENUM \
+        ) ( seq ) \
+    >
 
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
