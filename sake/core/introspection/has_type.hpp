@@ -34,7 +34,7 @@
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/core/utility/sizeof_t.hpp>
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_HAS_TYPE( trait, name ) \
 template< class T, class Pred = boost::mpl::always< boost::true_type > > \
@@ -43,26 +43,10 @@ class trait \
     template< class U > struct sfinae \
         : ::sake::sizeof_t< 1 + ::boost::mpl::apply1< Pred, U >::type::value > { }; \
     template< class T_ > static sfinae< typename T_::name > test(int); \
-    template< class T_ > static ::sake::no_tag test(...); \
+    template< class T_ > static ::sake::false_tag test(...); \
 public: \
-    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) ); \
     typedef trait type; \
 };
-
-#if 0 // old implementation
-#include <sake/core/utility/yes_no_tag.hpp>
-
-#define SAKE_INTROSPECTION_DEFINE_HAS_TYPE( trait, name ) \
-template< class T > \
-class trait \
-{ \
-    template< class > struct sfinae; \
-    template< class T_ > static ::sake::yes_tag test(sfinae< typename T_::name >*); \
-    template< class T_ > static ::sake::no_tag test(...); \
-public: \
-    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
-    typedef trait type; \
-};
-#endif // #if 0
 
 #endif // #ifndef SAKE_CORE_INTROSPECTION_HAS_TYPE_HPP

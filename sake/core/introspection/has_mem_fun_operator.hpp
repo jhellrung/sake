@@ -11,7 +11,7 @@
 #ifndef SAKE_CORE_INTROSPECTION_HAS_MEM_FUN_OPERATOR_HPP
 #define SAKE_CORE_INTROSPECTION_HAS_MEM_FUN_OPERATOR_HPP
 
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 namespace sake
 {
@@ -37,11 +37,11 @@ struct sfinae< T const volatile, U >
 template< class T, class U >
 class has_mem_fun_operator
 {
-    template< class T_ > static sake::yes_tag test(
+    template< class T_ > static sake::true_tag  test(
         typename has_mem_fun_operator_private::sfinae<T,U>::template _< &T_::operator U >*);
-    template< class T_ > static sake::no_tag test(...);
+    template< class T_ > static sake::false_tag test(...);
 public:
-    static bool const value = sizeof( sake::yes_tag ) == sizeof( test<T>(0) );
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) );
     typedef has_mem_fun_operator type;
 };
 

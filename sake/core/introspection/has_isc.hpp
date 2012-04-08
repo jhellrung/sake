@@ -41,18 +41,18 @@
 #include <boost/type_traits/is_void.hpp>
 
 #include <sake/core/expr_traits/integral_typeof.hpp>
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_HAS_ISC( trait, name ) \
 template< class T, class Pred = boost::mpl::always< boost::true_type > > \
 class trait \
 { \
     template< int > struct sfinae; \
-    template< class T_ > static ::sake::yes_tag test(sfinae< T_::name >*); \
-    template< class T_ > static ::sake::no_tag test(...); \
+    template< class T_ > static ::sake::true_tag  test(sfinae< T_::name >*); \
+    template< class T_ > static ::sake::false_tag test(...); \
     template< class T_, std::size_t > struct apply_pred; \
     template< class T_ > \
-    struct apply_pred< T_, SAKE_SIZEOF_YES_TAG > \
+    struct apply_pred< T_, SAKE_SIZEOF_TRUE_TAG > \
     { \
         SAKE_EXPR_INTEGRAL_TYPEOF_TYPEDEF( typename false || T_::name, type ); \
         BOOST_STATIC_ASSERT((!boost::is_void< type >::value)); \
@@ -60,27 +60,11 @@ class trait \
         static bool const value = ::boost::mpl::apply1< Pred, wrapped_type >::type::value; \
     }; \
     template< class T_ > \
-    struct apply_pred< T_, SAKE_SIZEOF_NO_TAG > \
+    struct apply_pred< T_, SAKE_SIZEOF_FALSE_TAG > \
     { static bool const value = false; }; \
 public: \
     static bool const value = apply_pred< T, sizeof( test<T>(0) ) >::value; \
     typedef trait type; \
 };
-
-#if 0 // old implementation
-#include <sake/core/utility/yes_no_tag.hpp>
-
-#define SAKE_INTROSPECTION_DEFINE_HAS_ISC( trait, name ) \
-template< class T > \
-class trait \
-{ \
-    template< int > struct sfinae; \
-    template< class T_ > static ::sake::yes_tag test(sfinae< T_::name >*); \
-    template< class T_ > static ::sake::no_tag test(...); \
-public: \
-    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
-    typedef trait type; \
-};
-#endif // #if 0
 
 #endif // #ifndef SAKE_CORE_INTROSPECTION_HAS_ISC_HPP

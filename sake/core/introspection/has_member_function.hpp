@@ -36,18 +36,18 @@
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 
 #include <sake/core/introspection/fwd.hpp>
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_HAS_MEMBER_FUNCTION( trait, name ) \
 template< class T, class Signature > \
 class trait \
 { \
-    template< class T_ > static ::sake::yes_tag test( \
+    template< class T_ > static ::sake::true_tag  test( \
         typename ::sake::has_member_function_private::sfinae< T, Signature >::template \
         _< &T_::name >* = 0); \
-    template< class T_ > static ::sake::no_tag test(...); \
+    template< class T_ > static ::sake::false_tag test(...); \
 public: \
-    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) ); \
     typedef trait type; \
 };
 

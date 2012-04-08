@@ -14,13 +14,13 @@
 #include <boost/type_traits/is_member_object_pointer.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
 
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 namespace
 {
 
-using sake::yes_tag;
-using sake::no_tag;
+using sake::true_tag;
+using sake::false_tag;
 
 struct X { };
 struct X_type { struct x; };
@@ -38,9 +38,9 @@ struct has_member
     struct base { int x; };
     template< int base::* > struct sfinae;
     struct derived : T, base { };
-    template< class U > static no_tag test(sfinae< &U::x >*);
-    template< class U > static yes_tag test(...);
-    static bool const value = sizeof( yes_tag ) == sizeof( test< derived >(0) );
+    template< class U > static false_tag test(sfinae< &U::x >*);
+    template< class U > static true_tag  test(...);
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test< derived >(0) );
 };
 
 BOOST_STATIC_ASSERT(!(has_member< X                         >::value));
@@ -57,9 +57,9 @@ template< class T >
 struct has_type
 {
     template< class > struct sfinae;
-    template< class U > static yes_tag test(sfinae< typename U::x >*);
-    template< class U > static no_tag test(...);
-    static bool const value = sizeof( yes_tag ) == sizeof( test<T>(0) );
+    template< class U > static true_tag  test(sfinae< typename U::x >*);
+    template< class U > static false_tag test(...);
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) );
 };
 
 BOOST_STATIC_ASSERT(!(has_type< X                         >::value));
@@ -76,9 +76,9 @@ template< class T >
 struct has_isc
 {
     template< int > struct sfinae;
-    template< class U > static yes_tag test(sfinae< U::x >*);
-    template< class U > static no_tag test(...);
-    static bool const value = sizeof( yes_tag ) == sizeof( test<T>(0) );
+    template< class U > static true_tag  test(sfinae< U::x >*);
+    template< class U > static false_tag test(...);
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) );
 };
 
 BOOST_STATIC_ASSERT(!(has_isc< X                         >::value));
@@ -95,9 +95,9 @@ template< class T >
 struct has_class_template
 {
     template< template< class U0 > class U > struct sfinae;
-    template< class U > static yes_tag test(sfinae< U::template x >*);
-    template< class U > static no_tag test(...);
-    static bool const value = sizeof( yes_tag ) == sizeof( test<T>(0) );
+    template< class U > static true_tag  test(sfinae< U::template x >*);
+    template< class U > static false_tag test(...);
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) );
 };
 
 BOOST_STATIC_ASSERT(!(has_class_template< X                         >::value));
@@ -114,9 +114,9 @@ template< class T >
 struct has_mem_obj
 {
     template< int T::* > struct sfinae;
-    template< class U > static yes_tag test(sfinae< &U::x >*);
-    template< class U > static no_tag test(...);
-    static bool const value = sizeof( yes_tag ) == sizeof( test<T>(0) );
+    template< class U > static true_tag  test(sfinae< &U::x >*);
+    template< class U > static false_tag test(...);
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) );
 };
 
 BOOST_STATIC_ASSERT(!(has_mem_obj< X                         >::value));

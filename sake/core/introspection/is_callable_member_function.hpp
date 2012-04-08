@@ -97,7 +97,7 @@
 #include <sake/core/introspection/private/dummy.hpp>
 #include <sake/core/utility/convertible_from_any.hpp>
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION() \
     <sake/core/introspection/private/is_callable_member_function.ipp>

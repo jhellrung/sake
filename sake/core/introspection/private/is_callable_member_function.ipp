@@ -143,16 +143,16 @@ template<
 struct sfinae_member;
 
 template< class T >
-::sake::no_tag test_member(sfinae_member< &T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
+::sake::false_tag test_member(sfinae_member< &T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
 template< class T >
-::sake::yes_tag test_member(...);
+::sake::true_tag  test_member(...);
 
 template< class T >
 class has_member
 {
     struct detector : T, member_detector_base { };
 public:
-    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test_member< detector >(0) );
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test_member< detector >(0) );
     typedef has_member type;
 };
 
@@ -167,14 +167,14 @@ struct dispatch< T, void, always_true, false >
 
 template< class > struct sfinae_member_type;
 template< class T >
-::sake::yes_tag test_member_type(sfinae_member_type< typename T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
+::sake::true_tag  test_member_type(sfinae_member_type< typename T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
 template< class T >
-::sake::no_tag test_member_type(...);
+::sake::false_tag test_member_type(...);
 
 template< class T >
 struct not_has_member_type
 {
-    static bool const value = sizeof( ::sake::no_tag ) == sizeof( test_member_type<T>(0) );
+    static bool const value = SAKE_SIZEOF_FALSE_TAG == sizeof( test_member_type<T>(0) );
     typedef not_has_member_type type;
 };
 
@@ -240,14 +240,14 @@ template< class T, class Nullary >
 class has_nullary_helper
 {
     template< Nullary > struct sfinae;
-    template< class U > static ::sake::yes_tag test(sfinae< &U::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
-    template< class U > static ::sake::no_tag test(...);
+    template< class U > static ::sake::true_tag  test(sfinae< &U::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
+    template< class U > static ::sake::false_tag test(...);
 public:
     // A compiler error here concerning an inaccessible private member indicates
     // that a member function overload of the given name is private.  In this
     // case, the only resolution is to explicitly extend the trait for this
     // class.
-    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) );
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) );
     typedef has_nullary_helper type;
 };
 

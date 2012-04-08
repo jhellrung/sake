@@ -18,10 +18,10 @@
 #include <boost/static_assert.hpp>
 
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 #define SAKE_EXPR_IS_RVALUE( expression ) \
-    ( sizeof( ::sake::yes_tag ) == sizeof( ::sake::expr_is_rvalue_private::test( expression ) ) )
+    (SAKE_SIZEOF_TRUE_TAG == sizeof( ::sake::expr_is_rvalue_private::test( expression ) ))
 
 namespace sake
 {
@@ -30,8 +30,8 @@ namespace expr_is_rvalue_private
 {
 
 template< class T >
-sake::no_tag test(T&);
-sake::yes_tag test(...);
+sake::false_tag test(T&);
+sake::true_tag test(...);
 
 namespace
 {

@@ -30,7 +30,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_class.hpp>
 
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 #include <sake/core/utility/void.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_HAS_MEMBER( trait, name ) \
@@ -45,10 +45,10 @@ class trait \
         ::sake::void_ \
     >::type base_type; \
     struct detector : base_type, detector_base { }; \
-    template< class T_ > static ::sake::no_tag test(sfinae< &T_::name >*); \
-    template< class T_ > static ::sake::yes_tag test(...); \
+    template< class T_ > static ::sake::false_tag test(sfinae< &T_::name >*); \
+    template< class T_ > static ::sake::true_tag  test(...); \
 public: \
-    static bool const vlaue = sizeof( ::sake::yes_tag ) == sizeof( test< detector >(0) ); \
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test< detector >(0) ); \
     typedef trait type; \
 };
 

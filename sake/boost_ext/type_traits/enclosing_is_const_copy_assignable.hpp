@@ -20,7 +20,7 @@
 #include <sake/core/utility/has_private_operator_assign.hpp>
 #include <sake/core/utility/convertible_from_any.hpp>
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 namespace sake
 {
@@ -40,8 +40,8 @@ class dispatch< T, true >
 { };
 
 struct const_copy_assignable_detector { };
-sake::yes_tag is_const_copy_assignable_detector(const_copy_assignable_detector);
-sake::no_tag is_const_copy_assignable_detector(...);
+sake::true_tag  is_const_copy_assignable_detector(const_copy_assignable_detector);
+sake::false_tag is_const_copy_assignable_detector(...);
 
 template< class T >
 class dispatch< T, false >
@@ -53,10 +53,9 @@ class dispatch< T, false >
     };
 public:
     static bool const value =
-        sizeof( sake::no_tag )
+        SAKE_SIZEOF_FALSE_TAG
      == sizeof( is_const_copy_assignable_detector(
-            sake::declval< detector& >() = sake::declval< detector const & >()
-        ) );
+            sake::declval< detector& >() = sake::declval< detector const & >() ) );
     typedef dispatch type;
 };
 

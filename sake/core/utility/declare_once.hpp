@@ -43,7 +43,7 @@
 
 #include <cstddef>
 
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 #define SAKE_DECLARE_ONCE_GLOBAL_DECLARATION( name ) \
     extern ::sake::declare_once_private::undeclared name
@@ -82,21 +82,21 @@ template< class T >
 struct declared< T, false >
 { static int const value = 0; };
 
-sake::no_tag
+sake::false_tag
 is_declared(undeclared);
 template< class T >
-sake::yes_tag
+sake::true_tag
 is_declared(declared<T> const &);
 
 template< std::size_t N >
 struct switch_on_declared;
 
 template<>
-struct switch_on_declared< SAKE_SIZEOF_YES_TAG >
+struct switch_on_declared< SAKE_SIZEOF_TRUE_TAG >
 { static int const template_or_value = 0; };
 
 template<>
-struct switch_on_declared< SAKE_SIZEOF_NO_TAG >
+struct switch_on_declared< SAKE_SIZEOF_FALSE_TAG >
 {
     template< int N >
     struct template_or_value

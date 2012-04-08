@@ -24,13 +24,10 @@
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 #define SAKE_EXPR_IS_CONVERTIBLE( from_expression, to_type ) \
-    ( \
-        sizeof( ::sake::yes_tag ) \
-     == sizeof( ::sake::expr_is_convertible_private::helper< to_type >::apply( from_expression ) ) \
-    )
+    (SAKE_SIZEOF_TRUE_TAG == sizeof( ::sake::expr_is_convertible_private::helper< to_type >::apply( from_expression ) ))
 
 namespace sake
 {
@@ -50,29 +47,29 @@ struct helper;
 template< class T >
 struct helper< T, true >
 {
-    static sake::yes_tag apply(T);
-    static sake::no_tag  apply(...);
+    static sake::true_tag  apply(T);
+    static sake::false_tag apply(...);
 };
 
 template<>
 struct helper< void, false >
-{ static sake::yes_tag apply(...); };
+{ static sake::true_tag apply(...); };
 
 template<>
 struct helper< void const, false >
-{ static sake::yes_tag apply(...); };
+{ static sake::true_tag apply(...); };
 
 template<>
 struct helper< void volatile, false >
-{ static sake::yes_tag apply(...); };
+{ static sake::true_tag apply(...); };
 
 template<>
 struct helper< void const volatile, false >
-{ static sake::yes_tag apply(...); };
+{ static sake::true_tag apply(...); };
 
 template< class T >
 struct helper< T, false >
-{ static sake::no_tag apply(...); };
+{ static sake::false_tag apply(...); };
 
 namespace
 {

@@ -77,7 +77,7 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
 
-#include <sake/core/utility/yes_no_tag.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
 #ifndef SAKE_INTROSPECTION_HAS_TEMPLATE_MAX_ARITY
 #define SAKE_INTROSPECTION_HAS_TEMPLATE_MAX_ARITY 8
@@ -95,9 +95,9 @@ class trait \
         SAKE_INTROSPECTION_HAS_TEMPLATE_test_sfinae_n, \
         name \
     ) \
-    template< class T_ > static ::sake::no_tag test(...); \
+    template< class T_ > static ::sake::false_tag test(...); \
 public: \
-    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) ); \
     typedef trait type; \
 };
 
@@ -109,15 +109,15 @@ template< class T > \
 class trait \
 { \
     template< template< SAKE_INTROSPECTION_HAS_TEMPLATE_params( params ) > class U > struct sfinae; \
-    template< class T_ > static ::sake::yes_tag test(sfinae< T_::template name >*); \
-    template< class T_ > static ::sake::no_tag test(...); \
+    template< class T_ > static ::sake::true_tag  test(sfinae< T_::template name >*); \
+    template< class T_ > static ::sake::false_tag test(...); \
 public: \
-    static bool const value = sizeof( ::sake::yes_tag ) == sizeof( test<T>(0) ); \
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) ); \
     typedef trait type; \
 };
 
 #define SAKE_INTROSPECTION_HAS_TEMPLATE_test_sfinae_n( z, n, data ) \
-    template< class T_ > static ::sake::yes_tag \
+    template< class T_ > static ::sake::true_tag \
     test(::sake::has_template_private::sfinae ## n < T_::template data >*);
 
 #define SAKE_INTROSPECTION_HAS_TEMPLATE_params( params ) \
