@@ -71,7 +71,7 @@
 #include <sake/boost_ext/type_traits/propagate_const.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
-#include <sake/core/data_structures/tuple.hpp>
+#include <sake/core/data_structures/tuple/tuple.hpp>
 #include <sake/core/functional/operators/less.hpp>
 #include <sake/core/math/compare.hpp>
 #include <sake/core/math/zero.hpp>

@@ -1,7 +1,7 @@
 /*******************************************************************************
- * sake/core/data_structures/tuple.hpp
+ * sake/core/data_structures/tuple/tuple.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -19,8 +19,8 @@
 
 #ifndef BOOST_PP_IS_ITERATING
 
-#ifndef SAKE_CORE_DATA_STRUCTURES_TUPLE_HPP
-#define SAKE_CORE_DATA_STRUCTURES_TUPLE_HPP
+#ifndef SAKE_CORE_DATA_STRUCTURES_TUPLE_TUPLE_HPP
+#define SAKE_CORE_DATA_STRUCTURES_TUPLE_TUPLE_HPP
 
 #include <cstddef>
 
@@ -54,7 +54,7 @@
 #include <sake/boost_ext/type_traits/propagate_const.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
-#include <sake/core/data_structures/tuple_fwd.hpp>
+#include <sake/core/data_structures/tuple/fwd.hpp>
 #include <sake/core/functional/operators/less.hpp>
 #include <sake/core/math/compare.hpp>
 #include <sake/core/math/zero.hpp>
@@ -287,7 +287,7 @@ struct at_c_dispatch;
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_DATA_STRUCTURES_TUPLE_HPP
+#endif // #ifndef SAKE_CORE_DATA_STRUCTURES_TUPLE_TUPLE_HPP
 
 #else // #ifndef BOOST_PP_IS_ITERATING
 

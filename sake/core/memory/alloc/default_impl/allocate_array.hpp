@@ -30,7 +30,7 @@
 #include <sake/boost_ext/type_traits/aligned_type.hpp>
 #include <sake/boost_ext/type_traits/max_align.hpp>
 
-#include <sake/core/data_structures/tuple.hpp>
+#include <sake/core/data_structures/tuple/tuple.hpp>
 #include <sake/core/math/intlog2.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/memory/alloc/is_callable_mem_fun_allocate.hpp>

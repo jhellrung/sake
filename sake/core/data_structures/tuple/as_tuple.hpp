@@ -1,15 +1,15 @@
 /*******************************************************************************
- * sake/core/data_structures/as_tuple.hpp
+ * sake/core/data_structures/tuple/as_tuple.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
 #ifndef BOOST_PP_IS_ITERATING
 
-#ifndef SAKE_CORE_DATA_STRUCTURES_AS_TUPLE_HPP
-#define SAKE_CORE_DATA_STRUCTURES_AS_TUPLE_HPP
+#ifndef SAKE_CORE_DATA_STRUCTURES_TUPLE_AS_TUPLE_HPP
+#define SAKE_CORE_DATA_STRUCTURES_TUPLE_AS_TUPLE_HPP
 
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
@@ -18,7 +18,7 @@
 
 #include <sake/boost_ext/move/forward.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
-#include <sake/core/data_structures/tuple.hpp>
+#include <sake/core/data_structures/tuple/tuple.hpp>
 
 namespace sake
 {
@@ -65,7 +65,7 @@ as_tuple(SAKE_FWD_REF( Sequence ) s)
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_DATA_STRUCTURES_AS_TUPLE_HPP
+#endif // #ifndef SAKE_CORE_DATA_STRUCTURES_TUPLE_AS_TUPLE_HPP
 
 #else // #ifndef BOOST_PP_IS_ITERATING
 

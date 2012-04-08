@@ -29,7 +29,7 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <sake/core/data_structures/tuple.hpp>
+#include <sake/core/data_structures/tuple/tuple.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/memory/alloc/check_align.hpp>
 #include <sake/core/memory/alloc/expand_array_tag.hpp>

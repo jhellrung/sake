@@ -19,7 +19,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <sake/core/data_structures/tuple.hpp>
+#include <sake/core/data_structures/tuple/tuple.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/memory/vmem/get_granularity.hpp>
 #include <sake/core/utility/assert.hpp>

@@ -27,7 +27,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/core/data_structures/tuple_fwd.hpp>
+#include <sake/core/data_structures/tuple/fwd.hpp>
 
 namespace sake
 {

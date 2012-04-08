@@ -25,7 +25,7 @@
 #include <sake/boost_ext/mpl/size_type.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
-#include <sake/core/data_structures/tuple.hpp>
+#include <sake/core/data_structures/tuple/tuple.hpp>
 #include <sake/core/introspection/has_type_difference_type.hpp>
 #include <sake/core/introspection/has_type_size_type.hpp>
 #include <sake/core/memory/alloc/check_align.hpp>
