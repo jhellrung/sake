@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/boost_ext/type_traits/common_type.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -18,8 +18,6 @@
 #ifndef SAKE_BOOST_EXT_TYPE_TRAITS_COMMON_TYPE_HPP
 #define SAKE_BOOST_EXT_TYPE_TRAITS_COMMON_TYPE_HPP
 
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
@@ -28,6 +26,7 @@
 #include <boost/type_traits/make_unsigned.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
+#include <sake/boost_ext/mpl/curry_quote.hpp>
 #include <sake/boost_ext/type_traits/is_integral_or_enum.hpp>
 #include <sake/boost_ext/type_traits/propagate_cv.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -37,7 +36,6 @@
 #include <sake/core/expr_traits/typeof.hpp>
 #include <sake/core/expr_traits/is_rvalue.hpp>
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/identity_type.hpp>
 
 namespace sake
 {
@@ -162,9 +160,8 @@ struct deduce_from_candidates
         Candidates,
         type
     );
-private:
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
-        typename SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, type > )),
+        boost_ext::mpl::curry_quote2< boost::is_same >::apply< type >,
         sake::declval< bool >() ? sake::declval< T0 >() : sake::declval< T1 >()
     ) );
 };

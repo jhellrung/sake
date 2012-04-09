@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/introspection/private/builtin_has_operator_star.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
@@ -21,12 +21,11 @@
 
 #include <sake/core/utility/workaround.hpp>
 
-#include <boost/mpl/placeholders.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <sake/boost_ext/mpl/curry_quote.hpp>
 #include <sake/core/expr_traits/apply.hpp>
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/identity_type.hpp>
 
 namespace sake
 {
@@ -86,7 +85,7 @@ namespace
 
 #define test( T, Result ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        SAKE_IDENTITY_TYPE_WRAP(( boost::is_same< boost::mpl::_1, Result > )), \
+        boost_ext::mpl::curry_quote2< boost::is_same >::apply< Result >, \
         *sake::declval<T>() \
     ) );
 test( int*, int& )
