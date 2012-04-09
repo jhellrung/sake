@@ -36,19 +36,19 @@ class inherit_cast;
 template< class U, class T >
 class inherit_cast< U*, T >
 {
-    typedef typename sake::remove_type_tag<T>::type T_;
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T_ >::value));
+    typedef typename sake::remove_type_tag<T>::type nott_type;
+    BOOST_STATIC_ASSERT((!boost_ext::is_reference< nott_type >::value));
 private:
-    typedef typename boost_ext::propagate_cv< U, T_ >::type * type;
+    typedef typename boost_ext::propagate_cv< U, nott_type >::type * type;
 };
 
 template< class U, class T >
 class inherit_cast< U&, T >
 {
-    typedef typename sake::remove_type_tag<T>::type T_;
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T_ >::value));
+    typedef typename sake::remove_type_tag<T>::type nott_type;
+    BOOST_STATIC_ASSERT((!boost_ext::is_reference< nott_type >::value));
 private:
-    typedef typename boost_ext::propagate_cv< U, T_ >::type & type;
+    typedef typename boost_ext::propagate_cv< U, nott_type >::type & type;
 };
 
 } // namespace result_of
@@ -57,8 +57,8 @@ template< class T, class U >
 inline typename result_of::inherit_cast< U*, T >::type
 inherit_cast(U* const p)
 {
-    typedef typename boost_ext::propagate_cv<U,T>::type T_;
-    return static_cast< T_* >(p);
+    typedef typename boost_ext::propagate_cv<U,T>::type cv_type;
+    return static_cast< cv_type* >(p);
 }
 
 template< class T, class U >

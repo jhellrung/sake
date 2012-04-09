@@ -70,26 +70,26 @@ struct pair
     { }
 
 private:
-    typedef typename boost::remove_cv< T0 >::type T0_;
-    typedef typename boost::remove_cv< T1 >::type T1_;
+    typedef typename boost::remove_cv< T0 >::type nocv0_type;
+    typedef typename boost::remove_cv< T1 >::type nocv1_type;
 public:
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U0 >
     pair(U0&& x0, sake::emplacer< void ( ) >)
-        : first (sake::emplacer_construct< T0_ >(sake::forward< U0 >(x0)))
+        : first (sake::emplacer_construct< nocv0_type >(sake::forward< U0 >(x0)))
     { }
 
     template< class U1 >
     pair(sake::emplacer< void ( ) >, U1&& x1)
-        : second(sake::emplacer_construct< T1_ >(sake::forward< U1 >(x1)))
+        : second(sake::emplacer_construct< nocv1_type >(sake::forward< U1 >(x1)))
     { }
 
     template< class U0, class U1 >
     pair(U0&& x0, U1&& x1)
-        : first (sake::emplacer_construct< T0_ >(sake::forward< U0 >(x0))),
-          second(sake::emplacer_construct< T1_ >(sake::forward< U1 >(x1)))
+        : first (sake::emplacer_construct< nocv0_type >(sake::forward< U0 >(x0))),
+          second(sake::emplacer_construct< nocv1_type >(sake::forward< U1 >(x1)))
     { }
 
     template< class Sequence >
@@ -104,46 +104,46 @@ public:
 
     template< class U0 >
     pair(U0& x0, sake::emplacer< void ( ) >)
-        : first (sake::emplacer_construct< T0_ >(x0))
+        : first (sake::emplacer_construct< nocv0_type >(x0))
     { }
 
     template< class U0 >
     pair(U0 const & x0, sake::emplacer< void ( ) >)
-        : first (sake::emplacer_construct< T0_ >(x0))
+        : first (sake::emplacer_construct< nocv0_type >(x0))
     { }
 
     template< class U1 >
     pair(sake::emplacer< void ( ) >, U1& x1)
-        : second(sake::emplacer_construct< T1_ >(x1))
+        : second(sake::emplacer_construct< nocv1_type >(x1))
     { }
 
     template< class U1 >
     pair(sake::emplacer< void ( ) >, U1 const & x1)
-        : second(sake::emplacer_construct< T1_ >(x1))
+        : second(sake::emplacer_construct< nocv1_type >(x1))
     { }
 
     template< class U0, class U1 >
     pair(U0& x0, U1& x1)
-        : first (sake::emplacer_construct< T0_ >(x0)),
-          second(sake::emplacer_construct< T1_ >(x1))
+        : first (sake::emplacer_construct< nocv0_type >(x0)),
+          second(sake::emplacer_construct< nocv1_type >(x1))
     { }
 
     template< class U0, class U1 >
     pair(U0& x0, U1 const & x1)
-        : first (sake::emplacer_construct< T0_ >(x0)),
-          second(sake::emplacer_construct< T1_ >(x1))
+        : first (sake::emplacer_construct< nocv0_type >(x0)),
+          second(sake::emplacer_construct< nocv1_type >(x1))
     { }
 
     template< class U0, class U1 >
     pair(U0 const & x0, U1& x1)
-        : first (sake::emplacer_construct< T0_ >(x0)),
-          second(sake::emplacer_construct< T1_ >(x1))
+        : first (sake::emplacer_construct< nocv0_type >(x0)),
+          second(sake::emplacer_construct< nocv1_type >(x1))
     { }
 
     template< class U0, class U1 >
     pair(U0 const & x0, U1 const & x1)
-        : first (sake::emplacer_construct< T0_ >(x0)),
-          second(sake::emplacer_construct< T1_ >(x1))
+        : first (sake::emplacer_construct< nocv0_type >(x0)),
+          second(sake::emplacer_construct< nocv1_type >(x1))
     { }
 
     template< class Sequence >

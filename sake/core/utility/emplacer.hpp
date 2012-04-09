@@ -197,13 +197,15 @@ public:
     template< class This, class T >
     struct result< This ( T ) >
     {
+    private:
         typedef typename sake::remove_type_tag<
             typename boost_ext::remove_qualifiers<T>::type
-        >::type T_;
+        >::type nott_type;
+    public:
         typedef typename boost::mpl::if_c<
-            boost_ext::is_same_sans_qualifiers< T_, U0 >::value,
+            boost_ext::is_same_sans_qualifiers< nott_type, U0 >::value,
             typename emplacer_private::traits< U0 >::type,
-            T_
+            nott_type
         >::type type;
     };
 

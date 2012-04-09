@@ -226,13 +226,13 @@ class emplacer_access
     static T&
     assign(T& x, sake::emplacer< Signature > e)
     {
-        typedef typename boost::remove_cv<T>::type T_;
+        typedef typename boost::remove_cv<T>::type nocv_type;
         typedef typename sake::emplacer< Signature >::value_type value_type;
         BOOST_STATIC_ASSERT((
             boost::is_void< value_type >::value
-         || boost::is_same< T_, value_type >::value
+         || boost::is_same< nocv_type, value_type >::value
         ));
-        return x = construct<T_>(e);
+        return x = construct< nocv_type >(e);
     }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -244,13 +244,13 @@ class emplacer_access
     >::type
     assign(T& x, sake::emplacer< Signature > e)
     {
-        typedef typename boost::remove_cv<T>::type T_;
+        typedef typename boost::remove_cv<T>::type nocv_type;
         typedef typename sake::emplacer< Signature >::value_type value_type;
         BOOST_STATIC_ASSERT((
             boost::is_void< value_type >::value
-         || boost::is_same< T_, value_type >::value
+         || boost::is_same< nocv_type, value_type >::value
         ));
-        return x = static_cast< SAKE_RV_REF( T_ ) >(construct<T_>(e));
+        return x = static_cast< SAKE_RV_REF( nocv_type ) >(construct< nocv_type >(e));
     }
 
     template< class T, class Signature >
@@ -260,13 +260,13 @@ class emplacer_access
     >::type
     assign(T& x, sake::emplacer< Signature > e)
     {
-        typedef typename boost::remove_cv<T>::type T_;
+        typedef typename boost::remove_cv<T>::type nocv_type;
         typedef typename sake::emplacer< Signature >::value_type value_type;
         BOOST_STATIC_ASSERT((
             boost::is_void< value_type >::value
-         || boost::is_same< T_, value_type >::value
+         || boost::is_same< nocv_type, value_type >::value
         ));
-        return x = construct<T_>(e);
+        return x = construct< nocv_type >(e);
     }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
