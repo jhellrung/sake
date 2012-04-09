@@ -5,12 +5,12 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_EXPR_TYPEOF_INDEX( expression, candidate_types )
+ * #define SAKE_EXPR_TYPEOF_INDEX( expression, candidates_type )
  *
  * Evaluates (at compile-time) to the index within the Boost.MPL sequence
- * candidate_types corresponding to the type of the given expression.
+ * candidates_type corresponding to the type of the given expression.
  * If the type of the given expression is not among the types given by
- * candidate_types, the result evaluates to the size of candidate_types.
+ * candidates_type, the result evaluates to the size of candidates_type.
  *
  * Note: expression must have non-void type.
  ******************************************************************************/
@@ -24,8 +24,8 @@
 
 #include <sake/core/utility/sizeof_t.hpp>
 
-#define SAKE_EXPR_TYPEOF_INDEX( expression, candidate_types ) \
-    ( sizeof( ::sake::expr_typeof_index_private::deduce< candidate_types >::apply( expression, expression ) ) - 1 )
+#define SAKE_EXPR_TYPEOF_INDEX( expression, candidates_type ) \
+    ( sizeof( ::sake::expr_typeof_index_private::deduce< candidates_type >::apply( expression, expression ) ) - 1 )
 
 namespace sake
 {
