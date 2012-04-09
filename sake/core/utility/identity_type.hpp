@@ -39,7 +39,6 @@
 #define SAKE_CORE_UTILITY_IDENTITY_TYPE_HPP
 
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/control/expr_iif.hpp>
 #include <boost/preprocessor/detail/is_unary.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -50,18 +49,20 @@
     ::sake::identity_type_private::impl< void _T_ >::type
 
 #define SAKE_IDENTITY_TYPE( T ) \
-    BOOST_PP_CAT( SAKE_IDENTITY_TYPE_a, BOOST_PP_IS_UNARY( T ) ) ( T )
-#define SAKE_IDENTITY_TYPE_a0( T ) \
-    SAKE_IDENTITY_TYPE_b( T, SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) )
-#define SAKE_IDENTITY_TYPE_b( T, U ) \
-    BOOST_PP_CAT( SAKE_IDENTITY_TYPE_b, BOOST_PP_IS_UNARY( U ) ) ( T, U )
-#define SAKE_IDENTITY_TYPE_b0( T, U ) \
-    T
-#define SAKE_IDENTITY_TYPE_b1( T, U ) \
-    BOOST_PP_EXPR_IIF( SAKE_BOOST_EXT_PP_KEYWORD_HAS_PREFIX_TYPENAME( T ), typename ) \
-    SAKE_IDENTITY_TYPE_WRAP U
-#define SAKE_IDENTITY_TYPE_a1( T ) \
+    BOOST_PP_CAT( SAKE_IDENTITY_TYPE_1, BOOST_PP_IS_UNARY( T ) ) ( T )
+
+#define SAKE_IDENTITY_TYPE_10( T ) \
+    SAKE_IDENTITY_TYPE_2( T, SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) )
+#define SAKE_IDENTITY_TYPE_11( T ) \
     SAKE_IDENTITY_TYPE_WRAP T
+
+#define SAKE_IDENTITY_TYPE_2( T, U ) \
+    BOOST_PP_CAT( SAKE_IDENTITY_TYPE_2, BOOST_PP_IS_UNARY( U ) ) ( T, U )
+#define SAKE_IDENTITY_TYPE_20( T, U ) \
+    T
+#define SAKE_IDENTITY_TYPE_21( T, U ) \
+    SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) \
+    SAKE_IDENTITY_TYPE_WRAP U
 
 namespace sake
 {
