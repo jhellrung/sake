@@ -17,9 +17,8 @@
 #define SAKE_CORE_EXPR_TRAITS_APPLY_HPP
 
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/if.hpp>
 
-#include <sake/core/utility/true_false_tag.hpp>
+#include <sake/core/utility/sizeof_t.hpp>
 
 #define SAKE_EXPR_APPLY( metafunction, expression ) \
     (SAKE_SIZEOF_TRUE_TAG == sizeof( ::sake::expr_apply_private::helper< metafunction >( expression, expression ) ))
@@ -36,7 +35,7 @@ struct result
 // MSVC9 chokes if you use boost::mpl::apply1<...>::type::value as a boolean template parameter.
 // Hence, we have to be very explicit about what we want to do :/
     static bool const b = boost::mpl::apply1<F,T>::type::value;
-    typedef typename boost::mpl::if_c< b, sake::true_tag, sake::false_tag >::type type;
+    typedef sake::sizeof_t< 1+b > type;
 };
 
 template< class F, class T, class U >
