@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/boost_ext/fusion/adapted/pair.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
@@ -11,7 +11,7 @@
 
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>
 
-#include <sake/core/data_structures/pair_fwd.hpp>
+#include <sake/core/data_structures/pair/fwd.hpp>
 
 BOOST_FUSION_ADAPT_TPL_STRUCT(
     ( T0 ) ( T1 ),
