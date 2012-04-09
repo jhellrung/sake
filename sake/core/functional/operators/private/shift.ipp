@@ -1,20 +1,29 @@
 /*******************************************************************************
  * sake/core/functional/operators/private/shift.ipp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
 #include <boost/config.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_promotion.hpp>
+#include <boost/type_traits/is_same.hpp>
 
+#include <sake/boost_ext/mpl/curry_quote.hpp>
+#include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_integral_or_enum.hpp>
+#include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/expr_traits/apply.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 #ifndef SAKE_OPERATORS_NAME
@@ -57,8 +66,13 @@ struct SAKE_OPERATORS_NAME;
 
 template< class T0, class T1 >
 struct SAKE_OPERATORS_NAME
-    : extension::BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )< T0, T1 >
-{ };
+{
+    typedef typename extension::BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )< T0, T1 >::type type;
+    BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
+        boost_ext::mpl::curry_quote2< boost::is_same >::apply< type >,
+        sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >()
+    ) );
+};
 
 /*******************************************************************************
  * struct operators::result_of::extension::SAKE_OPERATORS_NAME0< T0, T1, Enable = void >
@@ -91,24 +105,60 @@ namespace BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )
 {
 
 template< class T, bool = boost_ext::is_integral_or_enum<T>::value >
-struct dispatch;
+struct impl;
 
 template< class T >
-struct dispatch< T, true >
+struct impl< T, true >
     : boost::integral_promotion<T>
 { };
 
 template< class T >
-struct dispatch< T, false >
+struct impl< T, false >
 { typedef T type; };
+
+template< class T0, class T1 >
+class helper
+{
+    typedef typename boost_ext::remove_qualifiers< T0 >::type noqual0_type;
+    typedef typename boost_ext::remove_qualifiers< T1 >::type noqual1_type;
+    typedef typename impl< noqual0_type >::type maybe_type;
+    static bool const is_same_as_maybe_type = SAKE_EXPR_APPLY(
+        boost_ext::mpl::curry_quote2< boost::is_same >::apply< maybe_type >,
+        sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >()
+    );
+public:
+    typedef typename boost::mpl::eval_if_c<
+        is_same_as_maybe_type,
+        boost::mpl::identity< maybe_type >,
+        operators::result_of::SAKE_OPERATORS_NAME< noqual0_type, noqual1_type >
+    >::type type;
+};
 
 } // namespace BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )
 
 template< class T0, class T1 >
 struct SAKE_OPERATORS_NAME
-    : BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::dispatch<
-          typename boost_ext::remove_qualifiers< T0 >::type
-      >
+{
+    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T0 >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T1 >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T0 >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T1 >::value));
+    typedef typename BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::impl< T0 >::type type;
+};
+
+template< class T0, class T1 >
+struct SAKE_OPERATORS_NAME< T0, T1& >
+    : BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::helper< T0, T1& >
+{ };
+
+template< class T0, class T1 >
+struct SAKE_OPERATORS_NAME< T0&, T1 >
+    : BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::helper< T0&, T1 >
+{ };
+
+template< class T0, class T1 >
+struct SAKE_OPERATORS_NAME< T0&, T1& >
+    : BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::helper< T0&, T1& >
 { };
 
 } // namespace default_impl
