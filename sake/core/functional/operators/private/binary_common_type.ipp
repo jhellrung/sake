@@ -11,12 +11,12 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
 
 #include <sake/boost_ext/mpl/curry_quote.hpp>
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
+#include <sake/boost_ext/type_traits/is_same_sans_rv.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
@@ -68,7 +68,7 @@ struct SAKE_OPERATORS_NAME
 {
     typedef typename extension::BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )< T0, T1 >::type type;
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
-        boost_ext::mpl::curry_quote2< boost::is_same >::apply< type >,
+        boost_ext::mpl::curry_quote2< boost_ext::is_same_sans_rv >::apply< type >,
         sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >()
     ) );
 };
@@ -110,7 +110,7 @@ class helper
     typedef typename boost_ext::remove_qualifiers< T1 >::type noqual1_type;
     typedef typename boost_ext::common_type< noqual0_type, noqual1_type >::type maybe_type;
     static bool const is_same_as_maybe_type = SAKE_EXPR_APPLY(
-        boost_ext::mpl::curry_quote2< boost::is_same >::apply< maybe_type >,
+        boost_ext::mpl::curry_quote2< boost_ext::is_same_sans_rv >::apply< maybe_type >,
         sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >()
     );
 public:
