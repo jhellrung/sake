@@ -52,7 +52,7 @@ struct curry_quote1
 
 #define N BOOST_PP_ITERATION()
 
-template< template< BOOST_PP_ENUM_PARAMS( N, _ ) > class F >
+template< template< BOOST_PP_ENUM_PARAMS( N, class _ ) > class F >
 struct BOOST_PP_CAT( curry_quote, N )
     : boost_ext::mpl::BOOST_PP_CAT( curry, N )< boost::mpl::BOOST_PP_CAT( quote, N )<F> >
 { };
