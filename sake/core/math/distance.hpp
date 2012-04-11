@@ -21,6 +21,8 @@
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 
+#include <sake/boost_ext/mpl/if.hpp>
+#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -107,16 +109,19 @@ struct distance
 namespace distance_private
 {
 
+using boost_ext::mpl::uint;
+
 template< class T0, class T1 >
 struct dispatch_index
 {
+private:
     typedef typename boost_ext::common_type< T0, T1 >::type common_type_;
     typedef typename result_of::distance< T0, T1 >::type result_type;
-    static unsigned int const _ =
-        (1 << 2) * sake::is_iterator< common_type_ >::value
-      | (1 << 1) * boost_ext::is_convertible< common_type_, result_type >::value
-      | (1 << 0);
-    static unsigned int const value = sake::static_intlog2_c<_>::value;
+public:
+    static unsigned int const value = boost_ext::mpl::
+             if_< sake::is_iterator< common_type_ >, uint<2> >::type::template
+        else_if < boost_ext::is_convertible< common_type_, result_type >, uint<1> >::type::template
+        else_   < uint<0> >::type::value;
 };
 
 template< class T0, class T1 >
