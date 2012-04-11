@@ -18,7 +18,7 @@
  * sake::sign(T const &) is implemented in terms of
  * - T::sign(), if available; else
  * - sign(T const &) (unqualified, hence subject to ADL), if available; else
- * - comparison with sake::zero (via sake::compare).
+ * - comparison with sake::zero (via sake::cmp).
  *
  * The default implementation of the result_of::sign metafunction is evaluated
  * based on the result of the first available implementation above and is able
@@ -40,7 +40,7 @@
 #include <sake/core/expr_traits/best_conversion.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
-#include <sake/core/math/compare.hpp>
+#include <sake/core/math/cmp.hpp>
 #include <sake/core/math/fuzzy_sign_t.hpp>
 #include <sake/core/math/sign_fwd.hpp>
 #include <sake/core/math/sign_t.hpp>
@@ -235,9 +235,9 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
-    typedef typename sake::result_of::compare< T, sake::zero_t >::type type;
+    typedef typename sake::result_of::cmp< T, sake::zero_t >::type type;
     static type apply(T const & x)
-    { return sake::compare(x, sake::zero); }
+    { return sake::cmp(x, sake::zero); }
 };
 
 } // namespace sign_private

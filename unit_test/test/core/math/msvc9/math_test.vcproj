@@ -163,7 +163,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\compare_test.cpp"
+			RelativePath="..\cmp_test.cpp"
 			>
 		</File>
 		<File

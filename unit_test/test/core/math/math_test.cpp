@@ -16,7 +16,7 @@ void abs_ip_test(sake::test::environment& env);
 void binom_test(sake::test::environment& env);
 void clamp_test(sake::test::environment& env);
 void clamp_ip_test(sake::test::environment& env);
-void compare_test(sake::test::environment& env);
+void cmp_test(sake::test::environment& env);
 void intlog2_test(sake::test::environment& env);
 void max_test(sake::test::environment& env);
 void min_test(sake::test::environment& env);
@@ -32,7 +32,7 @@ void math_test(sake::test::environment& env)
     env("binom", &binom_test);
     env("clamp", &clamp_test);
     env("clamp_ip", &clamp_ip_test);
-    env("compare", &compare_test);
+    env("cmp", &cmp_test);
     env("intlog2", &intlog2_test);
     env("max", &max_test);
     env("min", &min_test);

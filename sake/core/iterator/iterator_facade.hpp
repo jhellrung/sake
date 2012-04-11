@@ -44,7 +44,7 @@
 #include <sake/core/iterator/private/facade/operator_bracket_dispatch.hpp>
 #include <sake/core/iterator/private/facade/operator_post_increment_dispatch.hpp>
 #include <sake/core/iterator/iterator_core_access.hpp>
-#include <sake/core/math/compare.hpp>
+#include <sake/core/math/cmp.hpp>
 #include <sake/core/math/sign.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
@@ -324,20 +324,20 @@ protected:
 
     template< class T >
     sake::sign_t
-    compare_impl(T const & other) const
+    cmp_impl(T const & other) const
     { return sake::sign(derived() - other); }
     template< class T >
     bool
     operator_equal_impl(T const & other) const
-    { return sake::compare(derived(), other) == sake::zero; }
+    { return sake::cmp(derived(), other) == sake::zero; }
     template< class T >
     bool
     operator_less_impl(T const & other) const
-    { return sake::compare(derived(), other) < sake::zero; }
+    { return sake::cmp(derived(), other) < sake::zero; }
     template< class T >
     bool
     operator_less_equal_impl(T const & other) const
-    { return sake::compare(derived(), other) <= sake::zero; }
+    { return sake::cmp(derived(), other) <= sake::zero; }
 
     derived_type
     operator_plus_impl(difference_type const n) const
@@ -377,8 +377,8 @@ SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< bool >, ope
 { return !(i1.derived() < i0.derived()); }
 SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< bool >, operator>= )
 { return !(i0.derived() < i1.derived()); }
-SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< sake::sign_t >, compare )
-{ return iterator_core_access::compare(i0.derived(), i1.derived()); }
+SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< sake::sign_t >, cmp )
+{ return iterator_core_access::cmp(i0.derived(), i1.derived()); }
 
 /*******************************************************************************
  * iterator_facade arithmetic operators

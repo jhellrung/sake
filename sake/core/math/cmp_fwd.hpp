@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/math/compare_fwd.hpp
+ * sake/core/math/cmp_fwd.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_MATH_COMPARE_FWD_HPP
-#define SAKE_CORE_MATH_COMPARE_FWD_HPP
+#ifndef SAKE_CORE_MATH_CMP_FWD_HPP
+#define SAKE_CORE_MATH_CMP_FWD_HPP
 
 namespace sake
 {
@@ -16,22 +16,22 @@ namespace result_of
 {
 
 template< class T0, class T1 = T0 >
-struct compare;
+struct cmp;
 
 namespace extension
 {
 template< class T0, class T1, class Enable = void >
-struct compare;
+struct cmp;
 } // namespace extension
 
 namespace default_impl
 {
 template< class T0, class T1 = T0 >
-struct compare;
+struct cmp;
 } // namespace default_impl
 
 } // namespace result_of
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_MATH_COMPARE_FWD_HPP
+#endif // #ifndef SAKE_CORE_MATH_CMP_FWD_HPP

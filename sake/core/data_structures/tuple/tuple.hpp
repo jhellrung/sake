@@ -14,7 +14,7 @@
  * operator==(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
  * operator!=(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
  * operator<(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
- * compare(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
+ * cmp(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
  ******************************************************************************/
 
 #ifndef BOOST_PP_IS_ITERATING
@@ -56,7 +56,7 @@
 
 #include <sake/core/data_structures/tuple/fwd.hpp>
 #include <sake/core/functional/operators/less.hpp>
-#include <sake/core/math/compare.hpp>
+#include <sake/core/math/cmp.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/forward.hpp>
@@ -193,7 +193,7 @@ hash_value(sake::tuple< T0N > const & x)
  * operator==(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
  * operator!=(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
  * operator<(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
- * compare(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
+ * cmp(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
  ******************************************************************************/
 
 template< class_T0N, class_U0N >
@@ -214,16 +214,16 @@ template< class_T0N, class_U0N >
 inline typename boost_ext::fusion::result_of::compare<
     sake::tuple< T0N >, sake::tuple< U0N >
 >::type
-compare(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
+cmp(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
 { return boost_ext::fusion::compare(x, y); }
 
 template< class_T0N, class_U0N >
 inline typename operators::result_of::less<
-    typename result_of::compare< sake::tuple< T0N > const &, sake::tuple< U0N > const & >::type,
+    typename result_of::cmp< sake::tuple< T0N > const &, sake::tuple< U0N > const & >::type,
     sake::zero_t
 >::type
 operator<(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return sake::compare(x,y) < sake::zero; }
+{ return sake::cmp(x,y) < sake::zero; }
 
 #undef class_T0N
 #undef class_U0N

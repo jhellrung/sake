@@ -13,7 +13,7 @@
  * operator==(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
  * operator!=(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
  * operator<(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
- * compare(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
+ * cmp(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
  *
  * A sake::compressed_pair is nearly functionally identical to a
  * boost::compressed_pair, except that it is emplace- and move-aware.
@@ -44,7 +44,7 @@
 #include <sake/core/functional/operators/equal.hpp>
 #include <sake/core/functional/operators/less.hpp>
 #include <sake/core/functional/operators/not_equal.hpp>
-#include <sake/core/math/compare.hpp>
+#include <sake/core/math/cmp.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
@@ -232,7 +232,7 @@ hash_value(compressed_pair< T0, T1 > const & x)
  * operator==(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
  * operator!=(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
  * operator<(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
- * compare(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
+ * cmp(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
  ******************************************************************************/
 
 template< class T0, class T1, class U0, class U1 >
@@ -266,7 +266,7 @@ operator!=(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const 
 template< class T0, class T1, class U0, class U1 >
 inline typename boost_ext::common_type<
     typename operators::result_of::less<
-        typename result_of::compare<
+        typename result_of::cmp<
             typename boost_ext::add_reference_add_const< T0 >::type,
             typename boost_ext::add_reference_add_const< U0 >::type
         >::type,
@@ -279,31 +279,31 @@ inline typename boost_ext::common_type<
 >::type
 operator<(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y)
 {
-    typename result_of::compare<
+    typename result_of::cmp<
         typename boost_ext::add_reference_add_const< T0 >::type,
         typename boost_ext::add_reference_add_const< U0 >::type
-    >::type const s0 = sake::compare(x.first(), y.first());
+    >::type const s0 = sake::cmp(x.first(), y.first());
     return s0 == sake::zero ? x.second() < y.second() : s0 < sake::zero;
 }
 
 template< class T0, class T1, class U0, class U1 >
 inline typename boost_ext::common_type<
-    typename result_of::compare<
+    typename result_of::cmp<
         typename boost_ext::add_reference_add_const< T0 >::type,
         typename boost_ext::add_reference_add_const< U0 >::type
     >::type,
-    typename result_of::compare<
+    typename result_of::cmp<
         typename boost_ext::add_reference_add_const< T1 >::type,
         typename boost_ext::add_reference_add_const< U1 >::type
     >::type
 >::type
-compare(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y)
+cmp(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y)
 {
-    typename result_of::compare<
+    typename result_of::cmp<
         typename boost_ext::add_reference_add_const< T0 >::type,
         typename boost_ext::add_reference_add_const< U0 >::type
-    >::type const s0 = sake::compare(x.first(), y.first());
-    return s0 == sake::zero ? sake::compare(x.second(), y.second()) : s0;
+    >::type const s0 = sake::cmp(x.first(), y.first());
+    return s0 == sake::zero ? sake::cmp(x.second(), y.second()) : s0;
 }
 
 namespace private_

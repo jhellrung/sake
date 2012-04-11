@@ -5,13 +5,13 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct operators::result_of::extension::equal< T, U, ... >
- * struct operators::result_of::extension::not_equal< T, U, ... >
- * struct operators::result_of::extension::less< T, U, ... >
- * struct operators::result_of::extension::less_equal< T, U, ... >
- * struct operators::result_of::extension::greater< T, U, ... >
- * struct operators::result_of::extension::greater_equal< T, U, ... >
- * struct result_of::extension::compare< T, U, ... >
+ * struct operators::result_of::extension::equal< ... >
+ * struct operators::result_of::extension::not_equal< ... >
+ * struct operators::result_of::extension::less< ... >
+ * struct operators::result_of::extension::less_equal< ... >
+ * struct operators::result_of::extension::greater< ... >
+ * struct operators::result_of::extension::greater_equal< ... >
+ * struct result_of::extension::cmp< ... >
  *
  * operator==(pair<T0,T1> const & x, pair<U0,U1> const & y) -> ...
  * operator!=(pair<T0,T1> const & x, pair<U0,U1> const & y) -> ...
@@ -19,7 +19,7 @@
  * operator<=(pair<T0,T1> const & x, pair<U0,U1> const & y) -> ...
  * operator>(pair<T0,T1> const & x, pair<U0,U1> const & y) -> ...
  * operator>=(pair<T0,T1> const & x, pair<U0,U1> const & y) -> ...
- * compare(pair<T0,T1> const & x, pair<U0,U1> const & y) -> ...
+ * cmp(pair<T0,T1> const & x, pair<U0,U1> const & y) -> ...
  ******************************************************************************/
 
 #ifndef SAKE_CORE_DATA_STRUCTURES_PAIR_OPERATORS_HPP
@@ -40,24 +40,11 @@
 #include <sake/core/functional/operators/logical_not.hpp>
 #include <sake/core/functional/operators/logical_or.hpp>
 #include <sake/core/functional/operators/not_equal.hpp>
-#include <sake/core/math/compare_fwd.hpp>
+#include <sake/core/math/cmp_fwd.hpp>
 #include <sake/core/math/zero.hpp>
 
 namespace sake
 {
-
-namespace pair_private
-{
-
-template< class T, class U >
-struct enable_binary
-    : boost::enable_if_c<
-          sake::is_pair< typename boost_ext::remove_qualifiers<T>::type >::value
-       && sake::is_pair< typename boost_ext::remove_qualifiers<U>::type >::value
-      >
-{ };
-
-} // namespace pair_private
 
 namespace operators
 {
@@ -118,40 +105,6 @@ struct less< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
       >
 { };
 
-#if 0
-template< class T, class U >
-struct equal< T, U, typename sake::pair_private::enable_binary<T,U>::type >
-    : operators::result_of::equal<
-          typename boost_ext::remove_qualifiers<T>::type,
-          typename boost_ext::remove_qualifiers<U>::type
-      >
-{ };
-
-template< class T, class U >
-struct not_equal< T, U, typename sake::pair_private::enable_binary<T,U>::type >
-    : operators::result_of::not_equal<
-          typename boost_ext::remove_qualifiers<T>::type,
-          typename boost_ext::remove_qualifiers<U>::type
-      >
-{ };
-
-template< class T, class U >
-struct less< T, U, typename sake::pair_private::enable_binary<T,U>::type >
-    : operators::result_of::less<
-          typename boost_ext::remove_qualifiers<T>::type,
-          typename boost_ext::remove_qualifiers<U>::type
-      >
-{ };
-
-template< class T, class U >
-struct less_equal< T, U, typename sake::pair_private::enable_binary<T,U>::type >
-    : operators::result_of::less_equal<
-          typename boost_ext::remove_qualifiers<T>::type,
-          typename boost_ext::remove_qualifiers<U>::type
-      >
-{ };
-#endif
-
 } // namespace extension
 
 } // namespace result_of
@@ -165,13 +118,13 @@ namespace extension
 {
 
 template< class T0, class T1, class U0, class U1 >
-struct compare< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
+struct cmp< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
     : boost_ext::common_type<
-          typename result_of::compare<
+          typename result_of::cmp<
               typename boost_ext::add_reference_add_const< T0 >::type,
               typename boost_ext::add_reference_add_const< U0 >::type
           >::type,
-          typename result_of::compare<
+          typename result_of::cmp<
               typename boost_ext::add_reference_add_const< T1 >::type,
               typename boost_ext::add_reference_add_const< U1 >::type
           >::type
@@ -179,8 +132,8 @@ struct compare< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
 { };
 
 template< class T, class U >
-struct compare< T, U, typename sake::pair_private::enable_binary<T,U>::type >
-    : result_of::compare<
+struct cmp< T, U, typename sake::pair_private::enable_binary<T,U>::type >
+    : result_of::cmp<
           typename boost_ext::remove_qualifiers<T>::type,
           typename boost_ext::remove_qualifiers<U>::type
       >
@@ -218,17 +171,17 @@ operator<(sake::pair<T0,T1> const & x, sake::pair<U0,U1> const & y)
 { return x.first < y.first || (!(y.first < x.first) && x.second < y.second); }
 
 template< class T0, class T1, class U0, class U1 >
-inline typename result_of::compare<
+inline typename result_of::cmp<
     sake::pair<T0,T1>,
     sake::pair<U0,U1>
 >::type
-compare(sake::pair< T0, T1 > const & x, sake::pair< U0, U1 > const & y)
+cmp(sake::pair< T0, T1 > const & x, sake::pair< U0, U1 > const & y)
 {
-    typename result_of::compare<
+    typename result_of::cmp<
         typename boost_ext::add_reference_add_const< T0 >::type,
         typename boost_ext::add_reference_add_const< U0 >::type
-    >::type const s0 = sake::compare(x.first, y.first);
-    return s0 == sake::zero ? sake::compare(x.second, y.second) : s0;
+    >::type const s0 = sake::cmp(x.first, y.first);
+    return s0 == sake::zero ? sake::cmp(x.second, y.second) : s0;
 }
 
 } // namespace pair_adl

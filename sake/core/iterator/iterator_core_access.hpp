@@ -33,7 +33,7 @@ class iterator_core_access
 
     SAKE_ITERATOR_FACADE_function_prototype( friend, boost::mpl::always< bool >, operator== );
     SAKE_ITERATOR_FACADE_function_prototype( friend, boost::mpl::always< bool >, operator<  );
-    SAKE_ITERATOR_FACADE_function_prototype( friend, boost::mpl::always< sake::sign_t >, compare );
+    SAKE_ITERATOR_FACADE_function_prototype( friend, boost::mpl::always< sake::sign_t >, cmp );
     SAKE_ITERATOR_FACADE_function_prototype(
         friend,
         boost::mpl::quote2< iterator_facade_private::common_difference_type >,
@@ -89,15 +89,15 @@ class iterator_core_access
         boost_ext::is_convertible<J,I>::value,
         sake::sign_t
     >::type
-    compare(I const & i, J const & j)
-    { return i.compare_impl(j); }
+    cmp(I const & i, J const & j)
+    { return i.cmp_impl(j); }
     template< class I, class J >
     static typename boost::disable_if_c<
         boost_ext::is_convertible<J,I>::value,
         sake::sign_t
     >::type
-    compare(I const & i, J const & j)
-    { return -j.compare_impl(i); }
+    cmp(I const & i, J const & j)
+    { return -j.cmp_impl(i); }
 
     template< class I, class J >
     static typename boost::enable_if_c<
