@@ -7,13 +7,17 @@
  *
  * struct boost_ext::mpl::if_c<B,T,U>
  * struct boost_ext::mpl::if_<B,T,U>
+ * struct boost_ext::mpl::if_not<B,T,U>
  * struct boost_ext::mpl::eval_if_c<B,T,U>
  * struct boost_ext::mpl::eval_if<B,T,U>
+ * struct boost_ext::mpl::eval_if_not<B,T,U>
  *
  * struct boost_ext::mpl::if_c<B,T>
  * struct boost_ext::mpl::if_<B,T>
+ * struct boost_ext::mpl::if_not<B,T>
  * struct boost_ext::mpl::eval_if_c<B,T>
  * struct boost_ext::mpl::eval_if<B,T>
+ * struct boost_ext::mpl::eval_if_not<B,T>
  *
  * The 3-argument form of these components function identical to their
  * same-named counterparts in Boost.MPL.
@@ -36,8 +40,10 @@
  *     else_eval
  *     else_if_c
  *     else_if
+ *     else_if_not
  *     else_eval_if_c
  *     else_eval_if
+ *     else_eval_if_not
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_MPL_IF_HPP
@@ -88,11 +94,17 @@ struct if_c< true, T, if_private::else_tag >
     template< class B, class U, class V = if_private::else_tag >
     struct else_if
     { typedef typename boost_ext::mpl::if_c< true, T, V >::type type; };
+    template< class B, class U, class V = if_private::else_tag >
+    struct else_if_not
+    { typedef typename boost_ext::mpl::if_c< true, T, V >::type type; };
     template< bool B, class U, class V = if_private::else_tag >
     struct else_eval_if_c
     { typedef typename boost_ext::mpl::if_c< true, T, V >::type type; };
     template< class B, class U, class V = if_private::else_tag >
     struct else_eval_if
+    { typedef typename boost_ext::mpl::if_c< true, T, V >::type type; };
+    template< class B, class U, class V = if_private::else_tag >
+    struct else_eval_if_not
     { typedef typename boost_ext::mpl::if_c< true, T, V >::type type; };
 };
 
@@ -114,12 +126,18 @@ struct impl_c_false
     template< class B, class U, class V = if_private::else_tag >
     struct else_if
     { typedef typename boost_ext::mpl::if_c< B::value, U, V >::type type; };
+    template< class B, class U, class V = if_private::else_tag >
+    struct else_if_not
+    { typedef typename boost_ext::mpl::if_c< !B::value, U, V >::type type; };
     template< bool B, class U, class V = if_private::else_tag >
     struct else_eval_if_c
     { typedef typename boost_ext::mpl::eval_if_c<B,U,V>::type type; };
     template< class B, class U, class V = if_private::else_tag >
     struct else_eval_if
     { typedef typename boost_ext::mpl::eval_if_c< B::value, U, V >::type type; };
+    template< class B, class U, class V = if_private::else_tag >
+    struct else_eval_if_not
+    { typedef typename boost_ext::mpl::eval_if_c< !B::value, U, V >::type type; };
 };
 
 } // namespace if_private
@@ -132,6 +150,11 @@ struct if_c< false, T, if_private::else_tag >
 template< class B, class T, class U = if_private::else_tag >
 struct if_
     : boost_ext::mpl::if_c< B::value, T, U >
+{ };
+
+template< class B, class T, class U = if_private::else_tag >
+struct if_not
+    : boost_ext::mpl::if_c< !B::value, T, U >
 { };
 
 template< class T, class U >
@@ -155,6 +178,11 @@ struct eval_if_c< false, T, if_private::else_tag >
 template< class B, class T, class U = if_private::else_tag >
 struct eval_if
     : boost_ext::mpl::eval_if_c< B::value, T, U >
+{ };
+
+template< class B, class T, class U = if_private::else_tag >
+struct eval_if_not
+    : boost_ext::mpl::eval_if_c< !B::value, T, U >
 { };
 
 } // namespace mpl
