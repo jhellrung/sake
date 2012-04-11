@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/math/gcd.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -61,7 +61,6 @@ struct gcd
     typename result_of::gcd< T0, T1 >::type
     operator()(T0 x0, T1 x1) const
     {
-        typedef typename result_of::gcd< T0, T1 >::type result_type;
         typedef typename gcd_private::narrow< T0, T1 >::type narrow_type;
         sake::abs_ip(x0);
         sake::abs_ip(x1);
@@ -112,7 +111,7 @@ helper(T& x0, T& x1)
 {
     // Euclidean Algorithm
     while(!(x1 == sake::zero)) {
-        T y = x0 % x1;
+        T y = sake::move(x0) % x1;
         x0 = sake::move(x1);
         x1 = sake::move(y);
     }
