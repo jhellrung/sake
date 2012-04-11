@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/expr_traits/type_tag_of.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -36,6 +36,9 @@ namespace sake
 namespace expr_type_tag_of_private
 {
 
+struct rvalue_detector
+{ template< class T > rvalue_detector(T const &) { } };
+
 template< class T, class U >
 inline sake::type_tag< T& >
 deduce(T&, U&)
@@ -45,13 +48,6 @@ template< class T, class U >
 inline sake::type_tag< T const & >
 deduce(T const &, U&)
 { return sake::type_tag< T const & >(); }
-
-struct rvalue_detector
-{
-    template< class T >
-    rvalue_detector(T const &)
-    { }
-};
 
 template< class T >
 inline sake::type_tag<T>
