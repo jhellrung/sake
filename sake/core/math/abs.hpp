@@ -259,6 +259,7 @@ struct adl< T, void >
     BOOST_STATIC_ASSERT((!::sake::boost_ext::is_reference<T>::value));
     BOOST_STATIC_ASSERT((!::sake::boost_ext::is_cv_or<T>::value));
     typedef typename adl_impl<T>::type type;
+    BOOST_STATIC_ASSERT((!::boost::is_void< type >::value));
 };
 
 template< class T >
@@ -287,7 +288,19 @@ namespace abs_private
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
-using ::sake::boost_ext::mpl::uint;
+using boost_ext::mpl::uint;
+
+template< class T >
+class dispatch_index_helper
+{
+    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
+public:
+    typedef typename boost_ext::mpl::
+             if_< boost::is_signed< noqual_type >              , uint<8> >::type::template
+        else_if < boost::is_unsigned< noqual_type >            , uint<7> >::type::template
+        else_if < is_callable_mem_fun<T>                       , uint<6> >::type::template
+        else_if < ::sake_abs_private::is_callable< void ( T ) >, uint<5> >::type type;
+};
 
 template< class T >
 #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -296,16 +309,12 @@ struct dispatch_index
 struct dispatch_index< T, true >
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 {
-    static unsigned int const value = boost_ext::mpl::
-        if_< boost::is_signed<T>, uint<8> >::type::template
-   else_if < boost::is_unsigned<T>, uint<7> >::type::template
-   else_if < is_callable_mem_fun<T>, uint<6> >::type::template
-   else_if < ::sake_abs_private::is_callable< void ( T ) >, uint<5> >::type::template
-   else_if < abs_ip_private::is_callable_mem_fun< T&, T& ( ) >, uint<4> >::type::template
-   else_if < abs_ip_private::is_callable_mem_fun< T&         >, uint<3> >::type::template
-   else_if < ::sake_abs_ip_private::is_callable<   T& ( T& ) >, uint<2> >::type::template
-   else_if < ::sake_abs_ip_private::is_callable< void ( T& ) >, uint<1> >::type::template
-   else_   < uint<0> >::type::value;
+    static unsigned int const value = dispatch_index_helper<T>::type::template
+        else_if< abs_ip_private::is_callable_mem_fun< T&, T& ( ) >, uint<4> >::type::template
+        else_if< abs_ip_private::is_callable_mem_fun< T&         >, uint<3> >::type::template
+        else_if< ::sake_abs_ip_private::is_callable<   T& ( T& ) >, uint<2> >::type::template
+        else_if< ::sake_abs_ip_private::is_callable< void ( T& ) >, uint<1> >::type::template
+        else_  < uint<0> >::type::value;
 };
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -313,13 +322,8 @@ struct dispatch_index< T, true >
 template< class T >
 struct dispatch_index< T& >
 {
-    typedef typename boost::remove_const<T>::type noconst_type;
-    static unsigned int const value = boost_ext::mpl::
-        if_< boost::is_signed< noconst_type >, uint<8> >::type::template
-   else_if < boost::is_unsigned< noconst_type >, uint<7> >::type::template
-   else_if < is_callable_mem_fun< T& >, uint<6> >::type::template
-   else_if < ::sake_abs_private::is_callable< void ( T& ) >, uint<5> >::type::template
-   else_   < uint<0> >::type::value;
+    static unsigned int const value = dispatch_index_helper< T& >::type::template
+        else_< uint<0> >::type::value;
 };
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -327,13 +331,8 @@ struct dispatch_index< T& >
 template< class T >
 struct dispatch_index< T, false >
 {
-    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
-    static unsigned int const value = boost_ext::mpl::
-        if_< boost::is_signed< noqual_type >, uint<8> >::type::template
-   else_if < boost::is_unsigned< noqual_type >, uint<7> >::type::template
-   else_if < is_callable_mem_fun<T>, uint<6> >::type::template
-   else_if < ::sake_abs_private::is_callable< void ( T ) >, uint<5> >::type::template
-   else_   < uint<0> >::type::value;
+    static unsigned int const value = dispatch_index_helper<T>::type::template
+        else_< uint<0> >::type::value;
 };
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
