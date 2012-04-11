@@ -46,14 +46,9 @@
 namespace sake
 {
 
-namespace operators
-{
-
-namespace result_of
-{
-
-namespace extension
-{
+namespace operators {
+namespace result_of {
+namespace extension {
 
 template< class T0, class T1, class U0, class U1 >
 struct equal< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
@@ -106,16 +101,11 @@ struct less< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
 { };
 
 } // namespace extension
-
 } // namespace result_of
-
 } // namespace operators
 
-namespace result_of
-{
-
-namespace extension
-{
+namespace result_of {
+namespace extension {
 
 template< class T0, class T1, class U0, class U1 >
 struct cmp< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
@@ -140,7 +130,6 @@ struct cmp< T, U, typename sake::pair_private::enable_binary<T,U>::type >
 { };
 
 } // namespace extension
-
 } // namespace result_of
 
 namespace pair_adl
