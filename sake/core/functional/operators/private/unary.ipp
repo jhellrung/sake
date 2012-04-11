@@ -74,6 +74,7 @@ struct SAKE_OPERATORS_NAME
     typedef typename extension::SAKE_OPERATORS_NAME<
         typename boost_ext::remove_rvalue_reference<T>::type
     >::type type;
+    BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 private:
 #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
     static bool const is_builtin_object_ =
@@ -146,7 +147,6 @@ struct SAKE_OPERATORS_NAME
     BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
     typedef typename BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::impl<T>::type type;
-    BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 };
 
 template< class T >

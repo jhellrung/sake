@@ -76,6 +76,7 @@ template<
 struct dispatch
 {
     typedef typename extension::BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )< T0, T1 >::type type;
+    BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
         typename boost_ext::mpl::curry_quote2< boost_ext::is_same_sans_rv >::apply< type >::type,
         sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >()
@@ -161,7 +162,6 @@ struct SAKE_OPERATORS_NAME
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T0 >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T1 >::value));
     typedef typename BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::impl< T0, T1 >::type type;
-    BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 };
 
 template< class T0, class T1 >
