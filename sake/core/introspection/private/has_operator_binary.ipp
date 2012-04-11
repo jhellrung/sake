@@ -37,7 +37,7 @@
 
 
 template<
-    class T, class U,
+    class T, class U = T,
     class Result = SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ),
     class ResultPred = ::boost::mpl::always< ::boost::true_type >
 >
