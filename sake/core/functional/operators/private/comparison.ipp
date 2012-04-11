@@ -70,14 +70,14 @@ namespace BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )
 
 template<
     class T0, class T1,
-    class T0_ = boost_ext::remove_qualifiers< T0 >::type,
-    class T1_ = boost_ext::remove_qualifiers< T1 >::type
+    class T0_ = typename boost_ext::remove_qualifiers< T0 >::type,
+    class T1_ = typename boost_ext::remove_qualifiers< T1 >::type
 >
 struct dispatch
 {
     typedef typename extension::BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )< T0, T1 >::type type;
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
-        boost_ext::mpl::curry_quote2< boost_ext::is_same_sans_rv >::apply< type >,
+        typename boost_ext::mpl::curry_quote2< boost_ext::is_same_sans_rv >::apply< type >::type,
         sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >()
     ) );
 };
@@ -90,7 +90,10 @@ struct dispatch< T0, T1, U0*, U1* >
 
 template< class T0, class T1 >
 struct SAKE_OPERATORS_NAME
-    : BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::dispatch< T0, T1 >
+    : BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::dispatch<
+          typename boost_ext::remove_rvalue_reference< T0 >::type,
+          typename boost_ext::remove_rvalue_reference< T1 >::type
+      >
 { };
 
 /*******************************************************************************
@@ -157,7 +160,7 @@ struct SAKE_OPERATORS_NAME
     BOOST_STATIC_ASSERT((!boost_ext::is_reference< T1 >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T0 >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T1 >::value));
-    typedef BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::impl< T0, T1 >::type type;
+    typedef typename BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::impl< T0, T1 >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 };
 
@@ -203,41 +206,30 @@ struct SAKE_OPERATORS_NAME
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME<
-        typename boost_ext::remove_rvalue_reference< T0& >::type,
-        typename boost_ext::remove_rvalue_reference< T1& >::type
-    >::type
+    typename result_of::SAKE_OPERATORS_NAME< T0&, T1& >::type
     operator()(T0& x0, T1& x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME<
-        typename boost_ext::remove_rvalue_reference< T0& >::type,
-        T1 const &
-    >::type
+    typename result_of::SAKE_OPERATORS_NAME< T0&, T1 const & >::type
     operator()(T0& x0, T1 const & x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME<
-        T0 const &,
-        typename boost_ext::remove_rvalue_reference< T1& >::type
-    >::type
+    typename result_of::SAKE_OPERATORS_NAME< T0 const &, T1& >::type
     operator()(T0 const & x0, T1& x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME<
-        T0 const &,
-        T1 const &
-    >::type
+    typename result_of::SAKE_OPERATORS_NAME< T0 const &, T1 const & >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    bool operator()(T0* const p0, T1* const p1) const
+    bool
+    operator()(T0* const p0, T1* const p1) const
     { return static_cast< void* >(p0) SAKE_OPERATORS_OP static_cast< void* >(p1); }
 };
 

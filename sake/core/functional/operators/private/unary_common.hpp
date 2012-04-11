@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/functional/operators/private/logical_common.hpp
+ * sake/core/functional/operators/private/unary_common.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_LOGICAL_COMMON_HPP
-#define SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_LOGICAL_COMMON_HPP
+#ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_UNARY_COMMON_HPP
+#define SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_UNARY_COMMON_HPP
 
 #include <boost/logic/tribool.hpp>
 #include <boost/mpl/vector/vector10.hpp>
@@ -26,11 +26,16 @@ namespace result_of
 namespace default_impl
 {
 
-typedef boost::mpl::vector3<
-    bool,
-    boost::logic::tribool,
-    sake::functional::indeterminate
-> logical_result_types;
+template< class T >
+struct unary_result_types
+{
+    typedef boost::mpl::vector4<
+        T,
+        bool, // logical
+        boost::logic::tribool, // logical
+        sake::functional::indeterminate // logical
+    > type;
+};
 
 } // namespace default_impl
 
@@ -40,4 +45,4 @@ typedef boost::mpl::vector3<
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_LOGICAL_COMMON_HPP
+#endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_UNARY_COMMON_HPP

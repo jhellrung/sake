@@ -22,7 +22,7 @@
 
 #define SAKE_OPERATORS_NAME shift_left
 #define SAKE_OPERATORS_OP   <<
-#include <sake/core/functional/operators/private/shift.ipp>
+#include <sake/core/functional/operators/private/binary.ipp>
 
 namespace sake {
 namespace operators {

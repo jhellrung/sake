@@ -19,6 +19,6 @@
 
 #define SAKE_OPERATORS_NAME unary_plus
 #define SAKE_OPERATORS_OP   +
-#include <sake/core/functional/operators/private/unary_sign.ipp>
+#include <sake/core/functional/operators/private/unary.ipp>
 
 #endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_UNARY_PLUS_HPP
