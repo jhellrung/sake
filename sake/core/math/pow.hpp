@@ -264,7 +264,8 @@ struct dispatch_c< B, P, false, true >
 {
     typedef typename result_of::sqr< B& >::type sqr_type;
     typedef typename operators::result_of::multiply<
-        B, typename dispatch_c< sqr_type, P/2 >::type >::type type;
+        B, typename dispatch_c< sqr_type, P/2 >::type
+    >::type type;
     static type apply(B& b)
     {
         sqr_type b2 = sake::sqr(b);
