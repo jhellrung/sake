@@ -23,7 +23,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
-#include <sake/boost_ext/type_traits/is_lvalue_reference.hpp>
+#include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
@@ -49,7 +49,7 @@ namespace result_of
 template< class T >
 struct neg_ip
 {
-    BOOST_STATIC_ASSERT((boost_ext::is_lvalue_reference<T>::value));
+    BOOST_STATIC_ASSERT((boost_ext::is_lvalue_reference_to_nonconst<T>::value));
     typedef T type;
 };
 
