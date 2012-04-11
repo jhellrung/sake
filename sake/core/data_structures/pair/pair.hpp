@@ -58,7 +58,7 @@ struct pair
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE( typename pair, ( T0 ) ( T1 ) )
 
     SAKE_DEFINE_NATURAL_MEM_FUN(
-        typename pair,
+        pair,
         ( default_ctor ) ( move_ctor )
         ( copy_assign ) ( move_assign )
         ( swap )
