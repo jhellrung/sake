@@ -24,6 +24,7 @@
 
 #include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/functional/operators/divide.hpp>
 #include <sake/core/functional/operators/multiply.hpp>
@@ -350,9 +351,11 @@ struct dispatch_c
 template< class X, class N, unsigned int K, unsigned int J >
 struct iterate_c
 {
-    typedef typename operators::result_of::divide<
-        typename operators::result_of::multiply< X, N& >::type,
-        boost_ext::mpl::uint<J>
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename operators::result_of::divide<
+            typename operators::result_of::multiply< X, N& >::type,
+            boost_ext::mpl::uint<J>
+        >::type
     >::type X_;
     typedef typename iterate_c<X_,N,K,J+1>::type type;
     static type apply(X& x, N& n)
@@ -365,9 +368,11 @@ struct iterate_c
 template< class X, class N, unsigned int K >
 struct iterate_c<X,N,K,K>
 {
-    typedef typename operators::result_of::divide<
-        typename operators::result_of::multiply< X, N& >::type,
-        boost_ext::mpl::uint<K>
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename operators::result_of::divide<
+            typename operators::result_of::multiply< X, N& >::type,
+            boost_ext::mpl::uint<K>
+        >::type
     >::type type;
     static type apply(X& x, N& n)
     { return SAKE_RV_CAST(sake::move(x) * n) / boost_ext::mpl::uint<K>(); }
