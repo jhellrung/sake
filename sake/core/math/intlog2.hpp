@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/math/intlog2.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -38,6 +38,8 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/exception/define_exception.hpp>
+#include <sake/boost_ext/mpl/if.hpp>
+#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/expr_traits/best_conversion.hpp>
@@ -45,7 +47,6 @@
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/iec559_traits.hpp>
 #include <sake/core/math/intlog2_fwd.hpp>
-#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/debug.hpp>
@@ -412,17 +413,18 @@ float_check()
 
 #endif // #ifdef SAKE_DEBUG
 
+using boost_ext::mpl::uint;
+
 template< class T >
 struct dispatch_index
 {
-    static unsigned int const _ =
-        (1 << 5) * boost::is_unsigned<T>::value
-      | (1 << 4) * boost::is_signed<T>::value
-      | (1 << 3) * boost::is_floating_point<T>::value
-      | (1 << 2) * is_callable_mem_fun< T const & >::value
-      | (1 << 1) * sake_intlog2_private::is_callable< void ( T const & ) >::value
-      | (1 << 0);
-    static unsigned int const value = sake::static_intlog2_c<_>::value;
+    static unsigned int const value = boost_ext::mpl::
+             if_< boost::is_unsigned<T>, uint<5> >::type::template
+        else_if < boost::is_signed<T>, uint<4> >::type::template
+        else_if < boost::is_floating_point<T>, uint<3> >::type::template
+        else_if < is_callable_mem_fun< T const & >, uint<2> >::type::template
+        else_if < ::sake_intlog2_private::is_callable< void ( T const & ) >, uint<1> >::type::template
+        else_   < uint<0> >::type::value;
 };
 
 template< class T, class Result >
