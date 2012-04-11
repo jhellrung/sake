@@ -16,12 +16,15 @@
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_integral.hpp>
 
-#include <sake/boost_ext/type_traits/is_lvalue_reference.hpp>
+#include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/if.hpp>
+#include <sake/boost_ext/mpl/uint.hpp>
+#include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 
 #include <sake/core/iterator/is_iterator.hpp>
-#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -35,7 +38,7 @@ namespace result_of
 template< class T, class D >
 struct advance
 {
-    BOOST_STATIC_ASSERT((boost_ext::is_lvalue_reference<T>::value));
+    BOOST_STATIC_ASSERT((boost_ext::is_lvalue_reference_to_nonconst<T>::value));
     typedef T type;
 };
 
@@ -60,16 +63,23 @@ functional::advance const advance = { };
 namespace advance_private
 {
 
+using boost_ext::mpl::uint;
+
 template< class T, class D >
 struct dispatch_index
 {
-    static unsigned int const _ =
-        (1 << 2) * sake::is_iterator<T>::value
-      | (1 << 1) * (boost::is_integral<T>::value
-                 && boost::is_integral<D>::value
-                 && (sizeof( T ) < sizeof( D )))
-      | (1 << 0);
-    static unsigned int const value = sake::static_intlog2_c<_>::value;
+    static unsigned int const value = boost_ext::mpl::
+        if_< boost::is_iterator<T>, uint<2> >::type::template
+        else_if <
+            boost_ext::mpl::and3<
+                boost::is_integral<T>,
+                boost::is_integral<D>,
+                boost::integral_constant<
+                    bool, (sizeof( T ) < sizeof( D )) >
+            >,
+            uint<1>
+        >::type::template
+        else_   < uint<0> >::type::value;
 };
 
 template< class T, class D >
