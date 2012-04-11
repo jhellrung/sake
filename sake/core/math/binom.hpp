@@ -31,6 +31,7 @@
 #include <sake/core/math/one.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/move.hpp>
+#include <sake/core/move/rv_cast.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
@@ -349,31 +350,27 @@ struct dispatch_c
 template< class X, class N, unsigned int K, unsigned int J >
 struct iterate_c
 {
-    typedef typename operators::result_of::multiply< X, N& >::type Y;
     typedef typename operators::result_of::divide<
-        Y, boost::mpl::integral_c< unsigned int, J >
-    >::type Z;
-    typedef typename iterate_c<Z,N,K,J+1>::type type;
+        typename operators::result_of::multiply< X, N& >::type,
+        boost_ext::mpl::uint<J>
+    >::type X_;
+    typedef typename iterate_c<X_,N,K,J+1>::type type;
     static type apply(X& x, N& n)
     {
-        Y y = sake::move(x) * n;
-        Z z = sake::move(y) / boost_ext::mpl::uint<J>();
-        return iterate_c<Z,N,K,J+1>::apply(z, ++n);
+        X_ x_ = SAKE_RV_CAST(sake::move(x) * n) / boost_ext::mpl::uint<J>();
+        return iterate_c<X_,N,K,J+1>::apply(x_, ++n);
     }
 };
 
 template< class X, class N, unsigned int K >
 struct iterate_c<X,N,K,K>
 {
-    typedef typename operators::result_of::multiply< X, N& >::type Y;
     typedef typename operators::result_of::divide<
-        Y, boost::mpl::integral_c< unsigned int, K >
+        typename operators::result_of::multiply< X, N& >::type,
+        boost_ext::mpl::uint<K>
     >::type type;
     static type apply(X& x, N& n)
-    {
-        Y y = sake::move(x) * n;
-        return sake::move(y) / boost_ext::mpl::uint<K>();
-    }
+    { return SAKE_RV_CAST(sake::move(x) * n) / boost_ext::mpl::uint<K>(); }
 };
 
 } // namespace binom_private
