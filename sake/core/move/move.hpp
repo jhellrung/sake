@@ -1,22 +1,22 @@
 /*******************************************************************************
  * sake/core/move/move.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * move(T&& x) -> result_of::move<T>::type
  * struct functional::move
- * #define SAKE_MOVE( Expr )
+ * #define SAKE_MOVE( expression )
  *
- * SAKE_MOVE( Expr ) is intended to be a replacement for boost::move and/or
- * sake::move that also works for rvalues in the absence of rvalue references.
- * Specifically, if BOOST_NO_RVALUE_REFERENCES, it casts movable rvalues of type
- * T and movable lvalues of type T& to boost::rv<T>&.  This is necessary to
- * coerce generic forwarding functions to capture rvalues as emulated rvalue
- * references.  Non-movable rvalues are cast to T const &.
+ * SAKE_MOVE( expression ) is intended to be a replacement for boost::move
+ * and/or sake::move that also works for rvalues in the absence of rvalue
+ * references.  Specifically, if BOOST_NO_RVALUE_REFERENCES, it casts movable
+ * rvalues of type T and movable lvalues of type T& to boost::rv<T>&.  This is
+ * necessary to coerce generic forwarding functions to capture rvalues as
+ * emulated rvalue references.  Non-movable rvalues are cast to T const &.
  *
- * Note: If Expr accesses class members through this-> or by explicit
+ * Note: If expression accesses class members through this-> or by explicit
  * qualification, this might not work (MSVC9, at least, complains).  The
  * workaround is to bring class members into the current class scope with using
  * declarations, or assign "this" to a temporary variable and access members
@@ -33,7 +33,6 @@
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
-#include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/expr_traits/type_tag_of.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -41,12 +40,12 @@
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
-#define SAKE_MOVE( Expr ) ::sake::move( Expr )
+#define SAKE_MOVE( expression ) ::sake::move( expression )
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-#define SAKE_MOVE( Expr ) \
-    ::sake::move_private::impl( SAKE_EXPR_TYPE_TAG_OF( Expr ), Expr )
+#define SAKE_MOVE( expression ) \
+    ::sake::move_private::impl( SAKE_EXPR_TYPE_TAG_OF( expression ), expression )
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -132,34 +131,10 @@ functional::move const move = { };
 namespace move_private
 {
 
-template<
-    class T,
-    bool = sake::is_movable<
-        typename boost_ext::remove_reference<T>::type
-    >::value
->
-struct traits;
-
 template< class T >
-struct traits< T, false >
-{
-    typedef typename boost_ext::add_reference_add_const<T>::type result_type;
-    typedef result_type param_type;
-};
-
-template< class T >
-struct traits< T, true >
-{
-    typedef typename boost_ext::add_rvalue_reference<
-        typename boost_ext::remove_reference<T>::type
-    >::type result_type;
-    typedef typename boost_ext::add_rvalue_reference<T>::type param_type;
-};
-
-template< class T >
-inline typename traits<T>::result_type
-impl(sake::type_tag<T>, typename traits<T>::param_type x)
-{ return static_cast< typename traits<T>::result_type >(x); }
+inline typename sake::result_of::move<T>::type
+impl(sake::type_tag<T>, typename sake::result_of::move<T>::type x)
+{ return x; }
 
 } // namespace move_private
 
