@@ -32,8 +32,9 @@ namespace expr_apply_private
 template< class F, class T >
 struct result
 {
-// MSVC9 chokes if you use boost::mpl::apply1<...>::type::value as a boolean template parameter.
-// Hence, we have to be very explicit about what we want to do :/
+    // MSVC9 chokes if you use boost::mpl::apply1<...>::type::value as a boolean
+    // template parameter.  Hence, we have to be very explicit about what we
+    // want to do :/
     static bool const b = boost::mpl::apply1<F,T>::type::value;
     typedef sake::sizeof_t< 1+b > type;
 };
