@@ -19,6 +19,7 @@
 #ifndef SAKE_BOOST_EXT_MPL_UNIQUE2_HPP
 #define SAKE_BOOST_EXT_MPL_UNIQUE2_HPP
 
+#include <boost/mpl/apply.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/copy.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -29,6 +30,7 @@
 #include <boost/mpl/vector/vector10.hpp>
 
 #include <sake/boost_ext/mpl/contains_if.hpp>
+#include <sake/boost_ext/mpl/curry.hpp>
 
 namespace sake
 {
@@ -42,22 +44,15 @@ namespace mpl
 namespace unique2_private
 {
 
-template< class Pred, class U >
-struct pred_binder
-{
-    template< class T >
-    struct apply
-        : boost::mpl::apply2< Pred, T, U >
-    { };
-};
-
 template< class Pred, class Operation >
 struct insert_operation
 {
     template< class S, class T >
     struct apply
         : boost::mpl::eval_if_c<
-              boost_ext::mpl::contains_if< S, pred_binder< Pred, T > >::value,
+              boost_ext::mpl::contains_if<
+                  S, typename boost_ext::mpl::curry2< Pred >::template apply<T>::type
+              >::value,
               boost::mpl::identity<S>,
               boost::mpl::apply2< Operation, S, T >
           >
