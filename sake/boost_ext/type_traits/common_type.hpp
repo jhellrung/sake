@@ -22,15 +22,19 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/make_signed.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
 #include <sake/boost_ext/mpl/curry_quote.hpp>
 #include <sake/boost_ext/type_traits/is_integral_or_enum.hpp>
+#include <sake/boost_ext/type_traits/make_signed.hpp>
+#include <sake/boost_ext/type_traits/make_unsigned.hpp>
 #include <sake/boost_ext/type_traits/propagate_cv.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/expr_traits/apply.hpp>
 #include <sake/core/expr_traits/typeof.hpp>
@@ -48,11 +52,6 @@ struct common_type;
 
 namespace common_type_private
 {
-
-template< class T > struct make_unsigned_ : boost::make_unsigned<T> { };
-template<> struct make_unsigned_< bool > { typedef bool type; };
-template< class T > struct make_signed_ : boost::make_signed<T> { };
-template<> struct make_signed_< bool > { typedef bool type; };
 
 template< class T0, class T1 >
 struct dispatch_on_void;
@@ -111,10 +110,10 @@ template< class T0, class T1 >
 struct nominal_candidates_dispatch< T0, T1, true >
 {
     typedef boost::mpl::vector8<
-        typename make_unsigned_< T0 >::type,
-        typename make_unsigned_< T1 >::type,
-        typename make_signed_< T0 >::type,
-        typename make_signed_< T1 >::type,
+        typename boost_ext::make_unsigned< T0 >::type,
+        typename boost_ext::make_unsigned< T1 >::type,
+        typename boost_ext::make_signed< T0 >::type,
+        typename boost_ext::make_signed< T1 >::type,
         T0, T1, unsigned int, int
     > type;
 };
@@ -160,8 +159,9 @@ struct deduce_from_candidates
         Candidates,
         type
     );
+    BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
-        boost_ext::mpl::curry_quote2< boost::is_same >::apply< type >,
+        typename boost_ext::mpl::curry_quote2< boost::is_same >::apply< type >::type,
         sake::declval< bool >() ? sake::declval< T0 >() : sake::declval< T1 >()
     ) );
 };
@@ -171,8 +171,12 @@ struct deduce_from_candidates
 template< class T0, class T1 >
 struct common_type
     : common_type_private::dispatch_on_void<
-          typename boost::remove_cv< T0 >::type,
-          typename boost::remove_cv< T1 >::type
+          typename boost::remove_cv<
+              typename boost_ext::remove_rvalue_reference< T0 >::type
+          >::type,
+          typename boost::remove_cv<
+              typename boost_ext::remove_rvalue_reference< T1 >::type
+          >::type
       >
 { };
 
