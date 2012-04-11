@@ -72,7 +72,7 @@ namespace
 
 #define test( T, U ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        boost_ext::mpl::curry_quote2< boost::is_same >::apply< T* >, \
+        boost_ext::mpl::curry_quote2< boost::is_same >::apply< T* >::type, \
         sake::declval< T* >() + sake::declval<U>() \
     ) );
 test( int*, bool )

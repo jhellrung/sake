@@ -55,7 +55,7 @@ namespace
 
 #define test( op, T ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        boost_ext::mpl::curry_quote2< boost::is_same >::apply< T& >, \
+        boost_ext::mpl::curry_quote2< boost::is_same >::apply< T& >::type, \
         op sake::declval< T& >() \
     ) );
 test( ++, bool )
@@ -66,13 +66,13 @@ test( --, int* )
 #undef test
 #define test( T, op ) \
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY( \
-        boost_ext::mpl::curry_quote2< boost::is_same >::apply<T>, \
+        boost_ext::mpl::curry_quote2< boost::is_same >::apply<T>::type, \
         sake::declval< T& >() op \
     ) );
 // For some reason, the type of declval< bool& >()++ is bool& on MSVC9.
 #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
 BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
-    boost_ext::mpl::curry_quote2< boost::is_same >::apply< bool >,
+    typename boost_ext::mpl::curry_quote2< boost::is_same >::apply< bool& >::type,
     sake::declval< bool& >()++
 ) );
 #else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
