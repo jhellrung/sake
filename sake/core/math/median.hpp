@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/math/median.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -61,9 +61,9 @@ struct median
                          sake::forward< T1 >(x1);
     }
 
-    template< class T0, class T1, class Less >
-    typename result_of::median< T0, T1 >::type
-    operator()(T0&& x0, T1&& x1, Less less) const
+    template< class T0, class T1, class T2, class Less >
+    typename result_of::median< T0, T1, T2 >::type
+    operator()(T0&& x0, T1&& x1, T2&& x2, Less less) const
     {
         return less(x1, x0) ?
                less(x2, x1) ? sake::forward< T1 >(x1) :
@@ -78,11 +78,7 @@ struct median
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1, class T2 >
-    typename result_of::median<
-        typename boost_ext::remove_rvalue_reference< T0& >::type,
-        typename boost_ext::remove_rvalue_reference< T1& >::type,
-        typename boost_ext::remove_rvalue_reference< T2& >::type
-    >::type
+    typename result_of::median< T0&, T1&, T2& >::type
     operator()(T0& x0, T1& x1, T2& x2) const
     {
         return x1 < x0 ?
@@ -91,11 +87,7 @@ struct median
     }
 
     template< class T0, class T1, class T2, class Less >
-    typename result_of::median<
-        typename boost_ext::remove_rvalue_reference< T0& >::type,
-        typename boost_ext::remove_rvalue_reference< T1& >::type,
-        typename boost_ext::remove_rvalue_reference< T2& >::type
-    >::type
+    typename result_of::median< T0&, T1&, T2& >::type
     operator()(T0& x0, T1& x1, T2& x2, Less less) const
     {
         return less(x1, x0) ?
@@ -104,11 +96,7 @@ struct median
     }
 
     template< class T0, class T1, class T2 >
-    typename result_of::median<
-        typename boost_ext::remove_rvalue_reference< T0 const & >::type,
-        typename boost_ext::remove_rvalue_reference< T1 const & >::type,
-        typename boost_ext::remove_rvalue_reference< T2 const & >::type
-    >::type
+    typename result_of::median< T0 const &, T1 const &, T2 const & >::type
     operator()(T0 const & x0, T1 const & x1, T2 const & x2) const
     {
         return x1 < x0 ?
@@ -122,11 +110,7 @@ struct median
     }
 
     template< class T0, class T1, class T2, class Less >
-    typename result_of::median<
-        typename boost_ext::remove_rvalue_reference< T0 const & >::type,
-        typename boost_ext::remove_rvalue_reference< T1 const & >::type,
-        typename boost_ext::remove_rvalue_reference< T2 const & >::type
-    >::type
+    typename result_of::median< T0 const &, T1 const &, T2 const & >::type
     operator()(T0 const & x0, T1 const & x1, T2 const & x2, Less less) const
     {
         return less(x1, x0) ?

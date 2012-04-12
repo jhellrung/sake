@@ -167,7 +167,7 @@ struct abs
 } // namespace result_of
 
 /*******************************************************************************
- * abs(T const & x) -> result_of::abs<T>::type
+ * abs(T&& x) -> result_of::abs<T>::type
  * struct functional::abs
  ******************************************************************************/
 

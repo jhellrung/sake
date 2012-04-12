@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/math/one.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -36,18 +36,15 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
-#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/functional/operators/bit_and.hpp>
 #include <sake/core/functional/operators/divide.hpp>
-#include <sake/core/functional/operators/shift_left.hpp>
-#include <sake/core/functional/operators/shift_right.hpp>
 #include <sake/core/math/inv.hpp>
 #include <sake/core/math/one_fwd.hpp>
-#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/move/forward.hpp>
 
 namespace sake
@@ -57,13 +54,8 @@ namespace one_private
 {
 
 template< class T >
-struct as_dispatch_index;
-
-template<
-    class T,
-    unsigned int = as_dispatch_index<T>::value
->
-struct as_dispatch;
+inline T
+as_impl();
 
 } // namespace one_private
 
@@ -71,7 +63,7 @@ template< class T >
 inline T
 one_t::
 as()
-{ return one_private::as_dispatch<T>::apply(); }
+{ return one_private::as_impl<T>(); }
 
 inline std::ostream&
 operator<<(std::ostream& o, sake::one_t)
@@ -81,35 +73,20 @@ namespace operators {
 namespace result_of {
 namespace extension {
 
-template< class T0, class T1 >
-struct shift_left0< T0, T1,
-    typename boost::enable_if_c< boost::is_same<
-        typename boost_ext::remove_qualifiers< T0 >::type, sake::one_t
-    >::value >::type >
-    : boost_ext::remove_qualifiers< T1 >
+template< class One, class T >
+struct divide0< One, T,
+    typename boost::enable_if_c<
+        boost::is_same<
+            typename boost_ext::remove_qualifiers< One >::type,
+            sake::one_t
+        >::value
+    >::type >
+    : sake::result_of::inv<T>
 { };
 
-template< class T0, class T1 >
-struct shift_right0< T0, T1,
-    typename boost::enable_if_c< boost::is_same<
-        typename boost_ext::remove_qualifiers< T0 >::type, sake::one_t
-    >::value >::type >
-    : boost_ext::remove_qualifiers< T1 >
-{ };
-
-template< class T0, class T1 >
-struct divide0< T0, T1,
-    typename boost::enable_if_c< boost::is_same<
-        typename boost_ext::remove_qualifiers< T0 >::type, sake::one_t
-    >::value >::type >
-    : sake::result_of::inv< T1 >
-{ };
-
-template< class T0, class T1 >
-struct bit_and1< T0, T1,
-    typename boost::enable_if_c< boost::is_same<
-        typename boost_ext::remove_qualifiers< T1 >::type, sake::one_t
-    >::value >::type >
+template< class T >
+struct bit_and1< T, sake::one_t,
+    typename boost::enable_if_c< boost::is_integral<T>::value >::type >
 { typedef bool type; };
 
 } // namespace extension
@@ -158,9 +135,7 @@ operator/(sake::one_t, T&& x)
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T >
-inline typename result_of::inv<
-    typename boost_ext::remove_rvalue_reference< T& >::type
->::type
+inline typename result_of::inv< T& >::type
 operator/(sake::one_t, T& x)
 { return sake::inv(x); }
 
@@ -182,44 +157,41 @@ operator&(T const x, sake::one_t)
 namespace one_private
 {
 
+using boost_ext::mpl::uint;
+
 template< class T >
 struct as_dispatch_index
-{
-    static unsigned int const _ =
-        (1 << 3) * boost_ext::is_convertible< sake::one_t, T >::value
-      | (1 << 2) * boost_ext::is_convertible< boost_ext::mpl::uint<1>, T >::value
-      | (1 << 1) * boost_ext::is_convertible< boost::mpl::int_<1>, T >::value
-      | (1 << 0);
-    static unsigned int const value = sake::static_intlog2_c<_>::value;
-};
+    : boost_ext::mpl::
+           if_< boost_ext::is_convertible<         sake::one_t, T >, uint<3> >::type::template
+      else_if < boost_ext::is_convertible<             uint<1>, T >, uint<2> >::type::template
+      else_if < boost_ext::is_convertible< boost::mpl::int_<1>, T >, uint<1> >::type::template
+      else_   < uint<0> >
+{ };
 
 template< class T >
-struct as_dispatch<T,3>
-{
-    static T apply()
-    { return T(sake::one); }
-};
+inline T
+as_dispatch(uint<3>)
+{ return T(sake::one); }
 
 template< class T >
-struct as_dispatch<T,2>
-{
-    static T apply()
-    { return T(boost_ext::mpl::uint<1>()); }
-};
+inline T
+as_dispatch(uint<2>)
+{ return T((uint<1>())); }
 
 template< class T >
-struct as_dispatch<T,1>
-{
-    static T apply()
-    { return T(boost::mpl::int_<1>()); }
-};
+inline T
+as_dispatch(uint<1>)
+{ return T((boost::mpl::int_<1>())); }
 
 template< class T >
-struct as_dispatch<T,0>
-{
-    static T apply()
-    { return T(1); }
-};
+inline T
+as_dispatch(uint<0>)
+{ return T(1); }
+
+template< class T >
+inline T
+as_impl()
+{ return one_private::as_dispatch<T>(typename as_dispatch_index<T>::type()); }
 
 } // namespace one_private
 

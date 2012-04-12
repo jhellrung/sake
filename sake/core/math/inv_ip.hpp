@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/math/inv_ip.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -21,14 +21,14 @@
 #define SAKE_CORE_MATH_INV_IP_HPP
 
 #include <boost/static_assert.hpp>
-#include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/mpl/if.hpp>
+#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 
 #include <sake/core/math/inv.hpp>
 #include <sake/core/math/private/inv_common.hpp>
-#include <sake/core/utility/dispatch_priority_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
 
@@ -102,44 +102,47 @@ namespace sake
 namespace inv_ip_private
 {
 
+using boost_ext::mpl::uint;
+
 template< class T >
-inline typename boost::enable_if_c<
-    is_callable_mem_fun< T&, T& ( ) >::value,
-    T&
->::type
-dispatch(T& x, sake::dispatch_priority_tag<4>)
+struct dispatch_index
+    : boost_ext::mpl::
+           if_< inv_ip_private::is_callable_mem_fun< T&, T& ( ) >, uint<4> >::type::template
+      else_if < inv_ip_private::is_callable_mem_fun< T&         >, uint<3> >::type::template
+      else_if < ::sake_inv_ip_private::is_callable<   T& ( T& ) >, uint<2> >::type::template
+      else_if < ::sake_inv_ip_private::is_callable< void ( T& ) >, uint<1> >::type::template
+      else_   < uint<0> >
+{ };
+
+template< class T >
+inline T&
+dispatch(T& x, uint<4>)
 { return x.inv_ip(); }
 
 template< class T >
-inline typename boost::enable_if_c< is_callable_mem_fun< T& >::value, T& >::type
-dispatch(T& x, sake::dispatch_priority_tag<3>)
+inline T&
+dispatch(T& x, uint<3>)
 { x.inv_ip(); return x; }
 
 template< class T >
-inline typename boost::enable_if_c<
-    ::sake_inv_ip_private::is_callable< T& ( T& ) >::value,
-    T&
->::type
-dispatch(T& x, sake::dispatch_priority_tag<2>)
+inline T&
+dispatch(T& x, uint<2>)
 { return ::sake_inv_ip_private::adl< T& >(x); }
 
 template< class T >
-inline typename boost::enable_if_c<
-    ::sake_inv_ip_private::is_callable< void ( T& ) >::value,
-    T&
->::type
-dispatch(T& x, sake::dispatch_priority_tag<1>)
+inline T&
+dispatch(T& x, uint<1>)
 { ::sake_inv_ip_private::adl< void >(x); return x; }
 
 template< class T >
 inline T&
-dispatch(T& x, sake::dispatch_priority_tag<0>)
+dispatch(T& x, uint<0>)
 { return x = sake::inv(x); }
 
 template< class T >
 inline T&
 impl(T& x)
-{ return inv_ip_private::dispatch(x, sake::dispatch_priority_tag<4>()); }
+{ return inv_ip_private::dispatch(x, typename dispatch_index<T>::type()); }
 
 } // namespace inv_ip_private
 

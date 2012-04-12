@@ -1,11 +1,11 @@
 /*******************************************************************************
  * sake/core/math/sqr.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * sqr(T const & x) -> result_of::sqr<T>::type
+ * sqr(T& x) -> result_of::sqr<T>::type
  * struct functional::sqr
  *
  * struct result_of::sqr<T>
@@ -29,26 +29,36 @@
 #ifndef SAKE_CORE_MATH_SQR_HPP
 #define SAKE_CORE_MATH_SQR_HPP
 
+#include <boost/config.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/mpl/vector/vector10.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_unsigned.hpp>
+#include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <sake/boost_ext/mpl/unique2.hpp>
+#include <sake/boost_ext/mpl/if.hpp>
+#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
+#include <sake/boost_ext/type_traits/is_cv_or.hpp>
+#include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/expr_traits/typeof.hpp>
 #include <sake/core/functional/operators/multiply.hpp>
+#include <sake/core/introspection/has_operator_multiply.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/private/sqr_common.hpp>
 #include <sake/core/math/sqr_fwd.hpp>
-#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -81,8 +91,12 @@ namespace result_of
 
 template< class T >
 struct sqr
-    : extension::sqr<T>
-{ };
+{
+    typedef typename extension::sqr<
+        typename boost_ext::remove_rvalue_reference<T>::type
+    >::type type;
+    BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
+};
 
 /*******************************************************************************
  * struct result_of::extension::sqr< T, Enable = void >
@@ -105,19 +119,41 @@ struct sqr
 namespace default_impl
 {
 
+namespace sqr_private
+{
+
+template< class T, bool = sake::has_operator_multiply<T>::value >
+struct result_types_dispatch;
+
+template< class T >
+struct result_types_dispatch< T, false >
+{
+    typedef boost::mpl::vector1<
+        typename boost_ext::remove_qualifiers<T>::type
+    > type;
+};
+
+template< class T >
+struct result_types_dispatch< T, true >
+{
+    typedef boost::mpl::vector2<
+        typename boost_ext::remove_qualifiers<T>::type,
+        typename boost_ext::remove_qualifiers<
+            typename operators::result_of::multiply<T>::type
+        >::type
+    > type;
+};
+
+} // namespace sqr_private
+
 template< class T >
 struct sqr_result_types
-    : boost_ext::mpl::unique2<
-          boost::mpl::vector2<
-              T,
-              typename operators::result_of::multiply<T>::type
-          >
-      >
+    : sqr_private::result_types_dispatch<T>
 { };
 
 template< class T >
 struct sqr
-    : sqr_private::dispatch< T, void >
+    : sake::sqr_private::dispatch< T, void >
 { };
 
 } // namespace default_impl
@@ -125,7 +161,7 @@ struct sqr
 } // namespace result_of
 
 /*******************************************************************************
- * sqr(T const & x) -> result_of::sqr<T>::type
+ * sqr(T&& x) -> result_of::sqr<T>::type
  * struct functional::sqr
  ******************************************************************************/
 
@@ -146,9 +182,7 @@ struct sqr
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::sqr<
-        typename boost_ext::remove_rvalue_reference< T& >::type
-    >::type
+    typename result_of::sqr< T& >::type
     operator()(T& x) const
     {
         return sqr_private::dispatch<
@@ -193,15 +227,34 @@ struct adl
 };
 
 template< class T >
-struct adl< T, void >
+struct adl_impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sqr(::sake::declval<T>()),
-        typename ::sake::result_of::default_impl::sqr_result_types<
-            typename ::sake::boost_ext::remove_qualifiers<T>::type
-        >::type,
+        typename ::sake::result_of::default_impl::sqr_result_types<T>::type,
         type
     );
+};
+
+template< class T >
+struct adl< T, void >
+{
+    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_reference<T>::value));
+    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_cv_or<T>::value));
+    typedef typename adl_impl<T>::type type;
+};
+
+template< class T >
+struct adl< T&, void >
+{
+private:
+    typedef typename adl_impl< T& >::type maybe_type;
+public:
+    typedef typename ::boost::mpl::eval_if_c<
+        ::boost::is_void< maybe_type >::value,
+        ::sake::result_of::sqr< typename boost::remove_cv<T>::type >,
+        ::boost::mpl::identity< maybe_type >
+    >::type type;
 };
 
 } // namespace sake_sqr_private
@@ -217,44 +270,30 @@ namespace sqr_private
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
+using boost_ext::mpl::uint;
+
 template< class T >
 struct dispatch_index
 {
-    static unsigned int const _ =
-        (1 << 8) * boost::is_signed<T>::value
-      | (1 << 7) * boost::is_unsigned<T>::value
-      | (1 << 6) * is_callable_mem_fun<T>::value
-      | (1 << 5) * ::sake_sqr_private::is_callable< void ( T ) >::value
-      | (1 << 4) * sqr_ip_private::is_callable_mem_fun< T&, T& ( ) >::value
-      | (1 << 3) * sqr_ip_private::is_callable_mem_fun< T& >::value
-      | (1 << 2) * ::sake_sqr_ip_private::is_callable< T& ( T& ) >::value
-      | (1 << 1) * ::sake_sqr_ip_private::is_callable< void ( T& ) >::value
-      | (1 << 0);
-    static unsigned int const value = sake::static_intlog2_c<_>::value;
-};
-
-template< class T >
-struct dispatch_index< T& >
-{
-    static unsigned int const _ =
-        (1 << 8) * boost::is_signed<T>::value
-      | (1 << 7) * boost::is_unsigned<T>::value
-      | (1 << 6) * is_callable_mem_fun< T& >::value
-      | (1 << 5) * ::sake_sqr_private::is_callable< void ( T& ) >::value
-      | (1 << 0);
-    static unsigned int const value = sake::static_intlog2_c<_>::value;
-};
-
-template< class T >
-struct dispatch_index< T const & >
-{
-    static unsigned int const _ =
-        (1 << 8) * boost::is_signed<T>::value
-      | (1 << 7) * boost::is_unsigned<T>::value
-      | (1 << 6) * is_callable_mem_fun< T const & >::value
-      | (1 << 5) * ::sake_sqr_private::is_callable< void ( T const & ) >::value
-      | (1 << 0);
-    static unsigned int const value = sake::static_intlog2_c<_>::value;
+private:
+    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
+    typedef typename boost_ext::add_reference<T>::type ref_type;
+public:
+    static unsigned int const value = boost_ext::mpl::
+             if_< boost::is_signed< noqual_type >              , uint<8> >::type::template
+        else_if < boost::is_unsigned< noqual_type >            , uint<7> >::type::template
+        else_if < is_callable_mem_fun<T>                       , uint<6> >::type::template
+        else_if < ::sake_sqr_private::is_callable< void ( T ) >, uint<5> >::type::template
+#ifndef BOOST_NO_RVALUE_REFERENCES
+        else_if < boost_ext::is_reference<T>, uint<0> >::type::template
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+        else_if_not< sake::is_movable<T>, uint<0> >::type::template
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+        else_if < sqr_ip_private::is_callable_mem_fun< ref_type, ref_type ( ) >, uint<4> >::type::template
+        else_if < sqr_ip_private::is_callable_mem_fun< ref_type >              , uint<3> >::type::template
+        else_if < ::sake_sqr_ip_private::is_callable< ref_type ( ref_type ) >  , uint<2> >::type::template
+        else_if < ::sake_sqr_ip_private::is_callable< void ( ref_type ) >      , uint<1> >::type::template
+        else_   < uint<0> >::type::value;
 };
 
 template< class T, class Result >
@@ -278,15 +317,34 @@ struct dispatch< T, Result, 7 >
 };
 
 template< class T >
-struct dispatch< T, void, 6 >
+struct dispatch6_impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sake::declval<T>().sqr(),
-        typename result_of::default_impl::sqr_result_types<
-            typename boost_ext::remove_qualifiers<T>::type
-        >::type,
+        typename result_of::default_impl::sqr_result_types<T>::type,
         type
     );
+};
+
+template< class T >
+struct dispatch< T, void, 6 >
+{
+    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    typedef typename dispatch6_impl<T>::type type;
+};
+
+template< class T >
+struct dispatch< T&, void, 6 >
+{
+private:
+    typedef typename dispatch6_impl< T& >::type maybe_type;
+public:
+    typedef typename boost::mpl::eval_if_c<
+        boost::is_void< maybe_type >::value,
+        result_of::sqr< typename boost::remove_cv<T>::type >,
+        boost::mpl::identity< maybe_type >
+    >::type type;
 };
 
 template< class T, class Result >
@@ -343,12 +401,14 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
-    typedef typename sake::operators::result_of::multiply<
-        typename boost_ext::add_reference<T>::type
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename sake::operators::result_of::multiply<
+            typename boost_ext::add_reference<T>::type
+        >::type
     >::type type;
     template< class T_ >
-    static type apply(T_& x)
-    { return x * x; }
+    static type apply(SAKE_FWD2_REF( T_ ) x)
+    { return SAKE_AS_LVALUE( x ) * SAKE_AS_LVALUE( x ); }
 };
 
 } // namespace sqr_private

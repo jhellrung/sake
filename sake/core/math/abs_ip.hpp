@@ -136,42 +136,42 @@ using boost_ext::mpl::uint;
 template< class T >
 struct dispatch_index
     : boost_ext::mpl::
-               if_< boost::is_signed<T>, uint<6> >::type::template
-          else_if < boost::is_unsigned<T>, uint<5> >::type::template
-          else_if < abs_ip_private::is_callable_mem_fun< T&, T& ( ) >, uint<4> >::type::template
-          else_if < abs_ip_private::is_callable_mem_fun< T&         >, uint<3> >::type::template
-          else_if < ::sake_abs_ip_private::is_callable<   T& ( T& ) >, uint<2> >::type::template
-          else_if < ::sake_abs_ip_private::is_callable< void ( T& ) >, uint<1> >::type::template
-          else_   < uint<0> >
+           if_< boost::is_signed<T>, uint<6> >::type::template
+      else_if < boost::is_unsigned<T>, uint<5> >::type::template
+      else_if < abs_ip_private::is_callable_mem_fun< T&, T& ( ) >, uint<4> >::type::template
+      else_if < abs_ip_private::is_callable_mem_fun< T&         >, uint<3> >::type::template
+      else_if < ::sake_abs_ip_private::is_callable<   T& ( T& ) >, uint<2> >::type::template
+      else_if < ::sake_abs_ip_private::is_callable< void ( T& ) >, uint<1> >::type::template
+      else_   < uint<0> >
 { };
 
 template< class T >
-inline typename T&
+inline T&
 dispatch(T& x, uint<6>)
 { return x = std::abs(x); }
 
 template< class T >
-inline typename T&
+inline T&
 dispatch(T& x, uint<5>)
 { return x; }
 
 template< class T >
-inline typename T&
+inline T&
 dispatch(T& x, uint<4>)
 { return x.abs_ip(); }
 
 template< class T >
-inline typename T&
+inline T&
 dispatch(T& x, uint<3>)
 { x.abs_ip(); return x; }
 
 template< class T >
-inline typename T&
+inline T&
 dispatch(T& x, uint<2>)
 { return ::sake_abs_ip_private::adl< T& >(x); }
 
 template< class T >
-inline typename T&
+inline T&
 dispatch(T& x, uint<1>)
 { ::sake_abs_ip_private::adl< void >(x); return x; }
 

@@ -29,17 +29,18 @@
 #include <ostream>
 
 #include <boost/mpl/int.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_unsigned.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
-#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/math/zero_fwd.hpp>
 
 namespace sake
@@ -49,13 +50,8 @@ namespace zero_private
 {
 
 template< class T >
-struct as_dispatch_index;
-
-template<
-    class T,
-    unsigned int = as_dispatch_index<T>::value
->
-struct as_dispatch;
+inline T
+as_impl();
 
 } // namespace zero_private
 
@@ -63,18 +59,18 @@ template< class T >
 inline T
 zero_t::
 as()
-{ return zero_private::as_dispatch<T>::apply(); }
+{ return zero_private::as_impl<T>(); }
 
 inline std::ostream&
 operator<<(std::ostream& o, sake::zero_t)
 { return o << '0'; }
 
-inline bool operator==(sake::zero_t, sake::zero_t) { return true; }
-inline bool operator!=(sake::zero_t, sake::zero_t) { return false; }
-inline bool operator< (sake::zero_t, sake::zero_t) { return false; }
-inline bool operator> (sake::zero_t, sake::zero_t) { return false; }
-inline bool operator<=(sake::zero_t, sake::zero_t) { return true; }
-inline bool operator>=(sake::zero_t, sake::zero_t) { return true; }
+inline boost:: true_type operator==(sake::zero_t, sake::zero_t) { return boost::true_type(); }
+inline boost::false_type operator!=(sake::zero_t, sake::zero_t) { return boost::false_type(); }
+inline boost::false_type operator< (sake::zero_t, sake::zero_t) { return boost::false_type(); }
+inline boost::false_type operator> (sake::zero_t, sake::zero_t) { return boost::false_type(); }
+inline boost:: true_type operator<=(sake::zero_t, sake::zero_t) { return boost::true_type(); }
+inline boost:: true_type operator>=(sake::zero_t, sake::zero_t) { return boost::true_type(); }
 
 template< class T >
 inline typename boost::enable_if_c<
@@ -196,44 +192,41 @@ operator>=(sake::zero_t, T const x)
 namespace zero_private
 {
 
+using boost_ext::mpl::uint;
+
 template< class T >
 struct as_dispatch_index
-{
-    static unsigned int const _ =
-        (1 << 3) * boost_ext::is_convertible< sake::zero_t, T >::value
-      | (1 << 2) * boost_ext::is_convertible< boost_ext::mpl::uint<0>, T >::value
-      | (1 << 1) * boost_ext::is_convertible< boost::mpl::int_<0>, T >::value
-      | (1 << 0);
-    static unsigned int const value = sake::static_intlog2_c<_>::value;
-};
+    : boost_ext::mpl::
+           if_< boost_ext::is_convertible<        sake::zero_t, T >, uint<3> >::type::template
+      else_if < boost_ext::is_convertible<             uint<0>, T >, uint<2> >::type::template
+      else_if < boost_ext::is_convertible< boost::mpl::int_<0>, T >, uint<1> >::type::template
+      else_   < uint<0> >
+{ };
 
 template< class T >
-struct as_dispatch<T,3>
-{
-    static T apply()
-    { return T(sake::zero); }
-};
+inline T
+as_dispatch(uint<3>)
+{ return T(sake::zero); }
 
 template< class T >
-struct as_dispatch<T,2>
-{
-    static T apply()
-    { return T(boost_ext::mpl::uint<0>()); }
-};
+inline T
+as_dispatch(uint<2>)
+{ return T((uint<0>())); }
 
 template< class T >
-struct as_dispatch<T,1>
-{
-    static T apply()
-    { return T(boost::mpl::int_<0>()); }
-};
+inline T
+as_dispatch(uint<1>)
+{ return T((boost::mpl::int_<0>())); }
 
 template< class T >
-struct as_dispatch<T,0>
-{
-    static T apply()
-    { return T(0); }
-};
+inline T
+as_dispatch(uint<0>)
+{ return T(0); }
+
+template< class T >
+inline T
+as_impl()
+{ return zero_private::as_dispatch<T>(typename as_dispatch_index<T>::type()); }
 
 } // namespace zero_private
 

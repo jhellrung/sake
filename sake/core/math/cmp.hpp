@@ -35,10 +35,7 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/vector/vector10.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_void.hpp>
 
@@ -58,6 +55,7 @@
 #include <sake/core/math/cmp_fwd.hpp>
 #include <sake/core/math/fuzzy_sign_t.hpp>
 #include <sake/core/math/indeterminate.hpp>
+#include <sake/core/math/private/sign_common.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -119,25 +117,9 @@ struct cmp
 namespace default_impl
 {
 
-typedef boost::mpl::vector9<
-    int,
-    sake::sign_t,
-    sake::fuzzy_sign_t,
-    boost::integral_constant< int, -1 >,
-    boost::integral_constant< int,  0 >,
-    boost::integral_constant< int, +1 >,
-    boost::mpl::int_<-1>,
-    boost::mpl::int_< 0>,
-    boost::mpl::int_<+1>
-> cmp_result_types;
-
 template< class T0, class T1 /*= T0*/ >
 struct cmp
-    : cmp_private::dispatch<
-          typename boost_ext::remove_qualifiers< T0 >::type,
-          typename boost_ext::remove_qualifiers< T1 >::type,
-          void
-      >
+    : cmp_private::dispatch< T0, T1, void >
 { };
 
 } // namespace default_impl
@@ -243,13 +225,19 @@ struct adl
 };
 
 template< class T0, class T1 >
-struct adl_impl
+class adl_impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename cmp(::sake::declval< T0 >(), ::sake::declval< T1 >()),
-        ::sake::result_of::default_impl::cmp_result_types,
-        type
+        ::sake::result_of::default_impl::sign_result_types,
+        nominal_type
     );
+public:
+    typedef typename ::boost::mpl::if_c<
+        ::boost::is_same< nominal_type, int >::value,
+        ::sake::sign_t,
+        nominal_type
+    >::type type;
 };
 
 template< class T0, class T1 >
@@ -259,14 +247,7 @@ struct adl< T0, T1, void >
     BOOST_STATIC_ASSERT((!::sake::boost_ext::is_reference< T1 >::value));
     BOOST_STATIC_ASSERT((!::sake::boost_ext::is_cv_or< T0 >::value));
     BOOST_STATIC_ASSERT((!::sake::boost_ext::is_cv_or< T1 >::value));
-private:
-    typedef typename adl_impl< T0, T1 >::type nominal_type;
-public:
-    typedef typename ::boost::mpl::if_c<
-        ::boost::is_same< nominal_type, int >::value,
-        ::sake::sign_t,
-        nominal_type
-    >::type type;
+    typedef typename adl_impl< T0, T1 >::type type;
 };
 
 template< class T0, class T1 >
@@ -326,13 +307,19 @@ struct dispatch_index
 };
 
 template< class T0, class T1 >
-struct dispatch3_impl
+class dispatch3_impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sake::declval< T0 >().cmp(sake::declval< T1 >()),
-        result_of::default_impl::cmp_result_types,
-        type
+        result_of::default_impl::sign_result_types,
+        nominal_type
     );
+public:
+    typedef typename boost::mpl::if_c<
+        boost::is_same< nominal_type, int >::value,
+        sake::sign_t,
+        nominal_type
+    >::type type;
 };
 
 template< class T0, class T1 >
@@ -342,14 +329,7 @@ struct dispatch< T0, T1, void, 3 >
     BOOST_STATIC_ASSERT((!boost_ext::is_reference< T1 >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T0 >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T1 >::value));
-private:
-    typedef typename dispatch3_impl< T0, T1 >::type nominal_type;
-public:
-    typedef typename boost::mpl::if_c<
-        boost::is_same< nominal_type, int >::value,
-        sake::sign_t,
-        nominal_type
-    >::type type;
+    typedef typename dispatch3_impl< T0, T1 >::type type;
 };
 
 template< class T0, class T1 >

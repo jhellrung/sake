@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/math/pow.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -23,6 +23,7 @@
 
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/functional/operators/multiply.hpp>
 #include <sake/core/introspection/has_isc_value.hpp>
@@ -36,6 +37,7 @@
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/move.hpp>
+#include <sake/core/move/rv_cast.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -175,14 +177,15 @@ pow_c(B b, I i)
 namespace pow_private
 {
 
+using boost_ext::mpl::uint;
+
 template< class B, class P >
 struct dispatch_index
 {
-    static unsigned int const _ =
-        (1 << 2) * sake::has_isc_value<P>::value
-      | (1 << 1) * boost::is_signed<P>::value
-      | (1 << 0);
-    static unsigned int const value = sake::static_intlog2_c<_>::value;
+    static unsigned int const value = boost_ext::mpl::
+             if_< sake::has_isc_value<P>, uint<2> >::type::template
+        else_if < boost::is_signed<P>, uint<1> >::type::template
+        else_   < uint<0> >::type::value;
 };
 
 template< class B, class P >
@@ -209,11 +212,11 @@ struct dispatch<B,P,1>
     template< class I >
     static type apply(B& b, P& p, I& i)
     {
-        bool const inv = p < sake::zero;
-        if(inv)
+        bool const inv_ = p < sake::zero;
+        if(inv_)
             sake::neg_ip(p);
         b = dispatch<B,P,0>::apply(b,p,i);
-        return inv ? sake::inv(sake::move(b)) : sake::move(b);
+        return inv_ ? sake::inv(sake::move(b)) : sake::move(b);
     }
 };
 
@@ -244,7 +247,9 @@ struct dispatch<B,P,0>
 template< int P, class B >
 struct dispatch_c< B, P, false, false >
 {
-    typedef typename result_of::sqr<B>::type sqr_type;
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename result_of::sqr<B>::type
+    >::type sqr_type;
     typedef typename dispatch_c< sqr_type, P/2 >::type type;
     static type apply(B& b)
     {
@@ -262,40 +267,51 @@ struct dispatch_c< B, P, false, false >
 template< int P, class B >
 struct dispatch_c< B, P, false, true >
 {
-    typedef typename result_of::sqr< B& >::type sqr_type;
-    typedef typename operators::result_of::multiply<
-        B, typename dispatch_c< sqr_type, P/2 >::type
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename result_of::sqr< B& >::type
+    >::type sqr_type;
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename operators::result_of::multiply<
+            B, typename dispatch_c< sqr_type, P/2 >::type
+        >::type
     >::type type;
     static type apply(B& b)
     {
         sqr_type b2 = sake::sqr(b);
-        return sake::move(b) * dispatch_c< sqr_type, P/2 >::apply(b2);
+        return sake::move(b) 
+             * SAKE_RV_CAST((dispatch_c< sqr_type, P/2 >::apply(b2)));
     }
     template< class I >
     static type apply(B& b, I& i)
     {
         sqr_type b2 = sake::sqr(b);
-        return sake::move(b) * dispatch_c< sqr_type, P/2 >::apply(b2,i);
+        return sake::move(b)
+             * SAKE_RV_CAST((dispatch_c< sqr_type, P/2 >::apply(b2,i)));
     }
 };
 
 template< int P, class B, bool _ >
 struct dispatch_c< B, P, true, _ >
 {
-    typedef typename result_of::inv<
-        typename dispatch_c<B,-P>::type >::type type;
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename result_of::inv< typename dispatch_c<B,-P>::type >::type
+    >::type type;
     static type apply(B& b)
-    { return sake::inv(SAKE_MOVE((dispatch_c<B,-P>::apply(b)))); }
+    { return sake::inv(SAKE_RV_CAST((dispatch_c<B,-P>::apply(b)))); }
     template< class I >
     static type apply(B& b, I& i)
-    { return sake::inv(SAKE_MOVE((dispatch_c<B,-P>::apply(b,i)))); }
+    { return sake::inv(SAKE_RV_CAST((dispatch_c<B,-P>::apply(b,i)))); }
 };
 
 template< class B >
 struct dispatch_c< B, 3, false, true >
 {
-    typedef typename result_of::sqr< B& >::type sqr_type;
-    typedef typename operators::result_of::multiply< B, sqr_type >::type type;
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename result_of::sqr< B& >::type
+    >::type sqr_type;
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename operators::result_of::multiply< B, sqr_type >::type
+    >::type type;
     static type apply(B& b)
     {
         sqr_type b2 = sake::sqr(b);
@@ -309,7 +325,9 @@ struct dispatch_c< B, 3, false, true >
 template< class B >
 struct dispatch_c< B, 2, false, false >
 {
-    typedef typename result_of::sqr<B>::type type;
+    typedef typename boost_ext::remove_rvalue_reference<
+        typename result_of::sqr<B>::type
+    >::type type;
     static type apply(B& b)
     { return sake::sqr(sake::move(b)); }
     template< class I >
