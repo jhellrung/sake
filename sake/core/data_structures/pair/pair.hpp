@@ -187,21 +187,6 @@ public:
     }
 };
 
-/*******************************************************************************
- * swap(pair< T0, T1 >& x, pair< T0, T1 >& y) -> void
- * hash_value(pair< T0, T1 > const & x) -> std::size_t
- ******************************************************************************/
-
-template< class T0, class T1 >
-inline void
-swap(sake::pair< T0, T1 >& x, sake::pair< T0, T1 >& y)
-{ x.swap(y); }
-
-template< class T0, class T1 >
-inline std::size_t
-hash_value(sake::pair< T0, T1 > const & x)
-{ return x.hash_value(); }
-
 } // namespace pair_adl
 
 } // namespace sake

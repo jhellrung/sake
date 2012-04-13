@@ -27,7 +27,9 @@
         ( SAKE_DEFINE_NATURAL_SWAP_ ) \
         ( SAKE_BOOST_EXT_PP_SEQ_IS_NIL( base_seq ) ) \
         ( SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_name_seq ) ) \
-    ) ( r, T, base_seq, member_name_seq )
+    ) ( r, T, base_seq, member_name_seq ) \
+    inline friend void swap(T& x, T& y) \
+    { x.swap(y); }
 
 #define SAKE_DEFINE_NATURAL_SWAP_00( r, T, base_seq, member_name_seq ) \
     void swap(T& other) \
