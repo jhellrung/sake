@@ -401,10 +401,8 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
-    typedef typename boost_ext::remove_rvalue_reference<
-        typename sake::operators::result_of::multiply<
-            typename boost_ext::add_reference<T>::type
-        >::type
+    typedef typename sake::operators::result_of::multiply<
+        typename boost_ext::add_reference<T>::type
     >::type type;
     template< class T_ >
     static type apply(SAKE_FWD2_REF( T_ ) x)

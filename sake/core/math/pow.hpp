@@ -23,7 +23,6 @@
 
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
-#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/functional/operators/multiply.hpp>
 #include <sake/core/introspection/has_isc_value.hpp>
@@ -247,9 +246,7 @@ struct dispatch<B,P,0>
 template< int P, class B >
 struct dispatch_c< B, P, false, false >
 {
-    typedef typename boost_ext::remove_rvalue_reference<
-        typename result_of::sqr<B>::type
-    >::type sqr_type;
+    typedef typename result_of::sqr<B>::type sqr_type;
     typedef typename dispatch_c< sqr_type, P/2 >::type type;
     static type apply(B& b)
     {
@@ -267,13 +264,9 @@ struct dispatch_c< B, P, false, false >
 template< int P, class B >
 struct dispatch_c< B, P, false, true >
 {
-    typedef typename boost_ext::remove_rvalue_reference<
-        typename result_of::sqr< B& >::type
-    >::type sqr_type;
-    typedef typename boost_ext::remove_rvalue_reference<
-        typename operators::result_of::multiply<
-            B, typename dispatch_c< sqr_type, P/2 >::type
-        >::type
+    typedef typename result_of::sqr< B& >::type sqr_type;
+    typedef typename operators::result_of::multiply<
+        B, typename dispatch_c< sqr_type, P/2 >::type
     >::type type;
     static type apply(B& b)
     {
@@ -293,9 +286,7 @@ struct dispatch_c< B, P, false, true >
 template< int P, class B, bool _ >
 struct dispatch_c< B, P, true, _ >
 {
-    typedef typename boost_ext::remove_rvalue_reference<
-        typename result_of::inv< typename dispatch_c<B,-P>::type >::type
-    >::type type;
+    typedef typename result_of::inv< typename dispatch_c<B,-P>::type >::type type;
     static type apply(B& b)
     { return sake::inv(SAKE_RV_CAST((dispatch_c<B,-P>::apply(b)))); }
     template< class I >
@@ -306,12 +297,8 @@ struct dispatch_c< B, P, true, _ >
 template< class B >
 struct dispatch_c< B, 3, false, true >
 {
-    typedef typename boost_ext::remove_rvalue_reference<
-        typename result_of::sqr< B& >::type
-    >::type sqr_type;
-    typedef typename boost_ext::remove_rvalue_reference<
-        typename operators::result_of::multiply< B, sqr_type >::type
-    >::type type;
+    typedef typename result_of::sqr< B& >::type sqr_type;
+    typedef typename operators::result_of::multiply< B, sqr_type >::type type;
     static type apply(B& b)
     {
         sqr_type b2 = sake::sqr(b);
@@ -325,9 +312,7 @@ struct dispatch_c< B, 3, false, true >
 template< class B >
 struct dispatch_c< B, 2, false, false >
 {
-    typedef typename boost_ext::remove_rvalue_reference<
-        typename result_of::sqr<B>::type
-    >::type type;
+    typedef typename result_of::sqr<B>::type type;
     static type apply(B& b)
     { return sake::sqr(sake::move(b)); }
     template< class I >

@@ -21,7 +21,6 @@
 
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
-#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/math/unbounded_tag.hpp>
 #include <sake/core/move/forward.hpp>
@@ -134,11 +133,7 @@ struct clamp
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class L, class T, class U >
-    typename result_of::clamp<
-        typename boost_ext::remove_rvalue_reference< L& >::type,
-        typename boost_ext::remove_rvalue_reference< T& >::type,
-        typename boost_ext::remove_rvalue_reference< U& >::type
-    >::type
+    typename result_of::clamp< L&, T&, U& >::type
     operator()(L& lower, T& x, U& upper) const
     {
         SAKE_ASSERT(!(upper < lower));
@@ -146,11 +141,7 @@ struct clamp
     }
 
     template< class L, class T, class U, class Less >
-    typename result_of::clamp<
-        typename boost_ext::remove_rvalue_reference< L& >::type,
-        typename boost_ext::remove_rvalue_reference< T& >::type,
-        typename boost_ext::remove_rvalue_reference< U& >::type
-    >::type
+    typename result_of::clamp< L&, T&, U& >::type
     operator()(L& lower, T& x, U& upper, Less less) const
     {
         SAKE_ASSERT(!less(upper, lower));
@@ -158,11 +149,7 @@ struct clamp
     }
 
     template< class L, class T, class U >
-    typename result_of::clamp<
-        typename boost_ext::remove_rvalue_reference< L const & >::type,
-        typename boost_ext::remove_rvalue_reference< T const & >::type,
-        typename boost_ext::remove_rvalue_reference< U const & >::type
-    >::type
+    typename result_of::clamp< L const &, T const &, U const & >::type
     operator()(L const & lower, T const & x, U const & upper) const
     {
         SAKE_ASSERT(!(upper < lower));
@@ -170,11 +157,7 @@ struct clamp
     }
 
     template< class L, class T, class U, class Less >
-    typename result_of::clamp<
-        typename boost_ext::remove_rvalue_reference< L const & >::type,
-        typename boost_ext::remove_rvalue_reference< T const & >::type,
-        typename boost_ext::remove_rvalue_reference< U const & >::type
-    >::type
+    typename result_of::clamp< L const &, T const &, U const & >::type
     operator()(L const & lower, T const & x, U const & upper, Less less) const
     {
         SAKE_ASSERT(!less(upper, lower));
@@ -182,110 +165,62 @@ struct clamp
     }
 
     template< class L, class T >
-    typename result_of::clamp<
-        typename boost_ext::remove_rvalue_reference< L& >::type,
-        typename boost_ext::remove_rvalue_reference< T& >::type,
-        sake::unbounded_tag
-    >::type
+    typename result_of::clamp< L&, T&, sake::unbounded_tag >::type
     operator()(L& lower, T& x, sake::unbounded_tag) const
     { return !(x < lower) ? x : lower; }
 
     template< class L, class T, class Less >
-    typename result_of::clamp<
-        typename boost_ext::remove_rvalue_reference< L& >::type,
-        typename boost_ext::remove_rvalue_reference< T& >::type,
-        sake::unbounded_tag
-    >::type
+    typename result_of::clamp< L&, T&, sake::unbounded_tag >::type
     operator()(L& lower, T& x, sake::unbounded_tag, Less less) const
     { return !less(x, lower) ? x : lower; }
 
     template< class L, class T >
-    typename result_of::clamp<
-        typename boost_ext::remove_rvalue_reference< L const & >::type,
-        typename boost_ext::remove_rvalue_reference< T const & >::type,
-        sake::unbounded_tag
-    >::type
+    typename result_of::clamp< L const &, T const &, sake::unbounded_tag >::type
     operator()(L const & lower, T const & x, sake::unbounded_tag) const
     { return !(x < lower) ? x : lower; }
 
     template< class L, class T, class Less >
-    typename result_of::clamp<
-        typename boost_ext::remove_rvalue_reference< L const & >::type,
-        typename boost_ext::remove_rvalue_reference< T const & >::type,
-        sake::unbounded_tag
-    >::type
+    typename result_of::clamp< L const &, T const &, sake::unbounded_tag >::type
     operator()(L const & lower, T const & x, sake::unbounded_tag, Less less) const
     { return !less(x, lower) ? x : lower; }
 
     template< class T, class U >
-    typename result_of::clamp<
-        sake::unbounded_tag,
-        typename boost_ext::remove_rvalue_reference< T& >::type,
-        typename boost_ext::remove_rvalue_reference< U& >::type
-    >::type
+    typename result_of::clamp< sake::unbounded_tag, T&, U& >::type
     operator()(sake::unbounded_tag, T& x, U& upper) const
     { return !(upper < x) ? x : upper; }
 
     template< class T, class U, class Less >
-    typename result_of::clamp<
-        sake::unbounded_tag,
-        typename boost_ext::remove_rvalue_reference< T& >::type,
-        typename boost_ext::remove_rvalue_reference< U& >::type
-    >::type
+    typename result_of::clamp< sake::unbounded_tag, T&, U& >::type
     operator()(sake::unbounded_tag, T& x, U& upper, Less less) const
     { return !less(upper, x) ? x : upper; }
 
     template< class T, class U >
-    typename result_of::clamp<
-        sake::unbounded_tag,
-        typename boost_ext::remove_rvalue_reference< T const & >::type,
-        typename boost_ext::remove_rvalue_reference< U const & >::type
-    >::type
+    typename result_of::clamp< sake::unbounded_tag, T const &, U const & >::type
     operator()(sake::unbounded_tag, T const & x, U const & upper) const
     { return !(upper < x) ? x : upper; }
 
     template< class T, class U, class Less >
-    typename result_of::clamp<
-        sake::unbounded_tag,
-        typename boost_ext::remove_rvalue_reference< T const & >::type,
-        typename boost_ext::remove_rvalue_reference< U const & >::type
-    >::type
+    typename result_of::clamp< sake::unbounded_tag, T const &, U const & >::type
     operator()(sake::unbounded_tag, T const & x, U const & upper, Less less) const
     { return !less(upper, x) ? x : upper; }
 
     template< class T >
-    typename result_of::clamp<
-        sake::unbounded_tag,
-        typename boost_ext::remove_rvalue_reference< T& >::type,
-        sake::unbounded_tag
-    >::type
+    typename result_of::clamp< sake::unbounded_tag, T&, sake::unbounded_tag >::type
     operator()(sake::unbounded_tag, T& x, sake::unbounded_tag) const
     { return x; }
 
     template< class T, class Less >
-    typename result_of::clamp<
-        sake::unbounded_tag,
-        typename boost_ext::remove_rvalue_reference< T& >::type,
-        sake::unbounded_tag
-    >::type
+    typename result_of::clamp< sake::unbounded_tag, T&, sake::unbounded_tag >::type
     operator()(sake::unbounded_tag, T& x, sake::unbounded_tag, Less const & /*less*/) const
     { return x; }
 
     template< class T >
-    typename result_of::clamp<
-        sake::unbounded_tag,
-        typename boost_ext::remove_rvalue_reference< T const & >::type,
-        sake::unbounded_tag
-    >::type
+    typename result_of::clamp< sake::unbounded_tag, T const &, sake::unbounded_tag >::type
     operator()(sake::unbounded_tag, T const & x, sake::unbounded_tag) const
     { return x; }
 
     template< class T, class Less >
-    typename result_of::clamp<
-        sake::unbounded_tag,
-        typename boost_ext::remove_rvalue_reference< T const & >::type,
-        sake::unbounded_tag
-    >::type
+    typename result_of::clamp< sake::unbounded_tag, T const &, sake::unbounded_tag >::type
     operator()(sake::unbounded_tag, T const & x, sake::unbounded_tag, Less const & /*less*/) const
     { return x; }
 

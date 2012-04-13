@@ -302,9 +302,7 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
-    typedef typename boost_ext::remove_rvalue_reference<
-        typename sake::result_of::cmp< T, sake::zero_t >::type
-    >::type type;
+    typedef typename sake::result_of::cmp< T, sake::zero_t >::type type;
     template< class T_ >
     static type apply(SAKE_FWD2_REF( T_ ) x)
     { return sake::cmp(sake::forward< T_ >(x), sake::zero); }
