@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/boost_ext/fusion/sequence/intrisic/back.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -21,7 +21,10 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #include <boost/fusion/support/is_view.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/not.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
@@ -46,43 +49,43 @@ namespace result_of
 namespace back_private
 {
 
-template<
-    class Sequence,
-    class T = typename boost::fusion::result_of::back< Sequence >::type,
-    bool = boost_ext::is_lvalue_reference_to_nonconst<T>::value
-       && !boost::fusion::traits::is_view< Sequence >::value
-       && !boost_ext::is_reference<
-               typename boost::fusion::result_of::value_at_c<
-                   Sequence,
-                   boost::fusion::result_of::size< Sequence >::value - 1
-               >::type
-           >::value
->
-struct dispatch;
+template< class Sequence >
+struct dispatch
+{
+private:
+    typedef typename boost::fusion::result_of::back< Sequence >::type back_type;
+    typedef typename boost::fusion::value_at_c<
+        Sequence,
+        boost::fusion::result_of::size< Sequence >::value - 1
+    >::type value_back_type;
+public:
+    typedef typename boost::mpl::eval_if_c<
+        boost_ext::mpl::and3<
+            boost_ext::is_lvalue_reference_to_nonconst< bck_type >,
+            boost::mpl::not_< boost::fusion::traits::is_view< Sequence > >,
+            boost::mpl::not_< boost_ext::is_reference< value_back_type > >
+        >::value,
+        typename boost_ext::add_reference<
+            typename boost_ext::add_rvalue_reference<
+                typename boost_ext::remove_reference< back_type >::type
+            >::type
+        >::type,
+        back_type
+    >::type type;
+};
 
-template< class Sequence, class T >
-struct dispatch< Sequence, T, false >
-{ typedef T type; };
-
-template< class Sequence, class T >
-struct dispatch< Sequence, T, true >
-    : boost_ext::add_reference<
-          typename boost_ext::add_rvalue_reference<
-              typename boost_ext::remove_reference<T>::type
-          >::type
-      >
+template< class Sequence >
+struct dispatch< Sequence& >
+    : boost::fusion::result_of::back< Sequence >
 { };
 
 } // namespace back_private
 
 template< class Sequence >
 struct back
-    : back_private::dispatch< Sequence >
-{ };
-
-template< class Sequence >
-struct back< Sequence& >
-    : boost::fusion::result_of::back< Sequence >
+    : back_private::dispatch<
+          typename boost_ext::remove_rvalue_reference< Sequence >::type
+      >
 { };
 
 } // namespace result_of
@@ -90,29 +93,25 @@ struct back< Sequence& >
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class Sequence >
-inline typename result_of::back< Sequence >::type
+inline typename boost_ext::fusion::result_of::back< Sequence >::type
 back(Sequence&& s)
 {
-    typedef typename result_of::back< Sequence >::type result_type;
+    typedef typename boost_ext::fusion::result_of::back< Sequence >::type result_type;
     return static_cast< result_type >(boost::fusion::back(s));
 }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class Sequence >
-inline typename result_of::back<
-    typename boost_ext::remove_rvalue_reference< Sequence& >::type
->::type
+inline typename boost_ext::fusion::result_of::back< Sequence& >::type
 back(Sequence& s)
 {
-    typedef typename result_of::back<
-        typename boost_ext::remove_rvalue_reference< Sequence& >::type
-    >::type result_type;
+    typedef typename boost_ext::fusion::result_of::back< Sequence& >::type result_type;
     return static_cast< result_type >(boost::fusion::back(SAKE_AS_LVALUE( s )));
 }
 
 template< class Sequence >
-inline typename result_of::back< Sequence const & >::type
+inline typename boost_ext::fusion::result_of::back< Sequence const & >::type
 back(Sequence const & s)
 { return boost::fusion::back(s); }
 

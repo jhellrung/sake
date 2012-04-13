@@ -7,6 +7,9 @@
  *
  * boost_ext::fusion::begin(Sequence&& s)
  *     -> boost_ext::fusion::result_of::begin< Sequence >::type
+ *
+ * TODO: Clean up...
+ * TODO: Needs sake::move_iterator!
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_FUSION_SEQUENCE_INTRINSIC_BEGIN_HPP

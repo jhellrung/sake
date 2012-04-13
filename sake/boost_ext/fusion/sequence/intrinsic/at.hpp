@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/boost_ext/fusion/sequence/intrisic/at.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -25,7 +25,10 @@
 #include <boost/fusion/sequence/intrinsic/at_c.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #include <boost/fusion/support/is_view.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/not.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
@@ -50,40 +53,41 @@ namespace result_of
 namespace at_private
 {
 
-template<
-    class Sequence, int N,
-    class T = typename boost::fusion::result_of::at_c< Sequence, N >::type,
-    bool = boost_ext::is_lvalue_reference_to_nonconst<T>::value
-       && !boost::fusion::traits::is_view< Sequence >::value
-       && !boost_ext::is_reference<
-               typename boost::fusion::result_of::value_at_c< Sequence, N >::type
-           >::value
->
-struct dispatch;
+template< class Sequence, int N >
+struct dispatch
+{
+private;
+    typedef typename boost::fusion::result_of::at_c< Sequence, N >::type at_type;
+    typedef typename boost::fusion::result_of::value_at_c< Sequence, N >::type value_at_type;
+public:
+    typedef typename boost::mpl::if_c<
+        boost_ext::mpl::and3<
+            boost_ext::is_lvalue_reference_to_nonconst< at_type >,
+            boost::mpl::not_< boost::fusion::traits::is_view< Sequence > >,
+            boost::mpl::not_< boost_ext::is_reference< value_at_type > >
+        >::value,
+        typename boost_ext::add_reference<
+            typename boost_ext::add_rvalue_reference<
+                typename boost_ext::remove_reference< at_type >::type
+            >::type
+        >::type,
+        at_type
+    >::type type;
+};
 
-template< class Sequence, int N, class T >
-struct dispatch< Sequence, N, T, false >
-{ typedef T type; };
-
-template< class Sequence, int N, class T >
-struct dispatch< Sequence, N, T, true >
-    : boost_ext::add_reference<
-          typename boost_ext::add_rvalue_reference<
-              typename boost_ext::remove_reference<T>::type
-          >::type
-      >
+template< class Sequence, int N >
+struct dispatch< Sequence&, N >
+    : boost::fusion::result_of::at_c< Sequence, N >
 { };
 
 } // namespace at_private
 
 template< class Sequence, int N >
 struct at_c
-    : at_private::dispatch< Sequence, N >
-{ };
-
-template< class Sequence, int N >
-struct at_c< Sequence&, N >
-    : boost::fusion::result_of::at_c< Sequence, N >
+    : at_private::dispatch<
+          typename boost_ext::remove_rvalue_reference< Sequence >::type,
+          N
+      >
 { };
 
 template< class Sequence, class N >
@@ -96,58 +100,46 @@ struct at
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< int N, class Sequence >
-inline typename result_of::at_c< Sequence, N >::type
+inline typename boost_ext::fusion::result_of::at_c< Sequence, N >::type
 at_c(Sequence&& s)
 {
-    typedef typename result_of::at_c< Sequence, N >::type result_type;
+    typedef typename boost_ext::fusion::result_of::at_c< Sequence, N >::type result_type;
     return static_cast< result_type >(boost::fusion::at_c<N>(s));
 }
 
 template< class N, class Sequence >
-inline typename result_of::at< Sequence, N >::type
+inline typename boost_ext::fusion::result_of::at< Sequence, N >::type
 at(Sequence&& s)
 {
-    typedef typename result_of::at< Sequence, N >::type result_type;
+    typedef typename boost_ext::fusion::result_of::at< Sequence, N >::type result_type;
     return static_cast< result_type >(boost::fusion::at<N>(s));
 }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< int N, class Sequence >
-inline typename result_of::at_c<
-    typename boost_ext::remove_rvalue_reference< Sequence& >::type,
-    N
->::type
+inline typename boost_ext::fusion::result_of::at_c< Sequence&, N >::type
 at_c(Sequence& s)
 {
-    typedef typename result_of::at_c<
-        typename boost_ext::remove_rvalue_reference< Sequence& >::type,
-        N
-    >::type result_type;
+    typedef typename boost_ext::fusion::result_of::at_c< Sequence&, N >::type result_type;
     return static_cast< result_type >(boost::fusion::at_c<N>(SAKE_AS_LVALUE( s )));
 }
 
 template< int N, class Sequence >
-inline typename result_of::at_c< Sequence const &, N >::type
+inline typename boost_ext::fusion::result_of::at_c< Sequence const &, N >::type
 at_c(Sequence const & s)
 { boost::fusion::at_c<N>(s); }
 
 template< class N, class Sequence >
-inline typename result_of::at<
-    typename boost_ext::remove_rvalue_reference< Sequence& >::type,
-    N
->::type
+inline typename boost_ext::fusion::result_of::at< Sequence&, N >::type
 at(Sequence& s)
 {
-    typedef typename result_of::at<
-        typename boost_ext::remove_rvalue_reference< Sequence& >::type,
-        N
-    >::type result_type;
+    typedef typename boost_ext::fusion::result_of::at< Sequence&, N >::type result_type;
     return static_cast< result_type >(boost::fusion::at<N>(SAKE_AS_LVALUE( s )));
 }
 
 template< class N, class Sequence >
-inline typename result_of::at< Sequence const &, N >::type
+inline typename boost_ext::fusion::result_of::at< Sequence const &, N >::type
 at(Sequence const & s)
 { boost::fusion::at<N>(s); }
 

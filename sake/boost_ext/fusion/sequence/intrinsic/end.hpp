@@ -7,6 +7,9 @@
  *
  * boost_ext::fusion::end(Sequence&& s)
  *     -> boost_ext::fusion::result_of::end< Sequence >::type
+ *
+ * TODO: This clearly needs some cleaning up...
+ * TODO: Needs sake::move_iterator!
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_FUSION_SEQUENCE_INTRINSIC_BEGIN_HPP
@@ -33,8 +36,6 @@
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
-#include <sake/core/utility/overload.hpp>
-
 namespace sake
 {
 
@@ -50,29 +51,29 @@ namespace result_of
 template< class Sequence >
 class end
 {
-    typedef typename boost::fusion::result_of::end< Sequence >::type begin_it_type;
+    typedef typename boost::fusion::result_of::end< Sequence >::type maybe_type;
     typedef boost::mpl::range_c<
         0, boost::fusion::result_of::size< Sequence >::value
-    > sequence_indices_type;
+    > indices_type;
 public:
-    typedef typename boost::mpl::if_<
-        boost::mpl::and_<
+    typedef typename boost::mpl::if_c<
+        boost_ext::mpl::and3<
             boost::mpl::not_< boost::fusion::traits::is_view< Sequence > >,
             boost::mpl::not_< boost_ext::mpl::all<
-                sequence_indices_type,
+                indices_type,
                 boost_ext::is_reference<
                     boost::fusion::result_of::value_at< Sequence, boost::mpl::_1 >
                 >
             > >,
             boost::mpl::any<
-                sequence_indices_type,
+                indices_type,
                 boost_ext::is_lvalue_reference_to_nonconst<
                     boost::fusion::result_of::at< Sequence, boost::mpl::_1 >
                 >
             >
-        >,
-        boost_ext::fusion::move_owned_iterator< begin_it_type >,
-        begin_it_type
+        >::value,
+        boost_ext::fusion::move_owned_iterator< maybe_type >,
+        maybe_type
     >::type type;
 };
 
@@ -83,18 +84,35 @@ class end< Sequence& >
 
 } // namespace result_of
 
-// template< class Sequence >
-// inline typename result_of::end< Sequence >::type
-// end(Sequence&& s);
-#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
-    result_of::end< SAKE_BOOST_EXT_PP_TUPLE_REM1 T_tuple >
-#define SAKE_OVERLOAD_FUNCTION_NAME \
-    end
-#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    return static_cast< typename SAKE_OVERLOAD_RESULT( n, T_tuple ) ::type >( \
-        boost::fusion::end x_tuple );
-#define SAKE_OVERLOAD_PERFECT_MAX_ARITY 1
-#include SAKE_OVERLOAD_GENERATE()
+#ifndef BOOST_NO_RVALUE_REFERENCES
+
+template< class Sequence >
+inline typename result_of::end< Sequence >::type
+end(Sequence&& s)
+{
+    typedef typename result_of::end< Sequence >::type result_type;
+    return static_cast< result_type >(boost::fusion::end(s));
+}
+
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+template< class Sequence >
+inline typename result_of::end< Sequence& >::type
+end(Sequence& s)
+{
+    typedef typename result_of::end< Sequence& >::type result_type;
+    return static_cast< result_type >(boost::fusion::end(s));
+}
+
+template< class Sequence >
+inline typename result_of::end< Sequence const & >::type
+end(Sequence const & s)
+{
+    typedef typename result_of::end< Sequence const & >::type result_type;
+    return static_cast< result_type >(boost::fusion::end(s));
+}
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 } // namespace fusion
 

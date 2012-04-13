@@ -30,7 +30,6 @@
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/functional/operators/equal.hpp>
-#include <sake/core/functional/operators/logical_and.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -64,21 +63,23 @@ struct iterate_dispatch;
 
 template< int N, class I0, class I1, class Equal >
 inline typename iterate_dispatch< N, I0, I1, Equal >::type
-iterate(I0 const & i0, I1 const & i1, Equal const & equal)
-{ return iterate_dispatch< N, I0, I1, Equal >::apply(i0, i1, equal); }
+iterate(I0 const & i0, I1 const & i1, Equal const & equal_)
+{ return iterate_dispatch< N, I0, I1, Equal >::apply(i0, i1, equal_); }
 
 template< class I0, class I1, class Equal >
 struct dispatch0< I0, I1, Equal, false, false >
 {
     typedef typename boost::result_of< Equal ( I0, I1 ) >::type type;
-    static type apply(I0 const & i0, I1 const & i1, Equal equal)
-    { return equal(i0, i1); }
+    static type apply(I0 const & i0, I1 const & i1, Equal equal_)
+    { return equal_(i0, i1); }
 };
 
 template< class I0, class I1 >
 struct dispatch0< I0, I1, sake::operators::functional::equal, false, false >
 {
-    typedef boost::mpl::bool_< boost::fusion::result_of::equal_to< I0, I1 >::type::value > type;
+    typedef boost::mpl::bool_<
+        boost::fusion::result_of::equal_to< I0, I1 >::type::value
+    > type;
     static type apply(I0 const & /*i0*/, I1 const & /*i1*/, sake::operators::functional::equal)
     { return type(); }
 };
@@ -92,7 +93,7 @@ template< class Sequence0, class Sequence1, class Equal, int N0, int N1 >
 struct dispatch1
 {
     typedef boost::mpl::false_ type;
-    static type apply(Sequence0 const & /*s0*/, Sequence1 const & /*s1*/, Equal const & /*equal*/)
+    static type apply(Sequence0 const & /*s0*/, Sequence1 const & /*s1*/, Equal const & /*equal_*/)
     {
         BOOST_STATIC_ASSERT((N0 != N1));
         return type();
@@ -108,15 +109,15 @@ struct dispatch1< Sequence0, Sequence1, Equal, N, N >
         typename boost::fusion::result_of::begin< Sequence1 const >::type,
         Equal
     >::type type;
-    static type apply(Sequence0 const & s0, Sequence1 const & s1, Equal const & equal)
-    { return equal_private::iterate<N>(boost::fusion::begin(s0), boost::fusion::begin(s1), equal); }
+    static type apply(Sequence0 const & s0, Sequence1 const & s1, Equal const & equal_)
+    { return equal_private::iterate<N>(boost::fusion::begin(s0), boost::fusion::begin(s1), equal_); }
 };
 
 template< class I0, class I1, class Equal >
 struct iterate_dispatch< 0, I0, I1, Equal >
 {
     typedef boost::mpl::true_ type;
-    static type apply(I0 const & /*i0*/, I1 const & /*i1*/, Equal const & /*equal*/)
+    static type apply(I0 const & /*i0*/, I1 const & /*i1*/, Equal const & /*equal_*/)
     { return type(); }
 };
 
@@ -127,8 +128,8 @@ struct iterate_dispatch< 1, I0, I1, Equal >
         typename boost::fusion::result_of::deref< I0 >::type,
         typename boost::fusion::result_of::deref< I1 >::type
     ) >::type type;
-    static type apply(I0 const & i0, I1 const & i1, Equal equal)
-    { return equal(*i0, *i1); }
+    static type apply(I0 const & i0, I1 const & i1, Equal equal_)
+    { return equal_(*i0, *i1); }
 };
 
 template< int N, class I0, class I1, class Equal >
@@ -144,19 +145,16 @@ struct iterate_dispatch
         typename boost::fusion::result_of::next< I1 >::type,
         Equal
     >::type next_type;
-    typedef typename boost_ext::common_type<
-        curr_type,
-        typename sake::operators::result_of::and_< curr_type, next_type >::type
-    >::type type;
-    static type apply(I0 const & i0, I1 const & i1, Equal equal)
+    typedef typename boost_ext::common_type< curr_type, next_type >::type type;
+    static type apply(I0 const & i0, I1 const & i1, Equal equal_)
     {
-        curr_type const curr_result = equal(*i0, *i1);
-        return curr_result == false ?
-               false :
-               curr_result && equal_private::iterate< N-1 >(
+        curr_type const curr_result = equal_(*i0, *i1);
+        return !curr_result ?
+               curr_result :
+               equal_private::iterate< N-1 >(
                    boost::fusion::next(i0),
                    boost::fusion::next(i1),
-                   equal
+                   equal_
                );
     }
 };

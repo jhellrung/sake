@@ -27,10 +27,10 @@
 #include <boost/utility/result_of.hpp>
 
 #include <sake/boost_ext/type_traits/common_type.hpp>
+#include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/functional/operators/not_equal.hpp>
-#include <sake/core/functional/operators/logical_or.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -64,21 +64,23 @@ struct iterate_dispatch;
 
 template< int N, class I0, class I1, class NotEqual >
 inline typename iterate_dispatch< N, I0, I1, NotEqual >::type
-iterate(I0 const & i0, I1 const & i1, NotEqual const & not_equal)
-{ return iterate_dispatch< N, I0, I1, NotEqual >::apply(i0, i1, not_equal); }
+iterate(I0 const & i0, I1 const & i1, NotEqual const & not_equal_)
+{ return iterate_dispatch< N, I0, I1, NotEqual >::apply(i0, i1, not_equal_); }
 
 template< class I0, class I1, class NotEqual >
 struct dispatch0< I0, I1, NotEqual, false, false >
 {
     typedef typename boost::result_of< NotEqual ( I0, I1 ) >::type type;
-    static type apply(I0 const & i0, I1 const & i1, NotEqual not_equal)
-    { return not_equal(i0, i1); }
+    static type apply(I0 const & i0, I1 const & i1, NotEqual not_equal_)
+    { return not_equal_(i0, i1); }
 };
 
 template< class I0, class I1 >
 struct dispatch0< I0, I1, sake::operators::functional::not_equal, false, false >
 {
-    typedef boost::mpl::bool_< !boost::fusion::result_of::equal_to< I0, I1 >::type::value > type;
+    typedef boost::mpl::bool_<
+        !boost::fusion::result_of::equal_to< I0, I1 >::type::value
+    > type;
     static type apply(I0 const & /*i0*/, I1 const & /*i1*/, sake::operators::functional::not_equal)
     { return type(); }
 };
@@ -92,7 +94,7 @@ template< class Sequence0, class Sequence1, class NotEqual, int N0, int N1 >
 struct dispatch1
 {
     typedef boost::mpl::true_ type;
-    static type apply(Sequence0 const & /*s0*/, Sequence1 const & /*s1*/, NotEqual const & /*not_equal*/)
+    static type apply(Sequence0 const & /*s0*/, Sequence1 const & /*s1*/, NotEqual const & /*not_equal_*/)
     {
         BOOST_STATIC_ASSERT((N0 != N1));
         return type();
@@ -108,15 +110,15 @@ struct dispatch1< Sequence0, Sequence1, NotEqual, N, N >
         typename boost::fusion::result_of::begin< Sequence1 const >::type,
         NotEqual
     >::type type;
-    static type apply(Sequence0 const & s0, Sequence1 const & s1, NotEqual const & not_equal)
-    { return not_equal_private::iterate<N>(boost::fusion::begin(s0), boost::fusion::begin(s1), not_equal); }
+    static type apply(Sequence0 const & s0, Sequence1 const & s1, NotEqual const & not_equal_)
+    { return not_equal_private::iterate<N>(boost::fusion::begin(s0), boost::fusion::begin(s1), not_equal_); }
 };
 
 template< class I0, class I1, class NotEqual >
 struct iterate_dispatch< 0, I0, I1, NotEqual >
 {
     typedef boost::mpl::false_ type;
-    static type apply(I0 const & /*i0*/, I1 const & /*i1*/, NotEqual const & /*not_equal*/)
+    static type apply(I0 const & /*i0*/, I1 const & /*i1*/, NotEqual const & /*not_equal_*/)
     { return type(); }
 };
 
@@ -127,8 +129,8 @@ struct iterate_dispatch< 1, I0, I1, NotEqual >
         typename boost::fusion::result_of::deref< I0 >::type,
         typename boost::fusion::result_of::deref< I1 >::type
     ) >::type type;
-    static type apply(I0 const & i0, I1 const & i1, NotEqual not_equal)
-    { return not_equal(*i0, *i1); }
+    static type apply(I0 const & i0, I1 const & i1, NotEqual not_equal_)
+    { return not_equal_(*i0, *i1); }
 };
 
 template< int N, class I0, class I1, class NotEqual >
@@ -144,19 +146,17 @@ struct iterate_dispatch
         typename boost::fusion::result_of::next< I1 >::type,
         NotEqual
     >::type next_type;
-    typedef typename boost_ext::common_type<
-        curr_type,
-        typename sake::operators::result_of::or_< curr_type, next_type >::type
-    >::type type;
-    static type apply(I0 const & i0, I1 const & i1, NotEqual not_equal)
+    typedef typename boost_ext::common_type< curr_type, next_type >::type type;
+    static type apply(I0 const & i0, I1 const & i1, NotEqual not_equal_)
     {
-        curr_type const curr_result = not_equal(*i0, *i1);
-        return curr_result == true ?
-               true :
-               curr_result || not_equal_private::iterate< N-1 >(
+        BOOST_STATIC_ASSERT((boost_ext::is_convertible< curr_type, bool >::value));
+        curr_type const curr_result = not_equal_(*i0, *i1);
+        return curr_result ?
+               curr_result :
+               not_equal_private::iterate< N-1 >(
                    boost::fusion::next(i0),
                    boost::fusion::next(i1),
-                   not_equal
+                   not_equal_
                );
     }
 };
