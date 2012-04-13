@@ -6,15 +6,9 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct tuple< T0, ... >
- * make_tuple(T0&& x0, ... ) -> result_of::make_tuple< T0, ... >::type
  *
  * swap(tuple< T0, ... >& x, tuple< U0, ... >& y) -> void
  * hash_value(tuple< T0, ... > const & x) -> std::size_t
- *
- * operator==(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
- * operator!=(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
- * operator<(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
- * cmp(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
  ******************************************************************************/
 
 #ifndef BOOST_PP_IS_ITERATING
@@ -30,11 +24,9 @@
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
@@ -45,9 +37,6 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/fusion/adapted/tuple.hpp>
-#include <sake/boost_ext/fusion/algorithm/query/compare.hpp>
-#include <sake/boost_ext/fusion/algorithm/query/equal.hpp>
-#include <sake/boost_ext/fusion/algorithm/query/not_equal.hpp>
 #include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
 #include <sake/boost_ext/mpl/vector.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
@@ -56,11 +45,7 @@
 
 #include <sake/core/data_structures/tuple/fwd.hpp>
 #include <sake/core/functional/operators/less.hpp>
-#include <sake/core/math/cmp.hpp>
-#include <sake/core/math/zero.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/move/forward.hpp>
-#include <sake/core/ref/wrapped_parameter_to_reference.hpp>
 #include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
 #include <sake/core/utility/overload.hpp>
@@ -115,124 +100,6 @@ struct tuple<>
 } // namespace tuple_adl
 
 /*******************************************************************************
- * make_tuple(T0&& x0, ... ) -> result_of::make_tuple< T0, ... >::type
- ******************************************************************************/
-
-namespace result_of
-{
-
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-template< class... T >
-#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-template< BOOST_PP_ENUM_BINARY_PARAMS( SAKE_TUPLE_MAX_SIZE, class T, = void BOOST_PP_INTERCEPT ) >
-#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-struct make_tuple;
-
-template<>
-struct make_tuple<>
-{ typedef sake::tuple<> type; };
-
-} // namespace result_of
-
-inline sake::tuple<>
-make_tuple()
-{ return sake::tuple<>(); }
-
-#if !defined( BOOST_NO_RVALUE_REFERENCES ) \
- && !defined( BOOST_NO_VARIADIC_TEMPLATES )
-
-template< class... T >
-typename result_of::make_tuple< T... >::type
-make_tuple(T&&... x)
-{ return typename result_of::make_tuple< T... >::type(sake::forward<T>(x)...); }
-
-#else // #if !defined( ... ) && ...
-
-#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
-    result_of::make_tuple< BOOST_PP_TUPLE_REM_CTOR( n, T_tuple ) >
-#define SAKE_OVERLOAD_FUNCTION_NAME \
-    make_tuple
-#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    return typename SAKE_OVERLOAD_RESULT( r, n, T_tuple ) ::type forward_x_tuple ;
-#define SAKE_OVERLOAD_FWD_MAX_ARITY SAKE_TUPLE_MAX_SIZE
-#include SAKE_OVERLOAD_GENERATE()
-
-#endif // #if !defined( ... ) && ...
-
-namespace tuple_adl
-{
-
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-#define class_T0N class... T
-#define class_U0N class... U
-#define T0N       T...
-#define U0N       U...
-#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-#define class_T0N BOOST_PP_ENUM_PARAMS( SAKE_TUPLE_MAX_SIZE, class T )
-#define class_U0N BOOST_PP_ENUM_PARAMS( SAKE_TUPLE_MAX_SIZE, class U )
-#define T0N       BOOST_PP_ENUM_PARAMS( SAKE_TUPLE_MAX_SIZE, T )
-#define U0N       BOOST_PP_ENUM_PARAMS( SAKE_TUPLE_MAX_SIZE, U )
-#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-
-/*******************************************************************************
- * swap(tuple< T0, ... >& x, tuple< U0, ... >& y) -> void
- * hash_value(tuple< T0, ... > const & x) -> std::size_t
- ******************************************************************************/
-
-template< class_T0N >
-inline void
-swap(sake::tuple< T0N >& x0, sake::tuple< T0N >& x1)
-{ x0.swap(x1); }
-
-template< class_T0N >
-inline std::size_t
-hash_value(sake::tuple< T0N > const & x)
-{ return x.hash_value(); }
-
-/*******************************************************************************
- * operator==(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
- * operator!=(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
- * operator<(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
- * cmp(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
- ******************************************************************************/
-
-template< class_T0N, class_U0N >
-inline typename boost_ext::fusion::result_of::equal<
-    sake::tuple< T0N >, sake::tuple< U0N >
->::type
-operator==(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return boost_ext::fusion::equal(x, y); }
-
-template< class_T0N, class_U0N >
-inline typename boost_ext::fusion::result_of::not_equal<
-    sake::tuple< T0N >, sake::tuple< U0N >
->::type
-operator!=(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return boost_ext::fusion::not_equal(x, y); }
-
-template< class_T0N, class_U0N >
-inline typename boost_ext::fusion::result_of::compare<
-    sake::tuple< T0N >, sake::tuple< U0N >
->::type
-cmp(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return boost_ext::fusion::compare(x, y); }
-
-template< class_T0N, class_U0N >
-inline typename operators::result_of::less<
-    typename result_of::cmp< sake::tuple< T0N > const &, sake::tuple< U0N > const & >::type,
-    sake::zero_t
->::type
-operator<(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return sake::cmp(x,y) < sake::zero; }
-
-#undef class_T0N
-#undef class_U0N
-#undef T0N
-#undef U0N
-
-} // namespace tuple_adl
-
-/*******************************************************************************
  * struct tuple< T0, ... >
  * struct result_of::make_tuple< T0, ... >
  ******************************************************************************/
@@ -267,9 +134,6 @@ struct at_c_dispatch;
     sake::emplacer_assign(_ ## n, sake::forward< U ## n >(x ## n));
 #define _n_assign_at_c_n_forward_Sequence_s( z, n, data ) \
     _ ## n = boost_ext::fusion::at_c<n>(sake::forward< Sequence >(s));
-#define wrapped_parameter_to_reference_remove_qualifiers_Tn( z, n, data ) \
-    typename sake::wrapped_parameter_to_reference< \
-        typename boost_ext::remove_qualifiers< T ## n >::type >::type
 
 #define BOOST_PP_ITERATION_LIMITS ( 1, SAKE_TUPLE_MAX_SIZE )
 #define BOOST_PP_FILENAME_1       <sake/core/data_structures/tuple/tuple.hpp>
@@ -283,7 +147,6 @@ struct at_c_dispatch;
 #undef fwd_ref_Un_xn
 #undef emplacer_assign_n_forward_Un_xn
 #undef _n_assign_at_c_n_forward_Sequence_s
-#undef wrapped_parameter_to_reference_remove_qualifiers_Tn
 
 } // namespace sake
 
@@ -491,22 +354,6 @@ struct tuple< T0N >
 };
 
 } // namespace tuple_adl
-
-namespace result_of
-{
-
-template< class_T0N >
-#if defined( BOOST_NO_VARIADIC_TEMPLATES ) && N == SAKE_TUPLE_MAX_SIZE
-struct make_tuple
-#else // #if defined( BOOST_NO_VARIADIC_TEMPLATES ) && N == SAKE_TUPLE_MAX_SIZE
-struct make_tuple< T0N >
-#endif // #if defined( BOOST_NO_VARIADIC_TEMPLATES ) && N == SAKE_TUPLE_MAX_SIZE
-{
-    typedef sake::tuple< BOOST_PP_ENUM( N,
-        wrapped_parameter_to_reference_remove_qualifiers_Tn, ~ ) > type;
-};
-
-} // namespace result_of
 
 #undef class_U0N
 
