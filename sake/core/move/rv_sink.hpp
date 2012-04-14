@@ -12,11 +12,8 @@
  * >
  *
  * struct rv_sink_traits::rv_param<T>
- * struct rv_sink_traits::enable_clv< T, U, Result = void >
- * struct rv_sink_traits::lazy_enable_clv< T, U, Result >
  * struct rv_sink_visitors::ctor_impl<T>
  * struct rv_sink_visitors::operator_assign<T>
- * struct rv_sink_predicates::not_is_same_as<T>
  *
  * rv_sink, when used as a function parameter, allows capturing of arbitrary
  * rvalues of types with rvalue reference emulation.
@@ -62,7 +59,6 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/integral_constant.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/result_type.hpp>
@@ -118,8 +114,11 @@ struct rv_sink
     rv_sink(T const & x,
         typename rv_sink_private::enable_ctor< Pred, T >::type* = 0)
         : m_apply(apply<T>),
-          mp(static_cast< void* >(sake::address_of(const_cast< T& >(x)))
+          mp(static_cast< void* >(sake::address_of(const_cast< T& >(x))))
     { }
+
+    result_type operator()() const
+    { return m_apply(Visitor(), mp); }
 
     result_type operator()(Visitor visitor) const
     { return m_apply(visitor, mp); }
@@ -135,8 +134,6 @@ private:
 
 /*******************************************************************************
  * struct rv_sink_traits::rv_param<T>
- * struct rv_sink_traits::enable_clv<T,U>
- * struct rv_sink_traits::lazy_enable_clv<T,U>
  ******************************************************************************/
 
 namespace rv_sink_traits
@@ -162,53 +159,6 @@ struct rv_param_dispatch< T, false >
 template< class T >
 struct rv_param
     : private_::rv_param_dispatch<T>
-{ };
-
-namespace private_
-{
-
-template<
-    class T, class U, class Result,
-    bool = boost_ext::is_convertible<
-               U&, typename rv_sink_traits::rv_param<T>::type >::value
-        || sake::is_movable<U>::value
->
-struct enable_clv_dispatch;
-
-template< class T, class U, class Result >
-struct enable_clv_dispatch< T, U, Result, true >
-{ };
-
-template< class T, class U, class Result >
-struct enable_clv_dispatch< T, U, Result, false >
-{ typedef Result type; };
-
-template<
-    class T, class U, class Result,
-    bool = boost_ext::is_convertible<
-               U&, typename rv_sink_traits::rv_param<T>::type >::value
-        || sake::is_movable<U>::value
->
-struct lazy_enable_clv_dispatch;
-
-template< class T, class U, class Result >
-struct lazy_enable_clv_dispatch< T, U, Result, true >
-{ };
-
-template< class T, class U, class Result >
-struct lazy_enable_clv_dispatch< T, U, Result, false >
-{ typedef typename Result::type type; };
-
-} // namespace private_
-
-template< class T, class U, class Result = void >
-struct enable_clv
-    : private_::enable_clv_dispatch< T, U, Result >
-{ };
-
-template< class T, class U, class Result >
-struct lazy_enable_clv
-    : private_::lazy_enable_clv_dispatch< T, U, Result >
 { };
 
 } // namespace rv_sink_traits
@@ -246,26 +196,6 @@ private:
 };
 
 } // namespace rv_sink_visitors
-
-/*******************************************************************************
- * struct rv_sink_predicates::not_is_same_as<T>
- ******************************************************************************/
-
-namespace rv_sink_predicates
-{
-
-template< class T >
-struct not_is_same_as
-{
-    template< class U >
-    struct apply
-    {
-        static bool const value = !boost::is_same<U,T>::value;
-        typedef apply type;
-    };
-};
-
-} // namespace rv_sink_predicates
 
 namespace rv_sink_private
 {
