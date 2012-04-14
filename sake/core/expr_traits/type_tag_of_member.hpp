@@ -18,8 +18,8 @@
 #define SAKE_CORE_EXPR_TRAITS_TYPE_TAG_OF_MEMBER_HPP
 
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/is_volatile.hpp>
+
+#include <sake/boost_ext/type_traits/is_cv_or.hpp>
 
 #include <sake/core/expr_traits/private/type_tag_inducer.hpp>
 #include <sake/core/utility/type_tag.hpp>
@@ -43,10 +43,7 @@ template< class T >
 sake::type_tag< T& >
 deduce(T&, T&, T&)
 {
-    BOOST_STATIC_ASSERT((
-        !boost::is_const<T>::value
-     || !boost::is_volatile<T>::value
-    ));
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
     return sake::type_tag< T& >();
 }
 

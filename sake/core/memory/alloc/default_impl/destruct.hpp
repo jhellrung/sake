@@ -15,11 +15,11 @@
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/add_reference.hpp>
-#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/type_traits/is_cv_or.hpp>
 
 #include <sake/core/memory/alloc/is_callable_mem_fun_destroy.hpp>
 #include <sake/core/memory/alloc/is_callable_mem_fun_destruct.hpp>
@@ -55,7 +55,7 @@ destruct(A& a,
     P const p_obj)
 {
     typedef typename sake::pointee<P>::type value_type;
-    BOOST_STATIC_ASSERT((!boost::is_const< value_type >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< value_type >::value));
     SAKE_USING_TYPEDEF( typename alloc::traits<A>::template value_traits< value_type >, pointer );
     BOOST_STATIC_ASSERT((boost::is_same< P, pointer >::value));
     SAKE_ASSERT((p_obj));
