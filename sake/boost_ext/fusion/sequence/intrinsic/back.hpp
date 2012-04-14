@@ -54,14 +54,14 @@ struct dispatch
 {
 private:
     typedef typename boost::fusion::result_of::back< Sequence >::type back_type;
-    typedef typename boost::fusion::value_at_c<
+    typedef typename boost::fusion::result_of::value_at_c<
         Sequence,
         boost::fusion::result_of::size< Sequence >::value - 1
     >::type value_back_type;
 public:
     typedef typename boost::mpl::eval_if_c<
         boost_ext::mpl::and3<
-            boost_ext::is_lvalue_reference_to_nonconst< bck_type >,
+            boost_ext::is_lvalue_reference_to_nonconst< back_type >,
             boost::mpl::not_< boost::fusion::traits::is_view< Sequence > >,
             boost::mpl::not_< boost_ext::is_reference< value_back_type > >
         >::value,

@@ -56,7 +56,7 @@ namespace at_private
 template< class Sequence, int N >
 struct dispatch
 {
-private;
+private:
     typedef typename boost::fusion::result_of::at_c< Sequence, N >::type at_type;
     typedef typename boost::fusion::result_of::value_at_c< Sequence, N >::type value_at_type;
 public:
