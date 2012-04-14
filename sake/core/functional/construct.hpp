@@ -14,7 +14,11 @@
 
 #include <boost/config.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
@@ -24,6 +28,7 @@
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/call_traits.hpp>
+#include <sake/core/utility/default_tag.hpp>
 #include <sake/core/utility/overload.hpp>
 
 #ifndef SAKE_CONSTRUCT_PERFECT_MAX_ARITY
@@ -56,6 +61,8 @@ namespace construct_private
 
 template< class T >
 struct rv_sink;
+template< class T, class U >
+struct enable_clv;
 
 } // namespace construct_private
 
@@ -99,17 +106,17 @@ public:
     T
     operator()(U& x) const
     { return static_cast<T>(x); }
-    // rvalues to T
+    // T rvalues
     T
     operator()(rv_param_type x) const
     { return static_cast<T>(x); }
     // movable rvalues
     T
     operator()(rv_sink_type x) const
-    { return x(*this); }
+    { return x(); }
     // const lvalues + non-movable rvalues
     template< class U >
-    typename rv_sink_traits::enable_clv<T,U,T>::type
+    typename construct_private::enable_clv<T,U>::type
     operator()(U const & x) const
     { return static_cast<T>(x); }
 
@@ -184,7 +191,7 @@ construct(typename construct_private::rv_sink<T>::type x)
 { return x(functional::construct<T>()); }
 
 template< class T, class U >
-inline typename rv_sink_traits::enable_clv<T,U,T>::type
+inline typename construct_private::enable_clv<T,U>::type
 construct(U const & x)
 { return functional::construct<T>()(x); }
 
@@ -213,11 +220,23 @@ template< class T >
 struct rv_sink
 {
     typedef sake::rv_sink<
-        construct, // Visitor
-        T, // Result
-        rv_sink_predicates::not_is_same_as<T> // Pred
+        sake::functional::construct<T>, // Visitor
+        sake::default_tag, // Result
+        boost::mpl::not_< boost::is_same< T, boost::mpl::_1 > > // Pred
     > type;
 };
+
+template< class T, class U >
+struct enable_clv
+    : boost::disable_if_c<
+          boost_ext::mpl::or2<
+              boost_ext::is_same_sans_qualifiers<
+                  U, typename rv_sink_traits::rv_param<T>::type >,
+              sake::is_movable<U>
+          >::value,
+          T
+      >
+{ };
 
 } // namespace construct_private
 

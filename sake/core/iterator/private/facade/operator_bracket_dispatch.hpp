@@ -10,9 +10,17 @@
 #define SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_BRACKET_DISPATCH_HPP
 
 #include <boost/config.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/has_trivial_copy.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/utility/enable_if.hpp>
+
+#include <sake/boost_ext/mpl/or.hpp>
+#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/is_by_value_optimal.hpp>
 #include <sake/core/utility/non_copy_assignable.hpp>
@@ -64,8 +72,8 @@ struct operator_bracket_dispatch
         typedef sake::rv_sink<
             rv_sink_visitors::operator_assign< proxy const >, // Visitor
             proxy const &, // Result
-            rv_sink_predicates::not_is_same_as< Value > // Pred
-        > rv_sink_type;
+            boost::mpl::not_< boost::is_same< Value, boost::mpl::_1 > > // Pred
+        > operator_assign_rv_sink_type;
     public:
         // lvalues
         template< class T >
@@ -78,11 +86,17 @@ struct operator_bracket_dispatch
         { *m_i = x; return *this; }
         // movable rvalues
         proxy const &
-        operator=(rv_sink_type x) const
+        operator=(operator_assign_rv_sink_type x) const
         { return x(rv_sink_visitors::operator_assign< proxy const >(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
-        typename rv_sink_traits::enable_clv< Value, T, proxy const & >::type
+        typename boost::disable_if_c<
+            boost_ext::mpl::or2<
+                boost_ext::is_same_sans_qualifiers< T, rv_param_type >,
+                sake::is_movable<T>
+            >::value,
+            proxy const &
+        >::type
         operator=(T const & x) const
         { *m_i = x; return *this; }
 

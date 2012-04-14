@@ -14,15 +14,21 @@
 #include <boost/config.hpp>
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_object.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
+#include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
+#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/call_traits.hpp>
 #include <sake/core/utility/non_copy_assignable.hpp>
@@ -107,7 +113,7 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         typedef sake::rv_sink<
             rv_sink_visitors::operator_assign< proxy const >, // Visitor
             proxy const &, // Result
-            rv_sink_predicates::not_is_same_as< value_type > // Pred
+            boost::mpl::not_< boost::is_same< value_type, boost::mpl::_1 > > // Pred
         > operator_assign_rv_sink_type;
     public:
         // lvalues
@@ -125,7 +131,13 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         { return x(rv_sink_visitors::operator_assign< proxy const >(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
-        typename rv_sink_traits::enable_clv< value_type, T, proxy const & >::type
+        typename boost::disable_if_c<
+            boost_ext::mpl::or2<
+                boost_ext::is_same_sans_qualifiers< T, rv_param_type >,
+                sake::is_movable<T>
+            >::value,
+            proxy const &
+        >::type
         operator=(T const & x) const
         { *m_i = x; return *this; }
 
