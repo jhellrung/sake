@@ -29,7 +29,7 @@
 #include <sake/core/memory/alloc/traits_fwd.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/dispatch_priority_tag.hpp>
-#include <sake/core/utility/emplacer_fwd.hpp>
+#include <sake/core/utility/emplacer/traits.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
 namespace sake

@@ -1,15 +1,15 @@
 /*******************************************************************************
- * sake/core/utility/private/emplacer/base.hpp
+ * sake/core/utility/emplacer/private/base.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
 #ifndef BOOST_PP_IS_ITERATING
 
-#ifndef SAKE_CORE_UTILITY_PRIVATE_EMPLACER_BASE_HPP
-#define SAKE_CORE_UTILITY_PRIVATE_EMPLACER_BASE_HPP
+#ifndef SAKE_CORE_UTILITY_EMPLACER_PRIVATE_BASE_HPP
+#define SAKE_CORE_UTILITY_EMPLACER_PRIVATE_BASE_HPP
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -19,8 +19,8 @@
 #include <boost/preprocessor/repetition/enum_shifted.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
 
-#include <sake/core/utility/emplacer_fwd.hpp>
-#include <sake/core/utility/private/emplacer/traits.hpp>
+#include <sake/core/utility/emplacer/fwd.hpp>
+#include <sake/core/utility/emplacer/private/cast.hpp>
 
 namespace sake
 {
@@ -46,9 +46,9 @@ template< class U0, class... U >
 struct base< void ( U0, U... ) >
     : base< void ( U... ) >
 {
-    base(traits< U0 >::type y0, traits<U>::type... y)
-        : base< void ( U... ) >(traits<U>::cast(y)...),
-          m_y0(traits< U0 >::cast(y0))
+    base(emplacer_private::cast< U0 >::type y0, emplacer_private::cast<U>::type... y)
+        : base< void ( U... ) >(emplacer_private::cast<U>::apply(y)...),
+          m_y0(emplacer_private::cast< U0 >::apply(y0))
     { }
 
 protected:
@@ -59,9 +59,9 @@ protected:
     template< class _ >
     struct at_c_impl< 0, _ >
     {
-        typedef typename traits< U0 >::type type;
+        typedef typename emplacer_private::cast< U0 >::type type;
         static type apply(base const & this_)
-        { return traits< U0 >::cast(this_.m_y0); }
+        { return emplacer_private::cast< U0 >::apply(this_.m_y0); }
     };
     template< unsigned int, class > friend struct at_c_impl;
 public:
@@ -71,22 +71,22 @@ public:
     { return at_c_impl<K>::apply(*this); }
 
 private:
-    typename traits< U0 >::type m_y0;
+    typename emplacer_private::cast< U0 >::type m_y0;
 };
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
-#define traits_Un_type_yn( z, n, data ) \
-    typename emplacer_private::traits< BOOST_PP_CAT( U, n ) >::type BOOST_PP_CAT( y, n )
-#define traits_Un_cast_yn( z, n, data ) \
-    emplacer_private::traits< BOOST_PP_CAT( U, n ) >::cast( BOOST_PP_CAT( y, n ) )
+#define cast_Un_type_yn( z, n, data ) \
+    typename emplacer_private::cast< BOOST_PP_CAT( U, n ) >::type BOOST_PP_CAT( y, n )
+#define cast_Un_apply_yn( z, n, data ) \
+    emplacer_private::cast< BOOST_PP_CAT( U, n ) >::apply( BOOST_PP_CAT( y, n ) )
 
 #define BOOST_PP_ITERATION_LIMITS ( 1, SAKE_EMPLACER_MAX_ARITY )
-#define BOOST_PP_FILENAME_1       <sake/core/utility/private/emplacer/base.hpp>
+#define BOOST_PP_FILENAME_1       <sake/core/utility/emplacer/private/base.hpp>
 #include BOOST_PP_ITERATE()
 
-#undef traits_Un_type_yn
-#undef traits_Un_cast_yn
+#undef cast_Un_type_yn
+#undef cast_Un_apply_yn
 
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
@@ -94,7 +94,7 @@ private:
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_PRIVATE_EMPLACER_BASE_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_PRIVATE_BASE_HPP
 
 #else // #ifndef BOOST_PP_IS_ITERATING
 
@@ -104,16 +104,16 @@ private:
 #define U0N       BOOST_PP_ENUM_PARAMS( N, U )
 #define U1N       BOOST_PP_ENUM_SHIFTED_PARAMS( N, U )
 
-#define traits_U0N_type_y0N BOOST_PP_ENUM( N, traits_Un_type_yn, ~ )
-#define traits_U1N_cast_y1N BOOST_PP_ENUM_SHIFTED( N, traits_Un_cast_yn, ~ )
+#define cast_U0N_type_y0N  BOOST_PP_ENUM( N, cast_Un_type_yn, ~ )
+#define cast_U1N_apply_y1N BOOST_PP_ENUM_SHIFTED( N, cast_Un_apply_yn, ~ )
 
 template< class_U0N >
 struct base< void ( U0N ) >
     : base< void ( U1N ) >
 {
-    base(traits_U0N_type_y0N)
-        : base< void ( U1N ) >(traits_U1N_cast_y1N),
-          m_y0(traits< U0 >::cast(y0))
+    base(cast_U0N_type_y0N)
+        : base< void ( U1N ) >(cast_U1N_apply_y1N),
+          m_y0(emplacer_private::cast< U0 >::apply(y0))
     { }
 
 protected:
@@ -128,9 +128,9 @@ protected:
     template< class _ >
     struct at_c_impl< 0, _ >
     {
-        typedef typename traits< U0 >::type type;
+        typedef typename emplacer_private::cast< U0 >::type type;
         static type apply(base const & this_)
-        { return traits< U0 >::cast(this_.m_y0); }
+        { return emplacer_private::cast< U0 >::apply(this_.m_y0); }
     };
     template< unsigned int, class > friend struct at_c_impl;
 public:
@@ -140,11 +140,11 @@ public:
     { return at_c_impl<K>::apply(*this); }
 
 private:
-    typename traits< U0 >::type m_y0;
+    typename emplacer_private::cast< U0 >::type m_y0;
 };
 
-#undef traits_U0N_type_y0N
-#undef traits_U1N_cast_y1N
+#undef cast_U0N_type_y0N
+#undef cast_U1N_apply_y1N
 
 #undef class_U0N
 #undef U0N

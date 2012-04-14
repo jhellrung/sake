@@ -35,7 +35,7 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
-#include <sake/core/utility/emplacer_fwd.hpp>
+#include <sake/core/utility/emplacer/construct.hpp>
 #include <sake/core/utility/memberwise/swap.hpp>
 
 namespace sake

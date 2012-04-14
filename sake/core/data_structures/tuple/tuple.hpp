@@ -45,7 +45,9 @@
 #include <sake/core/data_structures/tuple/fwd.hpp>
 #include <sake/core/functional/operators/less.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/emplacer.hpp>
+#include <sake/core/utility/emplacer/assign.hpp>
+#include <sake/core/utility/emplacer/construct.hpp>
+#include <sake/core/utility/emplacer/fwd.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>

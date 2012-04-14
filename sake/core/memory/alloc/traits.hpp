@@ -44,7 +44,6 @@
 #include <sake/core/memory/alloc/traits_fwd.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/assert.hpp>
-#include <sake/core/utility/emplacer_fwd.hpp>
 #include <sake/core/utility/nullptr.hpp>
 #include <sake/core/utility/pointee.hpp>
 #include <sake/core/utility/swap.hpp>

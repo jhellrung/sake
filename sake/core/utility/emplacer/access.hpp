@@ -1,7 +1,7 @@
 /*******************************************************************************
- * sake/core/utility/emplacer_access.hpp
+ * sake/core/utility/emplacer/access.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -23,26 +23,25 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_object.hpp>
 #include <boost/type_traits/is_pod.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_void.hpp>
-#include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/range_c.hpp>
 #include <sake/boost_ext/mpl/vector.hpp>
+#include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_cv.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv.hpp>
-#include <sake/core/utility/emplacer_fwd.hpp>
+#include <sake/core/utility/emplacer/fwd.hpp>
+#include <sake/core/utility/emplacer/private/cast.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
-#include <sake/core/utility/private/emplacer/traits.hpp>
 
 namespace sake
 {
@@ -63,8 +62,7 @@ class emplacer_access
     >::type
     construct(sake::emplacer< V ( ) >)
     {
-        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
         BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         T result;
         return result;
@@ -78,8 +76,7 @@ class emplacer_access
     construct(sake::emplacer< V ( ) >)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
         BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         return T();
     }
@@ -91,12 +88,11 @@ class emplacer_access
     template< class T, class V, class U0 >
     static typename boost::enable_if_c<
         boost_ext::is_same_sans_qualifiers< T, U0 >::value,
-        typename emplacer_private::traits< U0 >::type
+        typename emplacer_private::cast< U0 >::type
     >::type
     construct(sake::emplacer< V ( U0 ) > e)
     {
-        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
         BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         BOOST_STATIC_ASSERT((
            !boost_ext::is_reference<T>::value
@@ -112,8 +108,7 @@ class emplacer_access
     >::type
     construct(sake::emplacer< V ( U0 ) > e)
     {
-        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
         BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         BOOST_STATIC_ASSERT((
            !boost_ext::is_reference<T>::value
@@ -144,8 +139,7 @@ class emplacer_access
         boost_ext::mpl::vector< boost::mpl::integral_c< unsigned int, N >... >)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
         BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         new(p) T(e.template at_c<N>()...);
     }
@@ -165,8 +159,7 @@ class emplacer_access
         boost_ext::mpl::vector< boost::mpl::integral_c< unsigned int, N >... >)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
         BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         return T(e.template at_c<N>()...);
     }
@@ -176,7 +169,7 @@ class emplacer_access
 #define e_at_c_n( z, n, data ) e.template at_c<n>()
 
 #define BOOST_PP_ITERATION_LIMITS ( 0, SAKE_EMPLACER_MAX_ARITY )
-#define BOOST_PP_FILENAME_1       <sake/core/utility/emplacer_access.hpp>
+#define BOOST_PP_FILENAME_1       <sake/core/utility/emplacer/access.hpp>
 #include BOOST_PP_ITERATE()
 
 #undef e_at_c_n
@@ -291,8 +284,7 @@ class emplacer_access
     construct(void* const p, sake::emplacer< V ( U0N ) > e)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
         BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         new(p) T(e_at_c_0N);
     }
@@ -304,8 +296,7 @@ class emplacer_access
     construct(sake::emplacer< V ( U0N ) > e)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_const<T>::value));
-        BOOST_STATIC_ASSERT(!(boost::is_volatile<T>::value));
+        BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
         BOOST_STATIC_ASSERT((boost::is_void<V>::value || boost::is_same<T,V>::value));
         return T(e_at_c_0N);
     }

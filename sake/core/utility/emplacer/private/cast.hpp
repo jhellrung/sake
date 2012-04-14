@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/utility/private/emplacer/traits.hpp
+ * sake/core/utility/emplacer/private/cast.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_PRIVATE_EMPLACER_TRAITS_HPP
-#define SAKE_CORE_UTILITY_PRIVATE_EMPLACER_TRAITS_HPP
+#ifndef SAKE_CORE_UTILITY_EMPLACER_PRIVATE_CAST_HPP
+#define SAKE_CORE_UTILITY_EMPLACER_PRIVATE_CAST_HPP
 
 #include <boost/static_assert.hpp>
 
@@ -25,26 +25,26 @@ namespace emplacer_private
 {
 
 template< class U, bool = sake::is_by_value_optimal<U>::value >
-struct traits;
+struct cast;
 
 template< class U >
-struct traits< U, false >
+struct cast< U, false >
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_reference<U>::value));
     typedef typename boost_ext::add_reference_add_const<
         typename boost_ext::add_rvalue_reference<U>::type
     >::type type;
     template< class V >
-    static type cast(V& x)
+    static type apply(V& x)
     { return static_cast< type >(x); }
 };
 
 template< class U >
-struct traits< U, true >
+struct cast< U, true >
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference<U>::value));
     typedef typename boost::remove_cv<U>::type type;
-    static type cast(type x)
+    static type apply(type x)
     { return x; }
 };
 
@@ -52,4 +52,4 @@ struct traits< U, true >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_PRIVATE_EMPLACER_TRAITS_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_PRIVATE_CAST_HPP
