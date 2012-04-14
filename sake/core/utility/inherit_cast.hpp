@@ -18,6 +18,7 @@
 
 #include <boost/static_assert.hpp>
 
+#include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/propagate_cv.hpp>
 
 #include <sake/core/utility/address_of.hpp>
