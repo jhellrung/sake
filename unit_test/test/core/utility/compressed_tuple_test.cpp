@@ -8,7 +8,7 @@
 
 #include <boost/static_assert.hpp>
 
-#include <sake/core/utility/compressed_tuple.hpp>
+#include <sake/core/utility/compressed_tuple/compressed_tuple.hpp>
 
 #include <sake/test/environment.hpp>
 #include <sake/test/test.hpp>

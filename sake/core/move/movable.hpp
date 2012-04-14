@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/move/movable.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -11,13 +11,12 @@
  * SAKE_MOVABLE_COPYABLE_DEFINE_COPY_ASSIGN_FROM_SWAP( T )
  * SAKE_OPTIMAL_MOVABLE_COPYABLE( T )
  * SAKE_FRIENDLY_MOVABLE_COPYABLE( T )
- * SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C( T, c )
- * SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C( T, c )
- * SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE[_R]( [r,] T, U_seq )
- * SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_MOVABLE[_R]( [r,] T, U_seq )
+ * SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE[_R]( [r,] typenameT, base_seq, member_type_name_seq )
+ * SAKE_FRIENDLY_MOVABLE_COPYABLE_MEMBERWISE[_R]( [r,] typenameT, base_seq, member_type_name_seq )
  *
- * Note: For *_IF_* only, if T is a dependent type, it should be prefixed with
- * the "typename" keyword.
+ * Note: For the MEMBERWISE macros, typenameT should be the name of the
+ * enclosing class prefixed with the "typename" keyword if the class is a
+ * dependent type.
  *
  * These macros provide the move emulation machinery necessary for a class to be
  * movable in the absence of true rvalue references.  These macros can take the
@@ -27,47 +26,41 @@
  * implement efficient moving for the enclosing class, regardless of whether
  * BOOST_NO_RVALUE_REFERENCES is defined.
  *
- * All macros require the enclosing class to define a move constructor and, if
- * applicable, a move assignment operator, both taking parameters of type
- * this_rvalue_param_type:
+ * All the macros above *except* the *_MEMBERWISE macros require the enclosing
+ * class to define a move constructor and, if applicable, a move assignment
+ * operator, both taking parameters of type this_rvalue_param_type:
  *
  *     T(this_rvalue_param_type other) : ... { ... }
  *     T& operator=(this_rvalue_param_type other) { ... }
  *
- * When using the *_IF_* macros, if the given condition is false,
- * this_rvalue_param_type is a typedef for some dummy type, effectively
- * disabling the move constructor and move assignment operators defined in the
- * enclosing class and thus always using copy construction and copy assignment.
- * For these macros only, if the enclosing class T is a dependent type, then one
- * must prefix the enclosing class with the "typename" keyword.
- *
  * SAKE_BASIC_MOVABLE_COPYABLE allows a class to be move-constructible and
  * explicitly move-assignable, but it does not provide the machinery to move
- * assign from rvalues.  This is ideal for base classes which typically wouldn't
- * need their assignment operator to capture rvalues anyway.  The remaining
- * macros provide the machinery to move assign from rvalues.
+ * assign from rvalue expressions.  This is ideal for base classes which
+ * typically wouldn't need their assignment operator to capture rvalues anyway.
+ * The remaining macros provide the machinery to move assign from rvalue
+ * expressions.
  *
- * The SAKE_MOVABLE_COPYABLE_DEFINE_COPY_ASSIGN_FROM_* macros define copy
+ * The SAKE_MOVABLE_COPYABLE_DEFINE_COPY_ASSIGN_FROM macros define copy
  * assignment automatically in terms of either the well-known copy-and-swap
  * idiom or the copy-and-move idiom, so these require the least amount of
  * additional work to use.  The remaining macros require some additional
  * definitions to define copy assignment.
  *
- * The OPTIMAL macros require the enclosing class to define a copy assignment
- * operator.  This should take a parameter of type this_copy_assign_param_type:
+ * The OPTIMAL_MOVABLE_COPYABLE macro requires the enclosing class to define a
+ * copy assignment operator taking a parameter of type
+ * this_copy_assign_param_type:
  *     T& operator=(this_copy_assign_param_type other)
  *     { ... }
  *
- * The FRIENDLY macros require the enclosing class to define a member function
- * copy_assign_impl with the signature
+ * The FRIENDLY_MOVABLE_COPYABLE macro requires the enclosing class to define a
+ * copy_assign_impl member function with signature
  *     T& copy_assign_impl(T const &)
  * The copy assignment operator will automatically be implemented either in
  * terms of the move assignment operator or copy_assign_impl.
  *
- * The *_IF_C macros enable move emulation if the given condition is true.  If
- * false, the move constructor and move assignment operator will be disabled.
- * The *_IF_MOVABLE macros enable move emulation if at least one of the types in
- * the Boost.Preprocessor seq U_seq is movable.
+ * The MEMBERWISE macros define a memberwise copy constructor, move constructor,
+ * copy assignment operator, and move assignment operator, thus lessening the
+ * amount of boilerplate in the common case.
  *
  * If BOOST_NO_RVALUE_REFERENCES is not defined, then the OPTIMAL and FRIENDLY
  * versions are functionally identical.  However, if BOOST_NO_RVALUE_REFERENCES
@@ -76,8 +69,8 @@
  * OPTIMAL declares operator=(T&) to force T-rvalues to bind to the move
  * assignment operator, which enables move emulation to to be as efficient as
  * using true rvalue references (hence, optimal).  However, a class enclosing an
- * OPTIMAL (either deriving from or containing as a member object) movable type
- * will implicitly-define a copy assignment operator taking a
+ * OPTIMAL movable type (either deriving from or containing as a member object)
+ * will implicitly define a copy assignment operator taking a
  * reference-to-non-const, which is almost always undesirable (the enclosing
  * class won't be ConstCopyAssignable without explicitly defining the copy
  * assignment operator).  This could pose problems when mixing with
@@ -85,7 +78,7 @@
  * elision to efficiently capture rvalues.  This avoids the problem above with
  * OPTIMAL relating to enclosing classes, but now causes copy-assigning from
  * lvalues to be suboptimal (in general), since member objects would be
- * copied-and-moved or copied-and-copied, rather than just copied once.
+ * copied-and-moved, rather than simply copied.
  *
  * Since both techniques have drawbacks, both mechanisms are provided.
  ******************************************************************************/
@@ -95,6 +88,7 @@
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
@@ -103,50 +97,53 @@
 
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
+#include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
+#include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
+#include <sake/core/utility/memberwise/copy_assign.hpp>
+#include <sake/core/utility/memberwise/copy_ctor.hpp>
+#include <sake/core/utility/memberwise/move_assign.hpp>
+#include <sake/core/utility/memberwise/move_ctor.hpp>
 #include <sake/core/utility/non_copyable.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
-#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE( T, U_seq ) \
-    SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE_R( BOOST_PP_DEDUCE_R(), T, U_seq )
-#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_MOVABLE( T, U_seq ) \
-    SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_MOVABLE_R( BOOST_PP_DEDUCE_R(), T, U_seq )
+#define SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE( \
+    typenameT, base_seq, member_type_name_seq ) \
+    SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE_R( BOOST_PP_DEDUCE_R(), \
+        typenameT, base_seq, member_type_name_seq )
+#define SAKE_FRIENDLY_MOVABLE_COPYABLE_MEMBERWISE( \
+    typenameT, base_seq, member_type_name_seq ) \
+    SAKE_FRIENDLY_MOVABLE_COPYABLE_MEMBERWISE_R( BOOST_PP_DEDUCE_R(), \
+        typenameT, base_seq, member_type_name_seq )
 
-namespace sake
-{
-
-namespace movable_private
-{
-
-template< class T, int > struct disabler;
-
-template< class T >
-struct non_movable_traits
-{
-    typedef disabler<T,0> rv_conv_type;
-    typedef disabler<T,1> this_rvalue_param_type;
-    typedef T const &     this_copy_assign_param_type;
-    typedef disabler<T,3> enable_optimal_move_assign_param_type;
-    typedef disabler<T,4> enable_friendly_move_assign_param_type;
-    typedef T const &     disable_friendly_move_assign_param_type;
-};
-
-} // namespace movable_private
-
-} // namespace sake
+#define SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE_R( r, \
+    typenameT, base_seq, member_type_name_seq ) \
+    SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE_impl( r, \
+        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( typenameT ) BOOST_PP_EMPTY, \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( typenameT ), \
+        base_seq, \
+        SAKE_MEMBERWISE_seq_transform_tuple_elem( r, 0, member_type_name_seq ), \
+        SAKE_MEMBERWISE_seq_transform_tuple_elem( r, 1, member_type_name_seq ) \
+    )
+#define SAKE_FRIENDLY_MOVABLE_COPYABLE_MEMBERWISE_R( r, \
+    typenameT, base_seq, member_type_name_seq ) \
+    SAKE_FRIENDLY_MOVABLE_COPYABLE_MEMBERWISE_impl( r, \
+        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( typenameT ) BOOST_PP_EMPTY, \
+        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( typenameT ), \
+        base_seq, \
+        SAKE_MEMBERWISE_seq_transform_tuple_elem( r, 0, member_type_name_seq ), \
+        SAKE_MEMBERWISE_seq_transform_tuple_elem( r, 1, member_type_name_seq ) \
+    )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
 #define SAKE_BASIC_MOVABLE_COPYABLE( T ) \
-    private: \
-    typedef T&& this_rvalue_param_type; \
-    public:
+    typedef T&& this_rvalue_param_type;
 
 #define SAKE_MOVABLE_NONCOPYABLE( T ) \
-    private: \
     typedef T&& this_rvalue_param_type; \
     SAKE_NONCOPYABLE( T )
 
@@ -161,7 +158,6 @@ struct non_movable_traits
     { T temp(other); this->swap(temp); return *this; }
 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE( T ) \
-    private: \
     typedef T const & this_copy_assign_param_type; \
     SAKE_BASIC_MOVABLE_COPYABLE( T )
 
@@ -170,82 +166,32 @@ struct non_movable_traits
     T& operator=(T const & other) \
     { return copy_assign_impl(other); }
 
-#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C( T, c ) \
-    SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( \
-        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) BOOST_PP_EMPTY, \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
-        c \
-    )
-#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( typename, T, c ) \
-    private: \
-    typedef ::sake::movable_private::traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_rvalue_param_type ); \
-    typedef T const & this_copy_assign_param_type; \
-    public:
+#define SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE_impl( r, \
+    typename, T, base_seq, member_type_seq, member_name_seq ) \
+    SAKE_OPTIMAL_MOVABLE_COPYABLE( T ) \
+    SAKE_MEMBERWISE_COPY_CTOR_R( r, T, base_seq, member_name_seq ) \
+    SAKE_MEMBERWISE_MOVE_CTOR_R( r, T, base_seq, member_name_seq ) \
+    SAKE_MEMBERWISE_COPY_ASSIGN_R( r, T, base_seq, member_name_seq ) \
+    SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, T, base_seq, member_name_seq )
 
-#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C( T, c ) \
-    SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( \
-        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) BOOST_PP_EMPTY, \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
-        c \
-    )
-#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( typename, T, c ) \
-    private: \
-    typedef ::sake::movable_private::traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_rvalue_param_type ); \
-    public: \
-    T& operator=(T const & other) \
-    { return copy_assign_impl(other); }
-
-#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE_R( r, T, U_seq ) \
-    SAKE_OPTIMAL_MOVABLE_COPYABLE( \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) )
-
-#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_MOVABLE_R( r, T, U_seq ) \
-    SAKE_FRIENDLY_MOVABLE_COPYABLE( \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ) )
-
-namespace sake
-{
-
-namespace movable_private
-{
-
-template< class T, bool c >
-struct traits;
-
-template< class T >
-struct traits< T, false >
-    : non_movable_traits<T>
-{ };
-
-template< class T >
-struct traits< T, true >
-{
-    typedef T&& this_rvalue_param_type;
-};
-
-} // namespace movable_private
-
-} // namespace sake
+#define SAKE_FRIENDLY_MOVABLE_COPYABLE_MEMBERWISE_impl( r, \
+    typename, T, base_seq, member_type_seq, member_name_seq ) \
+    SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE_impl( r, \
+        typename, T, base_seq, member_type_seq, member_name_seq )
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 #define SAKE_BASIC_MOVABLE_COPYABLE( T ) \
-    private: \
     typedef ::boost::rv<T>& this_rvalue_param_type; \
-    public: \
     operator ::boost::rv<T> & () \
-    { return *static_cast< ::boost::rv<T>* >(this); } \
+    { return *static_cast< ::boost::rv<T> * >(this); } \
     operator ::boost::rv<T> const & () const \
     { return *static_cast< ::boost::rv<T> const * >(this); } \
 
 #define SAKE_MOVABLE_NONCOPYABLE( T ) \
-    private: \
     typedef ::boost::rv<T>& this_rvalue_param_type; \
-    public: \
     operator ::boost::rv<T>& () \
-    { return *static_cast< ::boost::rv<T>* >(this); } \
+    { return *static_cast< ::boost::rv<T> * >(this); } \
     SAKE_NONCOPYABLE( T )
 
 #define SAKE_MOVABLE_COPYABLE_DEFINE_COPY_ASSIGN_FROM_MOVE( T ) \
@@ -257,7 +203,6 @@ struct traits< T, true >
     { this->swap(other); return *this; }
 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE( T ) \
-    private: \
     typedef ::boost::rv<T> const & this_copy_assign_param_type; \
     SAKE_BASIC_MOVABLE_COPYABLE( T ) \
     T& operator=(T& other) \
@@ -268,62 +213,69 @@ struct traits< T, true >
     T& operator=(T other) \
     { return operator=(::sake::move(other)); }
 
-#define SAKE_MOVABLE_COPYABLE_IF_C_common( typename, T, c ) \
-    typedef typename() _sake_movable_traits::rv_conv_type _sake_rv_conv_type; \
-    SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_rvalue_param_type ); \
-    public: \
-    operator _sake_rv_conv_type& () \
-    { return *static_cast< _sake_rv_conv_type* >(this); } \
+#define SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE_impl( r, \
+    typename, T, base_seq, member_type_seq, member_name_seq ) \
+    static bool const _sake_movable_memberwise_enable = \
+        SAKE_MOVABLE_memberwise_enable( r, \
+            SAKE_BOOST_EXT_PP_SEQ_JOIN( ( base_seq ) ( member_type_seq ) ) ); \
+    typedef ::sake::movable_private::optimal_memberwise_traits< \
+        T, _sake_movable_memberwise_enable \
+    > _sake_movable_memberwise_traits; \
+    typedef typename() _sake_movable_memberwise_traits::rv_conv_type _sake_rv_conv_type; \
+    typedef typename() _sake_movable_memberwise_traits::enable_move_assign_param_type _sake_enable_move_assign_param_type; \
+    SAKE_USING_TYPEDEF( typename() _sake_movable_memberwise_traits, this_rvalue_param_type ); \
+    SAKE_USING_TYPEDEF( typename() _sake_movable_memberwise_traits, this_copy_assign_param_type ); \
+    operator _sake_rv_conv_type & () \
+    { return *static_cast< _sake_rv_conv_type * >(this); } \
     operator _sake_rv_conv_type const & () const \
     { return *static_cast< _sake_rv_conv_type const * >(this); } \
- 
-#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C( T, c ) \
-    SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( \
-        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) BOOST_PP_EMPTY, \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
-        c \
-    )
-#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C_impl( typename, T, c ) \
-    private: \
-    typedef ::sake::movable_private::optimal_traits< T, c > _sake_movable_traits; \
-    SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_copy_assign_param_type ); \
-    typedef typename() _sake_movable_traits::enable_optimal_move_assign_param_type \
-        _sake_enable_move_assign_param_type; \
-    SAKE_MOVABLE_COPYABLE_IF_C_common( typename, T, c ) \
+    SAKE_MEMBERWISE_MOVE_CTOR_R( r, T, base_seq, member_name_seq ) \
     T& operator=(_sake_enable_move_assign_param_type other) \
-    { return operator=(const_cast< T const & >(other)); }
+    { return operator=(const_cast< T const & >(other)); } \
+    SAKE_MEMBERWISE_COPY_ASSIGN_R( r, T, base_seq, member_name_seq ) \
+    SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, T, base_seq, member_name_seq )
 
-#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C( T, c ) \
-    SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( \
-        SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( T ) BOOST_PP_EMPTY, \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
-        c \
-    )
-#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C_impl( typename, T, c ) \
-    private: \
-    typedef ::sake::boost_ext::movable_private::friendly_traits< T, c > _sake_movable_traits; \
-    typedef typename() _sake_movable_traits::enable_friendly_move_assign_param_type \
-        _sake_enable_move_assign_param_type; \
-    typedef typename() _sake_movable_traits::disable_friendly_move_assign_param_type \
-        _sake_disable_move_assign_param_type; \
-    SAKE_MOVABLE_COPYABLE_IF_C_common( typename, T, c ) \
-    T& operator=(_sake_enable_move_assign_param_type other) \
-    { return operator=(::sake::boost_ext::move(other)); } \
-    T& operator=(_sake_disable_move_assign_param_type other) \
-    { return copy_assign_impl(other); }
+#define SAKE_FRIENDLY_MOVABLE_COPYABLE_MEMBERWISE_impl( r, \
+    typename, T, base_seq, member_type_seq, member_name_seq ) \
+    static bool const _sake_movable_memberwise_enable = \
+        SAKE_MOVABLE_memberwise_enable( r, \
+            SAKE_BOOST_EXT_PP_SEQ_JOIN( ( base_seq ) ( member_type_seq ) ) ); \
+    typedef ::sake::movable_private::friendly_memberwise_traits< \
+        T, _sake_movable_memberwise_enable \
+    > _sake_movable_memberwise_traits; \
+    typedef typename() _sake_movable_memberwise_traits::rv_conv_type _sake_rv_conv_type; \
+    typedef typename() _sake_movable_memberwise_traits::copy_assign_param_type _sake_copy_assign_param_type; \
+    SAKE_USING_TYPEDEF( typename() _sake_movable_memberwise_traits, this_rvalue_param_type ); \
+    SAKE_USING_TYPEDEF( typename() _sake_movable_memberwise_traits, this_copy_assign_param_type ); \
+    operator _sake_rv_conv_type & () \
+    { return *static_cast< _sake_rv_conv_type * >(this); } \
+    operator _sake_rv_conv_type const & () const \
+    { return *static_cast< _sake_rv_conv_type const * >(this); } \
+    SAKE_MEMBERWISE_MOVE_CTOR_R( r, T, base_seq, member_name_seq ) \
+    T& operator=(_sake_copy_assign_param_type other) \
+    { return operator=(::sake::move(other)); } \
+    SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, T, base_seq, member_name_seq )
 
-#define SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE_R( r, T, U_seq ) \
-    SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C( T, SAKE_MOVABLE_any_movable( r, U_seq ) )
-
-#define SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_MOVABLE_R( r, T, U_seq ) \
-    SAKE_FRIENDLY_MOVABLE_COPYABLE_IF_C( T, SAKE_MOVABLE_any_movable( r, U_seq ) )
-
-#define SAKE_MOVABLE_any_movable( r, U_seq ) \
-    ( ::sake::boost_ext::mpl::BOOST_PP_CAT( or, BOOST_PP_SEQ_SIZE( U_seq ) ) < \
-        BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_MOVABLE_comma_is_movable, ~, U_seq ) \
-    >::value )
+#define SAKE_MOVABLE_memberwise_enable( r, type_seq ) \
+    BOOST_PP_CAT( \
+        SAKE_MOVABLE_memberwise_enable_, \
+        SAKE_BOOST_EXT_PP_SEQ_IS_NIL( type_seq ) \
+    ) ( r, type_seq )
+#define SAKE_MOVABLE_memberwise_enable_0( r, type_seq ) \
+    BOOST_PP_CAT( \
+        SAKE_MOVABLE_memberwise_enable_0, \
+        BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( type_seq ) ) \
+    ) ( r, type_seq )
+#define SAKE_MOVABLE_memberwise_enable_00( r, type_seq ) \
+    ::sake::boost_ext::mpl::BOOST_PP_CAT( or, BOOST_PP_SEQ_SIZE( type_seq ) ) < \
+        BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_MOVABLE_comma_is_movable, ~, type_seq ) \
+    >::value
 #define SAKE_MOVABLE_comma_is_movable( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) ::sake::is_movable< elem >
+#define SAKE_MOVABLE_memberwise_enable_01( r, type_seq ) \
+    ::sake::is_movable< SAKE_BOOST_EXT_PP_TUPLE_REM1 type_seq >::value
+#define SAKE_MOVABLE_memberwise_enable_1( r, type_seq ) \
+    false
 
 namespace sake
 {
@@ -331,38 +283,45 @@ namespace sake
 namespace movable_private
 {
 
-template< class T, bool c >
-struct optimal_traits;
+template< class T, int > struct disabler;
+
+template< class T, bool Enable >
+struct optimal_memberwise_traits;
+template< class T, bool Enable >
+struct friendly_memberwise_traits;
 
 template< class T >
-struct optimal_traits< T, false >
-    : non_movable_traits<T>
-{ };
-
-template< class T >
-struct optimal_traits< T, true >
+struct optimal_memberwise_traits< T, true >
 {
     typedef boost::rv<T>         rv_conv_type;
     typedef boost::rv<T>&        this_rvalue_param_type;
     typedef boost::rv<T> const & this_copy_assign_param_type;
-    typedef T&                   enable_optimal_move_assign_param_type;
+    typedef T&                   enable_move_assign_param_type;
 };
 
-template< class T, bool c >
-struct friendly_traits;
+template< class T >
+struct optimal_memberwise_traits< T, false >
+{
+    typedef disabler<T,0> rv_conv_type;
+    typedef disabler<T,1> this_rvalue_param_type;
+    typedef disabler<T,2> this_copy_assign_param_type;
+    typedef disabler<T,3> enable_move_assign_param_type;
+};
 
 template< class T >
-struct friendly_traits< T, false >
-    : non_movable_traits<T>
-{ };
-
-template< class T >
-struct friendly_traits< T, true >
+struct friendly_memberwise_traits< T, true >
 {
     typedef boost::rv<T>  rv_conv_type;
     typedef boost::rv<T>& this_rvalue_param_type;
-    typedef T             enable_friendly_move_assign_param_type;
-    typedef disabler<T,0> disable_friendly_move_assign_param_type;
+    typedef T             copy_assign_param_type;
+};
+
+template< class T >
+struct friendly_memberwise_traits< T, false >
+{
+    typedef disabler<T,0> rv_conv_type;
+    typedef disabler<T,1> this_rvalue_param_type;
+    typedef disabler<T,2> copy_assign_param_type;
 };
 
 } // namespace movable_private

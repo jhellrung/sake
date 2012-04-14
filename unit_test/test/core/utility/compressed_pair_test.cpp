@@ -8,7 +8,7 @@
 
 #include <boost/static_assert.hpp>
 
-#include <sake/core/utility/compressed_pair.hpp>
+#include <sake/core/utility/compressed_pair/compressed_pair.hpp>
 
 #include <sake/test/environment.hpp>
 #include <sake/test/test.hpp>

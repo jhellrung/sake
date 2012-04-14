@@ -50,6 +50,7 @@
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/math/inv_fwd.hpp>
 #include <sake/core/math/inverse.hpp>
+#include <sake/core/math/inverse_fwd.hpp>
 #include <sake/core/math/private/inv_common.hpp>
 #include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/move/forward.hpp>

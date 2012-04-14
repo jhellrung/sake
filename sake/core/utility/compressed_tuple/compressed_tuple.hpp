@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/compressed_tuple.hpp
+ * sake/core/utility/compressed_tuple/compressed_tuple.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -9,11 +9,6 @@
  *
  * swap(compressed_tuple< T0, ... >& x, compressed_tuple< U0, ... >& y) -> void
  * hash_value(compressed_tuple< T0, ... > const & x) -> std::size_t
- *
- * operator==(compressed_tuple< T0, ... > const & x, compressed_tuple< U0, ... > const & y) -> ...
- * operator!=(compressed_tuple< T0, ... > const & x, compressed_tuple< U0, ... > const & y) -> ...
- * operator<(compressed_tuple< T0, ... > const & x, compressed_tuple< U0, ... > const & y) -> ...
- * cmp(compressed_tuple< T0, ... > const & x, compressed_tuple< U0, ... > const & y) -> ...
  *
  * This takes advantage of EBO, similar to compressed_pair.  If at least one
  * type is non-empty, all empty types will contribute nothing to
@@ -50,14 +45,10 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_empty.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/fusion/adapted/compressed_tuple.hpp>
-#include <sake/boost_ext/fusion/algorithm/query/compare.hpp>
-#include <sake/boost_ext/fusion/algorithm/query/equal.hpp>
-#include <sake/boost_ext/fusion/algorithm/query/not_equal.hpp>
 #include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
 #include <sake/boost_ext/fusion/sequence/intrinsic/front.hpp>
 #include <sake/boost_ext/mpl/advance_c.hpp>
@@ -68,21 +59,18 @@
 #include <sake/boost_ext/mpl/vector.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
+#include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/propagate_const.hpp>
-#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/data_structures/tuple/tuple.hpp>
-#include <sake/core/functional/operators/less.hpp>
-#include <sake/core/math/cmp.hpp>
-#include <sake/core/math/zero.hpp>
 #include <sake/core/math/static_clamp.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/base_member.hpp>
-#include <sake/core/utility/compressed_pair.hpp>
-#include <sake/core/utility/compressed_tuple_fwd.hpp>
-#include <sake/core/utility/define_natural/mem_fun.hpp>
+#include <sake/core/utility/compressed_pair/compressed_pair.hpp>
+#include <sake/core/utility/compressed_tuple/fwd.hpp>
 #include <sake/core/utility/emplacer.hpp>
+#include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
 #include <sake/core/utility/swap.hpp>
 
@@ -106,7 +94,7 @@ struct compressed_tuple<>
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         compressed_tuple,
         ( default_ctor )
         ( swap )
@@ -129,74 +117,6 @@ struct compressed_tuple<>
     operator=(Sequence const &)
     { return *this; }
 };
-
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-#define class_T0N class... T
-#define class_U0N class... U
-#define T0N       T...
-#define U0N       U...
-#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-#define class_T0N BOOST_PP_ENUM_PARAMS( SAKE_COMPRESSED_TUPLE_MAX_SIZE, class T )
-#define class_U0N BOOST_PP_ENUM_PARAMS( SAKE_COMPRESSED_TUPLE_MAX_SIZE, class U )
-#define T0N       BOOST_PP_ENUM_PARAMS( SAKE_COMPRESSED_TUPLE_MAX_SIZE, T )
-#define U0N       BOOST_PP_ENUM_PARAMS( SAKE_COMPRESSED_TUPLE_MAX_SIZE, U )
-#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-
-/*******************************************************************************
- * swap(compressed_tuple< T0, ... >& x, compressed_tuple< U0, ... >& y) -> void
- * hash_value(compressed_tuple< T0, ... > const & x) -> std::size_t
- ******************************************************************************/
-
-template< class_T0N >
-inline void
-swap(sake::compressed_tuple< T0N >& x0, sake::compressed_tuple< T0N >& x1)
-{ x0.swap(x1); }
-
-template< class_T0N >
-inline std::size_t
-hash_value(sake::compressed_tuple< T0N > const & x)
-{ return x.hash_value(); }
-
-/*******************************************************************************
- * operator==(compressed_tuple< T0, ... > const & x, compressed_tuple< U0, ... > const & y) -> ...
- * operator!=(compressed_tuple< T0, ... > const & x, compressed_tuple< U0, ... > const & y) -> ...
- * operator<(compressed_tuple< T0, ... > const & x, compressed_tuple< U0, ... > const & y) -> ...
- * cmp(compressed_tuple< T0, ... > const & x, compressed_tuple< U0, ... > const & y) -> ...
- ******************************************************************************/
-
-template< class_T0N, class_U0N >
-inline typename boost_ext::fusion::result_of::equal<
-    sake::compressed_tuple< T0N >, sake::compressed_tuple< U0N >
->::type
-operator==(sake::compressed_tuple< T0N > const & x, sake::compressed_tuple< U0N > const & y)
-{ return boost_ext::fusion::equal(x, y); }
-
-template< class_T0N, class_U0N >
-inline typename boost_ext::fusion::result_of::not_equal<
-    sake::compressed_tuple< T0N >, sake::compressed_tuple< U0N >
->::type
-operator!=(sake::compressed_tuple< T0N > const & x, sake::compressed_tuple< U0N > const & y)
-{ return boost_ext::fusion::not_equal(x, y); }
-
-template< class_T0N, class_U0N >
-inline typename boost_ext::fusion::result_of::compare<
-    sake::compressed_tuple< T0N >, sake::compressed_tuple< U0N >
->::type
-cmp(sake::compressed_tuple< T0N > const & x, sake::compressed_tuple< U0N > const & y)
-{ return boost_ext::fusion::compare(x, y); }
-
-template< class_T0N, class_U0N >
-inline typename operators::result_of::less<
-    typename result_of::cmp< sake::compressed_tuple< T0N > const &, sake::compressed_tuple< U0N > const & >::type,
-    sake::zero_t
->::type
-operator<(sake::compressed_tuple< T0N > const & x, sake::compressed_tuple< U0N > const & y)
-{ return sake::cmp(x,y) < sake::zero; }
-
-#undef class_T0N
-#undef class_U0N
-#undef T0N
-#undef U0N
 
 /*******************************************************************************
  * struct compressed_tuple< T0, ... >
@@ -250,7 +170,7 @@ struct at_c_dispatch;
     )
 
 #define BOOST_PP_ITERATION_LIMITS ( 1, SAKE_COMPRESSED_TUPLE_MAX_SIZE )
-#define BOOST_PP_FILENAME_1       <sake/core/utility/compressed_tuple.hpp>
+#define BOOST_PP_FILENAME_1       <sake/core/utility/compressed_tuple/compressed_tuple.hpp>
 #include BOOST_PP_ITERATE()
 
 #undef fwd2_ref_Un_xn
@@ -285,7 +205,7 @@ struct storage< boost::mpl::vector2< T0, T1 >, _ >
 private:
     typedef sake::compressed_pair< T0, T1 > m_pair_type;
 public:
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         storage,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         BOOST_PP_SEQ_NIL, (( m_pair_type, m_pair ))
@@ -460,7 +380,7 @@ struct compressed_tuple< T0N >
 private:
     typedef sake::base_member< T0 > base_member_;
 public:
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         compressed_tuple,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         ( base_member_ ), BOOST_PP_SEQ_NIL
@@ -470,9 +390,9 @@ public:
 
     template< class U0 >
     explicit compressed_tuple(U0&& x0,
-        typename boost::disable_if_c< boost::is_base_of<
-            compressed_tuple, typename boost_ext::remove_qualifiers< U0 >::type
-        >::value >::type* = 0)
+        typename boost::disable_if_c<
+            boost_ext::is_base_of_sans_qualifiers< compressed_tuple, U0 >::value
+        >::type* = 0)
         : base_member_(sake::forward< U0 >(x0))
     { }
 
@@ -480,17 +400,17 @@ public:
 
     template< class U0 >
     explicit compressed_tuple(U0& x0,
-        typename boost::disable_if_c< boost::is_base_of<
-            compressed_tuple, typename boost_ext::remove_qualifiers< U0 >::type
-        >::value >::type* = 0)
+        typename boost::disable_if_c<
+            boost_ext::is_base_of_sans_qualifiers< compressed_tuple, U0 >::value
+        >::type* = 0)
         : base_member_(sake::forward< U0 >(x0))
     { }
 
     template< class U0 >
     explicit compressed_tuple(U0 const & x0,
-        typename boost::disable_if_c< boost::is_base_of<
-            compressed_tuple, typename boost_ext::remove_qualifiers< U0 >::type
-        >::value >::type* = 0)
+        typename boost::disable_if_c<
+            boost_ext::is_base_of_sans_qualifiers< compressed_tuple, U0 >::value
+        >::type* = 0)
         : base_member_(sake::forward< U0 >(x0))
     { }
 
@@ -501,7 +421,7 @@ public:
 private:
     typedef private_::storage< values_type > m_storage_type;
 public:
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         compressed_tuple,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         BOOST_PP_SEQ_NIL, (( m_storage_type, m_storage ))
@@ -642,17 +562,21 @@ public:
     at() const
     { return at_c< I::value >(); }
 
-    void
-    swap(compressed_tuple& other)
+    void swap(compressed_tuple& other)
     { BOOST_PP_REPEAT( N, swap_at_c_n_other_at_c_n, ~ ); }
+    inline friend
+    void swap(compressed_tuple& x, compressed_tuple& y)
+    { x.swap(y); }
 
-    std::size_t
-    hash_value() const
+    std::size_t hash_value() const
     {
         std::size_t x = 0;
         BOOST_PP_REPEAT( N, hash_combine_x_at_c_n, ~ )
         return x;
     }
+    inline friend
+    std::size_t hash_value(compressed_tuple const & x)
+    { return x.hash_value(); }
 
 private:
 #if N != 1
@@ -678,7 +602,7 @@ struct storage< boost::mpl::BOOST_PP_CAT( vector, N )< T0N >, false >
 private:
     typedef sake::tuple< T0N > tuple_;
 public:
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( tuple_ ), BOOST_PP_SEQ_NIL
@@ -773,7 +697,7 @@ private:
     > m_storage_type;
 public:
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         storage,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         BOOST_PP_SEQ_NIL, (( m_storage_type, m_storage ))

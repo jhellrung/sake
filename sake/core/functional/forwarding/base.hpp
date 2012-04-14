@@ -26,7 +26,7 @@
 #include <sake/core/functional/forwarding/nullary_base.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/define_natural/mem_fun.hpp>
+#include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
@@ -45,8 +45,6 @@ protected:
     template< class Signature >
     struct enable;
 public:
-
-    SAKE_BASIC_MOVABLE_COPYABLE( base )
 
     template< class Signature >
     struct result;
@@ -115,7 +113,9 @@ protected:
     SAKE_USING_TYPEDEF( typename nullary_base_, chained_base_type );
     using nullary_base_::derived;
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_BASIC_MOVABLE_COPYABLE( base )
+
+    SAKE_MEMBERWISE_MEM_FUN(
         base,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         ( nullary_base_ ), BOOST_PP_SEQ_NIL

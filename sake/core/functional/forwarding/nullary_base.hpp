@@ -18,18 +18,17 @@
 #include <boost/mpl/not.hpp>
 #include <boost/preprocessor/iteration/self.hpp>
 #include <boost/preprocessor/seq/seq.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/at.hpp>
-#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/functional/forwarding/keyword.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
+#include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 #include <sake/core/utility/void.hpp>
 
@@ -57,10 +56,10 @@ class nullary_base
     : public nullary_base_private::impl< Derived, Params >
 {
     typedef nullary_base_private::impl< Derived, Params > impl_;
-    SAKE_BASIC_MOVABLE_COPYABLE( nullary_base )
 protected:
+    SAKE_BASIC_MOVABLE_COPYABLE( nullary_base )
     SAKE_USING_TYPEDEF( typename impl_, chained_base_type );
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         nullary_base,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         ( impl_ ), BOOST_PP_SEQ_NIL
@@ -134,7 +133,6 @@ template< class Derived, class Params >
 struct impl< Derived, Params, n >
     : boost_ext::mpl::at< Params, keyword::tag::chained_base, sake::void_ >::type
 {
-    SAKE_BASIC_MOVABLE_COPYABLE( impl )
     specialized_declarations()
 protected:
     friend class core_access;
@@ -144,11 +142,13 @@ protected:
     derived_type const & derived() const
     { return *static_cast< derived_type const * >(this); }
 
+    SAKE_BASIC_MOVABLE_COPYABLE( impl )
+
     typedef typename boost_ext::mpl::at<
         Params, keyword::tag::chained_base, sake::void_
     >::type chained_base_type;
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         typename impl,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( chained_base_type ), BOOST_PP_SEQ_NIL
@@ -156,10 +156,9 @@ protected:
 
     template< class T >
     explicit impl(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c< boost::is_base_of<
-            impl,
-            typename boost_ext::remove_qualifiers<T>::type
-        >::value >::type* = 0)
+        typename boost::disable_if_c<
+            boost_ext::is_base_of_sans_qualifiers< impl, T >::value
+        >::type* = 0)
         : chained_base_type(sake::emplacer_construct< chained_base_type >(sake::forward<T>(x)))
     { }
 

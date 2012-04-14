@@ -1,7 +1,7 @@
 /*******************************************************************************
- * sake/core/utility/compressed_pair.hpp
+ * sake/core/utility/compressed_pair/compressed_pair.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -9,11 +9,6 @@
  *
  * swap(compressed_pair< T0, T1 >& x, compressed_pair< T0, T1 >& y) -> void
  * hash_value(compressed_pair< T0, T1 > const & x) -> std::size_t
- *
- * operator==(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
- * operator!=(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
- * operator<(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
- * cmp(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
  *
  * A sake::compressed_pair is nearly functionally identical to a
  * boost::compressed_pair, except that it is emplace- and move-aware.
@@ -35,22 +30,14 @@
 
 #include <sake/boost_ext/fusion/adapted/compressed_pair.hpp>
 #include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
-#include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 
-#include <sake/core/functional/operators/logical_and.hpp>
-#include <sake/core/functional/operators/logical_or.hpp>
-#include <sake/core/functional/operators/equal.hpp>
-#include <sake/core/functional/operators/less.hpp>
-#include <sake/core/functional/operators/not_equal.hpp>
-#include <sake/core/math/cmp.hpp>
-#include <sake/core/math/zero.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/compressed_pair_fwd.hpp>
-#include <sake/core/utility/define_natural/mem_fun.hpp>
+#include <sake/core/utility/compressed_pair/fwd.hpp>
 #include <sake/core/utility/emplacer.hpp>
+#include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
 #include <sake/core/utility/swap.hpp>
 
@@ -88,7 +75,7 @@ struct compressed_pair
 private:
     typedef private_::storage< T0, T1 > m_storage_type;
 public:
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         compressed_pair,
         ( default_ctor ) ( move_ctor ) ( move_assign ),
         BOOST_PP_SEQ_NIL, (( m_storage_type, m_storage ))
@@ -185,15 +172,20 @@ public:
         sake::swap(first(),  other.first());
         sake::swap(second(), other.second());
     }
+    inline friend
+    void swap(compressed_pair& x, compressed_pair& y)
+    { x.swap(y); }
 
-    std::size_t
-    hash_value() const
+    std::size_t hash_value() const
     {
         std::size_t result = 0;
         boost::hash_combine(result, first());
         boost::hash_combine(result, second());
         return x;
     }
+    inline friend
+    std::size_t hash_value(compressed_pair const & x)
+    { return x.hash_value(); }
 
     typename boost_ext::add_reference< T0 >::type
     first()
@@ -213,99 +205,6 @@ private:
     m_storage_type m_storage;
 };
 
-/*******************************************************************************
- * swap(compressed_pair< T0, T1 >& x, compressed_pair< T0, T1 >& y) -> void
- * hash_value(compressed_pair< T0, T1 > const & x) -> std::size_t
- ******************************************************************************/
-
-template< class T0, class T1 >
-inline void
-swap(compressed_pair< T0, T1 >& x, compressed_pair< T0, T1 >& y)
-{ x.swap(y); }
-
-template< class T0, class T1 >
-inline std::size_t
-hash_value(compressed_pair< T0, T1 > const & x)
-{ return x.hash_value(); }
-
-/*******************************************************************************
- * operator==(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
- * operator!=(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
- * operator<(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
- * cmp(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y) -> ...
- ******************************************************************************/
-
-template< class T0, class T1, class U0, class U1 >
-inline typename operators::result_of::and_<
-    typename operators::result_of::equal<
-        typename boost_ext::add_reference_add_const< T0 >::type,
-        typename boost_ext::add_reference_add_const< U0 >::type
-    >::type,
-    typename operators::result_of::equal<
-        typename boost_ext::add_reference_add_const< T1 >::type,
-        typename boost_ext::add_reference_add_const< U1 >::type
-    >::type
->::type
-operator==(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y)
-{ return x.first() == y.first() && x.second() == y.second(); }
-
-template< class T0, class T1, class U0, class U1 >
-inline typename operators::result_of::or_<
-    typename operators::result_of::not_equal<
-        typename boost_ext::add_reference_add_const< T0 >::type,
-        typename boost_ext::add_reference_add_const< U0 >::type
-    >::type,
-    typename operators::result_of::not_equal<
-        typename boost_ext::add_reference_add_const< T1 >::type,
-        typename boost_ext::add_reference_add_const< U1 >::type
-    >::type
->::type
-operator!=(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y)
-{ return x.first() != y.first() || x.second() != y.second(); }
-
-template< class T0, class T1, class U0, class U1 >
-inline typename boost_ext::common_type<
-    typename operators::result_of::less<
-        typename result_of::cmp<
-            typename boost_ext::add_reference_add_const< T0 >::type,
-            typename boost_ext::add_reference_add_const< U0 >::type
-        >::type,
-        sake::zero_t
-    >::type,
-    typename operators::result_of::less<
-        typename boost_ext::add_reference_add_const< T1 >::type,
-        typename boost_ext::add_reference_add_const< U1 >::type
-    >::type
->::type
-operator<(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y)
-{
-    typename result_of::cmp<
-        typename boost_ext::add_reference_add_const< T0 >::type,
-        typename boost_ext::add_reference_add_const< U0 >::type
-    >::type const s0 = sake::cmp(x.first(), y.first());
-    return s0 == sake::zero ? x.second() < y.second() : s0 < sake::zero;
-}
-
-template< class T0, class T1, class U0, class U1 >
-inline typename boost_ext::common_type<
-    typename result_of::cmp<
-        typename boost_ext::add_reference_add_const< T0 >::type,
-        typename boost_ext::add_reference_add_const< U0 >::type
-    >::type,
-    typename result_of::cmp<
-        typename boost_ext::add_reference_add_const< T1 >::type,
-        typename boost_ext::add_reference_add_const< U1 >::type
-    >::type
->::type
-cmp(compressed_pair< T0, T1 > const & x, compressed_pair< U0, U1 > const & y)
-{
-    typename result_of::cmp<
-        typename boost_ext::add_reference_add_const< T0 >::type,
-        typename boost_ext::add_reference_add_const< U0 >::type
-    >::type const s0 = sake::cmp(x.first(), y.first());
-    return s0 == sake::zero ? sake::cmp(x.second(), y.second()) : s0;
-}
-
 namespace private_
 {
 
@@ -314,7 +213,7 @@ struct storage< T0, T1, false, false >
 {
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         BOOST_PP_SEQ_NIL, (( T0, m_x0 )) (( T1, m_x1 ))
@@ -364,7 +263,7 @@ struct storage< T0, T1, true, _ >
 {
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( T0 ), (( T1, m_x1 ))
@@ -413,7 +312,7 @@ struct storage< T0, T1, false, true >
 {
     SAKE_BASIC_MOVABLE_COPYABLE( storage )
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
         ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
         ( T1 ), (( T0, m_x0 ))

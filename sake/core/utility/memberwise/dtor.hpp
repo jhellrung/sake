@@ -1,11 +1,11 @@
 /*******************************************************************************
- * sake/core/utility/define_natural/dtor.hpp
+ * sake/core/utility/memberwise/dtor.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_DEFINE_NATURAL_DTOR( T )
+ * #define SAKE_MEMBERWISE_DTOR( T )
  * #define SAKE_NATURAL_DTOR_BODY()
  ******************************************************************************/
 
@@ -14,7 +14,7 @@
 
 #include <boost/config.hpp>
 
-#define SAKE_DEFINE_NATURAL_DTOR( T ) \
+#define SAKE_MEMBERWISE_DTOR( T ) \
     ~T() SAKE_NATURAL_DTOR_BODY()
 
 #ifndef BOOST_NO_DEFAULTED_FUNCTIONS

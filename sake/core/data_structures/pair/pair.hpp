@@ -31,8 +31,8 @@
 #include <sake/core/data_structures/pair/fwd.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
+#include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
 
 namespace sake
@@ -55,14 +55,14 @@ struct pair
     T0 first;
     T1 second;
 
-    SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE( typename pair, ( T0 ) ( T1 ) )
+    SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE(
+        typename pair,
+        BOOST_PP_SEQ_NIL, (( T0, first )) (( T1, second ))
+    )
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         pair,
-        ( default_ctor ) ( move_ctor )
-        ( copy_assign ) ( move_assign )
-        ( swap )
-        ( hash_value ),
+        ( default_ctor ) ( swap ) ( hash_value ),
         BOOST_PP_SEQ_NIL, (( T0, first )) (( T1, second ))
     )
 

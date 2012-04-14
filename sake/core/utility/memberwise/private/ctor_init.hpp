@@ -1,11 +1,11 @@
 /*******************************************************************************
- * sake/core/utility/define_natural/private/ctor_init.hpp
+ * sake/core/utility/memberwise/private/ctor_init.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_DEFINE_NATURAL_ctor_init( r, base_seq, member_name_seq )
+ * #define SAKE_MEMBERWISE_ctor_init( r, base_seq, member_name_seq )
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_DEFINE_NATURAL_PRIVATE_CTOR_INIT_HPP
@@ -22,31 +22,31 @@
 #include <sake/core/move/move.hpp>
 #include <sake/core/utility/inherit_cast.hpp>
 
-#define SAKE_DEFINE_NATURAL_ctor_init( r, base_seq, member_name_seq ) \
+#define SAKE_MEMBERWISE_ctor_init( r, base_seq, member_name_seq ) \
     BOOST_PP_CAT( \
-        SAKE_DEFINE_NATURAL_init_bases_, \
+        SAKE_MEMBERWISE_init_bases_, \
         SAKE_BOOST_EXT_PP_SEQ_IS_NIL( base_seq ) \
     ) ( r, base_seq, member_name_seq, BOOST_PP_IDENTITY( : ) ) \
 
-#define SAKE_DEFINE_NATURAL_init_bases_0( r, base_seq, member_name_seq, delimiter ) \
+#define SAKE_MEMBERWISE_init_bases_0( r, base_seq, member_name_seq, delimiter ) \
     delimiter() \
-    BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_DEFINE_NATURAL_comma_init_base, ~, base_seq ) \
-    SAKE_DEFINE_NATURAL_init_bases_1( r, base_seq, member_name_seq, BOOST_PP_COMMA )
-#define SAKE_DEFINE_NATURAL_comma_init_base( r, data, i, elem ) \
+    BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_MEMBERWISE_comma_init_base, ~, base_seq ) \
+    SAKE_MEMBERWISE_init_bases_1( r, base_seq, member_name_seq, BOOST_PP_COMMA )
+#define SAKE_MEMBERWISE_comma_init_base( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
     elem(::sake::move(::sake::inherit_cast< elem >(other)))
-#define SAKE_DEFINE_NATURAL_init_bases_1( r, base_seq, member_name_seq, delimiter ) \
+#define SAKE_MEMBERWISE_init_bases_1( r, base_seq, member_name_seq, delimiter ) \
     BOOST_PP_CAT( \
-        SAKE_DEFINE_NATURAL_init_members_, \
+        SAKE_MEMBERWISE_init_members_, \
         SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_name_seq ) \
     ) ( r, member_name_seq, delimiter )
 
-#define SAKE_DEFINE_NATURAL_init_members_0( r, member_name_seq, delimiter ) \
+#define SAKE_MEMBERWISE_init_members_0( r, member_name_seq, delimiter ) \
     delimiter() \
-    BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_DEFINE_NATURAL_comma_init_member, ~, member_name_seq )
-#define SAKE_DEFINE_NATURAL_comma_init_member( r, data, i, elem ) \
+    BOOST_PP_SEQ_FOR_EACH_I_R( r, SAKE_MEMBERWISE_comma_init_member, ~, member_name_seq )
+#define SAKE_MEMBERWISE_comma_init_member( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
     elem(::sake::move(other.elem))
-#define SAKE_DEFINE_NATURAL_init_members_1( r, member_name_seq, delimiter )
+#define SAKE_MEMBERWISE_init_members_1( r, member_name_seq, delimiter )
 
 #endif // #ifndef SAKE_CORE_UTILITY_DEFINE_NATURAL_PRIVATE_CTOR_INIT_HPP

@@ -20,7 +20,7 @@
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/core/utility/define_natural/default_ctor.hpp>
+#include <sake/core/utility/memberwise/default_ctor.hpp>
 
 #ifndef BOOST_NO_DELETED_FUNCTIONS
 
@@ -43,7 +43,7 @@ namespace sake
 struct non_copyable_base
 {
 protected:
-    SAKE_DEFINE_NATURAL_DEFAULT_CTOR( non_copyable_base, BOOST_PP_SEQ_NIL )
+    SAKE_MEMBERWISE_DEFAULT_CTOR( non_copyable_base, BOOST_PP_SEQ_NIL )
     SAKE_NON_COPYABLE( non_copyable_base )
 };
 

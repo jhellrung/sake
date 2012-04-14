@@ -1,11 +1,11 @@
 /*******************************************************************************
- * sake/core/utility/define_natural/default_ctor.hpp
+ * sake/core/utility/memberwise/default_ctor.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_DEFINE_NATURAL_DEFAULT_CTOR[_R]( [r,] T, type_seq )
+ * #define SAKE_MEMBERWISE_DEFAULT_CTOR[_R]( [r,] T, type_seq )
  * #define SAKE_NATURAL_DEFAULT_CTOR_BODY()
  *
  * Expands to define a default constructor equivalent to member-wise default
@@ -32,37 +32,37 @@
 
 #include <sake/core/utility/has_default_constructor.hpp>
 
-#define SAKE_DEFINE_NATURAL_DEFAULT_CTOR( T, type_seq ) \
-    SAKE_DEFINE_NATURAL_DEFAULT_CTOR_R( BOOST_PP_DEDUCE_R(), T, type_seq )
+#define SAKE_MEMBERWISE_DEFAULT_CTOR( T, type_seq ) \
+    SAKE_MEMBERWISE_DEFAULT_CTOR_R( BOOST_PP_DEDUCE_R(), T, type_seq )
 
-#define SAKE_DEFINE_NATURAL_DEFAULT_CTOR_R( r, T, type_seq ) \
+#define SAKE_MEMBERWISE_DEFAULT_CTOR_R( r, T, type_seq ) \
     T() SAKE_NATURAL_DEFAULT_CTOR_BODY() \
     static bool const has_default_constructor_value = \
         BOOST_PP_CAT( \
-            SAKE_DEFINE_NATURAL_DEFAULT_CTOR_has_default_constructor_value_, \
+            SAKE_MEMBERWISE_DEFAULT_CTOR_has_default_constructor_value_, \
             SAKE_BOOST_EXT_PP_SEQ_IS_NIL( type_seq ) \
         ) ( r, type_seq ); \
     typedef ::boost::integral_constant< bool, has_default_constructor_value > has_default_constructor; \
     template< class, class > friend class ::sake::has_type_has_default_constructor;
 
-#define SAKE_DEFINE_NATURAL_DEFAULT_CTOR_has_default_constructor_value_0( r, type_seq ) \
+#define SAKE_MEMBERWISE_DEFAULT_CTOR_has_default_constructor_value_0( r, type_seq ) \
     BOOST_PP_CAT( \
-        SAKE_DEFINE_NATURAL_DEFAULT_CTOR_has_default_constructor_value_0, \
+        SAKE_MEMBERWISE_DEFAULT_CTOR_has_default_constructor_value_0, \
         BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( type_seq ) ) \
     ) ( r, type_seq )
-#define SAKE_DEFINE_NATURAL_DEFAULT_CTOR_has_default_constructor_value_00( r, type_seq ) \
+#define SAKE_MEMBERWISE_DEFAULT_CTOR_has_default_constructor_value_00( r, type_seq ) \
     ::sake::boost_ext::mpl::BOOST_PP_CAT( and, BOOST_PP_SEQ_SIZE( type_seq ) )< \
         BOOST_PP_SEQ_FOR_EACH_I_R( r, \
-            SAKE_DEFINE_NATURAL_DEFAULT_CTOR_comma_has_default_constructor_elem, \
+            SAKE_MEMBERWISE_DEFAULT_CTOR_comma_has_default_constructor_elem, \
             ~, \
             type_seq \
         ) \
     >::value
-#define SAKE_DEFINE_NATURAL_DEFAULT_CTOR_comma_has_default_constructor_elem( r, data, i, elem ) \
+#define SAKE_MEMBERWISE_DEFAULT_CTOR_comma_has_default_constructor_elem( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) ::sake::has_default_constructor< elem >
-#define SAKE_DEFINE_NATURAL_DEFAULT_CTOR_has_default_constructor_value_01( r, type_seq ) \
+#define SAKE_MEMBERWISE_DEFAULT_CTOR_has_default_constructor_value_01( r, type_seq ) \
     ::sake::has_default_constructor< SAKE_BOOST_EXT_PP_TUPLE_REM1 type_seq >::value
-#define SAKE_DEFINE_NATURAL_DEFAULT_CTOR_has_default_constructor_value_1( r, type_seq ) \
+#define SAKE_MEMBERWISE_DEFAULT_CTOR_has_default_constructor_value_1( r, type_seq ) \
     true
 
 #ifndef BOOST_NO_DEFAULTED_FUNCTIONS

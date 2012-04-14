@@ -33,21 +33,20 @@
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/preprocessor/tuple/to_seq.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/fusion/adapted/tuple.hpp>
 #include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
 #include <sake/boost_ext/mpl/vector.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
+#include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/propagate_const.hpp>
-#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/data_structures/tuple/fwd.hpp>
 #include <sake/core/functional/operators/less.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer.hpp>
+#include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/private/is_compatible_sequence.hpp>
 
@@ -71,7 +70,7 @@ struct tuple<>
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         tuple,
         ( default_ctor )
         ( swap )
@@ -197,14 +196,14 @@ struct tuple< T0N >
 
     static std::size_t const static_size = N;
 
-    SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_MOVABLE( typename tuple, T0N_seq )
+    SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE(
+        typename tuple,
+        BOOST_PP_SEQ_NIL, T0N_0N_seq
+    )
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_MEMBERWISE_MEM_FUN(
         tuple,
-        ( default_ctor ) ( move_ctor )
-        ( copy_assign ) ( move_assign )
-        ( swap )
-        ( hash_value ),
+        ( default_ctor ) ( swap ) ( hash_value ),
         BOOST_PP_SEQ_NIL, T0N_0N_seq
     )
 
@@ -254,9 +253,9 @@ struct tuple< T0N >
 
     template< class U0 >
     explicit tuple(U0&& x0,
-        typename boost::disable_if_c< boost::is_base_of<
-            tuple, typename boost_ext::remove_qualifiers< U0 >::type
-        >::value >::type* = 0)
+        typename boost::disable_if_c<
+            boost_ext::is_base_of_sans_qualifiers< tuple, U0 >::value
+        >::type* = 0)
         : _0(sake::emplacer_construct< T0 >(sake::forward< U0 >(x0)))
     { }
 
@@ -264,17 +263,17 @@ struct tuple< T0N >
 
     template< class U0 >
     explicit tuple(U0& x0,
-        typename boost::disable_if_c< boost::is_base_of<
-            tuple, typename boost_ext::remove_qualifiers< U0 >::type
-        >::value >::type* = 0)
+        typename boost::disable_if_c<
+            boost_ext::is_base_of_sans_qualifiers< tuple, U0 >::value
+        >::type* = 0)
         : _0(sake::emplacer_construct< T0 >(x0))
     { }
 
     template< class U0 >
     explicit tuple(U0 const & x0,
-        typename boost::disable_if_c< boost::is_base_of<
-            tuple, typename boost_ext::remove_qualifiers< U0 >::type
-        >::value >::type* = 0)
+        typename boost::disable_if_c<
+            boost_ext::is_base_of_sans_qualifiers< tuple, U0 >::value
+        >::type* = 0)
         : _0(sake::emplacer_construct< T0 >(x0))
     { }
 

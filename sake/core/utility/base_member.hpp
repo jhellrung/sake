@@ -22,18 +22,17 @@
 #define SAKE_CORE_UTILITY_BASE_MEMBER_HPP
 
 #include <boost/preprocessor/seq/seq.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_empty.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
-#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/define_natural/mem_fun.hpp>
 #include <sake/core/utility/emplacer_fwd.hpp>
+#include <sake/core/utility/memberwise/mem_fun.hpp>
 
 namespace sake
 {
@@ -45,12 +44,12 @@ template< class T, class Tag >
 struct base_member< T, Tag,
     typename boost::disable_if_c< boost::is_empty<T>::value >::type >
 {
-    SAKE_BASIC_MOVABLE_COPYABLE( base_member )
-
 protected:
     friend class emplacer_access;
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_BASIC_MOVABLE_COPYABLE( base_member )
+
+    SAKE_MEMBERWISE_MEM_FUN(
         typename base_member,
         ( default_ctor ) ( move_ctor )
         ( copy_assign_if_any_umc ) ( move_assign )
@@ -60,10 +59,9 @@ protected:
 
     template< class U >
     explicit base_member(SAKE_FWD2_REF( U ) x,
-        typename boost::disable_if_c< boost::is_base_of<
-            base_member,
-            typename boost_ext::remove_qualifiers<U>::type
-        >::value >::type* = 0)
+        typename boost::disable_if_c<
+            boost_ext::is_base_of_sans_qualifiers< base_member, U >::value
+        >::type* = 0)
         : m_member(sake::emplacer_construct<T>(sake::forward<U>(x)))
     { }
 
@@ -83,12 +81,12 @@ struct base_member< T, Tag,
     typename boost::enable_if_c< boost::is_empty<T>::value >::type >
     : T
 {
-    SAKE_BASIC_MOVABLE_COPYABLE( base_member )
-
 protected:
     friend class emplacer_access;
 
-    SAKE_DEFINE_NATURAL_MEM_FUN(
+    SAKE_BASIC_MOVABLE_COPYABLE( base_member )
+
+    SAKE_MEMBERWISE_MEM_FUN(
         typename base_member,
         ( default_ctor ) ( move_ctor )
         ( copy_assign_if_any_umc ) ( move_assign )
@@ -98,10 +96,9 @@ protected:
 
     template< class U >
     explicit base_member(SAKE_FWD2_REF( U ) x,
-        typename boost::disable_if_c< boost::is_base_of<
-            base_member,
-            typename boost_ext::remove_qualifiers<U>::type
-        >::value >::type* = 0)
+        typename boost::disable_if_c<
+            boost_ext::is_base_of_sans_qualifiers< base_member, U >::value
+        >::type* = 0)
         : T(sake::emplacer_construct<T>(sake::forward<U>(x)))
     { }
 

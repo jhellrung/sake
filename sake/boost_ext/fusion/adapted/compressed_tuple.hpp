@@ -13,7 +13,7 @@
 
 #include <sake/boost_ext/fusion/adapted/tuple.hpp>
 
-#include <sake/core/utility/compressed_tuple_fwd.hpp>
+#include <sake/core/utility/compressed_tuple/fwd.hpp>
 
 namespace boost {
 namespace fusion {
