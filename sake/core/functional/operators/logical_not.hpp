@@ -48,7 +48,7 @@ typedef logical_not not_;
 
 } // namespace functional
 
-functional::not_ const not_ = { };
+sake::operators::functional::not_ const not_ = { };
 
 } // namespace operators
 

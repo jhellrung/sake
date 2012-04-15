@@ -90,11 +90,11 @@ struct binom
     { };
 
     template< class N >
-    typename result_of::binom<N,K>::type
+    typename sake::result_of::binom<N,K>::type
     operator()(N n) const
     { return binom_private::dispatch_c< N, K::value >::apply(n); }
     template< class N, class I >
-    typename result_of::binom<N,K>::type
+    typename sake::result_of::binom<N,K>::type
     operator()(N n, I i) const
     { return binom_private::dispatch_c< N, K::value >::apply(n,i); }
 };
@@ -105,11 +105,11 @@ struct binom< void >
     SAKE_RESULT_FROM_METAFUNCTION( result_of::binom, 2 )
 
     template< class N, class K >
-    typename result_of::binom<N,K>::value
+    typename sake::result_of::binom<N,K>::value
     operator()(N n, K k) const
     { return binom_private::dispatch<N,K>::apply(n,k); }
     template< class N, class K, class I >
-    typename result_of::binom<N,K>::value
+    typename sake::result_of::binom<N,K>::value
     operator()(N n, K k, I i) const
     { return binom_private::dispatch<N,K>::apply(n,k,i); }
 };
@@ -128,11 +128,11 @@ struct binom_c
     { };
 
     template< class N >
-    typename result_of::binom_c<N,K>::type
+    typename sake::result_of::binom_c<N,K>::type
     operator()(N n) const
     { return binom_private::dispatch_c<N,K>::apply(n); }
     template< class N, class I >
-    typename result_of::binom_c<N,K>::type
+    typename sake::result_of::binom_c<N,K>::type
     operator()(N n, I i) const
     { return binom_private::dispatch_c<N,K>::apply(n,i); }
 };
@@ -140,29 +140,29 @@ struct binom_c
 } // namespace functional
 
 template< class N, class K >
-inline typename result_of::binom<N,K>::type
+inline typename sake::result_of::binom<N,K>::type
 binom(N n, K k)
 { return binom_private::dispatch<N,K>::apply(n,k); }
 template< class N, class K, class I >
-inline typename result_of::binom<N,K>::type
+inline typename sake::result_of::binom<N,K>::type
 binom(N n, K k, I i)
 { return binom_private::dispatch<N,K>::apply(n,k,i); }
 
 template< class K, class N >
-inline typename result_of::binom_c< N, K::value >::type
+inline typename sake::result_of::binom_c< N, K::value >::type
 binom(N n)
 { return binom_private::dispatch_c< N, K::value >::apply(n); }
 template< class K, class N, class I >
-inline typename result_of::binom_c< N, K::value >::type
+inline typename sake::result_of::binom_c< N, K::value >::type
 binom(N n, I i)
 { return binom_private::dispatch_c< N, K::value >::apply(n,i); }
 
 template< unsigned int K, class N >
-inline typename result_of::binom_c<N,K>::type
+inline typename sake::result_of::binom_c<N,K>::type
 binom_c(N n)
 { return binom_private::dispatch_c<N,K>::apply(n); }
 template< unsigned int K, class N, class I >
-inline typename result_of::binom_c<N,K>::type
+inline typename sake::result_of::binom_c<N,K>::type
 binom_c(N n, I i)
 { return binom_private::dispatch_c<N,K>::apply(n,i); }
 
@@ -350,8 +350,8 @@ struct dispatch_c
 template< class X, class N, unsigned int K, unsigned int J >
 struct iterate_c
 {
-    typedef typename operators::result_of::divide<
-        typename operators::result_of::multiply< X, N& >::type,
+    typedef typename sake::operators::result_of::divide<
+        typename sake::operators::result_of::multiply< X, N& >::type,
         boost_ext::mpl::uint<J>
     >::type X_;
     typedef typename iterate_c<X_,N,K,J+1>::type type;
@@ -365,8 +365,8 @@ struct iterate_c
 template< class X, class N, unsigned int K >
 struct iterate_c<X,N,K,K>
 {
-    typedef typename operators::result_of::divide<
-        typename operators::result_of::multiply< X, N& >::type,
+    typedef typename sake::operators::result_of::divide<
+        typename sake::operators::result_of::multiply< X, N& >::type,
         boost_ext::mpl::uint<K>
     >::type type;
     static type apply(X& x, N& n)

@@ -49,7 +49,7 @@ typedef logical_and and_;
 
 } // namespace functional
 
-functional::and_ const and_ = { };
+sake::operators::functional::and_ const and_ = { };
 
 } // namespace operators
 

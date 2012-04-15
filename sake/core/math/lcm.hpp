@@ -40,10 +40,10 @@ namespace functional
 
 struct lcm
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::lcm, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::lcm, 2 )
 
     template< class T0, class T1 >
-    typename result_of::lcm< T0, T1 >::type
+    typename sake::result_of::lcm< T0, T1 >::type
     operator()(T0 x0, T1 x1) const
     {
         sake::abs_ip(x0);
@@ -56,7 +56,7 @@ struct lcm
 
 } // namespace functional
 
-functional::lcm const lcm = { };
+sake::functional::lcm const lcm = { };
 
 } // namespace sake
 

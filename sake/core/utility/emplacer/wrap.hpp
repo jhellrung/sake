@@ -72,7 +72,7 @@ struct typed_emplacer_wrap
 } // namespace result_of
 
 template< class U >
-inline typename result_of::emplacer_wrap< SAKE_FWD2_PARAM( U ) >::type
+inline typename sake::result_of::emplacer_wrap< SAKE_FWD2_PARAM( U ) >::type
 emplacer_wrap(SAKE_FWD2_REF( U ) x)
 {
     return emplacer_private::wrap_dispatch< SAKE_FWD2_PARAM( U ) >::
@@ -80,7 +80,7 @@ emplacer_wrap(SAKE_FWD2_REF( U ) x)
 }
 
 template< class T, class U >
-inline typename result_of::typed_emplacer_wrap< T, SAKE_FWD2_PARAM( U ) >::type
+inline typename sake::result_of::typed_emplacer_wrap< T, SAKE_FWD2_PARAM( U ) >::type
 typed_emplacer_wrap(SAKE_FWD2_REF( U ) x)
 {
     return emplacer_private::typed_wrap_dispatch< T, SAKE_FWD2_PARAM( U ) >::

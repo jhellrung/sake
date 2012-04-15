@@ -157,43 +157,43 @@ struct construct< void >
 template< class T, class... U >
 inline T
 construct(U&&... x)
-{ return functional::construct<T>()(sake::forward<U>(x)...); }
+{ return sake::functional::construct<T>()(sake::forward<U>(x)...); }
 
 #else // #if !defined( ... ) && !defined( ... )
 
 template< class T >
 inline T
 construct()
-{ return functional::construct<T>()(); }
+{ return sake::functional::construct<T>()(); }
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T, class U >
 inline T
 construct(U&& x)
-{ return functional::construct<T>()(sake::forward<U>(x)); }
+{ return sake::functional::construct<T>()(sake::forward<U>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T, class U >
 inline T
 construct(U& x)
-{ return functional::construct<T>()(x); }
+{ return sake::functional::construct<T>()(x); }
 
 template< class T >
 inline T
 construct(typename rv_sink_traits::rv_param<T>::type x)
-{ return functional::construct<T>()(x); }
+{ return sake::functional::construct<T>()(x); }
 
 template< class T >
 inline T
 construct(typename construct_private::rv_sink<T>::type x)
-{ return x(functional::construct<T>()); }
+{ return x(sake::functional::construct<T>()); }
 
 template< class T, class U >
 inline typename construct_private::enable_clv<T,U>::type
 construct(U const & x)
-{ return functional::construct<T>()(x); }
+{ return sake::functional::construct<T>()(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -204,7 +204,7 @@ construct(U const & x)
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     construct
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    return functional::construct<T>() forward_x_tuple ;
+    return sake::functional::construct<T>() forward_x_tuple ;
 #define SAKE_OVERLOAD_MIN_ARITY         2
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_CONSTRUCT_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_CONSTRUCT_FWD_MAX_ARITY

@@ -55,49 +55,49 @@ struct cref
 } // namespace result_of
 
 template< class T >
-inline typename result_of::ref<T>::type
+inline typename sake::result_of::ref<T>::type
 ref(T& x)
-{ return typename result_of::ref<T>::type(x); }
+{ return typename sake::result_of::ref<T>::type(x); }
 
 template< class T >
-inline typename result_of::ref< T const >::type
+inline typename sake::result_of::ref< T const >::type
 ref(T const & x)
-{ return typename result_of::ref< T const >::type(x); }
+{ return typename sake::result_of::ref< T const >::type(x); }
 
 template< class Tags, class T >
-inline typename result_of::ref< T, Tags >::type
+inline typename sake::result_of::ref< T, Tags >::type
 ref(T& x)
-{ return typename result_of::ref< T, Tags >::type(x); }
+{ return typename sake::result_of::ref< T, Tags >::type(x); }
 
 template< class Tags, class T >
-inline typename result_of::ref< T const, Tags >::type
+inline typename sake::result_of::ref< T const, Tags >::type
 ref(T const & x)
-{ return typename result_of::ref< T const, Tags >::type(x); }
+{ return typename sake::result_of::ref< T const, Tags >::type(x); }
 
 template< class T, class Tags >
-inline typename result_of::ref< T, Tags >::type
+inline typename sake::result_of::ref< T, Tags >::type
 ref(T& x, sake::type_tag< Tags >)
-{ return typename result_of::ref< T, Tags >::type(x); }
+{ return typename sake::result_of::ref< T, Tags >::type(x); }
 
 template< class T, class Tags >
-inline typename result_of::ref< T const, Tags >::type
+inline typename sake::result_of::ref< T const, Tags >::type
 ref(T const & x, sake::type_tag< Tags >)
-{ return typename result_of::ref< T const, Tags >::type(x); }
+{ return typename sake::result_of::ref< T const, Tags >::type(x); }
 
 template< class T >
-inline typename result_of::cref<T>::type
+inline typename sake::result_of::cref<T>::type
 cref(T const & x)
-{ return typename result_of::cref<T>::type(x); }
+{ return typename sake::result_of::cref<T>::type(x); }
 
 template< class Tags, class T >
-inline typename result_of::cref< T, Tags >::type
+inline typename sake::result_of::cref< T, Tags >::type
 cref(T const & x)
-{ return typename result_of::cref< T, Tags >::type(x); }
+{ return typename sake::result_of::cref< T, Tags >::type(x); }
 
 template< class T, class Tags >
-inline typename result_of::cref< T, Tags >::type
+inline typename sake::result_of::cref< T, Tags >::type
 cref(T const & x, sake::type_tag< Tags >)
-{ return typename result_of::cref< T, Tags >::type(x); }
+{ return typename sake::result_of::cref< T, Tags >::type(x); }
 
 } // namespace sake
 

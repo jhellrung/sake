@@ -49,7 +49,7 @@ typedef logical_or or_;
 
 } // namespace functional
 
-functional::or_ const or_ = { };
+sake::operators::functional::or_ const or_ = { };
 
 } // namespace operators
 

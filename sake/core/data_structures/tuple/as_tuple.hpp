@@ -56,10 +56,10 @@ struct as_tuple
 } // namespace result_of
 
 template< class Sequence >
-inline typename result_of::as_tuple< SAKE_FWD_PARAM( Sequence ) >::type
+inline typename sake::result_of::as_tuple< SAKE_FWD_PARAM( Sequence ) >::type
 as_tuple(SAKE_FWD_REF( Sequence ) s)
 {
-    typedef typename result_of::as_tuple< SAKE_FWD_PARAM( Sequence ) >::type result_type;
+    typedef typename sake::result_of::as_tuple< SAKE_FWD_PARAM( Sequence ) >::type result_type;
     return result_type(boost_ext::forward< Sequence >(s));
 }
 

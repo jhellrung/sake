@@ -212,7 +212,7 @@ apply_special_helper(
            .operator+=(' ')
            .operator+=(rhs)
            .operator+=(" }");
-    functional::print()(o,
+    sake::assert_failure_action::functional::print()(o,
         macro, expression, filename, function, line_number,
         message.c_str()
     );
@@ -254,7 +254,7 @@ apply_special_helper(
            .operator+=(" within { ")
            .operator+=(expression)
            .operator+=(" })");
-    functional::print()(o,
+    sake::assert_failure_action::functional::print()(o,
         macro, expression, filename, function, line_number,
         message.c_str()
     );
@@ -290,7 +290,7 @@ apply_special(
     std::ostringstream message(std::ostringstream::out);
     message << "{ " << expression << " } == "
                "{ " << lhs << ' ' << op << ' ' << rhs << " }";
-    functional::print()(o,
+    sake::assert_failure_action::functional::print()(o,
         macro, expression, filename, function, line_number,
         message.str().c_str()
     );
@@ -332,7 +332,7 @@ apply_special(
     message << "{ " << subexpression << " } == "
                "{ " << lhs << ' ' << op << ' ' << rhs << " } "
                "(subexpression " << subexpression_index << " within { " << expression << " })";
-    functional::print()(o,
+    sake::assert_failure_action::functional::print()(o,
         macro, expression, filename, function, line_number,
         message.str().c_str()
     );

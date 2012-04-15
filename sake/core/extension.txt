@@ -1,7 +1,7 @@
 sake/core/math/abs_fwd.hpp
     sake::result_of::extension::abs< T, Enable = void >
-sake/core/math/compare_fwd.hpp
-    sake::result_of::extension::compare< T0, T1, Enable = void >
+sake/core/math/cmp_fwd.hpp
+    sake::result_of::extension::cmp< T0, T1, Enable = void >
 sake/core/math/integer_difference_fwd.hpp
     sake::result_of::extension::integer_difference< T, Enable = void >
 sake/core/math/intlog2_fwd.hpp

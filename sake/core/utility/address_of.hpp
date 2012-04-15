@@ -55,13 +55,13 @@ namespace functional
 
 struct address_of
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::address_of, 1 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::address_of, 1 )
 
     template< class T >
-    typename result_of::address_of< T& >::type
+    typename sake::result_of::address_of< T& >::type
     operator()(T& x) const
     {
-        typedef typename result_of::address_of< T& >::type result_type;
+        typedef typename sake::result_of::address_of< T& >::type result_type;
         typedef typename boost_ext::propagate_cv< T, unsigned char >::type cv_uchar_type;
         return reinterpret_cast< result_type >(&reinterpret_cast< cv_uchar_type& >(x));
     }
@@ -69,7 +69,7 @@ struct address_of
 
 } // namespace functional
 
-functional::address_of const address_of = { };
+sake::functional::address_of const address_of = { };
 
 } // namespace sake
 

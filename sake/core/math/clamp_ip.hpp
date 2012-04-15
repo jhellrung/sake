@@ -44,7 +44,7 @@ namespace functional
 
 struct clamp_ip
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::clamp_ip, (3,4) )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::clamp_ip, (3,4) )
 
     template< class L, class T, class U >
     T& operator()(SAKE_FWD_REF( L ) lower, T& x, SAKE_FWD_REF( U ) upper) const
@@ -87,7 +87,7 @@ struct clamp_ip
 
 } // namespace functional
 
-functional::clamp_ip const clamp_ip = { };
+sake::functional::clamp_ip const clamp_ip = { };
 
 } // namespace sake
 

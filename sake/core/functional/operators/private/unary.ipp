@@ -157,7 +157,7 @@ private:
 public:
     typedef typename boost::mpl::eval_if_c<
         boost::is_void< maybe_type >::value,
-        operators::result_of::SAKE_OPERATORS_NAME<
+        sake::operators::result_of::SAKE_OPERATORS_NAME<
             typename boost_ext::remove_qualifiers<T>::type
         >,
         boost::mpl::identity< maybe_type >
@@ -179,24 +179,24 @@ namespace functional
 
 struct SAKE_OPERATORS_NAME
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::SAKE_OPERATORS_NAME, 1 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::operators::result_of::SAKE_OPERATORS_NAME, 1 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::SAKE_OPERATORS_NAME<T>::type
+    typename sake::operators::result_of::SAKE_OPERATORS_NAME<T>::type
     operator()(T&& x) const
     { return SAKE_OPERATORS_OP sake::forward<T>(x); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::SAKE_OPERATORS_NAME< T& >::type
+    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T& >::type
     operator()(T& x) const
     { return SAKE_OPERATORS_OP x; }
 
     template< class T >
-    typename result_of::SAKE_OPERATORS_NAME< T const & >::type
+    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T const & >::type
     operator()(T const & x) const
     { return SAKE_OPERATORS_OP x; }
 
@@ -206,7 +206,7 @@ struct SAKE_OPERATORS_NAME
 
 } // namespace functional
 
-functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
+sake::operators::functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
 
 } // namespace operators
 

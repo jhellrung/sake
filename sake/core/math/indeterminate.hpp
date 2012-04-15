@@ -95,7 +95,7 @@ inline boost::logic::tribool operator||(boost::logic::tribool const b, indetermi
 
 } // namespace functional
 
-functional::indeterminate const indeterminate = { };
+sake::functional::indeterminate const indeterminate = { };
 
 } // namespace sake
 

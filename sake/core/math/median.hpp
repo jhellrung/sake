@@ -43,12 +43,12 @@ namespace functional
 
 struct median
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::median, (3,4) )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::median, (3,4) )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1, class T2 >
-    typename result_of::median< T0, T1, T2 >::type
+    typename sake::result_of::median< T0, T1, T2 >::type
     operator()(T0&& x0, T1&& x1, T2&& x2) const
     {
         return x1 < x0 ?
@@ -62,7 +62,7 @@ struct median
     }
 
     template< class T0, class T1, class T2, class Less >
-    typename result_of::median< T0, T1, T2 >::type
+    typename sake::result_of::median< T0, T1, T2 >::type
     operator()(T0&& x0, T1&& x1, T2&& x2, Less less) const
     {
         return less(x1, x0) ?
@@ -78,7 +78,7 @@ struct median
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1, class T2 >
-    typename result_of::median< T0&, T1&, T2& >::type
+    typename sake::result_of::median< T0&, T1&, T2& >::type
     operator()(T0& x0, T1& x1, T2& x2) const
     {
         return x1 < x0 ?
@@ -87,7 +87,7 @@ struct median
     }
 
     template< class T0, class T1, class T2, class Less >
-    typename result_of::median< T0&, T1&, T2& >::type
+    typename sake::result_of::median< T0&, T1&, T2& >::type
     operator()(T0& x0, T1& x1, T2& x2, Less less) const
     {
         return less(x1, x0) ?
@@ -96,7 +96,7 @@ struct median
     }
 
     template< class T0, class T1, class T2 >
-    typename result_of::median< T0 const &, T1 const &, T2 const & >::type
+    typename sake::result_of::median< T0 const &, T1 const &, T2 const & >::type
     operator()(T0 const & x0, T1 const & x1, T2 const & x2) const
     {
         return x1 < x0 ?
@@ -110,7 +110,7 @@ struct median
     }
 
     template< class T0, class T1, class T2, class Less >
-    typename result_of::median< T0 const &, T1 const &, T2 const & >::type
+    typename sake::result_of::median< T0 const &, T1 const &, T2 const & >::type
     operator()(T0 const & x0, T1 const & x1, T2 const & x2, Less less) const
     {
         return less(x1, x0) ?
@@ -129,7 +129,7 @@ struct median
 
 } // namespace functional
 
-functional::median const median = { };
+sake::functional::median const median = { };
 
 } // namespace sake
 

@@ -55,7 +55,7 @@ private:
 } // namespace result_of
 
 template< class T, class U >
-inline typename result_of::inherit_cast< U*, T >::type
+inline typename sake::result_of::inherit_cast< U*, T >::type
 inherit_cast(U* const p)
 {
     typedef typename boost_ext::propagate_cv<U,T>::type cv_type;
@@ -63,17 +63,17 @@ inherit_cast(U* const p)
 }
 
 template< class T, class U >
-inline typename result_of::inherit_cast< U&, T >::type
+inline typename sake::result_of::inherit_cast< U&, T >::type
 inherit_cast(U& x)
 { return *sake::inherit_cast<T>(sake::address_of(x)); }
 
 template< class U, class T >
-inline typename result_of::inherit_cast< U*, T >::type
+inline typename sake::result_of::inherit_cast< U*, T >::type
 inherit_cast(U* const p, sake::type_tag<T>)
 { return sake::inherit_cast<T>(p); }
 
 template< class U, class T >
-inline typename result_of::inherit_cast< U&, T >::type
+inline typename sake::result_of::inherit_cast< U&, T >::type
 inherit_cast(U& x, sake::type_tag<T>)
 { return sake::inherit_cast<T>(x); }
 
@@ -92,12 +92,12 @@ struct inherit_cast
     { };
 
     template< class U >
-    typename result_of::inherit_cast< U*, T >::type
+    typename sake::result_of::inherit_cast< U*, T >::type
     operator()(U* const p) const
     { return sake::inherit_cast<T>(p); }
 
     template< class U >
-    typename result_of::inherit_cast< U&, T >::type
+    typename sake::result_of::inherit_cast< U&, T >::type
     operator()(U& x) const
     { return sake::inherit_cast<T>(x); }
 };
@@ -108,12 +108,12 @@ struct inherit_cast< void >
     SAKE_RESULT_FROM_METAFUNCTION( result_of::inherit_cast, 2 )
 
     template< class U, class T >
-    typename result_of::inherit_cast< U&, T >::type
+    typename sake::result_of::inherit_cast< U&, T >::type
     operator()(U* const p, sake::type_tag<T>) const
     { return sake::inherit_cast<T>(p); }
 
     template< class U, class T >
-    typename result_of::inherit_cast< U&, T >::type
+    typename sake::result_of::inherit_cast< U&, T >::type
     operator()(U& x, sake::type_tag<T>) const
     { return sake::inherit_cast<T>(x); }
 };

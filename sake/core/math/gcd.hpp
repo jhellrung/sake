@@ -55,10 +55,10 @@ namespace functional
 
 struct gcd
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::gcd, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::gcd, 2 )
 
     template< class T0, class T1 >
-    typename result_of::gcd< T0, T1 >::type
+    typename sake::result_of::gcd< T0, T1 >::type
     operator()(T0 x0, T1 x1) const
     {
         typedef typename gcd_private::narrow< T0, T1 >::type narrow_type;
@@ -83,7 +83,7 @@ struct gcd
 
 } // namespace functional
 
-functional::gcd const gcd = { };
+sake::functional::gcd const gcd = { };
 
 namespace gcd_private
 {

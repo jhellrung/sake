@@ -651,7 +651,7 @@ struct dispatch< LHS, RHS, true >
                    "{ " << sake::make_ostreamable(lhs)
                         << ' ' << op << ' '
                         << sake::make_ostreamable(rhs) << " }";
-        functional::print()(o,
+        sake::assert_failure_action::functional::print()(o,
             macro, expression, filename, function, line_number,
             message.str().c_str()
         );
@@ -670,7 +670,7 @@ struct dispatch< LHS, RHS, true >
                         << ' ' << op << ' '
                         << sake::make_ostreamable(rhs) << " } "
                    "(subexpression " << subexpression_index << " within { " << expression << " })";
-        functional::print()(o,
+        sake::assert_failure_action::functional::print()(o,
             macro, expression, filename, function, line_number,
             message.str().c_str()
         );
@@ -715,10 +715,10 @@ struct dispatch< LHS, RHS, false >
 
 } // namespace functional
 
-functional::print const print = { };
-functional::abort const abort = { };
-functional::terminate const terminate = { };
-functional::exit const exit = { };
+sake::assert_failure_action::functional::print const print = { };
+sake::assert_failure_action::functional::abort const abort = { };
+sake::assert_failure_action::functional::terminate const terminate = { };
+sake::assert_failure_action::functional::exit const exit = { };
 
 } // namespace assert_failure_action
 
@@ -751,7 +751,7 @@ struct failure_action
         unsigned int const subexpression_index, char const * const subexpression,
         LHS const & lhs, char const * const op, RHS const & rhs) const
     {
-        functional::print()(o,
+        sake::assert_failure_action::functional::print()(o,
             macro, expression, filename, function, line_number,
             subexpression_index, subexpression,
             lhs, op, rhs
@@ -796,7 +796,7 @@ struct failure_action
 
 #ifdef failure_action
 
-        functional::print()(o,
+        sake::assert_failure_action::functional::print()(o,
             macro, expression, filename, function, line_number,
             BOOST_PP_ENUM( N, lhsn_opn_rhsn, ~ )
         );

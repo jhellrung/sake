@@ -97,26 +97,26 @@ namespace functional
 
 struct move
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::move, 1 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::move, 1 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::move<T>::type
+    typename sake::result_of::move<T>::type
     operator()(T&& x) const
-    { return static_cast< typename result_of::move<T>::type >(x); }
+    { return static_cast< typename sake::result_of::move<T>::type >(x); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::move< T& >::type
+    typename sake::result_of::move< T& >::type
     operator()(T& x) const
-    { return static_cast< typename result_of::move< T& >::type >(x); }
+    { return static_cast< typename sake::result_of::move< T& >::type >(x); }
 
     template< class T >
-    typename result_of::move< T const & >::type
+    typename sake::result_of::move< T const & >::type
     operator()(T const & x) const
-    { return static_cast< typename result_of::move< T const & >::type >(x); }
+    { return static_cast< typename sake::result_of::move< T const & >::type >(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -124,7 +124,7 @@ struct move
 
 } // namespace functional
 
-functional::move const move = { };
+sake::functional::move const move = { };
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
 

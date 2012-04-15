@@ -183,22 +183,22 @@ namespace functional
 
 struct equal
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::equal, (2,3) )
+    SAKE_RESULT_FROM_METAFUNCTION( boost_ext::fusion::result_of::equal, (2,3) )
 
     template< class T0, class T1 >
-    typename result_of::equal< T0, T1 >::type
+    typename boost_ext::fusion::result_of::equal< T0, T1 >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return operator()(x0, x1, sake::operators::equal); }
 
     template< class T0, class T1, class Equal >
-    typename result_of::equal< T0, T1, Equal >::type
+    typename boost_ext::fusion::result_of::equal< T0, T1, Equal >::type
     operator()(T0 const & x0, T1 const & x1, Equal const & equal_) const
     { return equal_private::dispatch0< T0, T1, Equal >::apply(x0, x1, equal_); }
 };
 
 } // namespace functional
 
-functional::equal const equal = { };
+boost_ext::fusion::functional::equal const equal = { };
 
 } // namespace fusion
 

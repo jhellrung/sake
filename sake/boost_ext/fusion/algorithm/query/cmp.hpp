@@ -172,22 +172,22 @@ namespace functional
 
 struct cmp
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::cmp, (2,3) )
+    SAKE_RESULT_FROM_METAFUNCTION( boost_ext::fusion::result_of::cmp, (2,3) )
 
     template< class T0, class T1 >
-    typename result_of::cmp< T0, T1 >::type
+    typename boost_ext::fusion::result_of::cmp< T0, T1 >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return operator()(x0, x1, sake::cmp); }
 
     template< class T0, class T1, class Cmp >
-    typename result_of::cmp< T0, T1, Cmp >::type
+    typename boost_ext::fusion::result_of::cmp< T0, T1, Cmp >::type
     operator()(T0 const & x0, T1 const & x1, Cmp const & cmp_) const
     { return cmp_private::dispatch< T0, T1, Cmp >::apply(x0, x1, cmp_); }
 };
 
 } // namespace functional
 
-functional::cmp const cmp = { };
+boost_ext::fusion::functional::cmp const cmp = { };
 
 } // namespace fusion
 

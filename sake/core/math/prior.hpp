@@ -52,7 +52,7 @@ namespace functional
 
 struct prior
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::prior, (1,2) )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::prior, (1,2) )
 
     template< class T >
     T operator()(T x) const
@@ -65,7 +65,7 @@ struct prior
 
 } // namespace functional
 
-functional::prior const prior = { };
+sake::functional::prior const prior = { };
 
 namespace prior_private
 {

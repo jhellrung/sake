@@ -162,7 +162,7 @@ class helper
 public:
     typedef typename boost::mpl::eval_if_c<
         boost::is_void< maybe_type >::value,
-        operators::result_of::SAKE_OPERATORS_NAME<
+        sake::operators::result_of::SAKE_OPERATORS_NAME<
             typename boost_ext::remove_qualifiers< T0 >::type,
             typename boost_ext::remove_qualifiers< T1 >::type
         >,
@@ -212,34 +212,34 @@ namespace functional
 
 struct SAKE_OPERATORS_NAME
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::SAKE_OPERATORS_NAME, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::operators::result_of::SAKE_OPERATORS_NAME, 2 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME< T0, T1 >::type
+    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0, T1 >::type
     operator()(T0&& x0, T1&& x1) const
     { return sake::forward< T0 >(x0) SAKE_OPERATORS_OP sake::forward< T1 >(x1); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME< T0&, T1& >::type
+    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0&, T1& >::type
     operator()(T0& x0, T1& x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME< T0&, T1 const & >::type
+    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0&, T1 const & >::type
     operator()(T0& x0, T1 const & x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME< T0 const &, T1& >::type
+    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0 const &, T1& >::type
     operator()(T0 const & x0, T1& x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename result_of::SAKE_OPERATORS_NAME< T0 const &, T1 const & >::type
+    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0 const &, T1 const & >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
@@ -249,7 +249,7 @@ struct SAKE_OPERATORS_NAME
 
 } // namespace functional
 
-functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
+sake::operators::functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
 
 } // namespace operators
 

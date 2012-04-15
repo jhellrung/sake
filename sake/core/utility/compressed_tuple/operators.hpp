@@ -169,7 +169,7 @@ operator>=(sake::compressed_tuple< T0N > const & x, sake::compressed_tuple< U0N 
 { return sake::cmp(x,y) >= sake::zero; }
 
 template< class_T0N, class_U0N >
-inline typename result_of::cmp<
+inline typename sake::result_of::cmp<
     sake::compressed_tuple< T0N >, sake::compressed_tuple< U0N > >::type
 cmp(sake::compressed_tuple< T0N > const & x, sake::compressed_tuple< U0N > const & y)
 { return boost_ext::fusion::cmp(x, y); }

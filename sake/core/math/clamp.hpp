@@ -76,12 +76,12 @@ namespace functional
 
 struct clamp
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::clamp, (3,4) )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::clamp, (3,4) )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class L, class T, class U >
-    typename result_of::clamp<L,T,U>::type
+    typename sake::result_of::clamp<L,T,U>::type
     operator()(L&& lower, T&& x, U&& upper) const
     {
         SAKE_ASSERT(!(upper < lower));
@@ -92,7 +92,7 @@ struct clamp
     }
 
     template< class L, class T, class U, class Less >
-    typename result_of::clamp<L,T,U>::type
+    typename sake::result_of::clamp<L,T,U>::type
     operator()(L&& lower, T&& x, U&& upper, Less less) const
     {
         SAKE_ASSERT(!less(upper, lower));
@@ -103,22 +103,22 @@ struct clamp
     }
 
     template< class L, class T >
-    typename result_of::clamp< L, T, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< L, T, sake::unbounded_tag >::type
     operator()(L&& lower, T&& x, sake::unbounded_tag) const
     { return !(x < lower) ? sake::forward<T>(x) : sake::forward<L>(lower); }
 
     template< class L, class T, class Less >
-    typename result_of::clamp< L, T, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< L, T, sake::unbounded_tag >::type
     operator()(L&& lower, T&& x, sake::unbounded_tag, Less less) const
     { return !less(x, lower) ? sake::forward<T>(x) : sake::forward<L>(lower); }
 
     template< class T, class U >
-    typename result_of::clamp< sake::unbounded_tag, T, U >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T, U >::type
     operator()(sake::unbounded_tag, T&& x, U&& upper) const
     { return !(upper < x) ? sake::forward<T>(x) : sake::forward<U>(upper); }
 
     template< class T, class U, class Less >
-    typename result_of::clamp< sake::unbounded_tag, T, U >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T, U >::type
     operator()(sake::unbounded_tag, T&& x, U&& upper, Less less) const
     { return !less(upper, x) ? sake::forward<T>(x) : sake::forward<U>(upper); }
 
@@ -133,7 +133,7 @@ struct clamp
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class L, class T, class U >
-    typename result_of::clamp< L&, T&, U& >::type
+    typename sake::result_of::clamp< L&, T&, U& >::type
     operator()(L& lower, T& x, U& upper) const
     {
         SAKE_ASSERT(!(upper < lower));
@@ -141,7 +141,7 @@ struct clamp
     }
 
     template< class L, class T, class U, class Less >
-    typename result_of::clamp< L&, T&, U& >::type
+    typename sake::result_of::clamp< L&, T&, U& >::type
     operator()(L& lower, T& x, U& upper, Less less) const
     {
         SAKE_ASSERT(!less(upper, lower));
@@ -149,7 +149,7 @@ struct clamp
     }
 
     template< class L, class T, class U >
-    typename result_of::clamp< L const &, T const &, U const & >::type
+    typename sake::result_of::clamp< L const &, T const &, U const & >::type
     operator()(L const & lower, T const & x, U const & upper) const
     {
         SAKE_ASSERT(!(upper < lower));
@@ -157,7 +157,7 @@ struct clamp
     }
 
     template< class L, class T, class U, class Less >
-    typename result_of::clamp< L const &, T const &, U const & >::type
+    typename sake::result_of::clamp< L const &, T const &, U const & >::type
     operator()(L const & lower, T const & x, U const & upper, Less less) const
     {
         SAKE_ASSERT(!less(upper, lower));
@@ -165,62 +165,62 @@ struct clamp
     }
 
     template< class L, class T >
-    typename result_of::clamp< L&, T&, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< L&, T&, sake::unbounded_tag >::type
     operator()(L& lower, T& x, sake::unbounded_tag) const
     { return !(x < lower) ? x : lower; }
 
     template< class L, class T, class Less >
-    typename result_of::clamp< L&, T&, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< L&, T&, sake::unbounded_tag >::type
     operator()(L& lower, T& x, sake::unbounded_tag, Less less) const
     { return !less(x, lower) ? x : lower; }
 
     template< class L, class T >
-    typename result_of::clamp< L const &, T const &, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< L const &, T const &, sake::unbounded_tag >::type
     operator()(L const & lower, T const & x, sake::unbounded_tag) const
     { return !(x < lower) ? x : lower; }
 
     template< class L, class T, class Less >
-    typename result_of::clamp< L const &, T const &, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< L const &, T const &, sake::unbounded_tag >::type
     operator()(L const & lower, T const & x, sake::unbounded_tag, Less less) const
     { return !less(x, lower) ? x : lower; }
 
     template< class T, class U >
-    typename result_of::clamp< sake::unbounded_tag, T&, U& >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T&, U& >::type
     operator()(sake::unbounded_tag, T& x, U& upper) const
     { return !(upper < x) ? x : upper; }
 
     template< class T, class U, class Less >
-    typename result_of::clamp< sake::unbounded_tag, T&, U& >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T&, U& >::type
     operator()(sake::unbounded_tag, T& x, U& upper, Less less) const
     { return !less(upper, x) ? x : upper; }
 
     template< class T, class U >
-    typename result_of::clamp< sake::unbounded_tag, T const &, U const & >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T const &, U const & >::type
     operator()(sake::unbounded_tag, T const & x, U const & upper) const
     { return !(upper < x) ? x : upper; }
 
     template< class T, class U, class Less >
-    typename result_of::clamp< sake::unbounded_tag, T const &, U const & >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T const &, U const & >::type
     operator()(sake::unbounded_tag, T const & x, U const & upper, Less less) const
     { return !less(upper, x) ? x : upper; }
 
     template< class T >
-    typename result_of::clamp< sake::unbounded_tag, T&, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T&, sake::unbounded_tag >::type
     operator()(sake::unbounded_tag, T& x, sake::unbounded_tag) const
     { return x; }
 
     template< class T, class Less >
-    typename result_of::clamp< sake::unbounded_tag, T&, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T&, sake::unbounded_tag >::type
     operator()(sake::unbounded_tag, T& x, sake::unbounded_tag, Less const & /*less*/) const
     { return x; }
 
     template< class T >
-    typename result_of::clamp< sake::unbounded_tag, T const &, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T const &, sake::unbounded_tag >::type
     operator()(sake::unbounded_tag, T const & x, sake::unbounded_tag) const
     { return x; }
 
     template< class T, class Less >
-    typename result_of::clamp< sake::unbounded_tag, T const &, sake::unbounded_tag >::type
+    typename sake::result_of::clamp< sake::unbounded_tag, T const &, sake::unbounded_tag >::type
     operator()(sake::unbounded_tag, T const & x, sake::unbounded_tag, Less const & /*less*/) const
     { return x; }
 
@@ -230,7 +230,7 @@ struct clamp
 
 } // namespace functional
 
-functional::clamp const clamp = { };
+sake::functional::clamp const clamp = { };
 
 } // namespace sake
 

@@ -51,7 +51,7 @@ namespace functional
 
 struct next
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::next, (1,2) )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::next, (1,2) )
 
     template< class T >
     T operator()(T x) const
@@ -64,7 +64,7 @@ struct next
 
 } // namespace functional
 
-functional::next const next = { };
+sake::functional::next const next = { };
 
 namespace next_private
 {

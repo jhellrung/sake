@@ -49,12 +49,12 @@ namespace extension {
 
 template< class T0, class T1, class U0, class U1 >
 struct equal0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
-    : operators::result_of::and_<
-          typename operators::result_of::equal<
+    : sake::operators::result_of::and_<
+          typename sake::operators::result_of::equal<
               typename boost_ext::add_reference_add_const< T0 >::type,
               typename boost_ext::add_reference_add_const< U0 >::type
           >::type,
-          typename operators::result_of::equal<
+          typename sake::operators::result_of::equal<
               typename boost_ext::add_reference_add_const< T1 >::type,
               typename boost_ext::add_reference_add_const< U1 >::type
           >::type
@@ -63,12 +63,12 @@ struct equal0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
 
 template< class T0, class T1, class U0, class U1 >
 struct not_equal0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
-    : operators::result_of::or_<
-          typename operators::result_of::not_equal<
+    : sake::operators::result_of::or_<
+          typename sake::operators::result_of::not_equal<
               typename boost_ext::add_reference_add_const< T0 >::type,
               typename boost_ext::add_reference_add_const< U0 >::type
           >::type,
-          typename operators::result_of::not_equal<
+          typename sake::operators::result_of::not_equal<
               typename boost_ext::add_reference_add_const< T1 >::type,
               typename boost_ext::add_reference_add_const< U1 >::type
           >::type
@@ -77,19 +77,19 @@ struct not_equal0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
 
 template< class T0, class T1, class U0, class U1 >
 struct less0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
-    : operators::result_of::or_<
-          typename operators::result_of::less<
+    : sake::operators::result_of::or_<
+          typename sake::operators::result_of::less<
               typename boost_ext::add_reference_add_const< T0 >::type,
               typename boost_ext::add_reference_add_const< U0 >::type
           >::type,
-          typename operators::result_of::and_<
-              typename operators::result_of::not_<
-                  typename operators::result_of::less<
+          typename sake::operators::result_of::and_<
+              typename sake::operators::result_of::not_<
+                  typename sake::operators::result_of::less<
                       typename boost_ext::add_reference_add_const< U0 >::type,
                       typename boost_ext::add_reference_add_const< T0 >::type
                   >::type
               >::type
-              typename operators::result_of::less<
+              typename sake::operators::result_of::less<
                   typename boost_ext::add_reference_add_const< T1 >::type,
                   typename boost_ext::add_reference_add_const< U1 >::type
               >::type
@@ -99,19 +99,19 @@ struct less0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
 
 template< class T0, class T1, class U0, class U1 >
 struct greater0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
-    : operators::result_of::or_<
-          typename operators::result_of::greater<
+    : sake::operators::result_of::or_<
+          typename sake::operators::result_of::greater<
               typename boost_ext::add_reference_add_const< T0 >::type,
               typename boost_ext::add_reference_add_const< U0 >::type
           >::type,
-          typename operators::result_of::and_<
-              typename operators::result_of::not_<
-                  typename operators::result_of::greater<
+          typename sake::operators::result_of::and_<
+              typename sake::operators::result_of::not_<
+                  typename sake::operators::result_of::greater<
                       typename boost_ext::add_reference_add_const< U0 >::type,
                       typename boost_ext::add_reference_add_const< T0 >::type
                   >::type
               >::type
-              typename operators::result_of::greater<
+              typename sake::operators::result_of::greater<
                   typename boost_ext::add_reference_add_const< T1 >::type,
                   typename boost_ext::add_reference_add_const< U1 >::type
               >::type
@@ -121,19 +121,19 @@ struct greater0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
 
 template< class T0, class T1, class U0, class U1 >
 struct less_equal0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
-    : operators::result_of::and_<
-          typename operators::result_of::less_equal<
+    : sake::operators::result_of::and_<
+          typename sake::operators::result_of::less_equal<
               typename boost_ext::add_reference_add_const< T0 >::type,
               typename boost_ext::add_reference_add_const< U0 >::type
           >::type,
-          typename operators::result_of::or_<
-              typename operators::result_of::not_<
-                  typename operators::result_of::less_equal<
+          typename sake::operators::result_of::or_<
+              typename sake::operators::result_of::not_<
+                  typename sake::operators::result_of::less_equal<
                       typename boost_ext::add_reference_add_const< U0 >::type,
                       typename boost_ext::add_reference_add_const< T0 >::type
                   >::type
               >::type
-              typename operators::result_of::less_equal<
+              typename sake::operators::result_of::less_equal<
                   typename boost_ext::add_reference_add_const< T1 >::type,
                   typename boost_ext::add_reference_add_const< U1 >::type
               >::type
@@ -143,19 +143,19 @@ struct less_equal0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
 
 template< class T0, class T1, class U0, class U1 >
 struct greater_equal0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
-    : operators::result_of::and_<
-          typename operators::result_of::greater_equal<
+    : sake::operators::result_of::and_<
+          typename sake::operators::result_of::greater_equal<
               typename boost_ext::add_reference_add_const< T0 >::type,
               typename boost_ext::add_reference_add_const< U0 >::type
           >::type,
-          typename operators::result_of::or_<
-              typename operators::result_of::not_<
-                  typename operators::result_of::greater_equal<
+          typename sake::operators::result_of::or_<
+              typename sake::operators::result_of::not_<
+                  typename sake::operators::result_of::greater_equal<
                       typename boost_ext::add_reference_add_const< U0 >::type,
                       typename boost_ext::add_reference_add_const< T0 >::type
                   >::type
               >::type
-              typename operators::result_of::greater_equal<
+              typename sake::operators::result_of::greater_equal<
                   typename boost_ext::add_reference_add_const< T1 >::type,
                   typename boost_ext::add_reference_add_const< U1 >::type
               >::type
@@ -173,11 +173,11 @@ namespace extension {
 template< class T0, class T1, class U0, class U1 >
 struct cmp0< sake::pair<T0,T1>, sake::pair<U0,U1>, void >
     : boost_ext::common_type<
-          typename result_of::cmp<
+          typename sake::result_of::cmp<
               typename boost_ext::add_reference_add_const< T0 >::type,
               typename boost_ext::add_reference_add_const< U0 >::type
           >::type,
-          typename result_of::cmp<
+          typename sake::result_of::cmp<
               typename boost_ext::add_reference_add_const< T1 >::type,
               typename boost_ext::add_reference_add_const< U1 >::type
           >::type
@@ -191,43 +191,43 @@ namespace pair_adl
 {
 
 template< class T0, class T1, class U0, class U1 >
-inline typename operators::result_of::equal<
+inline typename sake::operators::result_of::equal<
     sake::pair<T0,T1>, sake::pair<U0,U1> >::type
 operator==(sake::pair<T0,T1> const & x, sake::pair<U0,U1> const & y)
 { return x.first == y.first && x.second == y.second; }
 
 template< class T0, class T1, class U0, class U1 >
-inline typename operators::result_of::not_equal<
+inline typename sake::operators::result_of::not_equal<
     sake::pair<T0,T1>, sake::pair<U0,U1> >::type
 operator!=(sake::pair<T0,T1> const & x, sake::pair<U0,U1> const & y)
 { return x.first != y.first || x.second != y.second; }
 
 template< class T0, class T1, class U0, class U1 >
-inline typename operators::result_of::less<
+inline typename sake::operators::result_of::less<
     sake::pair<T0,T1>, sake::pair<U0,U1> >::type
 operator<(sake::pair<T0,T1> const & x, sake::pair<U0,U1> const & y)
 { return x.first < y.first || (!(y.first < x.first) && x.second < y.second); }
 
 template< class T0, class T1, class U0, class U1 >
-inline typename operators::result_of::less<
+inline typename sake::operators::result_of::less<
     sake::pair<T0,T1>, sake::pair<U0,U1> >::type
 operator>(sake::pair<T0,T1> const & x, sake::pair<U0,U1> const & y)
 { return x.first > y.first || (!(y.first > x.first) && x.second > y.second); }
 
 template< class T0, class T1, class U0, class U1 >
-inline typename operators::result_of::less<
+inline typename sake::operators::result_of::less<
     sake::pair<T0,T1>, sake::pair<U0,U1> >::type
 operator<=(sake::pair<T0,T1> const & x, sake::pair<U0,U1> const & y)
 { return x.first <= y.first && (!(y.first <= x.first) || x.second <= y.second); }
 
 template< class T0, class T1, class U0, class U1 >
-inline typename operators::result_of::less<
+inline typename sake::operators::result_of::less<
     sake::pair<T0,T1>, sake::pair<U0,U1> >::type
 operator>=(sake::pair<T0,T1> const & x, sake::pair<U0,U1> const & y)
 { return x.first >= y.first && (!(y.first >= x.first) || x.second >= y.second); }
 
 template< class T0, class T1, class U0, class U1 >
-inline typename result_of::cmp<
+inline typename sake::result_of::cmp<
     sake::pair<T0,T1>, sake::pair<U0,U1> >::type
 cmp(sake::pair< T0, T1 > const & x, sake::pair< U0, U1 > const & y)
 {

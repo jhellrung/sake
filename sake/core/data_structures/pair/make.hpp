@@ -39,10 +39,10 @@ struct make_pair
 } // namespace result_of
 
 template< class T0, class T1 >
-inline typename result_of::make_pair< T0, T1 >::type
+inline typename sake::result_of::make_pair< T0, T1 >::type
 make_pair(SAKE_FWD_REF( T0 ) x0, SAKE_FWD_REF( T1 ) x1)
 {
-    typedef typename result_of::make_pair< T0, T1 >::type result_type;
+    typedef typename sake::result_of::make_pair< T0, T1 >::type result_type;
     return result_type(sake::forward< T0 >(x0), sake::forward< T1 >(x1));
 }
 

@@ -84,34 +84,34 @@ struct cref_if_nbvo< T&, Tags >
 } // namespace result_of
 
 template< class T >
-inline typename result_of::ref_if_nbvo<T>::type
+inline typename sake::result_of::ref_if_nbvo<T>::type
 ref_if_nbvo(T& x)
-{ return static_cast< typename result_of::ref_if_nbvo<T>::type >(x); }
+{ return static_cast< typename sake::result_of::ref_if_nbvo<T>::type >(x); }
 
 template< class T >
-inline typename result_of::ref_if_nbvo< T const >::type
+inline typename sake::result_of::ref_if_nbvo< T const >::type
 ref_if_nbvo(T const & x)
-{ return static_cast< typename result_of::ref_if_nbvo< T const >::type >(x); }
+{ return static_cast< typename sake::result_of::ref_if_nbvo< T const >::type >(x); }
 
 template< class T, class Tags >
-inline typename result_of::ref_if_nbvo< T, Tags >::type
+inline typename sake::result_of::ref_if_nbvo< T, Tags >::type
 ref_if_nbvo(T& x, sake::type_tag< Tags >)
-{ return static_cast< typename result_of::ref_if_nbvo< T, Tags >::type >(x); }
+{ return static_cast< typename sake::result_of::ref_if_nbvo< T, Tags >::type >(x); }
 
 template< class T, class Tags >
-inline typename result_of::ref_if_nbvo< T const, Tags >::type
+inline typename sake::result_of::ref_if_nbvo< T const, Tags >::type
 ref_if_nbvo(T const & x, sake::type_tag< Tags >)
-{ return static_cast< typename result_of::ref_if_nbvo< T const, Tags >::type >(x); }
+{ return static_cast< typename sake::result_of::ref_if_nbvo< T const, Tags >::type >(x); }
 
 template< class T >
-inline typename result_of::cref_if_nbvo<T>::type
+inline typename sake::result_of::cref_if_nbvo<T>::type
 cref_if_nbvo(T const & x)
-{ return static_cast< typename result_of::cref_if_nbvo<T>::type >(x); }
+{ return static_cast< typename sake::result_of::cref_if_nbvo<T>::type >(x); }
 
 template< class T, class Tags >
-inline typename result_of::cref_if_nbvo< T, Tags >::type
+inline typename sake::result_of::cref_if_nbvo< T, Tags >::type
 cref_if_nbvo(T const & x, sake::type_tag< Tags >)
-{ return static_cast< typename result_of::cref_if_nbvo< T, Tags >::type >(x); }
+{ return static_cast< typename sake::result_of::cref_if_nbvo< T, Tags >::type >(x); }
 
 } // namespace sake
 

@@ -68,14 +68,14 @@ make_tuple()
  && !defined( BOOST_NO_VARIADIC_TEMPLATES )
 
 template< class... T >
-typename result_of::make_tuple< T... >::type
+typename sake::result_of::make_tuple< T... >::type
 make_tuple(T&&... x)
-{ return typename result_of::make_tuple< T... >::type(sake::forward<T>(x)...); }
+{ return typename sake::result_of::make_tuple< T... >::type(sake::forward<T>(x)...); }
 
 #else // #if !defined( ... ) && ...
 
 #define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
-    result_of::make_tuple< BOOST_PP_TUPLE_REM_CTOR( n, T_tuple ) >
+    sake::result_of::make_tuple< BOOST_PP_TUPLE_REM_CTOR( n, T_tuple ) >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     make_tuple
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \

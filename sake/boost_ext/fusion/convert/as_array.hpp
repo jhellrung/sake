@@ -99,7 +99,7 @@ struct dispatch;
 } // namespace as_array_private
 
 template< class Sequence >
-inline typename result_of::as_array< Sequence >::type
+inline typename boost_ext::fusion::result_of::as_array< Sequence >::type
 as_array(Sequence const & s)
 { return as_array_private::dispatch< Sequence >::apply(s); }
 
@@ -123,7 +123,7 @@ as_array(boost::array<T,N> const & a)
 template< class Sequence >
 struct dispatch< Sequence, N >
 {
-    typedef typename result_of::as_array< Sequence >::type result_type;
+    typedef typename boost_ext::fusion::result_of::as_array< Sequence >::type result_type;
     static result_type apply(Sequence const & s)
     {
         result_type a = {{ BOOST_PP_ENUM( N, at_c_n_s, ~ ) }};

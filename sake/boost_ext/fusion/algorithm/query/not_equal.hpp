@@ -185,22 +185,22 @@ namespace functional
 
 struct not_equal
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::not_equal, (2,3) )
+    SAKE_RESULT_FROM_METAFUNCTION( boost_ext::fusion::result_of::not_equal, (2,3) )
 
     template< class T0, class T1 >
-    typename result_of::not_equal< T0, T1 >::type
+    typename boost_ext::fusion::result_of::not_equal< T0, T1 >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return operator()(x0, x1, sake::operators::not_equal); }
 
     template< class T0, class T1, class NotEqual >
-    typename result_of::not_equal< T0, T1, NotEqual >::type
+    typename boost_ext::fusion::result_of::not_equal< T0, T1, NotEqual >::type
     operator()(T0 const & x0, T1 const & x1, NotEqual const & not_equal_) const
     { return not_equal_private::dispatch0< T0, T1, NotEqual >::apply(x0, x1, not_equal_); }
 };
 
 } // namespace functional
 
-functional::not_equal const not_equal = { };
+boost_ext::fusion::functional::not_equal const not_equal = { };
 
 } // namespace fusion
 

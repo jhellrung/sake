@@ -13,7 +13,7 @@ operator()(
     char const * const macro, char const * const expression,
     char const * const filename, char const * const function, unsigned int const line_number) const
 {
-    functional::print()(o,
+    sake::assert_failure_action::functional::print()(o,
         macro, expression, filename, function, line_number
     );
     failure_action_abort();
@@ -27,7 +27,7 @@ operator()(
     char const * const filename, char const * const function, unsigned int const line_number,
     unsigned int const subexpression_index, char const * const subexpression) const
 {
-    functional::print()(o,
+    sake::assert_failure_action::functional::print()(o,
         macro, expression, filename, function, line_number,
         subexpression_index, subexpression
     );
