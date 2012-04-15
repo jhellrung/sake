@@ -40,7 +40,6 @@
 #include <boost/type_traits/is_void.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
@@ -58,6 +57,7 @@
 #include <sake/core/math/private/sign_common.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/utility/declval.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
 
@@ -72,8 +72,8 @@ struct dispatch_index;
 
 template<
     class T0, class T1,
-    class Result = typename result_of::cmp< T0, T1 >::type,
-    unsigned int = dispatch_index< T0, T1 >::value
+    class Result = typename sake::result_of::cmp< T0, T1 >::type,
+    int = dispatch_index< T0, T1 >::value
 >
 struct dispatch;
 
@@ -136,12 +136,12 @@ namespace functional
 
 struct cmp
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::cmp, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::cmp, 2 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename result_of::cmp< T0, T1 >::type
+    typename sake::result_of::cmp< T0, T1 >::type
     operator()(T0&& x0, T1&& x1) const
     {
         return cmp_private::dispatch< T0, T1 >::apply(
@@ -153,7 +153,7 @@ struct cmp
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename result_of::cmp< T0&, T1& >::type
+    typename sake::result_of::cmp< T0&, T1& >::type
     operator()(T0& x0, T1& x1) const
     {
         return cmp_private::dispatch<
@@ -163,7 +163,7 @@ struct cmp
     }
 
     template< class T0, class T1 >
-    typename result_of::cmp< T0&, T1 const & >::type
+    typename sake::result_of::cmp< T0&, T1 const & >::type
     operator()(T0& x0, T1 const & x1) const
     {
         return cmp_private::dispatch<
@@ -173,7 +173,7 @@ struct cmp
     }
 
     template< class T0, class T1 >
-    typename result_of::cmp< T0 const &, T1& >::type
+    typename sake::result_of::cmp< T0 const &, T1& >::type
     operator()(T0 const & x0, T1& x1) const
     {
         return cmp_private::dispatch<
@@ -183,7 +183,7 @@ struct cmp
     }
 
     template< class T0, class T1 >
-    typename result_of::cmp< T0 const &, T1 const & >::type
+    typename sake::result_of::cmp< T0 const &, T1 const & >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return cmp_private::dispatch< T0 const &, T1 const & >::apply(x0, x1); }
 
@@ -195,10 +195,10 @@ struct cmp
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace cmp_adl_barrier
-{ functional::cmp const cmp = { }; }
+{ sake::functional::cmp const cmp = { }; }
 using namespace cmp_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-functional::cmp const cmp = { };
+sake::functional::cmp const cmp = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
@@ -293,17 +293,15 @@ namespace cmp_private
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 1, 1 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
-using boost_ext::mpl::uint;
-
 template< class T0, class T1 >
 struct dispatch_index
 {
-    static unsigned int const value = boost_ext::mpl::
-             if_< is_callable_mem_fun< T0, void ( T1 ) >, uint<3> >::type::template
-        else_if < is_callable_mem_fun< T1, void ( T0 ) >, uint<2> >::type::template
-        else_if < ::sake_cmp_private::is_callable< void ( T0, T1 ) >, uint<1> >::type::template
-        else_if < ::sake_cmp_private::is_callable< void ( T1, T0 ) >, uint<2> >::type::template
-        else_   < uint<0> >::type::value;
+    static int const value = boost_ext::mpl::
+         if_< cmp_private::is_callable_mem_fun< T0, void ( T1 ) >, sake::int_tag<3> >::type::template
+    else_if < cmp_private::is_callable_mem_fun< T1, void ( T0 ) >, sake::int_tag<2> >::type::template
+    else_if < ::sake_cmp_private::is_callable< void ( T0, T1 ) >, sake::int_tag<1> >::type::template
+    else_if < ::sake_cmp_private::is_callable< void ( T1, T0 ) >, sake::int_tag<2> >::type::template
+    else_   < sake::int_tag<0> >::type::value;
 };
 
 template< class T0, class T1 >
@@ -378,8 +376,8 @@ struct dispatch< T0, T1, Result, 3 >
 template< class T0, class T1 >
 struct dispatch< T0, T1, void, 2 >
     : boost_ext::remove_rvalue_reference<
-          typename operators::result_of::unary_minus<
-              typename result_of::cmp< T1, T0 >::type
+          typename sake::operators::result_of::unary_minus<
+              typename sake::result_of::cmp< T1, T0 >::type
           >::type
       >
 { };
@@ -405,10 +403,10 @@ struct dispatch< T0, T1, Result, 1 >
 template<
     class T0, class T1,
     class B01 = typename boost_ext::remove_rvalue_reference<
-                    typename operators::result_of::less< T0, T1 >::type
+                    typename sake::operators::result_of::less< T0, T1 >::type
                 >::type,
     class B10 = typename boost_ext::remove_rvalue_reference<
-                    typename operators::result_of::less< T1, T0 >::type
+                    typename sake::operators::result_of::less< T1, T0 >::type
                 >::type
 >
 struct dispatch0_impl;
@@ -421,8 +419,8 @@ struct dispatch0_impl
     {
         BOOST_STATIC_ASSERT((boost_ext::is_convertible< B01, bool >::value));
         BOOST_STATIC_ASSERT((boost_ext::is_convertible< B10, bool >::value));
-        B01 const b01 = operators::less(x0, x1);
-        B10 const b10 = operators::less(x1, x0);
+        B01 const b01 = sake::operators::less(x0, x1);
+        B10 const b10 = sake::operators::less(x1, x0);
         return sake::indeterminate(b01)
             || sake::indeterminate(b10) ?
                sake::fuzzy_sign_t() :
@@ -440,8 +438,8 @@ struct dispatch0_impl< T0, T1, bool, bool >
     static type apply(T0 const & x0, T1 const & x1)
     {
         return sake::sign_t(
-            static_cast< int >(operators::less(x1, x0))
-          - static_cast< int >(operators::less(x0, x1))
+            static_cast< int >(sake::operators::less(x1, x0))
+          - static_cast< int >(sake::operators::less(x0, x1))
         );
     }
 };

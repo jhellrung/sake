@@ -35,6 +35,7 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
 
+#include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/add_cv_if.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference.hpp>
@@ -44,8 +45,8 @@
 #include <sake/core/expr_traits/is_convertible.hpp>
 #include <sake/core/introspection/has_operator_star.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
-#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/utility/declval.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
@@ -61,7 +62,7 @@ struct dispatch_index;
 
 template<
     class From, class To,
-    unsigned int = dispatch_index< From, To >::value
+    int = dispatch_index< From, To >::value
 >
 struct dispatch;
 
@@ -100,16 +101,16 @@ struct as_reference_to
     template< class > struct result;
     template< class This, class From >
     struct result< This ( From ) >
-        : result_of::as_reference_to< From, To >
+        : sake::result_of::as_reference_to< From, To >
     { };
 
     template< class From >
-    typename result_of::as_reference_to< From, To >::type
+    typename sake::result_of::as_reference_to< From, To >::type
     operator()(From& from) const
     { return as_reference_to_private::dispatch< From, To >::apply(from); }
 
     template< class From >
-    typename result_of::as_reference_to< From const, To >::type
+    typename sake::result_of::as_reference_to< From const, To >::type
     operator()(From const & from) const
     { return as_reference_to_private::dispatch< From const, To >::apply(from); }
 };
@@ -117,17 +118,17 @@ struct as_reference_to
 template<>
 struct as_reference_to< void >
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::as_reference_to, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::as_reference_to, 2 )
 
     template< class From, class To >
-    typename result_of::as_reference_to< From, To >::type
+    typename sake::result_of::as_reference_to< From, To >::type
     operator()(From& from, sake::type_tag< To >) const
-    { return functional::as_reference_to< To >()(from); }
+    { return sake::functional::as_reference_to< To >()(from); }
 
     template< class From, class To >
-    typename result_of::as_reference_to< From const, To >::type
+    typename sake::result_of::as_reference_to< From const, To >::type
     operator()(From const & from, sake::type_tag< To >) const
-    { return functional::as_reference_to< To >()(from); }
+    { return sake::functional::as_reference_to< To >()(from); }
 };
 
 } // namespace functional
@@ -136,14 +137,14 @@ namespace as_reference_to_adl_barrier
 {
 
 template< class To, class From >
-inline typename result_of::as_reference_to< From, To >::type
+inline typename sake::result_of::as_reference_to< From, To >::type
 as_reference_to(From& from)
-{ return functional::as_reference_to< To >()(from); }
+{ return sake::functional::as_reference_to< To >()(from); }
 
 template< class To, class From >
-inline typename result_of::as_reference_to< From const, To >::type
+inline typename sake::result_of::as_reference_to< From const, To >::type
 as_reference_to(From const & from)
-{ return functional::as_reference_to< To >()(from); }
+{ return sake::functional::as_reference_to< To >()(from); }
 
 } // namespace as_reference_to_adl_barrier
 
@@ -192,13 +193,26 @@ namespace as_reference_to_private
 template< class From, class To >
 struct dispatch_index
 {
-    static unsigned int const n =
-        (1u << 3) * sake_as_reference_to_private::is_callable< void ( From&, sake::type_tag< To > ) >::value
-      | (1u << 2) * sake::is_convertible_wnrbt< From&, To const & >::value
-      | (1u << 2) * sake::is_convertible_wnrbt< From&, To const volatile & >::value
-      | (1u << 1) * sake::has_operator_star< From& >::value
-      | (1u << 0);
-    static unsigned int const value = sake::static_intlog2_c<n>::value;
+    static int const value = boost_ext::mpl::
+         if_<
+        ::sake_as_reference_to_private::is_callable< void ( From&, sake::type_tag< To > ) >,
+        sake::int_tag<3>
+    >::type::template
+    else_if <
+        sake::is_convertible_wnrbt< From&, To const & >,
+        sake::int_tag<2>
+    >::type::template
+    else_if <
+        sake::is_convertible_wnrbt< From&, To const volatile & >,
+        sake::int_tag<2>
+    >::type::template
+    else_if <
+        sake::has_operator_star< From& >,
+        sake::int_tag<1>
+    >::type::template
+    else_   <
+        sake::int_tag<0>
+    >::type::value;
 };
 
 template< class From, class To >

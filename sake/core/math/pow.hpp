@@ -21,6 +21,7 @@
 #include <boost/type_traits/is_empty.hpp>
 #include <boost/type_traits/is_signed.hpp>
 
+#include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -32,11 +33,11 @@
 #include <sake/core/math/one.hpp>
 #include <sake/core/math/sqr.hpp>
 #include <sake/core/math/sqr_ip.hpp>
-#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_cast.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -50,7 +51,7 @@ struct dispatch_index;
 
 template<
     class B, class P,
-    unsigned int = dispatch_index<B,P>::value
+    int = dispatch_index<B,P>::value
 >
 struct dispatch;
 
@@ -89,19 +90,19 @@ struct pow
     template< class > struct result;
     template< class This, class B >
     struct result< This ( B ) >
-        : result_of::pow<B,P>
+        : sake::result_of::pow<B,P>
     { };
     template< class This, class B, class I >
     struct result< This ( B, I ) >
-        : result_of::pow<B,P>
+        : sake::result_of::pow<B,P>
     { };
 
     template< class B >
-    typename result_of::pow<B,P>::type
+    typename sake::result_of::pow<B,P>::type
     operator()(B b) const
     { return pow_private::dispatch_c< B, P::value >::apply(b); }
     template< class B, class I >
-    typename result_of::pow<B,P>::type
+    typename sake::result_of::pow<B,P>::type
     operator()(B b, I i) const
     { return pow_private::dispatch_c< B, P::value >::apply(b,i); }
 };
@@ -109,14 +110,14 @@ struct pow
 template<>
 struct pow< void >
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::pow, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::pow, 2 )
 
     template< class B, class P >
-    typename result_of::pow<B,P>::value
+    typename sake::result_of::pow<B,P>::value
     operator()(B b, P p) const
     { return pow_private::dispatch<B,P>::apply(b,p); }
     template< class B, class P, class I >
-    typename result_of::pow<B,P>::value
+    typename sake::result_of::pow<B,P>::value
     operator()(B b, P p, I i) const
     { return pow_private::dispatch<B,P>::apply(b,p,i); }
 };
@@ -135,11 +136,11 @@ struct pow_c
     { };
 
     template< class B >
-    typename result_of::pow_c<B,P>::type
+    typename sake::result_of::pow_c<B,P>::type
     operator()(B b) const
     { return pow_private::dispatch_c<B,P>::apply(b); }
     template< class B, class I >
-    typename result_of::pow_c<B,P>::type
+    typename sake::result_of::pow_c<B,P>::type
     operator()(B b, I i) const
     { return pow_private::dispatch_c<B,P>::apply(b,i); }
 };
@@ -147,44 +148,42 @@ struct pow_c
 } // namespace functional
 
 template< class B, class P >
-inline typename result_of::pow<B,P>::type
+inline typename sake::result_of::pow<B,P>::type
 pow(B b, P p)
 { return pow_private::dispatch<B,P>::apply(b,p); }
 template< class B, class P, class I >
-inline typename result_of::pow<B,P>::type
+inline typename sake::result_of::pow<B,P>::type
 pow(B b, P p, I i)
 { return pow_private::dispatch<B,P>::apply(b,p,i); }
 
 template< class P, class B >
-inline typename result_of::pow_c< B, P::value >::type
+inline typename sake::result_of::pow_c< B, P::value >::type
 pow(B b)
 { return pow_private::dispatch_c< B, P::value >::apply(b); }
 template< class P, class B, class I >
-inline typename result_of::pow_c< B, P::value >::type
+inline typename sake::result_of::pow_c< B, P::value >::type
 pow(B b, I i)
 { return pow_private::dispatch_c< B, P::value >::apply(b,i); }
 
 template< int P, class B >
-inline typename result_of::pow_c<B,P>::type
+inline typename sake::result_of::pow_c<B,P>::type
 pow_c(B b)
 { return pow_private::dispatch_c<B,P>::apply(b); }
 template< int P, class B, class I >
-inline typename result_of::pow_c<B,P>::type
+inline typename sake::result_of::pow_c<B,P>::type
 pow_c(B b, I i)
 { return pow_private::dispatch_c<B,P>::apply(b,i); }
 
 namespace pow_private
 {
 
-using boost_ext::mpl::uint;
-
 template< class B, class P >
 struct dispatch_index
 {
-    static unsigned int const value = boost_ext::mpl::
-             if_< sake::has_isc_value<P>, uint<2> >::type::template
-        else_if < boost::is_signed<P>, uint<1> >::type::template
-        else_   < uint<0> >::type::value;
+    static int const value = boost_ext::mpl::
+             if_< sake::has_isc_value<P>, sake::int_tag<2> >::type::template
+        else_if < boost::is_signed<P>, sake::int_tag<1> >::type::template
+        else_   < sake::int_tag<0> >::type::value;
 };
 
 template< class B, class P >
@@ -246,7 +245,7 @@ struct dispatch<B,P,0>
 template< int P, class B >
 struct dispatch_c< B, P, false, false >
 {
-    typedef typename result_of::sqr<B>::type sqr_type;
+    typedef typename sake::result_of::sqr<B>::type sqr_type;
     typedef typename dispatch_c< sqr_type, P/2 >::type type;
     static type apply(B& b)
     {
@@ -264,8 +263,8 @@ struct dispatch_c< B, P, false, false >
 template< int P, class B >
 struct dispatch_c< B, P, false, true >
 {
-    typedef typename result_of::sqr< B& >::type sqr_type;
-    typedef typename operators::result_of::multiply<
+    typedef typename sake::result_of::sqr< B& >::type sqr_type;
+    typedef typename sake::operators::result_of::multiply<
         B, typename dispatch_c< sqr_type, P/2 >::type
     >::type type;
     static type apply(B& b)
@@ -286,7 +285,7 @@ struct dispatch_c< B, P, false, true >
 template< int P, class B, bool _ >
 struct dispatch_c< B, P, true, _ >
 {
-    typedef typename result_of::inv< typename dispatch_c<B,-P>::type >::type type;
+    typedef typename sake::result_of::inv< typename dispatch_c<B,-P>::type >::type type;
     static type apply(B& b)
     { return sake::inv(SAKE_RV_CAST((dispatch_c<B,-P>::apply(b)))); }
     template< class I >
@@ -297,8 +296,8 @@ struct dispatch_c< B, P, true, _ >
 template< class B >
 struct dispatch_c< B, 3, false, true >
 {
-    typedef typename result_of::sqr< B& >::type sqr_type;
-    typedef typename operators::result_of::multiply< B, sqr_type >::type type;
+    typedef typename sake::result_of::sqr< B& >::type sqr_type;
+    typedef typename sake::operators::result_of::multiply< B, sqr_type >::type type;
     static type apply(B& b)
     {
         sqr_type b2 = sake::sqr(b);
@@ -312,7 +311,7 @@ struct dispatch_c< B, 3, false, true >
 template< class B >
 struct dispatch_c< B, 2, false, false >
 {
-    typedef typename result_of::sqr<B>::type type;
+    typedef typename sake::result_of::sqr<B>::type type;
     static type apply(B& b)
     { return sake::sqr(sake::move(b)); }
     template< class I >

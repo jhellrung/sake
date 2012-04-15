@@ -39,7 +39,6 @@
 #include <boost/type_traits/remove_cv.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -55,6 +54,7 @@
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/declval.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
 
@@ -69,8 +69,8 @@ struct dispatch_index;
 
 template<
     class T,
-    class Result = typename result_of::sign<T>::type,
-    unsigned int = dispatch_index<T>::value
+    class Result = typename sake::result_of::sign<T>::type,
+    int = dispatch_index<T>::value
 >
 struct dispatch;
 
@@ -132,19 +132,19 @@ namespace functional
 
 struct sign
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::sign, 1 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::sign, 1 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::sign<T>::type
+    typename sake::result_of::sign<T>::type
     operator()(T&& x) const
     { return sign_private::dispatch<T>::apply(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::sign< T& >::type
+    typename sake::result_of::sign< T& >::type
     operator()(T& x) const
     {
         return sign_private::dispatch<
@@ -153,7 +153,7 @@ struct sign
     }
 
     template< class T >
-    typename result_of::sign< T const & >::type
+    typename sake::result_of::sign< T const & >::type
     operator()(T const & x) const
     { return sign_private::dispatch< T const & >::apply(x); }
 
@@ -165,10 +165,10 @@ struct sign
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace sign_adl_barrier
-{ functional::sign const sign = { }; }
+{ sake::functional::sign const sign = { }; }
 using namespace sign_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-functional::sign const sign = { };
+sake::functional::sign const sign = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
@@ -239,15 +239,13 @@ namespace sign_private
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
-using boost_ext::mpl::uint;
-
 template< class T >
 struct dispatch_index
 {
-    static unsigned int const value = boost_ext::mpl::
-             if_< is_callable_mem_fun<T>, uint<2> >::type::template
-        else_if < ::sake_sign_private::is_callable< void ( T ) >, uint<1> >::type::template
-        else_   < uint<0> >::type::value;
+    static int const value = boost_ext::mpl::
+         if_< is_callable_mem_fun<T>, sake::int_tag<2> >::type::template
+    else_if < ::sake_sign_private::is_callable< void ( T ) >, sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type::value;
 };
 
 template< class T >

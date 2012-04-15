@@ -24,12 +24,13 @@
 #include <cstddef>
 
 #include <boost/static_assert.hpp>
-#include <boost/utility/enable_if.hpp>
+
+#include <sake/boost_ext/mpl/if.hpp>
 
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/move/move.hpp>
-#include <sake/core/utility/dispatch_priority_tag.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/workaround.hpp>
 
 namespace sake
@@ -73,10 +74,10 @@ struct swap
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace swap_adl_barrier
-{ functional::swap const swap = { }; }
+{ sake::functional::swap const swap = { }; }
 using namespace swap_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-functional::swap const swap = { };
+sake::functional::swap const swap = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
@@ -108,36 +109,28 @@ namespace swap_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class T0, class T1 >
-typename boost::enable_if_c<
-    is_callable_mem_fun< T0&, void ( T1& ) >::value
->::type
-dispatch(T0& x0, T1& x1, sake::dispatch_priority_tag<4>)
+inline void
+dispatch(T0& x0, T1& x1, sake::int_tag<4>)
 { x0.swap(x1); }
 
 template< class T0, class T1 >
-typename boost::enable_if_c<
-    is_callable_mem_fun< T1&, void ( T0& ) >::value
->::type
-dispatch(T0& x0, T1& x1, sake::dispatch_priority_tag<3>)
+inline void
+dispatch(T0& x0, T1& x1, sake::int_tag<3>)
 { x1.swap(x0); }
 
 template< class T0, class T1 >
-typename boost::enable_if_c<
-    ::sake_swap_private::is_callable< void ( T0&, T1& ) >::value
->::type
-dispatch(T0& x0, T1& x1, sake::dispatch_priority_tag<2>)
+inline void
+dispatch(T0& x0, T1& x1, sake::int_tag<2>)
 { ::sake_swap_private::adl(x0, x1); }
 
 template< class T0, class T1 >
-typename boost::enable_if_c<
-    ::sake_swap_private::is_callable< void ( T1&, T0& ) >::value
->::type
-dispatch(T0& x0, T1& x1, sake::dispatch_priority_tag<1>)
+inline void
+dispatch(T0& x0, T1& x1, sake::int_tag<1>)
 { ::sake_swap_private::adl(x1, x0); }
 
 template< class T0, class T1 >
 inline void
-dispatch(T0& x0, T1& x1, sake::dispatch_priority_tag<0>)
+dispatch(T0& x0, T1& x1, sake::int_tag<0>)
 {
     T0 temp(sake::move(x0));
     x0 = sake::move(x1);
@@ -147,7 +140,15 @@ dispatch(T0& x0, T1& x1, sake::dispatch_priority_tag<0>)
 template< class T0, class T1 >
 inline void
 impl(T0& x0, T1& x1)
-{ swap_private::dispatch(x0, x1, sake::dispatch_priority_tag<4>()); }
+{
+    typedef typename boost_ext::mpl::
+         if_< swap_private::is_callable_mem_fun< T0&, void ( T1& ) >, sake::int_tag<4> >::type::template
+    else_if < swap_private::is_callable_mem_fun< T1&, void ( T0& ) >, sake::int_tag<3> >::type::template
+    else_if < ::sake_swap_private::is_callable< void ( T0&, T1& ) >, sake::int_tag<2> >::type::template
+    else_if < ::sake_swap_private::is_callable< void ( T1&, T0& ) >, sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type int_tag_;
+    swap_private::dispatch(x0, x1, int_tag_());
+}
 
 } // namespace swap_private
 

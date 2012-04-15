@@ -36,7 +36,6 @@
 #include <boost/type_traits/remove_cv.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
@@ -52,10 +51,10 @@
 #include <sake/core/math/inverse.hpp>
 #include <sake/core/math/inverse_fwd.hpp>
 #include <sake/core/math/private/inv_common.hpp>
-#include <sake/core/math/static_intlog2.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/utility/declval.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
 
@@ -70,8 +69,8 @@ struct dispatch_index;
 
 template<
     class T,
-    class Result = typename result_of::inv<T>::type,
-    unsigned int = dispatch_index<T>::value
+    class Result = typename sake::result_of::inv<T>::type,
+    int = dispatch_index<T>::value
 >
 struct dispatch;
 
@@ -134,7 +133,7 @@ struct result_types_dispatch< T, true >
     typedef boost::mpl::vector2<
         typename boost_ext::remove_qualifiers<T>::type,
         typename boost_ext::remove_rvalue_reference<
-            typename operators::result_of::divide<T>::type
+            typename sake::operators::result_of::divide<T>::type
         >::type
     > type;
 };
@@ -165,19 +164,19 @@ namespace functional
 
 struct inv
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::inv, 1 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::inv, 1 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::inv<T>::type
+    typename sake::result_of::inv<T>::type
     operator()(T&& x) const
     { return inv_private::dispatch<T>::apply(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::inv< T& >::type
+    typename sake::result_of::inv< T& >::type
     operator()(T& x) const
     {
         return inv_private::dispatch<
@@ -186,7 +185,7 @@ struct inv
     }
 
     template< class T >
-    typename result_of::inv< T const & >::type
+    typename sake::result_of::inv< T const & >::type
     operator()(T const & x) const
     { return inv_private::dispatch< T const & >::apply(x); }
 
@@ -198,10 +197,10 @@ struct inv
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace inv_adl_barrier
-{ functional::inv const inv = { }; }
+{ sake::functional::inv const inv = { }; }
 using namespace inv_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-functional::inv const inv = { };
+sake::functional::inv const inv = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
@@ -266,8 +265,6 @@ namespace inv_private
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
-using boost_ext::mpl::uint;
-
 template< class T >
 struct dispatch_index
 {
@@ -275,20 +272,20 @@ private:
     typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
     typedef typename boost_ext::add_reference<T>::type ref_type;
 public:
-    static unsigned int const value = boost_ext::mpl::
-             if_< boost::is_floating_point< noqual_type >      , uint<7> >::type::template
-        else_if < is_callable_mem_fun<T>                       , uint<6> >::type::template
-        else_if < ::sake_inv_private::is_callable< void ( T ) >, uint<5> >::type::template
+    static int const value = boost_ext::mpl::
+         if_< boost::is_floating_point< noqual_type >      , sake::int_tag<7> >::type::template
+    else_if < is_callable_mem_fun<T>                       , sake::int_tag<6> >::type::template
+    else_if < ::sake_inv_private::is_callable< void ( T ) >, sake::int_tag<5> >::type::template
 #ifndef BOOST_NO_RVALUE_REFERENCES
-        else_if < boost_ext::is_reference<T>, uint<0> >::type::template
+    else_if < boost_ext::is_reference<T>, sake::int_tag<0> >::type::template
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
-        else_if_not< sake::is_movable<T>, uint<0> >::type::template
+    else_if_not< sake::is_movable<T>, sake::int_tag<0> >::type::template
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
-        else_if < inv_ip_private::is_callable_mem_fun< ref_type, ref_type ( ) >, uint<4> >::type::template
-        else_if < inv_ip_private::is_callable_mem_fun< ref_type >              , uint<3> >::type::template
-        else_if < ::sake_inv_ip_private::is_callable< ref_type ( ref_type ) >  , uint<2> >::type::template
-        else_if < ::sake_inv_ip_private::is_callable< void ( ref_type ) >      , uint<1> >::type::template
-        else_   < uint<0> >::type::value;
+    else_if < inv_ip_private::is_callable_mem_fun< ref_type, ref_type ( ) >, sake::int_tag<4> >::type::template
+    else_if < inv_ip_private::is_callable_mem_fun< ref_type >              , sake::int_tag<3> >::type::template
+    else_if < ::sake_inv_ip_private::is_callable< ref_type ( ref_type ) >  , sake::int_tag<2> >::type::template
+    else_if < ::sake_inv_ip_private::is_callable< void ( ref_type ) >      , sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type::value;
 };
 
 template< class T, class Result >
@@ -304,7 +301,7 @@ struct dispatch6_impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sake::declval<T>().inv(),
-        typename result_of::default_impl::inv_result_types<T>::type,
+        typename sake::result_of::default_impl::inv_result_types<T>::type,
         type
     );
 };

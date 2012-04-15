@@ -42,6 +42,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/math/zero_fwd.hpp>
+#include <sake/core/utility/int_tag.hpp>
 
 namespace sake
 {
@@ -192,41 +193,37 @@ operator>=(sake::zero_t, T const x)
 namespace zero_private
 {
 
-using boost_ext::mpl::uint;
-
-template< class T >
-struct as_dispatch_index
-    : boost_ext::mpl::
-           if_< boost_ext::is_convertible<        sake::zero_t, T >, uint<3> >::type::template
-      else_if < boost_ext::is_convertible<             uint<0>, T >, uint<2> >::type::template
-      else_if < boost_ext::is_convertible< boost::mpl::int_<0>, T >, uint<1> >::type::template
-      else_   < uint<0> >
-{ };
-
 template< class T >
 inline T
-as_dispatch(uint<3>)
+as_dispatch(sake::int_tag<3>)
 { return T(sake::zero); }
 
 template< class T >
 inline T
-as_dispatch(uint<2>)
-{ return T((uint<0>())); }
-
-template< class T >
-inline T
-as_dispatch(uint<1>)
+as_dispatch(sake::int_tag<2>)
 { return T((boost::mpl::int_<0>())); }
 
 template< class T >
 inline T
-as_dispatch(uint<0>)
+as_dispatch(sake::int_tag<1>)
+{ return T((boost_ext::mpl::uint<0>())); }
+
+template< class T >
+inline T
+as_dispatch(sake::int_tag<0>)
 { return T(0); }
 
 template< class T >
 inline T
 as_impl()
-{ return zero_private::as_dispatch<T>(typename as_dispatch_index<T>::type()); }
+{
+    typedef typename boost_ext::mpl::
+         if_< boost_ext::is_convertible< sake::zero_t, T >      , sake::int_tag<3> >::type::template
+    else_if < boost_ext::is_convertible< boost::mpl::int_<0>    , sake::int_tag<2> >::type::template
+    else_if < boost_ext::is_convertible< boost_ext::mpl::uint<0>, sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type int_tag_;
+    return zero_private::as_dispatch<T>(typename as_dispatch_index<T>::type());
+}
 
 } // namespace zero_private
 

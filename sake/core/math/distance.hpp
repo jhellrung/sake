@@ -22,13 +22,13 @@
 #include <boost/iterator/iterator_traits.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/iterator/is_iterator.hpp>
 #include <sake/core/math/integer_difference.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -50,7 +50,7 @@ struct dispatch_index;
 
 template<
     class T0, class T1,
-    unsigned int = dispatch_index< T0, T1 >::value
+    int = dispatch_index< T0, T1 >::value
 >
 struct dispatch;
 
@@ -61,17 +61,17 @@ namespace functional
 
 struct distance
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::distance, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::distance, 2 )
 
     template< class T0, class T1 >
-    typename result_of::distance< T0, T1 >::type
+    typename sake::result_of::distance< T0, T1 >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return distance_private::dispatch< T0, T1 >::apply(x0, x1); }
 };
 
 } // namespace functional
 
-functional::distance const distance = { };
+sake::functional::distance const distance = { };
 
 namespace result_of
 {
@@ -109,26 +109,24 @@ struct distance
 namespace distance_private
 {
 
-using boost_ext::mpl::uint;
-
 template< class T0, class T1 >
 struct dispatch_index
 {
 private:
     typedef typename boost_ext::common_type< T0, T1 >::type common_type_;
-    typedef typename result_of::distance< T0, T1 >::type result_type;
+    typedef typename sake::result_of::distance< T0, T1 >::type result_type;
 public:
-    static unsigned int const value = boost_ext::mpl::
-             if_< sake::is_iterator< common_type_ >, uint<2> >::type::template
-        else_if < boost_ext::is_convertible< common_type_, result_type >, uint<1> >::type::template
-        else_   < uint<0> >::type::value;
+    static int const value = boost_ext::mpl::
+         if_< sake::is_iterator< common_type_ >, sake::int_tag<2> >::type::template
+    else_if < boost_ext::is_convertible< common_type_, result_type >, sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type::value;
 };
 
 template< class T0, class T1 >
 struct dispatch< T0, T1, 2 >
 {
     typedef typename boost_ext::common_type< T0, T1 >::type common_type_;
-    typedef typename result_of::distance< T0, T1 >::type result_type;
+    typedef typename sake::result_of::distance< T0, T1 >::type result_type;
 
     static result_type
     apply(T0 i0, T1 const i1, boost::incrementable_traversal_tag)
@@ -150,7 +148,7 @@ struct dispatch< T0, T1, 2 >
 template< class T0, class T1 >
 struct dispatch< T0, T1, 1 >
 {
-    typedef typename result_of::distance< T0, T1 >::type result_type;
+    typedef typename sake::result_of::distance< T0, T1 >::type result_type;
     static result_type
     apply(T0 const & i0, T1 const & i1)
     { return static_cast< result_type >(i1) - static_cast< result_type >(i0); }
@@ -159,7 +157,7 @@ struct dispatch< T0, T1, 1 >
 template< class T0, class T1 >
 struct dispatch< T0, T1, 0 >
 {
-    typedef typename result_of::distance< T0, T1 >::type result_type;
+    typedef typename sake::result_of::distance< T0, T1 >::type result_type;
     static result_type
     apply(T0 const & i0, T1 const & i1)
     { return i1 - i0; }

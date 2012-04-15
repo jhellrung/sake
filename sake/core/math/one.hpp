@@ -46,6 +46,7 @@
 #include <sake/core/math/inv.hpp>
 #include <sake/core/math/one_fwd.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/utility/int_tag.hpp>
 
 namespace sake
 {
@@ -128,19 +129,19 @@ operator>>=(T& x, sake::one_t)
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T >
-inline typename result_of::inv<T>::type
+inline typename sake::result_of::inv<T>::type
 operator/(sake::one_t, T&& x)
 { return sake::inv(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T >
-inline typename result_of::inv< T& >::type
+inline typename sake::result_of::inv< T& >::type
 operator/(sake::one_t, T& x)
 { return sake::inv(x); }
 
 template< class T >
-inline typename result_of::inv< T const & >::type
+inline typename sake::result_of::inv< T const & >::type
 operator/(sake::one_t, T const & x)
 { return sake::inv(x); }
 
@@ -157,41 +158,48 @@ operator&(T const x, sake::one_t)
 namespace one_private
 {
 
-using boost_ext::mpl::uint;
-
-template< class T >
-struct as_dispatch_index
-    : boost_ext::mpl::
-           if_< boost_ext::is_convertible<         sake::one_t, T >, uint<3> >::type::template
-      else_if < boost_ext::is_convertible<             uint<1>, T >, uint<2> >::type::template
-      else_if < boost_ext::is_convertible< boost::mpl::int_<1>, T >, uint<1> >::type::template
-      else_   < uint<0> >
-{ };
-
 template< class T >
 inline T
-as_dispatch(uint<3>)
+as_dispatch(sake::int_tag<3>)
 { return T(sake::one); }
 
 template< class T >
 inline T
-as_dispatch(uint<2>)
-{ return T((uint<1>())); }
+as_dispatch(sake::int_tag<2>)
+{ return T((boost_ext::mpl::uint<1>())); }
 
 template< class T >
 inline T
-as_dispatch(uint<1>)
+as_dispatch(sake::int_tag<1>)
 { return T((boost::mpl::int_<1>())); }
 
 template< class T >
 inline T
-as_dispatch(uint<0>)
+as_dispatch(sake::int_tag<0>)
 { return T(1); }
 
 template< class T >
 inline T
 as_impl()
-{ return one_private::as_dispatch<T>(typename as_dispatch_index<T>::type()); }
+{
+    typedef typename boost_ext::mpl::
+         if_<
+        boost_ext::is_convertible< sake::one_t, T >,
+        sake::int_tag<3>
+    >::type::template
+    else_if <
+        boost_ext::is_convertible< boost_ext::mpl::uint<1>, T >,
+        sake::int_tag<2>
+    >::type::template
+    else_if <
+        boost_ext::is_convertible< boost::mpl::int_<1>, T >,
+        sake::int_tag<1>
+    >::type::template
+    else_   <
+        sake::int_tag<0>
+    >::type int_tag_;
+    return one_private::as_dispatch<T>(int_tag_());
+}
 
 } // namespace one_private
 

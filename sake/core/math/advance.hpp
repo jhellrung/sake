@@ -21,12 +21,12 @@
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 
 #include <sake/core/iterator/is_iterator.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/assert.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -44,12 +44,26 @@ struct advance
 
 } // namespace result_of
 
+namespace advance_private
+{
+
+template< class T, class D >
+struct dispatch_index;
+
+template<
+    class T, class D,
+    int = dispatch_index<T,D>::value
+>
+struct dispatch;
+
+} // namespace advance_private
+
 namespace functional
 {
 
 struct advance
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::advance, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::advance, 2 )
 
     template< class T, class D >
     T& operator()(T& x, D const & n) const
@@ -58,28 +72,31 @@ struct advance
 
 } // namespace functional
 
-functional::advance const advance = { };
+sake::functional::advance const advance = { };
 
 namespace advance_private
 {
 
-using boost_ext::mpl::uint;
-
 template< class T, class D >
 struct dispatch_index
 {
-    static unsigned int const value = boost_ext::mpl::
-        if_< boost::is_iterator<T>, uint<2> >::type::template
-        else_if <
-            boost_ext::mpl::and3<
-                boost::is_integral<T>,
-                boost::is_integral<D>,
-                boost::integral_constant<
-                    bool, (sizeof( T ) < sizeof( D )) >
-            >,
-            uint<1>
-        >::type::template
-        else_   < uint<0> >::type::value;
+    static int const value = boost_ext::mpl::
+         if_<
+        boost::is_iterator<T>,
+        sake::int_tag<2>
+    >::type::template
+    else_if <
+        boost_ext::mpl::and3<
+            boost::is_integral<T>,
+            boost::is_integral<D>,
+            boost::integral_constant<
+                bool, (sizeof( T ) < sizeof( D )) >
+        >,
+        sake::int_tag<1>
+    >::type::template
+    else_   <
+        sake::int_tag<0>
+    >::type::value;
 };
 
 template< class T, class D >

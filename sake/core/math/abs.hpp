@@ -46,7 +46,6 @@
 #include <boost/type_traits/remove_cv.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
@@ -67,6 +66,7 @@
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/declval.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
 
@@ -81,8 +81,8 @@ struct dispatch_index;
 
 template<
     class T,
-    class Result = typename result_of::abs<T>::type,
-    unsigned int = dispatch_index<T>::value
+    class Result = typename sake::result_of::abs<T>::type,
+    int = dispatch_index<T>::value
 >
 struct dispatch;
 
@@ -145,7 +145,7 @@ struct result_types_dispatch< T, true >
     typedef boost::mpl::vector2<
         typename boost_ext::remove_qualifiers<T>::type,
         typename boost_ext::common_type<
-            T, typename operators::result_of::unary_minus<T>::type
+            T, typename sake::operators::result_of::unary_minus<T>::type
         >::type
     > type;
 };
@@ -176,19 +176,19 @@ namespace functional
 
 struct abs
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::abs, 1 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::abs, 1 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::abs<T>::type
+    typename sake::result_of::abs<T>::type
     operator()(T&& x) const
     { return abs_private::dispatch<T>::apply(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename result_of::abs< T& >::type
+    typename sake::result_of::abs< T& >::type
     operator()(T& x) const
     {
         return abs_private::dispatch<
@@ -197,7 +197,7 @@ struct abs
     }
 
     template< class T >
-    typename result_of::abs< T const & >::type
+    typename sake::result_of::abs< T const & >::type
     operator()(T const & x) const
     { return abs_private::dispatch< T const & >::apply(x); }
 
@@ -218,10 +218,10 @@ struct abs
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace abs_adl_barrier
-{ functional::abs const abs = { }; }
+{ sake::functional::abs const abs = { }; }
 using namespace abs_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-functional::abs const abs = { };
+sake::functional::abs const abs = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
@@ -295,21 +295,21 @@ private:
     typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
     typedef typename boost_ext::add_reference<T>::type ref_type;
 public:
-    static unsigned int const value = boost_ext::mpl::
-             if_< boost::is_signed< noqual_type >              , uint<8> >::type::template
-        else_if < boost::is_unsigned< noqual_type >            , uint<7> >::type::template
-        else_if < is_callable_mem_fun<T>                       , uint<6> >::type::template
-        else_if < ::sake_abs_private::is_callable< void ( T ) >, uint<5> >::type::template
+    static int const value = boost_ext::mpl::
+         if_< boost::is_signed< noqual_type >, sake::int_tag<8> >::type::template
+    else_if < boost::is_unsigned< noqual_type >, sake::int_tag<7> >::type::template
+    else_if < abs_private::is_callable_mem_fun<T>, sake::int_tag<6> >::type::template
+    else_if < ::sake_abs_private::is_callable< void ( T ) >, sake::int_tag<5> >::type::template
 #ifndef BOOST_NO_RVALUE_REFERENCES
-        else_if < boost_ext::is_reference<T>, uint<0> >::type::template
+    else_if < boost_ext::is_reference<T>, sake::int_tag<0> >::type::template
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
-        else_if_not< sake::is_movable<T>, uint<0> >::type::template
+    else_if_not< sake::is_movable<T>, sake::int_tag<0> >::type::template
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
-        else_if < abs_ip_private::is_callable_mem_fun< ref_type, ref_type ( ) >, uint<4> >::type::template
-        else_if < abs_ip_private::is_callable_mem_fun< ref_type >              , uint<3> >::type::template
-        else_if < ::sake_abs_ip_private::is_callable< ref_type ( ref_type ) >  , uint<2> >::type::template
-        else_if < ::sake_abs_ip_private::is_callable< void ( ref_type ) >      , uint<1> >::type::template
-        else_   < uint<0> >::type::value;
+    else_if < abs_ip_private::is_callable_mem_fun< ref_type, ref_type ( ) >, sake::int_tag<4> >::type::template
+    else_if < abs_ip_private::is_callable_mem_fun< ref_type               >, sake::int_tag<3> >::type::template
+    else_if < ::sake_abs_ip_private::is_callable< ref_type ( ref_type ) >, sake::int_tag<2> >::type::template
+    else_if < ::sake_abs_ip_private::is_callable<     void ( ref_type ) >, sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type::value;
 };
 
 template< class T, class Result >
@@ -346,7 +346,7 @@ struct dispatch6_impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sake::declval<T>().abs(),
-        typename result_of::default_impl::abs_result_types<T>::type,
+        typename sake::result_of::default_impl::abs_result_types<T>::type,
         type
     );
 };
@@ -367,7 +367,7 @@ private:
 public:
     typedef typename boost::mpl::eval_if_c<
         boost::is_void< maybe_type >::value,
-        result_of::abs< typename boost::remove_cv<T>::type >,
+        sake::result_of::abs< typename boost::remove_cv<T>::type >,
         boost::mpl::identity< maybe_type >
     >::type type;
 };

@@ -39,7 +39,6 @@
 
 #include <sake/boost_ext/exception/define_exception.hpp>
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/mpl/uint.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/expr_traits/best_conversion.hpp>
@@ -51,6 +50,7 @@
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/debug.hpp>
 #include <sake/core/utility/declval.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/workaround.hpp>
 
@@ -81,8 +81,8 @@ struct dispatch_index;
 
 template<
     class T,
-    class Result = typename result_of::intlog2<T>::type,
-    unsigned int = dispatch_index<T>::value
+    class Result = typename sake::result_of::intlog2<T>::type,
+    int = dispatch_index<T>::value
 >
 struct dispatch;
 
@@ -149,10 +149,10 @@ namespace functional
 
 struct intlog2
 {
-    SAKE_RESULT_FROM_METAFUNCTION( result_of::intlog2, 1 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::intlog2, 1 )
 
     template< class T >
-    typename result_of::intlog2<T>::type
+    typename sake::result_of::intlog2<T>::type
     operator()(T const & x) const
     { return intlog2_private::dispatch<T>::apply(x); }
 };
@@ -162,7 +162,7 @@ struct intlog2_nothrow
     SAKE_RESULT_FROM_METAFUNCTION( result_of::intlog2, 1 )
 
     template< class T >
-    typename result_of::intlog2<T>::type
+    typename sake::result_of::intlog2<T>::type
     operator()(T const & x) const
     { return intlog2_private::dispatch<T>::apply_nothrow(x); }
 };
@@ -171,12 +171,12 @@ struct intlog2_nothrow
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace intlog2_adl_barrier
-{ functional::intlog2 const intlog2 = { };
-  functional::intlog2_nothrow const intlog2_nothrow = { }; }
+{ sake::functional::intlog2 const intlog2 = { };
+  sake::functional::intlog2_nothrow const intlog2_nothrow = { }; }
 using namespace intlog2_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-functional::intlog2 const intlog2 = { };
-functional::intlog2_nothrow const intlog2_nothrow = { };
+sake::functional::intlog2 const intlog2 = { };
+sake::functional::intlog2_nothrow const intlog2_nothrow = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
@@ -413,18 +413,16 @@ float_check()
 
 #endif // #ifdef SAKE_DEBUG
 
-using boost_ext::mpl::uint;
-
 template< class T >
 struct dispatch_index
 {
-    static unsigned int const value = boost_ext::mpl::
-             if_< boost::is_unsigned<T>, uint<5> >::type::template
-        else_if < boost::is_signed<T>, uint<4> >::type::template
-        else_if < boost::is_floating_point<T>, uint<3> >::type::template
-        else_if < is_callable_mem_fun< T const & >, uint<2> >::type::template
-        else_if < ::sake_intlog2_private::is_callable< void ( T const & ) >, uint<1> >::type::template
-        else_   < uint<0> >::type::value;
+    static int const value = boost_ext::mpl::
+         if_< boost::is_unsigned<T>, sake::int_tag<5> >::type::template
+    else_if < boost::is_signed<T>, sake::int_tag<4> >::type::template
+    else_if < boost::is_floating_point<T>, sake::int_tag<3> >::type::template
+    else_if < intlog2_private::is_callable_mem_fun< T const & >, sake::int_tag<2> >::type::template
+    else_if < ::sake_intlog2_private::is_callable< void ( T const & ) >, sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type::value;
 };
 
 template< class T, class Result >

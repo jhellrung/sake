@@ -11,11 +11,11 @@
  *
  * Returns the hash value of its argument.
  *
- * sake::hash_value(T const &) is implemented in terms of
+ * sake::hash_value(T) is implemented in terms of
  * - T::hash_value(), if available; else
- * - hash_value(T const &) (unqualified, hence subject to ADL), if available;
+ * - hash_value(T) (unqualified, hence subject to ADL), if available;
  *   else
- * - boost::hash<T>()(T const &).
+ * - boost::hash<T>()(T).
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_HASH_VALUE_HPP
@@ -24,11 +24,12 @@
 #include <cstddef>
 
 #include <boost/functional/hash.hpp>
-#include <boost/utility/enable_if.hpp>
+
+#include <sake/boost_ext/mpl/if.hpp>
 
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
-#include <sake/core/utility/dispatch_priority_tag.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/workaround.hpp>
 
 namespace sake
@@ -67,10 +68,10 @@ typedef hash_value hash;
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace hash_value_adl_barrier
-{ functional::hash_value const hash_value = { }; }
+{ sake::functional::hash_value const hash_value = { }; }
 using namespace hash_value_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-functional::hash_value const hash_value = { };
+sake::functional::hash_value const hash_value = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
@@ -102,30 +103,38 @@ namespace hash_value_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class T >
-typename boost::enable_if_c<
-    is_callable_mem_fun< T const &, std::size_t ( ) >::value,
-    std::size_t
->::type
-dispatch(T const & x, sake::dispatch_priority_tag<2>)
+inline std::size_t
+dispatch(T const & x, sake::int_tag<2>)
 { return x.hash_value(); }
 
 template< class T >
-typename boost::enable_if_c<
-    ::sake_hash_value_private::is_callable< std::size_t ( T const & ) >::value,
-    std::size_t
->::type
-dispatch(T const & x, sake::dispatch_priority_tag<1>)
+inline std::size_t
+dispatch(T const & x, sake::int_tag<1>)
 { return ::sake_hash_value_private::adl(x); }
 
 template< class T >
 inline std::size_t
-dispatch(T const & x, sake::dispatch_priority_tag<0>)
+dispatch(T const & x, sake::int_tag<0>)
 { return boost::hash<T>()(x); }
 
 template< class T >
 inline std::size_t
 impl(T const & x)
-{ return hash_value_private::dispatch(x, sake::dispatch_priority_tag<2>()); }
+{
+    typedef typename boost_ext::mpl::
+         if_<
+        hash_value_private::is_callable_mem_fun< T const &, std::size_t ( ) >,
+        sake::int_tag<2>
+    >::type::template
+    else_if <
+        ::sake_hash_value_private::is_callable< std::size_t ( T const & ) >,
+        sake::int_tag<1>
+    >::type::template
+    else_   <
+        sake::int_tag<0>
+    >::type int_tag_;
+    return hash_value_private::dispatch(x, int_tag_());
+}
 
 } // namespace hash_value_private
 
