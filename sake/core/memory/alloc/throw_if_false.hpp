@@ -24,7 +24,7 @@ inline T
 throw_if_false(T const x)
 {
     if(!x)
-        boost::throw_exception(alloc::error());
+        boost::throw_exception(sake::alloc::error());
     return x;
 }
 
