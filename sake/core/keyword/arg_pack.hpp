@@ -86,7 +86,7 @@ protected:
     struct at_impl< K, typename A0::tag >
     {
         typedef typename A0::value_type type;
-        static type apply(arg_pack const & this_, K const k)
+        static type apply(arg_pack const & this_, K const /*k*/)
         { return this_.m_a0.value(); }
     };
     template< class, class > friend struct at_impl;
