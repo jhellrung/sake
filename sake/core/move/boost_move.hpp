@@ -23,11 +23,11 @@
 
 #else // #if BOOST_VERSION >= 104800
 
-#ifdef SAKE_MOVE_USE_BOOST_SANDBOX_MOVE
+#ifdef SAKE_MOVE_BOOST_SANDBOX_MOVE_HPP
 
-#include <boost-sandbox/move/boost/move/move.hpp>
+#include SAKE_MOVE_BOOST_SANDBOX_MOVE_HPP
 
-#else // #ifdef SAKE_MOVE_USE_BOOST_SANDBOX_MOVE
+#else // #ifdef SAKE_MOVE_BOOST_SANDBOX_MOVE_HPP
 
 #ifndef BOOST_MOVE_MOVE_HPP
 
@@ -51,7 +51,7 @@ __attribute__ (( __may_alias__ ))
 
 #endif // #ifndef BOOST_MOVE_MOVE_HPP
 
-#endif // #ifdef SAKE_MOVE_USE_BOOST_SANDBOX_MOVE
+#endif // #ifdef SAKE_MOVE_BOOST_SANDBOX_MOVE_HPP
 
 #endif // #if BOOST_VERSION >= 104800
 
