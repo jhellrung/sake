@@ -24,9 +24,9 @@
 
 #include <sake/boost_ext/mpl/and.hpp>
 
-#include <sake/core/ref/is_reference_wrapper.hpp>
-#include <sake/core/ref/unwrap_ref.hpp>
-#include <sake/core/ref/unwrap_reference.hpp>
+#include <sake/core/utility/ref/is_reference_wrapper.hpp>
+#include <sake/core/utility/ref/unwrap_ref.hpp>
+#include <sake/core/utility/ref/unwrap_reference.hpp>
 
 namespace sake
 {

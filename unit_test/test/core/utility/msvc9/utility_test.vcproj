@@ -179,6 +179,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\reference_wrapper_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\swap_test.cpp"
 			>
 		</File>

@@ -1,7 +1,7 @@
 /*******************************************************************************
- * sake/core/ref/ref.hpp
+ * sake/core/utility/ref/ref.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -13,14 +13,14 @@
  * cref(T const & x, type_tag< Tags >) -> result_of::cref< T, Tags >::type
  ******************************************************************************/
 
-#ifndef SAKE_CORE_REF_REF_HPP
-#define SAKE_CORE_REF_REF_HPP
+#ifndef SAKE_CORE_UTILITY_REF_REF_HPP
+#define SAKE_CORE_UTILITY_REF_REF_HPP
 
 #include <boost/mpl/set/set10.hpp>
 #include <boost/type_traits/add_const.hpp>
 
-#include <sake/core/ref/ref_tag.hpp>
-#include <sake/core/ref/reference_wrapper.hpp>
+#include <sake/core/utility/ref/reference_wrapper.hpp>
+#include <sake/core/utility/ref/tag.hpp>
 #include <sake/core/utility/referent.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
@@ -37,8 +37,7 @@ template<
 struct ref
 {
     typedef sake::reference_wrapper<
-        typename sake::referent<T>::type, Tags
-    > type;
+        typename sake::referent<T>::type, Tags > type;
 };
 
 template<
@@ -48,7 +47,8 @@ template<
 struct cref
 {
     typedef sake::reference_wrapper<
-        typename boost::add_const< typename sake::referent<T>::type >::type, Tags
+        typename boost::add_const< typename sake::referent<T>::type >::type,
+        Tags
     > type;
 };
 
@@ -101,4 +101,4 @@ cref(T const & x, sake::type_tag< Tags >)
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_REF_REF_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_REF_REF_HPP

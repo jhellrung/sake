@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/ref/wrapper_to_reference.hpp
+ * sake/core/utility/ref/wrapper_to_reference.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,10 +8,10 @@
  * struct wrapper_to_reference<T>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_REF_WRAPPER_TO_REFERENCE_HPP
-#define SAKE_CORE_REF_WRAPPER_TO_REFERENCE_HPP
+#ifndef SAKE_CORE_UTILITY_REF_WRAPPER_TO_REFERENCE_HPP
+#define SAKE_CORE_UTILITY_REF_WRAPPER_TO_REFERENCE_HPP
 
-#include <sake/core/ref/unwrap_reference.hpp>
+#include <sake/core/utility/ref/unwrap_reference.hpp>
 
 namespace sake
 {
@@ -35,4 +35,4 @@ struct wrapper_to_reference
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_REF_WRAPPER_TO_REFERENCE_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_REF_WRAPPER_TO_REFERENCE_HPP

@@ -39,9 +39,8 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/has_small_size.hpp>
 
-#include <sake/core/ref/is_reference_wrapper.hpp>
-
 #include <sake/core/utility/is_by_value_optimal_fwd.hpp>
+#include <sake/core/utility/ref/is_reference_wrapper.hpp>
 
 namespace sake
 {

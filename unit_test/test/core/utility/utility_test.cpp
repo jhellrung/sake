@@ -22,6 +22,7 @@ void direct_init_ctor_test(sake::test::environment& env);
 void declare_once_test(sake::test::environment& env);
 void emplacer_test(sake::test::environment& env);
 void overload_test(sake::test::environment& env);
+void reference_wrapper_test(sake::test::environment& env);
 void swap_test(sake::test::environment& env);
 
 void utility_test(sake::test::environment& env)
@@ -35,6 +36,7 @@ void utility_test(sake::test::environment& env)
     env("declare_once", &declare_once_test);
     env("emplacer", &emplacer_test);
     env("overload", &overload_test);
+    env("reference_wrapper", &reference_wrapper_test);
     env("swap", &swap_test);
 }
 

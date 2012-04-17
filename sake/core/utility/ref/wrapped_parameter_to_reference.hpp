@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/ref/wrapped_parameter_to_reference.hpp
+ * sake/core/utility/ref/wrapped_parameter_to_reference.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,11 +8,11 @@
  * struct wrapped_parameter_to_reference<T>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_REF_WRAPPED_PARAMETER_TO_REFERENCE_HPP
-#define SAKE_CORE_REF_WRAPPED_PARAMETER_TO_REFERENCE_HPP
+#ifndef SAKE_CORE_UTILITY_REF_WRAPPED_PARAMETER_TO_REFERENCE_HPP
+#define SAKE_CORE_UTILITY_REF_WRAPPED_PARAMETER_TO_REFERENCE_HPP
 
-#include <sake/core/ref/is_wrapped_parameter.hpp>
-#include <sake/core/ref/wrapper_to_reference.hpp>
+#include <sake/core/utility/ref/is_wrapped_parameter.hpp>
+#include <sake/core/utility/ref/wrapper_to_reference.hpp>
 
 namespace sake
 {
@@ -41,4 +41,4 @@ struct wrapped_parameter_to_reference
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_REF_WRAPPED_PARAMETER_TO_REFERENCE_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_REF_WRAPPED_PARAMETER_TO_REFERENCE_HPP

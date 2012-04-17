@@ -8,9 +8,9 @@
 
 #include <boost/mpl/set/set10.hpp>
 
-#include <sake/core/ref/ref_tag.hpp>
-#include <sake/core/ref/reference_wrapper.hpp>
 #include <sake/core/utility/nullptr.hpp>
+#include <sake/core/utility/ref/reference_wrapper.hpp>
+#include <sake/core/utility/ref/tag.hpp>
 
 #include <sake/test/environment.hpp>
 #include <sake/test/test.hpp>

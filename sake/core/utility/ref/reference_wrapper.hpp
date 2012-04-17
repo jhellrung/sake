@@ -1,7 +1,7 @@
 /*******************************************************************************
- * sake/core/ref/reference_wrapper.hpp
+ * sake/core/utility/ref/reference_wrapper.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -17,10 +17,12 @@
  *   - implicit conversion from T&
  * - A forwarding operator().
  * - A nested result_type typedef iff T has a result_type member type.
+ *
+ * TODO: Finish range support
  ******************************************************************************/
 
-#ifndef SAKE_CORE_REF_REFERENCE_WRAPPER_HPP
-#define SAKE_CORE_REF_REFERENCE_WRAPPER_HPP
+#ifndef SAKE_CORE_UTILITY_REF_REFERENCE_WRAPPER_HPP
+#define SAKE_CORE_UTILITY_REF_REFERENCE_WRAPPER_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/has_key.hpp>
@@ -44,20 +46,23 @@
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/range/begin_end_fwd.hpp>
-#include <sake/core/ref/fwd.hpp>
-#include <sake/core/ref/is_wrapped_parameter.hpp>
-#include <sake/core/ref/ref_tag.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/non_copy_assignable.hpp>
 #include <sake/core/utility/nullptr.hpp>
 #include <sake/core/utility/overload.hpp>
+#include <sake/core/utility/ref/fwd.hpp>
+#include <sake/core/utility/ref/is_wrapped_parameter.hpp>
+#include <sake/core/utility/ref/tag.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
 {
 
-namespace reference_wrapper_private
+namespace reference_wrapper_adl
+{
+
+namespace private_
 {
 
 struct dummy { };
@@ -65,7 +70,7 @@ struct dummy { };
 template< class T, class Tags >
 struct traits;
 
-} // namespace reference_wrapper_private
+} // namespace private_
 
 /*******************************************************************************
  * class reference_wrapper< T, Tags >
@@ -73,10 +78,10 @@ struct traits;
 
 template< class T, class Tags /*= ref_tag::default_tags*/ >
 class reference_wrapper
-    : public reference_wrapper_private::traits< T, Tags >::forwarding_base
+    : public private_::traits< T, Tags >::forwarding_base
 {
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Tags >::value));
-    typedef typename reference_wrapper_private::traits< T, Tags >::forwarding_base forwarding_base;
+    typedef typename private_::traits< T, Tags >::forwarding_base forwarding_base;
 public:
     typedef T type;
     typedef Tags tags;
@@ -89,13 +94,13 @@ private:
         boost::mpl::has_key< Tags, sake::ref_tag::implicitly_convertible >::value;
     typedef typename boost::mpl::if_c<
         has_implicitly_convertible_tag,
-        reference_wrapper_private::dummy,
+        private_::dummy,
         T&
     >::type explicit_ctor_param_type;
     typedef typename boost::mpl::if_c<
         has_implicitly_convertible_tag,
         T&,
-        reference_wrapper_private::dummy
+        private_::dummy
     >::type implicit_ctor_param_type;
 public:
     explicit reference_wrapper(explicit_ctor_param_type x);
@@ -108,7 +113,6 @@ public:
     reference_wrapper(boost::reference_wrapper< T2 > other,
         typename boost::enable_if_c< boost_ext::is_convertible< T2*, T* >::value >::type* = 0);
 
-    using forwarding_base::operator=;
 private:
     static bool const has_assignable_tag = boost_ext::mpl::or2<
         boost::mpl::has_key< Tags, sake::ref_tag::default_constructible >,
@@ -117,7 +121,7 @@ private:
     typedef typename boost::mpl::if_c<
         has_assignable_tag,
         T&,
-        reference_wrapper_private::dummy
+        private_::dummy
     >::type assign_param_type;
 public:
     reference_wrapper& operator=(assign_param_type x);
@@ -138,7 +142,8 @@ private:
     template< class Signature > struct enable_impl;
     template< class Signature > struct result_impl;
 
-    typedef typename forwarding_base::protected_nullary_result_type private_nullary_result_type;
+    typedef typename forwarding_base::protected_nullary_result_type
+        private_nullary_result_type;
 
     private_nullary_result_type apply_impl() const;
 
@@ -166,6 +171,24 @@ private:
 
 };
 
+#if 0
+/*******************************************************************************
+ * Allow a reference_wrapper wrapping a range to be viewed as a range itself.
+ ******************************************************************************/
+
+template< class T, class Tags >
+inline typename boost::range_iterator<T>::type
+range_begin(sake::reference_wrapper< T, Tags > w)
+{ return sake::range::functional::begin()(*w); }
+
+template< class T, class Tags >
+inline typename boost::range_iterator<T>::type
+range_end(sake::reference_wrapper< T, Tags > w)
+{ return sake::range::functional::end()(*w); }
+#endif // #if 0
+
+} // namespace reference_wrapper_adl
+
 /*******************************************************************************
  * struct extension::unwrap_reference< reference_wrapper< T, Tags >, void >
  * struct extension::is_wrapped_parameter< reference_wrapper< T, Tags >, void >
@@ -175,32 +198,19 @@ namespace extension
 {
 
 template< class T, class Tags >
-struct unwrap_reference< reference_wrapper< T, Tags >, void >
+struct unwrap_reference< sake::reference_wrapper< T, Tags >, void >
 { typedef T type; };
 
 template< class T, class Tags >
-struct is_wrapped_parameter< reference_wrapper< T, Tags >, void >
+struct is_wrapped_parameter< sake::reference_wrapper< T, Tags >, void >
     : boost::mpl::has_key< Tags, sake::ref_tag::parameter >
 { };
 
 } // namespace extension
 
-/*******************************************************************************
- * Allow a reference_wrapper wrapping a range to be viewed as a range itself.
- ******************************************************************************/
-
-template< class T, class Tags >
-inline typename boost::range_iterator<T>::type
-range_begin(sake::reference_wrapper< T, Tags > w)
-{ return range::functional::begin()(*w); }
-
-template< class T, class Tags >
-inline typename boost::range_iterator<T>::type
-range_end(sake::reference_wrapper< T, Tags > w)
-{ return range::functional::end()(*w); }
-
 } // namespace sake
 
+#if 0
 namespace boost
 {
 
@@ -215,23 +225,23 @@ struct range_const_iterator< sake::reference_wrapper< T, Tags > >
 { };
 
 } // namespace boost
+#endif // #if 0
 
 namespace sake
 {
 
-/*******************************************************************************
- * struct reference_wrapper_private::traits< T, Tags >
- ******************************************************************************/
+namespace reference_wrapper_adl
+{
 
-namespace reference_wrapper_private
+namespace private_
 {
 
 template< class T, class Tags >
 struct traits
 {
-    typedef forwarding::base<
-        reference_wrapper< T, Tags >,
-        typename forwarding::deduced_params<
+    typedef sake::forwarding::base<
+        sake::reference_wrapper< T, Tags >,
+        typename sake::forwarding::deduced_params<
             T&,
             typename boost::mpl::if_c<
                 boost_ext::mpl::or2<
@@ -245,7 +255,7 @@ struct traits
     > forwarding_base;
 };
 
-} // namespace reference_wrapper_private
+} // namespace private_
 
 /*******************************************************************************
  * reference_wrapper member implementations
@@ -365,6 +375,8 @@ reference_wrapper< T, Tags >::
 apply_impl() const
 { return (*mp)(); }
 
+} // namespace reference_wrapper_adl
+
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_REF_REFERENCE_WRAPPER_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_REF_REFERENCE_WRAPPER_HPP
