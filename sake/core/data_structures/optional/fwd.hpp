@@ -1,7 +1,7 @@
 /*******************************************************************************
- * sake/core/data_structures/optional_fwd.hpp
+ * sake/core/data_structures/optional/fwd.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -14,6 +14,7 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
+#include <sake/core/data_structures/optional/tag.hpp>
 #include <sake/core/utility/default_tag.hpp>
 
 namespace sake
@@ -22,7 +23,7 @@ namespace sake
 namespace optional_adl
 {
 
-template< class T >
+template< class T, class Tags = sake::optional_tag::default_tags >
 struct optional;
 
 } // namespace optional_adl

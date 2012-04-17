@@ -23,28 +23,31 @@
 
 #include <boost/config.hpp>
 // #include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
+// #include <boost/mpl/not.hpp>
 // #include <boost/mpl/or.hpp>
 // #include <boost/preprocessor/facilities/apply.hpp>
 #include <boost/static_assert.hpp>
 // #include <boost/type_traits/alignment_of.hpp>
-// #include <boost/type_traits/integral_constant.hpp>
-#include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+// #include <boost/type_traits/is_base_of.hpp>
+// #include <boost/type_traits/is_same.hpp>
 // #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/utility/enable_if.hpp>
 
 // #include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/mpl/or.hpp>
-// #include <sake/boost_ext/type_traits/add_const_remove_reference.hpp>
+// #include <sake/boost_ext/mpl/or.hpp>
 // #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
-// #include <sake/boost_ext/type_traits/is_convertible.hpp>
+#include <sake/boost_ext/type_traits/common_type.hpp>
+#include <sake/boost_ext/type_traits/is_convertible.hpp>
 // #include <sake/boost_ext/type_traits/is_convertible_wnrbt.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 // #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/remove_reference_add_const.hpp>
 
+#include <sake/core/data_structures/optional_fwd.hpp>
+#include <sake/core/data_structures/private/optional.hpp>
 // #include <sake/core/functional/forwarding/forwarding_base.hpp>
 // #include <sake/core/functional/forwarding/forwarding_base_deduced_callable.hpp>
 // #include <sake/core/functional/forwarding/forwarding_base_deduced_params.hpp>
@@ -52,39 +55,33 @@
 // #include <sake/core/functional/forwarding/forwarding_core_access.hpp>
 // #include <sake/core/introspection/is_assignable.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/move/move.hpp>
-#include <sake/core/move/rv.hpp>
-#include <sake/core/move/rv_sink.hpp>
-#include <sake/core/utility/address_of.hpp>
-#include <sake/core/utility/assert.hpp>
-#include <sake/core/utility/call_traits.hpp>
-#include <sake/core/utility/emplacer_fwd.hpp>
+// #include <sake/core/move/move.hpp>
+// #include <sake/core/move/rv.hpp>
+// #include <sake/core/move/rv_sink.hpp>
+// #include <sake/core/utility/address_of.hpp>
+// #include <sake/core/utility/assert.hpp>
+// #include <sake/core/utility/call_traits.hpp>
+// #include <sake/core/utility/emplacer_fwd.hpp>
 // #include <sake/core/utility/explicit_bool.hpp>
 // #include <sake/core/utility/forwarding_assign.hpp>
 // #include <sake/core/utility/forwarding_unary_ctor.hpp>
-// #include <sake/core/utility/has_default_constructor_fwd.hpp>
+#include <sake/core/utility/has_default_constructor_fwd.hpp>
 // #include <sake/core/utility/nullptr.hpp>
 // #include <sake/core/utility/overload.hpp>
 
 namespace sake
 {
 
-namespace optional_private
-{
-
-template< class T > struct base;
-template< class T, class U, bool > struct copy_assign_dispatch;
-template< class T, class U, bool > struct move_assign_dispatch;
-
-} // namespace optional_private
-
 /*******************************************************************************
  * struct optional<T>
  ******************************************************************************/
 
+namespace optional_adl
+{
+
 template< class T >
 struct optional
-    : optional_private::base<T>
+    : private_::forwarding_base<T>
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
 
@@ -119,14 +116,26 @@ struct optional
 
 private:
     typedef typename rv_sink_traits::rv_param<T>::type value_rv_param_type;
-    typedef sake::rv_sink<
-        rv_sink_visitors::init< optional >,
-        void,
-        rv_sink_predicates::is_not_sam_as<T>
-    > value_ctor_rv_sink_type;
-    friend struct rv_sink_visitors::init< optional >;
+    struct value_ctor_rv_sink
+    {
+        template< class U >
+        struct apply
+        {
+            static bool const value =
+                !boost::is_base_of< optional, U >::value
+             && !boost_ext::is_same_sans_cv<U,T>::value
+             && !sake::is_optional<U>::value;
+            typedef apply type;
+        };
+        typedef sake::rv_sink<
+            rv_sink_visitors::ctor_impl< optional >,
+            void,
+            value_ctor_rv_sink
+        > type;
+    };
+    friend struct rv_sink_visitors::ctor_impl< optional >;
     template< class U >
-    void init(U& x);
+    void ctor_impl(U& x);
 public:
     // lvalues
     template< class U >
@@ -140,24 +149,27 @@ public:
     explicit optional(value_rv_param_type x);
     optional(value_rv_param_type x, bool const active);
     // movable rvalues
-    explicit optional(ctor_rv_sink_type x);
-    optional(ctor_rv_sink_type x, bool const active);
+    explicit optional(typename value_ctor_rv_sink::type x);
+    optional(typename value_ctor_rv_sink::type x, bool const active);
     // const lvalues + non-movable rvalues
     template< class U >
     explicit optional(U const & x,
         typename boost::disable_if_c< boost_ext::mpl::or3<
             boost::is_base_of< optional, U >,
             boost_ext::is_convertible< U&, value_rv_param_type >,
-            boost_ext::is_convertible< U&, ctor_rv_sink_type >
+            boost_ext::is_convertible< U&, typename value_ctor_rv_sink::type >
         >::value >::type* = 0);
     template< class U >
     optional(U const & x, bool const active,
         typename boost::disable_if_c< boost_ext::mpl::or2<
             boost_ext::is_convertible< U&, value_rv_param_type >,
-            boost_ext::is_convertible< U&, ctor_rv_sink_type >
+            boost_ext::is_convertible< U&, typename value_ctor_rv_sink::type >
         >::value >::type* = 0);
 
     // optional lvalue
+    template< class U >
+    optional(optional<U>& other,
+        
     template< class U >
     optional(U& other,
         typename boost::enable_if_c< boost_ext::mpl::and2<
@@ -452,41 +464,64 @@ private:
     template<class> friend struct optional;
 };
 
+} // namespace optional_adl
+
 /*******************************************************************************
- * ext::has_default_constructor< optional<T> >
+ * extension::has_default_constructor< sake::optional<T> >
  ******************************************************************************/
 
-namespace ext
+namespace extension
 {
 
 template< class T >
-struct has_default_constructor< optional<T>, void >
+struct has_default_constructor< sake::optional<T>, void >
     : boost::true_type
 { };
 
-} // namespace ext
+} // namespace extension
+
+namespace optional_adl
+{
 
 /*******************************************************************************
  * optional comparison operators
  ******************************************************************************/
 
-#define SAKE_comparison_operator( Op, Expr ) \
+template< class T0, class T1 >
+inline typename boost_ext::common_type<
+    bool,
+    typename sake::operators::result_of::and_<
+        bool,
+        typename sake::operators::result_of::equal<
+            typename boost_ext::add_reference_add_const< T0 >::type,
+            typename boost_ext::add_reference_add_const< T1 >::type
+        >::type
+    >::type
+>::type
+operator==(sake::optional< T0 > const & x0, sake::optional< T1 > const & x1)
+{
+    typename boost_ext::remove_reference_add_const< T0 >::type * p0 = x0.get_ptr();
+    typename boost_ext::remove_reference_add_const< T1 >::type * p1 = x1.get_ptr();
+    return p0 == 0 ? p1 == 0 : p1 != 0 && *p1 == *p2;
+}
+
+#define define_comparison_operator( op, expr ) \
 template< class T0, class T1 > \
-inline bool operator Op (optional< T0 > const & x0, optional< T1 > const & x1) \
+inline bool operator op (sake::optional< T0 > const & x0, sake::optional< T1 > const & x1) \
 { \
     typename boost_ext::add_const_remove_reference< T0 >::type * p0 = x0.get_ptr(); \
     typename boost_ext::add_const_remove_reference< T1 >::type * p1 = x1.get_ptr(); \
-    return Expr ; \
+    return expr ; \
 }
 
-SAKE_comparison_operator( ==, p0 == nullptr ? p1 == nullptr : p1 != nullptr && *p0 == *p1 )
-SAKE_comparison_operator( !=, p0 == nullptr ? p1 != nullptr : p1 == nullptr || *p0 != *p1 )
-SAKE_comparison_operator( < , p1 != nullptr && (p0 == nullptr || *p0 < *p1 ) )
-SAKE_comparison_operator( > , p0 != nullptr && (p1 == nullptr || *p0 > *p1 ) )
-SAKE_comparison_operator( <=, p0 == nullptr || p1 != nullptr && *p0 <= *p1 )
-SAKE_comparison_operator( >=, p1 == nullptr || p0 != nullptr && *p0 >= *p1 )
+define_comparison_operator( ==, p0 == nullptr ? p1 == nullptr : p1 != nullptr && *p0 == *p1 )
+define_comparison_operator( !=, p0 == nullptr ? p1 != nullptr : p1 == nullptr || *p0 != *p1 )
+define_comparison_operator( < , p1 != nullptr && (p0 == nullptr || *p0 < *p1 ) )
+define_comparison_operator( > , p0 != nullptr && (p1 == nullptr || *p0 > *p1 ) )
+define_comparison_operator( <=, p0 == nullptr || p1 != nullptr && *p0 <= *p1 )
+define_comparison_operator( >=, p1 == nullptr || p0 != nullptr && *p0 >= *p1 )
 
-#undef SAKE_comparison_operator
+#undef define_comparison_operator
 
 /*******************************************************************************
  * struct optional_private::base
