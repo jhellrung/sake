@@ -31,7 +31,6 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/seq/seq.hpp>
-#include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/preprocessor/tuple/to_seq.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -74,10 +73,8 @@ struct tuple<>
 
     SAKE_MEMBERWISE_MEM_FUN(
         tuple,
-        ( default_ctor )
-        ( swap )
-        ( hash_value ),
-        BOOST_PP_SEQ_NIL, BOOST_PP_SEQ_NIL
+        ( default_ctor ) ( swap ) ( hash_value ),
+        BOOST_PP_SEQ_NIL
     )
 
     template< class Sequence >
@@ -120,7 +117,7 @@ struct at_c_dispatch;
 #define Tn_seq( z, n, data ) \
     ( T ## n )
 #define Tn_n_seq( z, n, data ) \
-    (( T ## n, _ ## n ))
+    (( T ## n )( _ ## n ))
 #define Tn_n( z, n, data ) \
     T ## n _ ## n;
 #define comma_i_emplacer_construct_Ti_elem( r, data, i, elem ) \
@@ -199,13 +196,13 @@ struct tuple< T0N >
 
     SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE(
         typename tuple,
-        BOOST_PP_SEQ_NIL, T0N_0N_seq
+        T0N_0N_seq
     )
 
     SAKE_MEMBERWISE_MEM_FUN(
-        tuple,
+        typename tuple,
         ( default_ctor ) ( swap ) ( hash_value ),
-        BOOST_PP_SEQ_NIL, T0N_0N_seq
+        T0N_0N_seq
     )
 
     struct result_of

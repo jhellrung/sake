@@ -14,8 +14,8 @@
  * boost::compressed_pair, except that it is emplace- and move-aware.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_COMPRESSED_PAIR_HPP
-#define SAKE_CORE_UTILITY_COMPRESSED_PAIR_HPP
+#ifndef SAKE_CORE_UTILITY_COMPRESSED_PAIR_COMPRESSED_PAIR_HPP
+#define SAKE_CORE_UTILITY_COMPRESSED_PAIR_COMPRESSED_PAIR_HPP
 
 #include <cstddef>
 
@@ -23,9 +23,6 @@
 #include <boost/functional/hash.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/mpl/vector/vector10.hpp>
-#include <boost/preprocessor/seq/seq.hpp>
-#include <boost/type_traits/is_empty.hpp>
-#include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/fusion/adapted/compressed_pair.hpp>
@@ -36,9 +33,8 @@
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/compressed_pair/fwd.hpp>
+#include <sake/core/utility/compressed_pair/private/storage.hpp>
 #include <sake/core/utility/emplacer/assign.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
-#include <sake/core/utility/emplacer/emplacer.hpp>
 #include <sake/core/utility/emplacer/make.hpp>
 #include <sake/core/utility/emplacer/wrap.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
@@ -55,18 +51,6 @@ namespace sake
 namespace compressed_pair_adl
 {
 
-namespace private_
-{
-
-template<
-    class T0, class T1,
-    bool = boost::is_empty< T0 >::value,
-    bool = boost::is_empty< T1 >::value
->
-struct storage;
-
-} // namespace private_
-
 template< class T0, class T1 >
 struct compressed_pair
 {
@@ -74,15 +58,18 @@ struct compressed_pair
     typedef T1 second_type;
     typedef boost::mpl::vector2< T0, T1 > values_type;
 
-    SAKE_BASIC_MOVABLE_COPYABLE( compressed_pair )
-
 private:
     typedef private_::storage< T0, T1 > m_storage_type;
 public:
+
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+        typename compressed_pair,
+        (( m_storage_type )( m_storage ))
+    )
     SAKE_MEMBERWISE_MEM_FUN(
-        compressed_pair,
-        ( default_ctor ) ( move_ctor ) ( move_assign ),
-        BOOST_PP_SEQ_NIL, (( m_storage_type, m_storage ))
+        typename compressed_pair,
+        ( default_ctor ) ( swap ) ( hash_value ),
+        (( m_storage_type )( m_storage ))
     )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -171,26 +158,6 @@ public:
         return *this;
     }
 
-    void swap(compressed_pair& other)
-    {
-        sake::swap(first(),  other.first());
-        sake::swap(second(), other.second());
-    }
-    inline friend
-    void swap(compressed_pair& x, compressed_pair& y)
-    { x.swap(y); }
-
-    std::size_t hash_value() const
-    {
-        std::size_t result = 0;
-        boost::hash_combine(result, first());
-        boost::hash_combine(result, second());
-        return x;
-    }
-    inline friend
-    std::size_t hash_value(compressed_pair const & x)
-    { return x.hash_value(); }
-
     typename boost_ext::add_reference< T0 >::type
     first()
     { return m_storage.first(); }
@@ -209,160 +176,8 @@ private:
     m_storage_type m_storage;
 };
 
-namespace private_
-{
-
-template< class T0, class T1 >
-struct storage< T0, T1, false, false >
-{
-    SAKE_BASIC_MOVABLE_COPYABLE( storage )
-
-    SAKE_MEMBERWISE_MEM_FUN(
-        typename storage,
-        ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
-        BOOST_PP_SEQ_NIL, (( T0, m_x0 )) (( T1, m_x1 ))
-    )
-
-    storage(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
-    { }
-
-    template< class Emplacer0 >
-    storage(Emplacer0 e0, sake::emplacer< void ( ) >)
-        : m_x0(sake::emplacer_construct< typename boost::remove_cv< T0 >::type >(e0))
-    { }
-
-    template< class Emplacer1 >
-    storage(sake::emplacer< void ( ) >, Emplacer1 e1)
-        : m_x1(sake::emplacer_construct< typename boost::remove_cv< T1 >::type >(e1))
-    { }
-
-    template< class Emplacer0, class Emplacer1 >
-    storage(Emplacer0 e0, Emplacer1 e1)
-        : m_x0(sake::emplacer_construct< typename boost::remove_cv< T0 >::type >(e0)),
-          m_x1(sake::emplacer_construct< typename boost::remove_cv< T1 >::type >(e1))
-    { }
-
-    typename boost_ext::add_reference< T0 >::type
-    first()
-    { return m_x0; }
-    typename boost_ext::add_reference_add_const< T0 >::type
-    first() const
-    { return m_x0; }
-
-    typename boost_ext::add_reference< T1 >::type
-    second()
-    { return m_x1; }
-    typename boost_ext::add_reference_add_const< T1 >::type
-    second() const
-    { return m_x1; }
-
-private:
-    T0 m_x0;
-    T1 m_x1;
-};
-
-template< class T0, class T1, bool _ >
-struct storage< T0, T1, true, _ >
-    : private T0
-{
-    SAKE_BASIC_MOVABLE_COPYABLE( storage )
-
-    SAKE_MEMBERWISE_MEM_FUN(
-        typename storage,
-        ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
-        ( T0 ), (( T1, m_x1 ))
-    )
-
-    storage(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
-    { }
-
-    template< class Emplacer0 >
-    storage(Emplacer0 e0, sake::emplacer< void ( ) >)
-        : T0(sake::emplacer_construct< typename boost::remove_cv< T0 >::type >(e0))
-    { }
-
-    template< class Emplacer1 >
-    storage(sake::emplacer< void ( ) >, Emplacer1 e1)
-        : m_x1(sake::emplacer_construct< typename boost::remove_cv< T1 >::type >(e1))
-    { }
-
-    template< class Emplacer0, class Emplacer1 >
-    storage(Emplacer0 const e0, Emplacer1 const e1)
-        : T0(sake::emplacer_construct< typename boost::remove_cv< T0 >::type >(e0)),
-          m_x1(sake::emplacer_construct< typename boost::remove_cv< T1 >::type >(e1))
-    { }
-
-    T0&
-    first()
-    { return *this; }
-    T0 const &
-    first() const
-    { return *this; }
-
-    typename boost_ext::add_reference< T1 >::type
-    second()
-    { return m_x1; }
-    typename boost_ext::add_reference_add_const< T1 >::type
-    second() const
-    { return m_x1; }
-
-private:
-    T1 m_x1;
-};
-
-template< class T0, class T1 >
-struct storage< T0, T1, false, true >
-    : private T1
-{
-    SAKE_BASIC_MOVABLE_COPYABLE( storage )
-
-    SAKE_MEMBERWISE_MEM_FUN(
-        typename storage,
-        ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
-        ( T1 ), (( T0, m_x0 ))
-    )
-
-    storage(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
-    { }
-
-    template< class Emplacer0 >
-    storage(Emplacer0 e0, sake::emplacer< void ( ) >)
-        : m_x0(sake::emplacer_construct< typename boost::remove_cv< T0 >::type >(e0))
-    { }
-
-    template< class Emplacer1 >
-    storage(sake::emplacer< void ( ) >, Emplacer1 e1)
-        : T1(sake::emplacer_construct< typename boost::remove_cv< T1 >::type >(e1))
-    { }
-
-    template< class Emplacer0, class Emplacer1 >
-    storage(Emplacer0 const e0, Emplacer1 const e1)
-        : T1(sake::emplacer_construct< typename boost::remove_cv< T1 >::type >(e1)),
-          m_x0(sake::emplacer_construct< typename boost::remove_cv< T0 >::type >(e0))
-    { }
-
-    typename boost_ext::add_reference< T0 >::type
-    first()
-    { return m_x0; }
-    typename boost_ext::add_reference_add_const< T0 >::type
-    first() const
-    { return m_x0; }
-
-    T1&
-    second()
-    { return *this; }
-    T1 const &
-    second() const
-    { return *this; }
-
-private:
-    T0 m_x0;
-};
-
-} // namespace private_
-
 } // namespace compressed_pair_adl
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_COMPRESSED_PAIR_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_COMPRESSED_PAIR_COMPRESSED_PAIR_HPP

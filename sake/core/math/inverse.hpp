@@ -58,12 +58,12 @@ struct inverse
 
     SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE(
         typename inverse,
-        BOOST_PP_SEQ_NIL, (( T, m_value ))
+        (( T )( m_value ))
     )
 
     SAKE_MEMBERWISE_SWAP(
-        inverse,
-        BOOST_PP_SEQ_NIL, (( T, m_value ))
+        typename inverse,
+        (( T )( m_value ))
     )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES

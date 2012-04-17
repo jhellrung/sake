@@ -21,7 +21,6 @@
 #ifndef SAKE_CORE_UTILITY_BASE_MEMBER_HPP
 #define SAKE_CORE_UTILITY_BASE_MEMBER_HPP
 
-#include <boost/preprocessor/seq/seq.hpp>
 #include <boost/type_traits/is_empty.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -33,6 +32,7 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
 #include <sake/core/utility/emplacer/fwd.hpp>
+#include <sake/core/utility/memberwise/default_ctor.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 
 namespace sake
@@ -45,17 +45,21 @@ template< class T, class Tag >
 struct base_member< T, Tag,
     typename boost::disable_if_c< boost::is_empty<T>::value >::type >
 {
+    SAKE_MEMBERWISE_MEM_FUN(
+        typename base_member,
+        ( swap ) ( hash_value ),
+        (( T )( m_member ))
+    )
 protected:
     friend class emplacer_access;
 
-    SAKE_BASIC_MOVABLE_COPYABLE( base_member )
-
-    SAKE_MEMBERWISE_MEM_FUN(
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
         typename base_member,
-        ( default_ctor ) ( move_ctor )
-        ( copy_assign_if_any_umc ) ( move_assign )
-        ( swap ),
-        BOOST_PP_SEQ_NIL, (( T, m_member ))
+        (( T )( m_member ))
+    )
+    SAKE_MEMBERWISE_DEFAULT_CTOR(
+        typename base_member,
+        (( T )( m_member ))
     )
 
     template< class U >
@@ -82,17 +86,21 @@ struct base_member< T, Tag,
     typename boost::enable_if_c< boost::is_empty<T>::value >::type >
     : T
 {
+    SAKE_MEMBERWISE_MEM_FUN(
+        typename base_member,
+        ( swap ) ( hash_value ),
+        (( T ))
+    )
 protected:
     friend class emplacer_access;
 
-    SAKE_BASIC_MOVABLE_COPYABLE( base_member )
-
-    SAKE_MEMBERWISE_MEM_FUN(
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
         typename base_member,
-        ( default_ctor ) ( move_ctor )
-        ( copy_assign_if_any_umc ) ( move_assign )
-        ( swap ),
-        ( T ), BOOST_PP_SEQ_NIL
+        (( T ))
+    )
+    SAKE_MEMBERWISE_DEFAULT_CTOR(
+        typename base_member,
+        (( T ))
     )
 
     template< class U >

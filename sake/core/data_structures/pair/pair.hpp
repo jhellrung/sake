@@ -21,7 +21,6 @@
 
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/mpl/vector/vector10.hpp>
-#include <boost/preprocessor/seq/seq.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -59,13 +58,13 @@ struct pair
 
     SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE(
         typename pair,
-        BOOST_PP_SEQ_NIL, (( T0, first )) (( T1, second ))
+        (( T0 )( first )) (( T1 )( second ))
     )
 
     SAKE_MEMBERWISE_MEM_FUN(
-        pair,
+        typename pair,
         ( default_ctor ) ( swap ) ( hash_value ),
-        BOOST_PP_SEQ_NIL, (( T0, first )) (( T1, second ))
+        (( T0 )( first )) (( T1 )( second ))
     )
 
     pair(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)

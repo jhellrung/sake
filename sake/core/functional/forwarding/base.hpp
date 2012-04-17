@@ -13,7 +13,6 @@
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
-#include <boost/preprocessor/seq/seq.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -26,6 +25,7 @@
 #include <sake/core/functional/forwarding/nullary_base.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
+#include <sake/core/utility/memberwise/default_ctor.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/using_typedef.hpp>
@@ -109,16 +109,23 @@ public:
 
 #endif // #if !defined( ... ) && !defined( ... )
 
+    SAKE_MEMBERWISE_MEM_FUN(
+        typename base,
+        ( swap ) ( hash_value ),
+        (( nullary_base_ ))
+    )
+
 protected:
     SAKE_USING_TYPEDEF( typename nullary_base_, chained_base_type );
     using nullary_base_::derived;
 
-    SAKE_BASIC_MOVABLE_COPYABLE( base )
-
-    SAKE_MEMBERWISE_MEM_FUN(
-        base,
-        ( default_ctor ) ( move_ctor ) ( move_assign ),
-        ( nullary_base_ ), BOOST_PP_SEQ_NIL
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+        typename base,
+        (( nullary_base_ ))
+    )
+    SAKE_MEMBERWISE_DEFAULT_CTOR(
+        typename base,
+        (( nullary_base_ ))
     )
 
     template< class T >

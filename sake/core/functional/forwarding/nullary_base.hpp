@@ -17,7 +17,6 @@
 #include <boost/mpl/has_key.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/preprocessor/iteration/self.hpp>
-#include <boost/preprocessor/seq/seq.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/at.hpp>
@@ -28,6 +27,7 @@
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
+#include <sake/core/utility/memberwise/default_ctor.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 #include <sake/core/utility/void.hpp>
@@ -56,13 +56,21 @@ class nullary_base
     : public nullary_base_private::impl< Derived, Params >
 {
     typedef nullary_base_private::impl< Derived, Params > impl_;
-protected:
-    SAKE_BASIC_MOVABLE_COPYABLE( nullary_base )
-    SAKE_USING_TYPEDEF( typename impl_, chained_base_type );
+public:
     SAKE_MEMBERWISE_MEM_FUN(
-        nullary_base,
-        ( default_ctor ) ( move_ctor ) ( move_assign ),
-        ( impl_ ), BOOST_PP_SEQ_NIL
+        typename nullary_base,
+        ( swap ) ( hash_value ),
+        (( impl_ ))
+    )
+protected:
+    SAKE_USING_TYPEDEF( typename impl_, chained_base_type );
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+        typename nullary_base,
+        (( impl_ ))
+    )
+    SAKE_MEMBERWISE_DEFAULT_CTOR(
+        typename nullary_base,
+        (( impl_ ))
     )
     template< class T >
     explicit nullary_base(SAKE_FWD2_REF( T ) x)
@@ -135,6 +143,16 @@ struct impl< Derived, Params, n >
 {
     specialized_declarations()
 protected:
+    typedef typename boost_ext::mpl::at<
+        Params, keyword::tag::chained_base, sake::void_
+    >::type chained_base_type;
+public:
+    SAKE_MEMBERWISE_MEM_FUN(
+        typename impl,
+        ( swap ) ( hash_value ),
+        (( chained_base_type ))
+    )
+protected:
     friend class core_access;
     typedef Derived derived_type;
     derived_type& derived()
@@ -142,16 +160,13 @@ protected:
     derived_type const & derived() const
     { return *static_cast< derived_type const * >(this); }
 
-    SAKE_BASIC_MOVABLE_COPYABLE( impl )
-
-    typedef typename boost_ext::mpl::at<
-        Params, keyword::tag::chained_base, sake::void_
-    >::type chained_base_type;
-
-    SAKE_MEMBERWISE_MEM_FUN(
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
         typename impl,
-        ( default_ctor ) ( move_ctor ) ( copy_assign_if_any_umc ) ( move_assign ),
-        ( chained_base_type ), BOOST_PP_SEQ_NIL
+        (( chained_base_type ))
+    )
+    SAKE_MEMBERWISE_DEFAULT_CTOR(
+        typename impl,
+        (( chained_base_type ))
     )
 
     template< class T >
