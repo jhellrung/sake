@@ -47,15 +47,15 @@
  * --------------
  * Each macro calls a global function object (the failure action) upon failure
  * of the assertion.  By default, this amounts to printing a message to the
- * ostream given by the preprocessor macro SAKE_ASSERT_OSTREAM (which defaults
- * to if not defined otherwise std::cerr) and calling std::abort.  One of the
- * three provided failure actions may be specified explicitly by defining one of
- * SAKE_ASSERT_ON_FAILURE_{ABORT,TERMINATE,EXIT}, which call
+ * std::ostream given by the preprocessor macro SAKE_ASSERT_OSTREAM (which
+ * defaults to std::cerr if not defined otherwise) and calling std::abort.  One
+ * of the three provided failure actions may be specified explicitly by defining
+ * one of SAKE_ASSERT_ON_FAILURE_{ABORT,TERMINATE,EXIT}, which call
  * assert_failure_action::{abort,terminate,exit}, respectively.  A custom
  * failure action may be used by defining the macro SAKE_ASSERT_FAILURE_ACTION
  * as the name of the global function object.  Any custom failure actions must
  * have the same set of operator() overloads as assert_failure_action::{abort,
- * terminate,exit}.
+ * terminate,exit}; see their implementations in the source below.
  *
  * SAKE_ASSERT*
  * ------------
@@ -63,14 +63,15 @@
  * and fails (calls the failure action) if the result is false.
  *
  * SAKE_ASSERT_ALL( subexpression_seq ) (where subexpression_seq is a
- * Boost.Preprocessor seq) is semantically equivalent to SAKE_ASSERT(
- * subexpression_seq[0] && ... && subexpression_seq[n-1] ), except it will
- * identify the first subexpression which evaluated to false.
+ * Boost.PP sequence of convertible-to-bool expressions) is semantically
+ * equivalent to
+ *     SAKE_ASSERT( subexpression_seq[0] && ... && subexpression_seq[n-1] )
+ * except it will identify the first subexpression which evaluated to false.
  *
  * SAKE_ASSERT_ANY( subexpression_seq ) (where subexpression_seq is a
- * Boost.Preprocessor seq) is semantically equivalent to SAKE_ASSERT(
- * subexpression_seq[0] || ... || subexpression_seq[n-1] ).
- *
+ * Boost.PP sequence of convertible-to-bool expressions) is semantically
+ * equivalent to
+ *     SAKE_ASSERT( subexpression_seq[0] || ... || subexpression_seq[n-1] )
  * SAKE_ASSERT_RELATION( lhs, op, rhs ) (where op is one of ==, !=, <, >, <=,
  * >=) is semantically equivalent to SAKE_ASSERT( lhs op rhs ), except it will
  * evaluate lhs and rhs and pass these to the failure action.  This
@@ -78,18 +79,22 @@
  * strings (via the stream operator operator<<), giving more helpful debugging
  * information.  Note that lhs and rhs may be evaluated more than once.
  *
- * SAKE_ASSERT_RELATION_ALL( relation_seq ) (where relation_seq is a
- * Boost.Preprocessor seq of Boost.Preprocessor 3-tuples that each look like
- * ( lhs, op, rhs )) is semantically equivalent to SAKE_ASSERT( ( lhs[0] op[0]
- * rhs[0] ) && ... && ( lhs[n-1] op[n-1] rhs[n-1] ) ), except it will identify
- * the first subexpression i which evaluated to false and provide the
- * evaluations of lhs[i] and rhs[i].
+ * SAKE_ASSERT_RELATION_ALL( relation_seq ) (where relation_seq is a Boost.PP
+ * sequence of Boost.PP 3-tuples that each look like ( lhs, op, rhs )) is
+ * semantically equivalent to
+ *     SAKE_ASSERT( (lhs[0] op[0] rhs[0])
+ *               && ...
+ *               && (lhs[n-1] op[n-1] rhs[n-1]) )
+ * except it will identify the first subexpression i which evaluated to false
+ * and provide the evaluations of lhs[i] and rhs[i].
  *
- * SAKE_ASSERT_RELATION_ANY( relation_seq ) (where relation_seq is a
- * Boost.Preprocessor seq of Boost.Preprocessor 3-tuples that each look like
- * ( lhs, op, rhs )) is semantically equivalent to SAKE_ASSERT( ( lhs[0] op[0]
- * rhs[0] ) || ... || ( lhs[n-1] op[n-1] rhs[n-1] ) ), except it will provide
- * evaluations of all the lhs[i]s and rhs[i]s.
+ * SAKE_ASSERT_RELATION_ANY( relation_seq ) (where relation_seq is a Boost.PP
+ * sequence of Boost.PP 3-tuples that each look like ( lhs, op, rhs )) is
+ * semantically equivalent to
+ *     SAKE_ASSERT( (lhs[0] op[0] rhs[0])
+ *               || ...
+ *               || (lhs[n-1] op[n-1] rhs[n-1]) )
+ * except it will provide evaluations of all the lhs[i]s and rhs[i]s.
  ******************************************************************************/
 
 #ifndef BOOST_PP_IS_ITERATING
@@ -119,9 +124,11 @@
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 #include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/is_unsigned.hpp>
 #include <boost/type_traits/is_void.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
@@ -494,9 +501,8 @@ namespace functional
 namespace print_private
 {
 
-template< class T, class Enable = void >
-struct dispatch_special
-{ typedef void type; };
+template< class T >
+struct dispatch_special;
 
 template<
     class LHS, class RHS,
@@ -592,42 +598,32 @@ struct sizeof_less_equal
 };
 
 template< class T >
-struct dispatch_long
-    : boost_ext::mpl::and3<
-          boost::is_integral<T>,
-          boost::is_signed<T>,
-          sizeof_less_equal< T, sizeof( long ) >
-      >
+struct dispatch_special
+    : boost_ext::mpl::
+         if_<
+        boost_ext::mpl::and3<
+            boost::is_integral<T>,
+            boost::is_signed<T>,
+            sizeof_less_equal< T, sizeof( long ) >
+        >,
+        long
+    >::type::template
+    else_if <
+        boost_ext::mpl::and3<
+            boost::is_integral<T>,
+            boost::is_unsigned<T>,
+            sizeof_less_equal< T, sizeof( unsigned long ) >
+        >,
+        unsigned long
+    >::type::template
+    else_if<
+        boost::is_floating_point<T>,
+        long double
+    >::type::template
+    else_  <
+        void
+    >
 { };
-
-template< class T >
-struct dispatch_ulong
-    : boost_ext::mpl::and3<
-          boost::is_integral<T>,
-          boost::mpl::not_< boost::is_signed<T> >,
-          sizeof_less_equal< T, sizeof( unsigned long ) >
-      >
-{ };
-
-template< class T >
-struct dispatch_ldouble
-    : boost::is_floating_point<T>
-{ };
-
-template< class T >
-struct dispatch_special< T,
-    typename boost::enable_if_c< dispatch_long<T>::value >::type >
-{ typedef long type; };
-
-template< class T >
-struct dispatch_special< T,
-    typename boost::enable_if_c< dispatch_ulong<T>::value >::type >
-{ typedef unsigned long type; };
-
-template< class T >
-struct dispatch_special< T,
-    typename boost::enable_if_c< dispatch_ldouble<T>::value >::type >
-{ typedef long double type; };
 
 template< class T >
 struct dispatch_special< T* >
