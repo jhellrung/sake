@@ -7,9 +7,9 @@
  *
  * #define SAKE_BOOST_EXT_PP_SEQ_JOIN( seq )
  *
- * Expands to a concatenation of seq, where seq is a Boost.PP Seq of Boost.PP
- * Seqs.  Any such sub-Seq within seq may be BOOST_PP_SEQ_NIL, indicating an
- * empty Seq.
+ * Expands to a concatenation of seq, where seq is a Boost.PP sequence of
+ * Boost.PP sequences.  Any such sub-sequence within seq may be
+ * BOOST_PP_SEQ_NIL, indicating an "empty sequence".
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_PREPROCESSOR_SEQ_JOIN_HPP

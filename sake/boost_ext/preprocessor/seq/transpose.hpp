@@ -7,7 +7,7 @@
  *
  * SAKE_BOOST_EXT_PP_SEQ_TRANSPOSE( seq )
  *
- * Expands to the "transpose" of the given Boost.PP Seqs-of-Seqs.
+ * Expands to the "transpose" of the given Boost.PP sequence-of-sequences.
  *
  * Example:
  *

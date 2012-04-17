@@ -121,9 +121,9 @@
  *     The next available state of the BOOST_PP_FOR construct. (Normally ignored
  *     but occasionally necessary to maximize preprocessing efficiency.)
  * n
- *     The size of each of the remaining Boost.Preprocessor tuple argument(s).
- *     n will be between SAKE_OVERLOAD_MIN_ARITY and the overall maximum among
- *     the SAKE_OVERLOAD_XXX_MAX_ARITY macros, inclusive.
+ *     The size of each of the remaining Boost.PP tuple argument(s).  n will be
+ *     between SAKE_OVERLOAD_MIN_ARITY and the overall maximum among the
+ *     *_MAX_ARITY macros, inclusive.
  * classT_tuple
  *     A tuple of class declarations:
  *         ( class T0, ..., class T[n-1] )

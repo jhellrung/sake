@@ -16,10 +16,10 @@
  * "typename" keyword.
  *
  * SAKE_IDENTITY_TYPE is a slight generalization of SAKE_IDENTITY_TYPE_WRAP.  If
- * its argument T is not a Boost.Preprocessor 1-tuple, it simply expands to T.
- * Otherwise, it expands to SAKE_IDENTITY_TYPE_WRAP T.  One may prefix the
- * 1-tuple argument with the "typename" keyword to indicate that the argument
- * corresponds to a dependent type.
+ * its argument T is not a Boost.PP 1-tuple, it simply expands to T.  Otherwise,
+ * it expands to SAKE_IDENTITY_TYPE_WRAP T.  One may prefix the 1-tuple argument
+ * with the "typename" keyword to indicate that the argument corresponds to a
+ * dependent type.
  *
  * Example:
  *

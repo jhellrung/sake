@@ -8,11 +8,12 @@
  * SAKE_BOOST_EXT_FUSION_UNPACK[_R]( [r,] vars, expr )
  *
  * SAKE_BOOST_EXT_FUSION_UNPACK( vars, expr ) "unpacks" the tuple returned by
- * expr into the variables given by the Boost.PP Seq vars.  This is similar to
- * boost::fusion::tie, except you can declare each variable inline.  Also, note
- * that expr will be evaluated precisely once, and if it evaluates to an rvalue,
- * a copy of that rvalue will be held for the duration of the scope.  Thus, you
- * may use reference types in vars, even if expr evaluates to an rvalue.
+ * expr into the variables given by the Boost.PP sequence vars.  This is similar
+ * to boost::fusion::tie, except you can declare each variable inline.  Also,
+ * note that expr will be evaluated precisely once, and if it evaluates to an
+ * rvalue, a copy of that rvalue will be held for the duration of the scope.
+ * Thus, you may use reference types in vars, even if expr evaluates to an
+ * rvalue.
  *
  * Example:
  *     SAKE_BOOST_EXT_FUSION_UNPACK(

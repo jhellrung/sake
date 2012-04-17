@@ -12,7 +12,7 @@
  * purpose is to reduce boilerplate.
  *
  * SAKE_DIRECT_INIT_CTOR defines a constructor for class T which directly
- * initializes the members specified by the Boost.Preprocessor seq member_seq.
+ * initializes the members specified by the Boost.PP sequence member_seq.
  *
  * Example:
  *

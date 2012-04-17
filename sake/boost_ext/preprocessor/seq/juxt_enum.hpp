@@ -7,10 +7,10 @@
  *
  * SAKE_BOOST_EXT_PP_SEQ_JUXT_ENUM( seq )
  *
- * This enumerates each given Boost.PP Seq and juxtaposes the results.  This
- * is useful when having to pass template instantiations (with more than one
- * template parameter) as macro arguments, since the comma delimiting template
- * parameters would be interpretted as separating macro arguments.
+ * This enumerates each given Boost.PP sequence and juxtaposes the results.
+ * This is useful when having to pass template instantiations (with more than
+ * one template parameter) as macro arguments, since the comma delimiting
+ * template parameters would be interpretted as separating macro arguments.
  *
  * Example:
  *

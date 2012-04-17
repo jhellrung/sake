@@ -38,9 +38,9 @@
  *     Expands to the (fixed) arity of the member function.
  * SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
  *     [ optional, defaults to "( 0, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )" ]
- *     Expands to a Boost.Preprocessor 2-tuple giving the (inclusive) arity
- *     limits of the member function.  Note that at most one of *_ARITY and
- *     *_ARITY_LIMITS should be defined.
+ *     Expands to a Boost.PP 2-tuple giving the (inclusive) arity limits of the
+ *     member function.  Note that at most one of *_ARITY and *_ARITY_LIMITS
+ *     should be defined.
  * SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION( T, Signature, ResultPred )
  *     [ defaults to "boost::false_type" ]
  *     Expands to a type with a nested type typedef indicating whether the
