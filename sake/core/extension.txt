@@ -1,3 +1,6 @@
+sake/core/functional/operators/*.hpp
+    sake::operators::result_of::extension::*
+
 sake/core/math/abs_fwd.hpp
     sake::result_of::extension::abs< T, Enable = void >
 sake/core/math/cmp_fwd.hpp
