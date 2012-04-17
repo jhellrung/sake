@@ -30,8 +30,8 @@ namespace sake
 {
 
 SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
-    has_type_has_private_operator_assign,
-    has_private_operator_assign
+    has_type_has_private_operator_assign_tag,
+    has_private_operator_assign_tag
 )
 
 /*******************************************************************************
@@ -66,7 +66,7 @@ namespace default_impl
 
 template< class T >
 struct has_private_operator_assign
-    : sake::has_type_has_private_operator_assign<
+    : sake::has_type_has_private_operator_assign_tag<
           T, boost::mpl::quote1< boost::mpl::identity > >
 { };
 

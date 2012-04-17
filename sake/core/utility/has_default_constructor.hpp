@@ -36,8 +36,8 @@ namespace sake
 {
 
 SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
-   has_type_has_default_constructor,
-   has_default_constructor
+   has_type_has_default_constructor_tag,
+   has_default_constructor_tag
 )
 
 /*******************************************************************************
@@ -86,7 +86,7 @@ struct has_default_constructor
           boost::has_trivial_constructor<
               typename boost::remove_cv<T>::type
           >,
-          sake::has_type_has_default_constructor<
+          sake::has_type_has_default_constructor_tag<
               T, boost::mpl::quote1< boost::mpl::identity >
           >
       >

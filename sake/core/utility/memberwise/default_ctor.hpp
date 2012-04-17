@@ -9,9 +9,9 @@
  * #define SAKE_MEMBERWISE_DEFAULT_CTOR_BODY()
  *
  * Expands to define a default constructor equivalent to member-wise default
- * construction. Additionally defines a has_default_constructor typedef based on
- * whether each member specified in member_seq has a default constructor (as
- * determined by sake::has_default_constructor).
+ * construction. Additionally defines a has_default_constructor_tag typedef
+ * based on whether each member specified in member_seq has a default
+ * constructor (as determined by sake::has_default_constructor).
  *
  * member_seq should be a Boost.PP sequence of base class specifiers followed by
  * member variable specifiers. A base class specifier is a Boost.PP 1-sequence
@@ -51,13 +51,13 @@
 
 #define SAKE_MEMBERWISE_DEFAULT_CTOR_impl( r, T, member_seq ) \
     T() SAKE_MEMBERWISE_DEFAULT_CTOR_BODY() \
-    static bool const has_default_constructor_value = \
+    static bool const has_default_constructor_tag_value = \
         BOOST_PP_CAT( \
             SAKE_MEMBERWISE_DEFAULT_CTOR_any_has_default_constructor_, \
             SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_seq ) \
         ) ( r, member_seq ); \
-    typedef ::boost::integral_constant< bool, has_default_constructor_value > has_default_constructor; \
-    template< class, class > friend class ::sake::has_type_has_default_constructor;
+    typedef ::boost::integral_constant< bool, has_default_constructor_tag_value > has_default_constructor_tag; \
+    template< class, class > friend class ::sake::has_type_has_default_constructor_tag;
 
 #define SAKE_MEMBERWISE_DEFAULT_CTOR_any_has_default_constructor_0( r, member_seq ) \
     BOOST_PP_CAT( \

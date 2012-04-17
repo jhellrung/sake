@@ -33,7 +33,7 @@
 #define SAKE_NON_COPYABLE( T ) \
     private: T(T&); \
     private: void operator=(T&); \
-    public: typedef ::boost::true_type has_private_operator_assign;
+    public: typedef ::boost::true_type has_private_operator_assign_tag;
 
 #endif // #ifndef BOOST_NO_DELETED_FUNCTIONS
 
