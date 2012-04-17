@@ -15,20 +15,12 @@
 #ifndef SAKE_CORE_UTILITY_VOID_HPP
 #define SAKE_CORE_UTILITY_VOID_HPP
 
-#include <cstddef>
-
 #include <boost/type_traits/integral_constant.hpp>
 
 namespace sake
 {
 
-struct void_
-{
-    static void swap(void_ const &)
-    { }
-    static std::size_t hash_value()
-    { return 0; }
-};
+struct void_ { };
 
 template< class T >
 struct is_void_
