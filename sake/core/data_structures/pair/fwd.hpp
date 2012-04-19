@@ -9,8 +9,6 @@
 #ifndef SAKE_CORE_DATA_STRUCTURES_PAIR_FWD_HPP
 #define SAKE_CORE_DATA_STRUCTURES_PAIR_FWD_HPP
 
-#include <boost/type_traits/integral_constant.hpp>
-
 namespace sake
 {
 
@@ -23,16 +21,6 @@ struct pair;
 } // namespace pair_adl
 
 using pair_adl::pair;
-
-template< class T >
-struct is_pair
-    : boost::false_type
-{ };
-
-template< class T0, class T1 >
-struct is_pair< sake::pair< T0, T1 > >
-    : boost::true_type
-{ };
 
 } // namespace sake
 
