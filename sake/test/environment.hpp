@@ -113,7 +113,7 @@ private:
 };
 
 /*******************************************************************************
- * environment (inline) member implementations
+ * environment (inline) member definitions
  ******************************************************************************/
 
 inline void

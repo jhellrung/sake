@@ -258,7 +258,7 @@ struct traits
 } // namespace private_
 
 /*******************************************************************************
- * reference_wrapper member implementations
+ * reference_wrapper member definitions
  ******************************************************************************/
 
 template< class T, class Tags >
