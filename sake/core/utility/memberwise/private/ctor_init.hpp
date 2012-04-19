@@ -20,7 +20,7 @@
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
 #include <sake/core/move/move.hpp>
-#include <sake/core/utility/inherit_cast.hpp>
+#include <sake/core/utility/cast/inherit.hpp>
 
 #define SAKE_MEMBERWISE_ctor_init( r, member_seq ) \
     BOOST_PP_CAT( \
