@@ -25,7 +25,7 @@
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/introspection/private/builtin_has_operator_assign.hpp>
 #include <sake/core/move/rv.hpp>
-#include <sake/core/utility/has_private_assign.hpp>
+#include <sake/core/utility/has_private_operator_assign.hpp>
 
 namespace sake
 {
@@ -89,7 +89,7 @@ template< class T, class Signature, class ResultPred >
 struct has_operator_assign<
     T, Signature, ResultPred,
     typename boost::enable_if_c<
-        sake::has_private_assign<
+        sake::has_private_operator_assign<
             typename boost_ext::remove_qualifiers<T>::type
         >::value
     >::type
