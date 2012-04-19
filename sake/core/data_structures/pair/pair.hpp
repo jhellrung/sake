@@ -166,12 +166,10 @@ public:
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U0, class U1 >
-    pair&
-    assign(SAKE_FWD_REF( U0 ) x0, SAKE_FWD_REF( U1 ) x1)
+    void assign(SAKE_FWD_REF( U0 ) x0, SAKE_FWD_REF( U1 ) x1)
     {
         sake::emplacer_assign(first,  sake::forward< U0 >(x0));
         sake::emplacer_assign(second, sake::forward< U1 >(x1));
-        return *this;
     }
 
     template< class Sequence >

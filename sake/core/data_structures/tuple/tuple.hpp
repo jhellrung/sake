@@ -330,12 +330,8 @@ struct tuple< T0N >
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class_U0N >
-    tuple&
-    assign( BOOST_PP_ENUM( N, fwd_ref_Un_xn, ~ ) )
-    {
-        BOOST_PP_REPEAT( N, emplacer_assign_n_forward_Un_xn, ~ )
-        return *this;
-    }
+    void assign( BOOST_PP_ENUM( N, fwd_ref_Un_xn, ~ ) )
+    { BOOST_PP_REPEAT( N, emplacer_assign_n_forward_Un_xn, ~ ) }
 
     template< class Sequence >
     typename boost::enable_if_c<

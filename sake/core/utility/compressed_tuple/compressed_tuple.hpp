@@ -283,15 +283,13 @@ public:
     }
 
     template< class_U0N >
-    compressed_tuple&
-    assign( BOOST_PP_ENUM( N, fwd_ref_Un_xn, ~ ) )
+    void assign( BOOST_PP_ENUM( N, fwd_ref_Un_xn, ~ ) )
     {
 #if N == 1
         sake::emplacer_assign(this->member(), sake::forward< U0 >(x0));
 #else // #if N == 1
         BOOST_PP_REPEAT( N, emplacer_assign_at_c_n_forward_Un_xn, ~ )
 #endif // #if N == 1
-        return *this;
     }
 
     struct result_of

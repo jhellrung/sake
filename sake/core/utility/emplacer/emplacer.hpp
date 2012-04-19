@@ -10,7 +10,7 @@
  *
  * emplacer_construct<T>(emplacer< Signature > e, void* p) -> void
  * emplacer_construct<T>(emplacer< Signature > e) -> T [qualified]
- * emplacer_assign(T& x, emplacer< Signature > e) -> T&
+ * emplacer_assign(T& x, emplacer< Signature > e) -> void
  *
  * emplacer objects provide an abstraction for constructor arguments, allowing
  * one a generic facility to pass constructor arguments and do in-place
@@ -92,9 +92,9 @@ public:
     { return emplacer_access::construct<T>(emplacer()); }
 
     template< class T >
-    static T&
+    static void
     assign(T& x)
-    { return emplacer_access::assign(x, emplacer()); }
+    { emplacer_access::assign(x, emplacer()); }
 
     struct result_of
     {
@@ -144,9 +144,9 @@ public:
     { return emplacer_access::construct<T>(emplacer()); }
 
     template< class V >
-    V&
+    void
     assign(V& x)
-    { return emplacer_access::assign(x, emplacer()); }
+    { emplacer_access::assign(x, emplacer()); }
 
     void
     operator()(void* const p) const
@@ -205,9 +205,9 @@ public:
     { return emplacer_access::construct<T>(*this); }
 
     template< class T >
-    T&
+    void
     assign(T& x) const
-    { return emplacer_access::assign(x, *this); }
+    { emplacer_access::assign(x, *this); }
 
     template< class T >
     void
@@ -258,9 +258,9 @@ public:
     { return emplacer_access::construct<T>(*this); }
 
     template< class V >
-    V&
+    void
     assign(V& x) const
-    { return emplacer_access::assign(x, *this); }
+    { emplacer_access::assign(x, *this); }
 
     void
     operator()(void* const p) const
@@ -320,9 +320,9 @@ public:
     { return emplacer_access::construct<T>(*this); }
 
     template< class T >
-    T&
+    void
     assign(T& x) const
-    { return emplacer_access::assign(x, *this); }
+    { emplacer_access::assign(x, *this); }
 
     struct result_of
     {
@@ -391,9 +391,9 @@ public:
     { return emplacer_access::construct<T>(*this); }
 
     template< class V >
-    V&
+    void
     assign(V& x) const
-    { return emplacer_access::assign(x, *this); }
+    { emplacer_access::assign(x, *this); }
 
     void
     operator()(void* const p) const
@@ -423,7 +423,7 @@ public:
 /*******************************************************************************
  * emplacer_construct<T>(emplacer< Signature > e, void* p) -> void
  * emplacer_construct<T>(emplacer< Signature > e) -> T [qualified]
- * emplacer_assign(T& x, emplacer< Signature > e) -> T&
+ * emplacer_assign(T& x, emplacer< Signature > e) -> void
  ******************************************************************************/
 
 template< class T, class Signature >
@@ -457,9 +457,9 @@ emplacer_construct(sake::emplacer< Signature > e)
 { return e.construct(); }
 
 template< class T, class Signature >
-inline T&
+inline void
 emplacer_assign(T& x, sake::emplacer< Signature > e)
-{ return e.assign(x); }
+{ e.assign(x); }
 
 } // namespace sake
 
@@ -505,9 +505,9 @@ public:
     { return emplacer_access::construct<T>(*this); }
 
     template< class T >
-    T&
+    void
     assign(T& x)
-    { return emplacer_access::assign(x, *this); }
+    { emplacer_access::assign(x, *this); }
 
     struct result_of
     {
@@ -579,9 +579,9 @@ public:
     { return emplacer_access::construct<T>(*this); }
 
     template< class V >
-    V&
+    void
     assign(V& x) const
-    { return emplacer_access::assign(x, *this); }
+    { emplacer_access::assign(x, *this); }
 
     result_type
     operator()() const
