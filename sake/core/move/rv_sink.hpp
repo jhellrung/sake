@@ -12,7 +12,6 @@
  * >
  *
  * struct rv_sink_traits::rv_param<T>
- * struct rv_sink_visitors::ctor_impl<T>
  * struct rv_sink_visitors::operator_assign<T>
  *
  * rv_sink, when used as a function parameter, allows capturing of arbitrary
@@ -164,24 +163,11 @@ struct rv_param
 } // namespace rv_sink_traits
 
 /*******************************************************************************
- * struct rv_sink_visitors::ctor_impl<T>
  * struct rv_sink_visitors::operator_assign<T>
  ******************************************************************************/
 
 namespace rv_sink_visitors
 {
-
-template< class T >
-struct ctor_impl
-{
-    explicit ctor_impl(T& this_) : m_this(this_) { }
-    typedef void result_type;
-    template< class U >
-    void operator()(U& x) const
-    { m_this.ctor_impl(x); }
-private:
-    T& m_this;
-};
 
 template< class T >
 struct operator_assign
