@@ -28,7 +28,6 @@
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/call_traits.hpp>
-#include <sake/core/utility/default_tag.hpp>
 #include <sake/core/utility/overload.hpp>
 
 #ifndef SAKE_CONSTRUCT_PERFECT_MAX_ARITY
@@ -56,15 +55,17 @@
 namespace sake
 {
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+
 namespace construct_private
 {
 
-template< class T >
-struct rv_sink;
-template< class T, class U >
-struct enable_clv;
+template< class T > struct rv_sink;
+template< class T, class U > struct enable_cref;
 
 } // namespace construct_private
+
+#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
 namespace functional
 {
@@ -78,45 +79,39 @@ struct construct
  && !defined( BOOST_NO_VARIADIC_TEMPLATES )
 
     template< class... U >
-    T
-    operator()(U&&... x) const
+    T operator()(U&&... x) const
     { return T(sake::forward<U>(x)...); }
 
 #else // #if !defined( ... ) && !defined( ... )
 
-    T
-    operator()() const
+    T operator()() const
     { return T(); }
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    T
-    operator()(U&& x) const
+    T operator()(U&& x) const
     { return static_cast<T>(sake::forward<U>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    typedef typename rv_sink_traits::rv_param<T>::type rv_param_type;
-    typedef typename construct_private::rv_sink<T>::type rv_sink_type;
+    typedef typename sake::rv_sink_traits::rv_param<T>::type rv_param_type;
+    typedef typename sake::construct_private::rv_sink<T>::type rv_sink_type;
 public:
-    // lvalues
+    // lvalues + movable explicit rvalues
     template< class U >
-    T
-    operator()(U& x) const
+    T operator()(U& x) const
     { return static_cast<T>(x); }
     // T rvalues
-    T
-    operator()(rv_param_type x) const
+    T operator()(rv_param_type x) const
     { return static_cast<T>(x); }
-    // movable rvalues
-    T
-    operator()(rv_sink_type x) const
+    // movable implicit rvalues
+    T operator()(rv_sink_type x) const
     { return x(); }
     // const lvalues + non-movable rvalues
     template< class U >
-    typename construct_private::enable_clv<T,U>::type
+    typename sake::construct_private::enable_cref<T,U>::type
     operator()(U const & x) const
     { return static_cast<T>(x); }
 
@@ -182,16 +177,16 @@ construct(U& x)
 
 template< class T >
 inline T
-construct(typename rv_sink_traits::rv_param<T>::type x)
+construct(typename sake::rv_sink_traits::rv_param<T>::type x)
 { return sake::functional::construct<T>()(x); }
 
 template< class T >
 inline T
-construct(typename construct_private::rv_sink<T>::type x)
-{ return x(sake::functional::construct<T>()); }
+construct(typename sake::construct_private::rv_sink<T>::type x)
+{ return x(); }
 
 template< class T, class U >
-inline typename construct_private::enable_clv<T,U>::type
+inline typename sake::construct_private::enable_cref<T,U>::type
 construct(U const & x)
 { return sake::functional::construct<T>()(x); }
 
@@ -213,6 +208,8 @@ construct(U const & x)
 
 #endif // #if !defined( ... ) && !defined( ... )
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+
 namespace construct_private
 {
 
@@ -221,24 +218,23 @@ struct rv_sink
 {
     typedef sake::rv_sink<
         sake::functional::construct<T>, // Visitor
-        sake::default_tag, // Result
+        T, // Result
         boost::mpl::not_< boost::is_same< T, boost::mpl::_1 > > // Pred
     > type;
 };
 
 template< class T, class U >
-struct enable_clv
-    : boost::disable_if_c<
-          boost_ext::mpl::or2<
-              boost_ext::is_same_sans_qualifiers<
-                  U, typename rv_sink_traits::rv_param<T>::type >,
-              sake::is_movable<U>
-          >::value,
-          T
-      >
+struct enable_cref
+    : boost::disable_if_c< boost_ext::mpl::or2<
+          boost_ext::is_same_sans_qualifiers<
+              U, typename sake::rv_sink_traits::rv_param<T>::type >,
+          sake::is_movable<U>
+      >::value, T >
 { };
 
 } // namespace construct_private
+
+#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
 } // namespace sake
 
