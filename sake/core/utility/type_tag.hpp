@@ -8,6 +8,7 @@
  * struct type_tag<T>
  * struct is_type_tag<T>
  * struct remove_type_tag<T>
+ * struct remove_qualified_type_tag<T>
  *
  * type_tag<T> is simply an empty struct with a single "typedef T type;".  It
  * is intended to be used as a function parameter to allow a type template
@@ -27,6 +28,8 @@
 
 #include <boost/type_traits/integral_constant.hpp>
 
+#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+
 namespace sake
 {
 
@@ -40,7 +43,7 @@ struct is_type_tag
 { };
 
 template< class T >
-struct is_type_tag< type_tag<T> >
+struct is_type_tag< sake::type_tag<T> >
     : boost::true_type
 { };
 
@@ -49,8 +52,29 @@ struct remove_type_tag
 { typedef T type; };
 
 template< class T >
-struct remove_type_tag< type_tag<T> >
+struct remove_type_tag< sake::type_tag<T> >
 { typedef T type; };
+
+namespace type_tag_private
+{
+
+template<
+    class T,
+    class T_ = typename boost_ext::remove_qualifiers<T>::type
+>
+struct remove_qualified_dispatch
+{ typedef T type; };
+
+template< class T, class U >
+struct remove_qualified_dispatch< T, sake::type_tag<U> >
+{ typedef U type; };
+
+} // namespace type_tag_private
+
+template< class T >
+struct remove_qualified_type_tag
+    : type_tag_private::remove_qualified_dispatch<T>
+{ };
 
 } // namespace sake
 
