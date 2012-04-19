@@ -6,6 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct is_emplacer< T, ValuePred = default_tag >
+ * struct is_emplacer_sans_qualifiers< T, ValuePred = default_tag >
  *
  * struct enable_if_is_emplacer< T, Result = void, ValuePred = default_tag >
  * struct disable_if_is_emplacer< T, Result = void, ValuePred = default_tag >
@@ -23,6 +24,8 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_void.hpp>
 #include <boost/utility/enable_if.hpp>
+
+#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/utility/default_tag.hpp>
 #include <sake/core/utility/emplacer/fwd.hpp>
@@ -81,6 +84,18 @@ struct is_emplacer<
     >::value;
     typedef is_emplacer type;
 };
+
+/*******************************************************************************
+ * struct is_emplacer_sans_qualifiers< T, ValuePred = default_tag >
+ ******************************************************************************/
+
+template< class T, class ValuePred = sake::default_tag >
+struct is_emplacer_sans_qualifiers
+    : sake::is_emplacer<
+          typename boost_ext::remove_qualifiers<T>::type,
+          ValuePred
+      >
+{ };
 
 /*******************************************************************************
  * struct enable_if_is_emplacer< T, Result = void, ValuePred = default_tag >

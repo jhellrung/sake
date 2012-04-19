@@ -37,20 +37,16 @@ namespace emplacer_private
 
 template<
     class U,
-    class U_ = typename boost_ext::remove_qualifiers<U>::type,
-    bool = sake::is_emplacer<U_>::value
+    bool = sake::is_emplacer_sans_qualifiers<U>::value
 >
 struct wrap_dispatch;
 
 template<
     class T, class U,
-    class U_ = typename boost_ext::remove_qualifiers<U>::type,
-    bool = sake::is_emplacer<
-               U_, boost::mpl::quote1< boost::is_void >
-           >::value,
-    bool = sake::is_emplacer<
-               U_, boost::mpl::not_< boost::is_void< boost::mpl::_1 > >
-           >::value
+    bool = sake::is_emplacer_sans_qualifiers<
+               U, boost::mpl::quote1< boost::is_void > >::value,
+    bool = sake::is_emplacer_sans_qualifiers<
+               U, boost::mpl::not_< boost::is_void< boost::mpl::_1 > > >::value
 >
 struct typed_wrap_dispatch;
 
@@ -90,42 +86,43 @@ typed_emplacer_wrap(SAKE_FWD2_REF( U ) x)
 namespace emplacer_private
 {
 
-template< class U, class U_ >
-struct wrap_dispatch< U, U_, false >
+template< class U >
+struct wrap_dispatch< U, false >
 {
     typedef sake::emplacer< void ( U ) > type;
     static type apply(typename emplacer_private::cast<U>::type x)
     { return type(emplacer_private::cast<U>::apply(x)); }
 };
 
-template< class U, class U_ >
-struct wrap_dispatch< U, U_, true >
+template< class U >
+struct wrap_dispatch< U, true >
 {
-    typedef U_ type;
+    typedef typename boost_ext::remove_qualifiers<U>::type type;
     static type apply(type e)
     { return e; }
 };
 
-template< class T, class U, class U_ >
-struct typed_wrap_dispatch< T, U, U_, false, false >
+template< class T, class U >
+struct typed_wrap_dispatch< T, U, false, false >
 {
     typedef sake::emplacer< T ( U ) > type;
     static type apply(typename emplacer_private::cast<U>::type x)
     { return type(emplacer_private::cast<U>::apply(x)); }
 };
 
-template< class T, class U, class U_ >
-struct typed_wrap_dispatch< T, U, U_, true, false >
+template< class T, class U >
+struct typed_wrap_dispatch< T, U, true, false >
 {
-    typedef typename U_::result_of::template as_typed<T>::type type;
-    static type apply(U_ e)
+    typedef typename boost_ext::remove_qualifiers<U>::type noqual_type;
+    typedef typename noqual_type::result_of::template as_typed<T>::type type;
+    static type apply(noqual_type e)
     { return e.template as_typed<T>(); }
 };
 
-template< class T, class U, class U_ >
-struct typed_wrap_dispatch< T, U, U_, false, true >
+template< class T, class U >
+struct typed_wrap_dispatch< T, U, false, true >
 {
-    typedef U_ type;
+    typedef typename boost_ext::remove_qualifiers<U>::type type;
     static type apply(type e)
     { return e; }
 };
