@@ -109,14 +109,14 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     private:
-        typedef typename rv_sink_traits::rv_param< value_type >::type rv_param_type;
+        typedef typename sake::rv_sink_traits::rv_param< value_type >::type rv_param_type;
         typedef sake::rv_sink<
-            rv_sink_visitors::operator_assign< proxy const >, // Visitor
+            sake::rv_sink_visitors::operator_assign< proxy const >, // Visitor
             proxy const &, // Result
             boost::mpl::not_< boost::is_same< value_type, boost::mpl::_1 > > // Pred
         > operator_assign_rv_sink_type;
     public:
-        // lvalues
+        // lvalues + movable explicit rvalues
         template< class T >
         proxy const &
         operator=(T& x) const
@@ -125,10 +125,10 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         proxy const &
         operator=(rv_param_type x) const
         { *m_i = x; return *this; }
-        // movable rvalues
+        // movable implicit rvalues
         proxy const &
         operator=(operator_assign_rv_sink_type const x) const
-        { return x(rv_sink_visitors::operator_assign< proxy const >(*this)); }
+        { return x(sake::rv_sink_visitors::operator_assign< proxy const >(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
         typename boost::disable_if_c<

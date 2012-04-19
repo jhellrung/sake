@@ -68,14 +68,14 @@ struct operator_bracket_dispatch
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     private:
-        typedef typename rv_sink_traits::rv_param< Value >::type rv_param_type;
+        typedef typename sake::rv_sink_traits::rv_param< Value >::type rv_param_type;
         typedef sake::rv_sink<
-            rv_sink_visitors::operator_assign< proxy const >, // Visitor
+            sake::rv_sink_visitors::operator_assign< proxy const >, // Visitor
             proxy const &, // Result
             boost::mpl::not_< boost::is_same< Value, boost::mpl::_1 > > // Pred
         > operator_assign_rv_sink_type;
     public:
-        // lvalues
+        // lvalues + movable explicit rvalues
         template< class T >
         proxy const &
         operator=(T& x) const
@@ -84,10 +84,10 @@ struct operator_bracket_dispatch
         proxy const &
         operator=(rv_param_type x) const
         { *m_i = x; return *this; }
-        // movable rvalues
+        // movable implicit rvalues
         proxy const &
         operator=(operator_assign_rv_sink_type x) const
-        { return x(rv_sink_visitors::operator_assign< proxy const >(*this)); }
+        { return x(sake::rv_sink_visitors::operator_assign< proxy const >(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
         typename boost::disable_if_c<
