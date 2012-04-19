@@ -37,6 +37,7 @@
 
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
+#include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -216,9 +217,9 @@ namespace sake_inv_private
 template< class T, class Result >
 struct adl
 {
-    template< class T_ >
-    static Result apply(SAKE_FWD2_REF( T_ ) x)
-    { return inv(::sake::forward<T_>(x)); }
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    static Result apply(fwd_type x)
+    { return inv(static_cast< fwd_type >(x)); }
 };
 
 template< class T >
@@ -330,9 +331,9 @@ public:
 template< class T, class Result >
 struct dispatch< T, Result, 6 >
 {
-    template< class T_ >
-    static Result apply(SAKE_FWD2_REF( T_ ) x)
-    { return sake::forward<T_>(x).inv(); }
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    static Result apply(fwd_type x)
+    { return static_cast< fwd_type >(x).inv(); }
 };
 
 template< class T, class Result >
@@ -381,12 +382,11 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
-    typedef sake::inverse<
-        typename boost_ext::remove_qualifiers<T>::type
-    > type;
-    template< class T_ >
-    static type apply(SAKE_FWD2_REF( T_ ) x)
-    { return type(sake::forward<T_>(x)); }
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
+    typedef sake::inverse< noqual_type > type;
+    static type apply(fwd_type x)
+    { return type(static_cast< fwd_type >(x)); }
 };
 
 } // namespace inv_private

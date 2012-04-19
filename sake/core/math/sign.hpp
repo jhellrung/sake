@@ -12,7 +12,7 @@
  * struct result_of::extension::sign< T, Enable = void >
  * struct result_of::default_impl::sign<T>
  *
- * Teturns the sign of its argument (either a sake::sign_t or, in the event
+ * Returns the sign of its argument (either a sake::sign_t or, in the event
  * that the sign could be indeterminate, a sake::fuzzy_sign_t).
  *
  * sake::sign(T) is implemented in terms of
@@ -39,6 +39,7 @@
 #include <boost/type_traits/remove_cv.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
+#include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -184,9 +185,9 @@ namespace sake_sign_private
 template< class T, class Result >
 struct adl
 {
-    template< class T_ >
-    static Result apply(SAKE_FWD2_REF( T_ ) x)
-    { return static_cast< Result >(sign(::sake::forward< T_ >(x))); }
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    static Result apply(fwd_type x)
+    { return static_cast< Result >(sign(static_cast< fwd_type >(x))); }
 };
 
 template< class T >
@@ -287,9 +288,9 @@ public:
 template< class T, class Result >
 struct dispatch< T, Result, 2 >
 {
-    template< class T_ >
-    static Result apply(SAKE_FWD2_REF( T_ ) x)
-    { return static_cast< Result >(sake::forward< T_ >(x).sign()); }
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    static Result apply(fwd_type x)
+    { return static_cast< Result >(static_cast< fwd_type >(x).sign()); }
 };
 
 template< class T, class Result >
@@ -300,10 +301,10 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
     typedef typename sake::result_of::cmp< T, sake::zero_t >::type type;
-    template< class T_ >
-    static type apply(SAKE_FWD2_REF( T_ ) x)
-    { return sake::cmp(sake::forward< T_ >(x), sake::zero); }
+    static type apply(fwd_type x)
+    { return sake::cmp(static_cast< fwd_type >(x), sake::zero); }
 };
 
 } // namespace sign_private

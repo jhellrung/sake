@@ -221,9 +221,9 @@ namespace sake_sqr_private
 template< class T, class Result >
 struct adl
 {
-    template< class T_ >
-    static Result apply(SAKE_FWD2_REF( T_ ) x)
-    { return sqr(::sake::forward<T_>(x)); }
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    static Result apply(fwd_type x)
+    { return sqr(static_cast< fwd_type >(x)); }
 };
 
 template< class T >
@@ -297,20 +297,17 @@ public:
 template< class T, class Result >
 struct dispatch< T, Result, 8 >
 {
-    typedef typename boost::make_unsigned<
-        typename boost_ext::remove_qualifiers<T>::type
-    >::type type;
-    template< class T_ >
-    static type apply(T_ const x)
-    { return static_cast< type >(x) * static_cast< type >(x); }
+    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
+    typedef typename boost::make_unsigned< noqual_type >::type type;
+    static type apply(noqual_type const x)
+    { return static_cast< type >(x * x); }
 };
 
 template< class T, class Result >
 struct dispatch< T, Result, 7 >
 {
     typedef typename boost_ext::remove_qualifiers<T>::type type;
-    template< class T_ >
-    static type apply(T_ const x)
+    static type apply(type const x)
     { return x * x; }
 };
 
@@ -348,9 +345,9 @@ public:
 template< class T, class Result >
 struct dispatch< T, Result, 6 >
 {
-    template< class T_ >
-    static Result apply(SAKE_FWD2_REF( T_ ) x)
-    { return sake::forward<T_>(x).sqr(); }
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    static Result apply(fwd_type x)
+    { return static_cast< fwd_type >(x).sqr(); }
 };
 
 template< class T, class Result >
@@ -399,11 +396,11 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
     typedef typename sake::operators::result_of::multiply<
         typename boost_ext::add_reference<T>::type
     >::type type;
-    template< class T_ >
-    static type apply(SAKE_FWD2_REF( T_ ) x)
+    static type apply(fwd_type x)
     { return SAKE_AS_LVALUE( x ) * SAKE_AS_LVALUE( x ); }
 };
 

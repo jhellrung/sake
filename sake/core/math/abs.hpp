@@ -48,6 +48,7 @@
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
+#include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -237,9 +238,9 @@ namespace sake_abs_private
 template< class T, class Result >
 struct adl
 {
-    template< class T_ >
-    static Result apply(SAKE_FWD2_REF( T_ ) x)
-    { return abs(::sake::forward<T_>(x)); }
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    static Result apply(fwd_type x)
+    { return abs(static_cast< fwd_type >(x)); }
 };
 
 template< class T >
@@ -315,11 +316,9 @@ public:
 template< class T, class Result >
 struct dispatch< T, Result, 8 >
 {
-    typedef typename boost::make_unsigned<
-        typename boost_ext::remove_qualifiers<T>::type
-    >::type type;
-    template< class T_ >
-    static type apply(T_ const x)
+    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
+    typedef typename boost::make_unsigned< noqual_type >::type type;
+    static type apply(noqual_type const x)
     {
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -336,8 +335,7 @@ template< class T, class Result >
 struct dispatch< T, Result, 7 >
 {
     typedef typename boost_ext::remove_qualifiers<T>::type type;
-    template< class T_ >
-    static type apply(T_ const x)
+    static type apply(type const x)
     { return x; }
 };
 
@@ -375,9 +373,9 @@ public:
 template< class T, class Result >
 struct dispatch< T, Result, 6 >
 {
-    template< class T_ >
-    static Result apply(SAKE_FWD2_REF( T_ ) x)
-    { return sake::forward<T_>(x).abs(); }
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    static Result apply(fwd_type x)
+    { return static_cast< fwd_type >(x).abs(); }
 };
 
 template< class T, class Result >
@@ -426,14 +424,15 @@ struct dispatch< T, Result, 1 >
 template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
+    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
     typedef typename boost_ext::common_type<
         T, typename sake::operators::result_of::unary_minus<T>::type
     >::type type;
-    template< class T_ >
-    static type apply(SAKE_FWD2_REF( T_ ) x)
+    static type apply(fwd_type x)
     {
         return SAKE_AS_LVALUE( x ) < sake::zero ?
-               -sake::forward<T_>(x) : sake::forward<T_>(x);
+              -static_cast< fwd_type >(x) :
+               static_cast< fwd_type >(x);
     }
 };
 
