@@ -1,14 +1,18 @@
 /*******************************************************************************
  * sake/boost_ext/mpl/insert_if.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct boost_ext::mpl::insert_if< C, Sequence, T >
- * struct boost_ext::mpl::insert_if_c< C, Sequence, T >
- * struct boost_ext::mpl::lazy_insert_if< C, Sequence, T >
- * struct boost_ext::mpl::lazy_insert_if_c< C, Sequence, T >
+ * struct boost_ext::mpl::insert_if_c< Cond, Sequence, T >
+ * struct boost_ext::mpl::insert_if< Cond, Sequence, T >
+ * struct boost_ext::mpl::insert_if_not_c< Cond, Sequence, T >
+ * struct boost_ext::mpl::insert_if_not< Cond, Sequence, T >
+ * struct boost_ext::mpl::lazy_insert_if_c< Cond, Sequence, T >
+ * struct boost_ext::mpl::lazy_insert_if< Cond, Sequence, T >
+ * struct boost_ext::mpl::lazy_insert_if_not_c< Cond, Sequence, T >
+ * struct boost_ext::mpl::lazy_insert_if_not< Cond, Sequence, T >
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_MPL_INSERT_IF_HPP
@@ -25,7 +29,7 @@ namespace boost_ext
 namespace mpl
 {
 
-template< bool C, class Sequence, class T >
+template< bool Cond, class Sequence, class T >
 struct insert_if_c;
 
 template< class Sequence, class T >
@@ -37,12 +41,22 @@ struct insert_if_c< true, Sequence, T >
     : boost::mpl::insert< Sequence, T >
 { };
 
-template< class C, class Sequence, class T >
+template< class Cond, class Sequence, class T >
 struct insert_if
-    : insert_if_c< C::value, Sequence, T >
+    : insert_if_c< Cond::value, Sequence, T >
 { };
 
-template< bool C, class Sequence, class T >
+template< bool Cond, class Sequence, class T >
+struct insert_if_not_c
+    : insert_if_c< !Cond, Sequence, T >
+{ };
+
+template< class Cond, class Sequence, class T >
+struct insert_if_not
+    : insert_if_c< !Cond::value, Sequence, T >
+{ };
+
+template< bool Cond, class Sequence, class T >
 struct lazy_insert_if_c;
 
 template< class Sequence, class T >
@@ -54,9 +68,19 @@ struct lazy_insert_if_c< true, Sequence, T >
     : boost::mpl::insert< Sequence, typename T::type >
 { };
 
-template< class C, class Sequence, class T >
+template< class Cond, class Sequence, class T >
 struct lazy_insert_if
-    : lazy_insert_if_c< C::value, Sequence, T >
+    : lazy_insert_if_c< Cond::value, Sequence, T >
+{ };
+
+template< bool Cond, class Sequence, class T >
+struct lazy_insert_if_not_c
+    : lazy_insert_if_c< !Cond, Sequence, T >
+{ };
+
+template< class Cond, class Sequence, class T >
+struct lazy_insert_if_not
+    : lazy_insert_if_c< !Cond::value, Sequence, T >
 { };
 
 } // namespace mpl
