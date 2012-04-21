@@ -38,7 +38,7 @@
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
-#include <sake/core/utility/emplacer/traits.hpp>
+#include <sake/core/utility/emplacer/emplacer.hpp>
 #include <sake/core/utility/memberwise/swap.hpp>
 
 namespace sake
@@ -85,9 +85,9 @@ private:
     typedef sake::rv_sink<
         sake::functional::construct<T>, // Visitor
         T, // Result
-        boost::mpl::and2<
-            boost::mpl::not_< boost::is_same< T, boost::mpl::_1 > >,
-            boost_ext::is_convertible< boost::mpl::_1, T >
+        boost_ext::mpl::and2<
+            boost_ext::is_convertible< boost::mpl::_1, T >,
+            boost::mpl::not_< boost::is_same< T, boost::mpl::_1 > >
         > // Pred
     > ctor_rv_sink_type;
 public:
@@ -110,19 +110,18 @@ public:
     template< class U >
     explicit inverse(U const & x,
         typename boost::disable_if_c< boost_ext::mpl::or3<
+            boost::mpl::not_< boost_ext::is_convertible< U const &, T > >,
             boost_ext::is_same_sans_qualifiers< U, rv_param_type >,
-            sake::is_movable<U>,
-            boost::mpl::not_< boost_ext::is_convertible< U const &, T > >
+            sake::is_movable<U>
         >::value >::type* = 0)
         : m_value(x)
     { }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-    template< class Emplacer >
-    explicit inverse(Emplacer e,
-        typename sake::enable_if_is_emplacer< Emplacer >::type* = 0)
-        : m_value(emplacer_construct<T>(e))
+    template< class Signature >
+    explicit inverse(sake::emplacer< Signature > e)
+        : m_value(sake::emplacer_construct<T>(e))
     { }
 
     T const & value() const
