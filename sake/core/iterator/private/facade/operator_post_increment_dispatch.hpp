@@ -128,7 +128,7 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         // movable implicit rvalues
         proxy const &
         operator=(operator_assign_rv_sink_type const x) const
-        { return x(sake::rv_sink_visitors::operator_assign< proxy const >(*this)); }
+        { return x(sake::rv_sink_visitors::make_operator_assign(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
         typename boost::disable_if_c<

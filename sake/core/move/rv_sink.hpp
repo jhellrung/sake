@@ -12,7 +12,10 @@
  * >
  *
  * struct rv_sink_traits::rv_param<T>
+ *
  * struct rv_sink_visitors::operator_assign<T>
+ * rv_sink_visitors::make_operator_assign(T& x)
+ *     -> rv_sink_visitors::operator_assign<T>
  *
  * rv_sink, when used as a function parameter, allows capturing of arbitrary
  * rvalues of types with rvalue reference emulation.
@@ -164,6 +167,8 @@ struct rv_param
 
 /*******************************************************************************
  * struct rv_sink_visitors::operator_assign<T>
+ * rv_sink_visitors::make_operator_assign(T& x)
+ *     -> rv_sink_visitors::operator_assign<T>
  ******************************************************************************/
 
 namespace rv_sink_visitors
@@ -175,11 +180,16 @@ struct operator_assign
     explicit operator_assign(T& this_) : m_this(this_) { }
     typedef T& result_type;
     template< class U >
-    result_type operator()(U& x) const
+    result_type operator()(SAKE_RV_REF( U ) x) const
     { return m_this = x; }
 private:
     T& m_this;
 };
+
+template< class T >
+inline sake::rv_sink_visitors::operator_assign<T>
+make_operator_assign(T& x)
+{ return sake::rv_sink_visitors::operator_assign<T>(x); }
 
 } // namespace rv_sink_visitors
 

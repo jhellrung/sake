@@ -87,7 +87,7 @@ struct operator_bracket_dispatch
         // movable implicit rvalues
         proxy const &
         operator=(operator_assign_rv_sink_type x) const
-        { return x(sake::rv_sink_visitors::operator_assign< proxy const >(*this)); }
+        { return x(sake::rv_sink_visitors::make_operator_assign(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
         typename boost::disable_if_c<
