@@ -37,15 +37,14 @@ namespace boost_ext
 template< std::size_t Size, std::size_t Align >
 union aligned_storage_c
 {
-    typedef aligned_storage type;
+    typedef aligned_storage_c type;
     unsigned char _[Size];
     typename boost_ext::aligned_type< Align >::type _aligned;
 };
 
 template< class T >
 struct aligned_storage
-    : aligned_storage_c< sizeof( T ), boost::alignment_of<T>::value >
-{ };
+{ typedef aligned_storage_c< sizeof( T ), boost::alignment_of<T>::value > type; };
 
 } // namespace boost_ext
 
