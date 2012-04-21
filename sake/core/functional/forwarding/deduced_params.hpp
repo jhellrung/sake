@@ -39,7 +39,7 @@ template< class T, class ChainedBase = void >
 class deduced_params
     : public boost::mpl::insert<
           typename deduced_params< T, void >::type,
-          keyword::chained_base< ChainedBase >
+          sake::forwarding::keyword::chained_base< ChainedBase >
       >
 { };
 
@@ -68,29 +68,19 @@ class deduced_params< T, void >
         typename boost_ext::remove_reference<T>::type
     > has_type_result_type_;
 
-    typedef typename boost_ext::mpl::insert_if_c<
-        is_nullary_callable::value,
-        keyword::default_params,
-        keyword::nullary_callable
-    >::type temp0_type;
-    typedef typename boost_ext::mpl::insert_if_c<
-        is_nullary_const_callable::value,
-        temp0_type,
-        keyword::nullary_const_callable
-    >::type temp1_type;
 public:
-    typedef typename lazy_insert_keyword_value_if_c<
+    typedef typename sake::lazy_insert_keyword_value_if_c<
         boost_ext::mpl::or2< has_type_result_type_, is_nullary_callable >::value,
         typename boost_ext::mpl::insert_if_c<
             is_nullary_const_callable::value,
             typename boost_ext::mpl::insert_if_c<
                 is_nullary_callable::value,
-                keyword::default_params,
-                keyword::nullary_callable
+                sake::forwarding::keyword::default_params,
+                sake::forwarding::keyword::nullary_callable
             >::type,
-            keyword::nullary_const_callable
+            sake::forwarding::keyword::nullary_const_callable
         >::type,
-        keyword::result,
+        sake::forwarding::keyword::result,
         boost::mpl::eval_if_c<
             has_type_result_type_::value,
             boost_ext::mpl::result_type< typename boost_ext::remove_reference<T>::type >,
