@@ -56,16 +56,16 @@ public:
 
     storage(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
     { }
-    template< class Emplacer0 >
-    storage(Emplacer0 e0, sake::emplacer< void ( ) >)
+    template< class Signature0 >
+    storage(sake::emplacer< Signature0 > e0, sake::emplacer< void ( ) >)
         : m_x0(sake::emplacer_construct< nocv0_type >(e0))
     { }
-    template< class Emplacer1 >
-    storage(sake::emplacer< void ( ) >, Emplacer1 e1)
+    template< class Signature1 >
+    storage(sake::emplacer< void ( ) >, sake::emplacer< Signature1 > e1)
         : m_x1(sake::emplacer_construct< nocv1_type >(e1))
     { }
-    template< class Emplacer0, class Emplacer1 >
-    storage(Emplacer0 e0, Emplacer1 e1)
+    template< class Signature0, class Signature1 >
+    storage(sake::emplacer< Signature0 > e0, sake::emplacer< Signature1 > e1)
         : m_x0(sake::emplacer_construct< nocv0_type >(e0)),
           m_x1(sake::emplacer_construct< nocv1_type >(e1))
     { }
@@ -111,18 +111,18 @@ public:
     storage(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
     { }
 
-    template< class Emplacer0 >
-    storage(Emplacer0 e0, sake::emplacer< void ( ) >)
+    template< class Signature0 >
+    storage(sake::emplacer< Signature0 > e0, sake::emplacer< void ( ) >)
         : T0(sake::emplacer_construct< nocv0_type >(e0))
     { }
 
-    template< class Emplacer1 >
-    storage(sake::emplacer< void ( ) >, Emplacer1 e1)
+    template< class Signature1 >
+    storage(sake::emplacer< void ( ) >, sake::emplacer< Signature1 > e1)
         : m_x1(sake::emplacer_construct< nocv1_type >(e1))
     { }
 
-    template< class Emplacer0, class Emplacer1 >
-    storage(Emplacer0 const e0, Emplacer1 const e1)
+    template< class Signature0, class Signature1 >
+    storage(sake::emplacer< Signature0 > e0, sake::emplacer< Signature1 > e1)
         : T0(sake::emplacer_construct< nocv0_type >(e0)),
           m_x1(sake::emplacer_construct< nocv1_type >(e1))
     { }
@@ -167,18 +167,18 @@ public:
     storage(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
     { }
 
-    template< class Emplacer0 >
-    storage(Emplacer0 e0, sake::emplacer< void ( ) >)
+    template< class Signature0 >
+    storage(sake::emplacer< Signature0 > e0, sake::emplacer< void ( ) >)
         : m_x0(sake::emplacer_construct< nocv0_type >(e0))
     { }
 
-    template< class Emplacer1 >
-    storage(sake::emplacer< void ( ) >, Emplacer1 e1)
+    template< class Signature1 >
+    storage(sake::emplacer< void ( ) >, sake::emplacer< Signature1 > e1)
         : T1(sake::emplacer_construct< nocv1_type >(e1))
     { }
 
-    template< class Emplacer0, class Emplacer1 >
-    storage(Emplacer0 const e0, Emplacer1 const e1)
+    template< class Signature0, class Signature1 >
+    storage(sake::emplacer< Signature0 > e0, sake::emplacer< Signature1 > e1)
         : T1(sake::emplacer_construct< nocv1_type >(e1)),
           m_x0(sake::emplacer_construct< nocv0_type >(e0))
     { }
