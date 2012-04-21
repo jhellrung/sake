@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/utility/template_keyword.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -11,8 +11,12 @@
  *
  * struct insert_keyword_value_if_c< Cond, Sequence, Keyword, Value >
  * struct insert_keyword_value_if< Cond, Sequence, Keyword, Value >
+ * struct insert_keyword_value_if_not_c< Cond, Sequence, Keyword, Value >
+ * struct insert_keyword_value_if_not< Cond, Sequence, Keyword, Value >
  * struct lazy_insert_keyword_value_if_c< Cond, Sequence, Keyword, Value >
  * struct lazy_insert_keyword_value_if< Cond, Sequence, Keyword, Value >
+ * struct lazy_insert_keyword_value_if_not_c< Cond, Sequence, Keyword, Value >
+ * struct lazy_insert_keyword_value_if_not< Cond, Sequence, Keyword, Value >
  *
  * This header provides a framework to define and use a keyword set to specify
  * template parameters.
@@ -113,6 +117,24 @@ template<
     class Sequence,
     template< class > class Keyword, class Value
 >
+struct insert_keyword_value_if_not_c
+    : insert_keyword_value_if_c< !Cond, Sequence, Keyword, Value >
+{ };
+
+template<
+    class Cond,
+    class Sequence,
+    template< class > class Keyword, class Value
+>
+struct insert_keyword_value_if_not
+    : insert_keyword_value_if_c< !Cond::value, Sequence, Keyword, Value >
+{ };
+
+template<
+    bool Cond,
+    class Sequence,
+    template< class > class Keyword, class Value
+>
 struct lazy_insert_keyword_value_if_c;
 
 template<
@@ -137,6 +159,24 @@ template<
 >
 struct lazy_insert_keyword_value_if
     : lazy_insert_keyword_value_if_c< Cond::value, Sequence, Keyword, Value >
+{ };
+
+template<
+    bool Cond,
+    class Sequence,
+    template< class > class Keyword, class Value
+>
+struct lazy_insert_keyword_value_if_not_c
+    : lazy_insert_keyword_value_if_c< !Cond, Sequence, Keyword, Value >
+{ };
+
+template<
+    class Cond,
+    class Sequence,
+    template< class > class Keyword, class Value
+>
+struct lazy_insert_keyword_value_if_not
+    : lazy_insert_keyword_value_if_c< !Cond::value, Sequence, Keyword, Value >
 { };
 
 } // namespace sake
