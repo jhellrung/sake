@@ -7,8 +7,10 @@
  *
  * struct compressed_tuple< T0, ... >
  *
- * swap(compressed_tuple< T0, ... >& x, compressed_tuple< U0, ... >& y) -> void
- * hash_value(compressed_tuple< T0, ... > const & x) -> std::size_t
+ * compressed_tuple_adl::swap(
+ *     compressed_tuple< T0, ... >& x, compressed_tuple< U0, ... >& y) -> void
+ * compressed_tuple_adl::hash_value(
+ *     compressed_tuple< T0, ... > const & x) -> std::size_t
  *
  * This takes advantage of EBO, similar to compressed_pair.  If at least one
  * type is non-empty, all empty types will contribute nothing to

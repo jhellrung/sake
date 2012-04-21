@@ -7,8 +7,10 @@
  *
  * struct compressed_pair< T0, T1 >
  *
- * swap(compressed_pair< T0, T1 >& x, compressed_pair< T0, T1 >& y) -> void
- * hash_value(compressed_pair< T0, T1 > const & x) -> std::size_t
+ * compressed_pair_adl::swap(
+ *     compressed_pair< T0, T1 >& x, compressed_pair< T0, T1 >& y) -> void
+ * compressed_pair_adl::hash_value(
+ *     compressed_pair< T0, T1 > const & x) -> std::size_t
  *
  * A sake::compressed_pair is nearly functionally identical to a
  * boost::compressed_pair, except that it is emplace- and move-aware.

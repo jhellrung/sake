@@ -7,8 +7,8 @@
  *
  * struct tuple< T0, ... >
  *
- * swap(tuple< T0, ... >& x, tuple< U0, ... >& y) -> void
- * hash_value(tuple< T0, ... > const & x) -> std::size_t
+ * tuple_adl::swap(tuple< T0, ... >& x, tuple< U0, ... >& y) -> void
+ * tuple_adl::hash_value(tuple< T0, ... > const & x) -> std::size_t
  ******************************************************************************/
 
 #ifndef BOOST_PP_IS_ITERATING

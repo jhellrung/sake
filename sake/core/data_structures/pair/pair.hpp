@@ -7,8 +7,8 @@
  *
  * struct pair< T0, T1 >
  *
- * swap(pair< T0, T1 >& x, pair< T0, T1 >& y) -> void
- * hash_value(pair< T0, T1 > const & x) -> std::size_t
+ * pair_adl::swap(pair< T0, T1 >& x, pair< T0, T1 >& y) -> void
+ * pair_adl::hash_value(pair< T0, T1 > const & x) -> std::size_t
  *
  * A sake::pair is nearly functionally identical to a std::pair, except that it
  * handles reference types and is emplacer- and move-aware.
