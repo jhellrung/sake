@@ -93,7 +93,7 @@ class begin< Sequence& >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     begin
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    return static_cast< typename SAKE_OVERLOAD_RESULT( n, T_tuple ) ::type >( \
+    return static_cast< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple ) ::type >( \
         boost::fusion::begin x_tuple );
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY 1
 #include SAKE_OVERLOAD_GENERATE()
