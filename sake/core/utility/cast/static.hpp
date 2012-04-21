@@ -31,7 +31,7 @@
 namespace sake
 {
 
-#ifdef BOOST_NO_RVALUE_REFERENCE
+#ifdef BOOST_NO_RVALUE_REFERENCES
 
 namespace static_cast_private
 {
@@ -41,7 +41,7 @@ template< class T, class U > struct enable_cref;
 
 } // namespace static_cast_private
 
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
 namespace result_of
 {
@@ -61,13 +61,13 @@ struct static_cast_
 {
     typedef T result_type;
 
-#ifndef BOOST_NO_RVALUE_REFERENCE
+#ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
     T operator()(U&& x) const
     { return static_cast<T>(sake::forward<U>(x)); }
 
-#else // #ifndef BOOST_NO_RVALUE_REFERENCE
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
     typedef typename sake::rv_sink_traits::rv_param<T>::type rv_param_type;
@@ -89,7 +89,7 @@ public:
     operator()(U const & x) const
     { return static_cast<T>(x); }
 
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 };
 
@@ -102,13 +102,13 @@ struct static_cast_< void >
     void operator()(U const &) const
     { }
 
-#ifndef BOOST_NO_RVALUE_REFERENCE
+#ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U, class T >
     T operator()(U&& x, sake::type_tag<T>) const
     { return static_cast<T>(sake::forward<U>(x)); }
 
-#else // #ifndef BOOST_NO_RVALUE_REFERENCE
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     // lvalues + movable explicit rvalues
     template< class U, class T >
@@ -132,20 +132,20 @@ struct static_cast_< void >
     operator()(U const & x, sake::type_tag<T>) const
     { return static_cast<T>(x); }
 
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 };
 
 } // namespace functional
 
-#ifndef BOOST_NO_RVALUE_REFERENCE
+#ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class U, class T >
 inline T
 static_cast_(U&& x, sake::type_tag<T>)
 { return static_cast<T>(sake::forward<U>(x)); }
 
-#else // #ifndef BOOST_NO_RVALUE_REFERENCE
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class U, class T >
 inline T
@@ -171,9 +171,9 @@ inline typename sake::static_cast_private::enable_cref<T,U>::type
 static_cast_(U const & x, sake::type_tag<T>)
 { return static_cast<T>(x); }
 
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-#ifdef BOOST_NO_RVALUE_REFERENCE
+#ifdef BOOST_NO_RVALUE_REFERENCES
 
 namespace static_cast_private
 {
@@ -199,7 +199,7 @@ struct enable_cref
 
 } // namespace static_cast_private
 
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
 } // namespace sake
 

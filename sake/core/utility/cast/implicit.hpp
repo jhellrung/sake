@@ -42,11 +42,11 @@ namespace implicit_cast_private
 {
 
 template< class T, class U > struct enable;
-#ifdef BOOST_NO_RVALUE_REFERENCE
+#ifdef BOOST_NO_RVALUE_REFERENCES
 template< class T > struct rv_sink;
 template< class T, class U > struct enable_ref;
 template< class T, class U > struct enable_cref;
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
 } // namespace implicit_cast_private
 
@@ -71,14 +71,14 @@ struct implicit_cast
 {
     typedef T result_type;
 
-#ifndef BOOST_NO_RVALUE_REFERENCE
+#ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
     typename implicit_cast_private::enable<T,U>::type
     operator()(U&& x) const
     { return static_cast<T>(sake::forward<U>(x)); }
 
-#else // #ifndef BOOST_NO_RVALUE_REFERENCE
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
     typedef typename sake::rv_sink_traits::rv_param<T>::type rv_param_type;
@@ -101,7 +101,7 @@ public:
     operator()(U const & x) const
     { return static_cast<T>(x); }
 
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 };
 
@@ -110,14 +110,14 @@ struct implicit_cast< void >
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::implicit_cast, 2 )
 
-#ifndef BOOST_NO_RVALUE_REFERENCE
+#ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U, class T >
     typename implicit_cast_private::enable<T,U>::type
     operator()(U&& x, sake::type_tag<T>) const
     { return static_cast<T>(sake::forward<U>(x)); }
 
-#else // #ifndef BOOST_NO_RVALUE_REFERENCE
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     // lvalues + movable explicit rvalues
     template< class U, class T >
@@ -133,22 +133,22 @@ struct implicit_cast< void >
     // movable implicit rvalues
     template< class T >
     T operator()(
-        typename sake::static_cast_private::rv_sink<T>::type x,
+        typename sake::implicit_cast_private::rv_sink<T>::type x,
         sake::type_tag<T>) const
     { return x(); }
     // const lvalues + non-movable rvalues
     template< class U, class T >
-    typename sake::static_cast_private::enable_cref<T,U>::type
+    typename sake::implicit_cast_private::enable_cref<T,U>::type
     operator()(U const & x, sake::type_tag<T>) const
     { return static_cast<T>(x); }
 
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 };
 
 } // namespace functional
 
-#ifndef BOOST_NO_RVALUE_REFERENCE
+#ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T, class U >
 inline typename implicit_cast_private::enable<T,U>::type
@@ -160,15 +160,15 @@ inline typename implicit_cast_private::enable<T,U>::type
 implicit_cast(U&& x, sake::type_tag<T>)
 { return static_cast<T>(sake::forward<U>(x)); }
 
-#else // #ifndef BOOST_NO_RVALUE_REFERENCE
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T, class U >
-inline sake::implicit_cast_private::enable_ref<T,U>::type
+inline typename sake::implicit_cast_private::enable_ref<T,U>::type
 implicit_cast(U& x)
 { return static_cast<T>(x); }
 
 template< class U, class T >
-inline sake::implicit_cast_private::enable_ref<T,U>::type
+inline typename sake::implicit_cast_private::enable_ref<T,U>::type
 implicit_cast(U& x, sake::type_tag<T>)
 { return static_cast<T>(x); }
 
@@ -208,17 +208,17 @@ inline typename sake::implicit_cast_private::enable_cref<T,U>::type
 implicit_cast(U const & x, sake::type_tag<T>)
 { return static_cast<T>(x); }
 
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 namespace implicit_cast_private
 {
 
 template< class T, class U >
 struct enable
-    : boost::enable_if_c< boost_ext::is_convertible<U,T>, T >
+    : boost::enable_if_c< boost_ext::is_convertible<U,T>::value, T >
 { };
 
-#ifdef BOOST_NO_RVALUE_REFERENCE
+#ifdef BOOST_NO_RVALUE_REFERENCES
 
 template< class T >
 struct rv_sink
@@ -251,7 +251,7 @@ struct enable_cref
       >::value, T >
 { };
 
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCE
+#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
 } // namespace implicit_cast_private
 
