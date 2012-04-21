@@ -26,6 +26,7 @@
 #define SAKE_CORE_DATA_STRUCTURES_PAIR_OPERATORS_HPP
 
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
+#include <sake/boost_ext/type_traits/common_type.hpp>
 
 #include <sake/core/data_structures/pair/fwd.hpp>
 #include <sake/core/functional/operators/equal.hpp>
