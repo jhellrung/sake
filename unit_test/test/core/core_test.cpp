@@ -11,6 +11,7 @@
 namespace sake_unit_test
 {
 
+void data_structures_test(sake::test::environment& env);
 void expr_traits_test(sake::test::environment& env);
 void introspection_test(sake::test::environment& env);
 void keyword_test(sake::test::environment& env);
@@ -20,6 +21,7 @@ void utility_test(sake::test::environment& env);
 
 void core_test(sake::test::environment& env)
 {
+    env("data_structures", &data_structures_test);
     env("expr_traits", &expr_traits_test);
     env("introspection", &introspection_test);
     env("keyword", &keyword_test);
