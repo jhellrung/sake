@@ -75,7 +75,8 @@ template<
 >
 struct dispatch
 {
-    typedef typename extension::BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )< T0, T1 >::type type;
+    typedef typename sake::operators::result_of::extension::
+        BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )< T0, T1 >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
         typename boost_ext::mpl::curry_quote2< boost_ext::is_same_sans_rv >::apply< type >::type,
@@ -107,12 +108,14 @@ namespace extension
 
 template< class T0, class T1, class Enable >
 struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )
-    : extension::BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )< T0, T1 >
+    : sake::operators::result_of::extension::
+          BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )< T0, T1 >
 { };
 
 template< class T0, class T1, class Enable >
 struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )
-    : default_impl::SAKE_OPERATORS_NAME< T0, T1 >
+    : sake::operators::result_of::default_impl::
+          SAKE_OPERATORS_NAME< T0, T1 >
 { };
 
 } // namespace extension
@@ -132,7 +135,7 @@ struct impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >(),
-        default_impl::comparison_result_types,
+        sake::operators::result_of::default_impl::comparison_result_types,
         type
     );
 };

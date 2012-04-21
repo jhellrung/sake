@@ -71,9 +71,10 @@ struct SAKE_OPERATORS_NAME;
 template< class T >
 struct SAKE_OPERATORS_NAME
 {
-    typedef typename extension::SAKE_OPERATORS_NAME<
-        typename boost_ext::remove_rvalue_reference<T>::type
-    >::type type;
+    typedef typename sake::operators::result_of::extension::
+        SAKE_OPERATORS_NAME<
+            typename boost_ext::remove_rvalue_reference<T>::type
+        >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 private:
 #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
@@ -112,7 +113,8 @@ namespace extension
 
 template< class T, class Enable /*= void*/ >
 struct SAKE_OPERATORS_NAME
-    : default_impl::SAKE_OPERATORS_NAME<T>
+    : sake::operators::result_of::default_impl::
+          SAKE_OPERATORS_NAME<T>
 { };
 
 } // namespace extension
@@ -132,7 +134,7 @@ struct impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename SAKE_OPERATORS_OP sake::declval<T>(),
-        typename default_impl::unary_result_types<
+        typename sake::operators::result_of::default_impl::unary_result_types<
             typename boost_ext::remove_qualifiers<T>::type
         >::type,
         type

@@ -74,10 +74,11 @@ struct SAKE_OPERATORS_NAME;
 template< class T0, class T1 >
 struct SAKE_OPERATORS_NAME
 {
-    typedef typename extension::BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )<
-        typename boost_ext::remove_rvalue_reference< T0 >::type,
-        typename boost_ext::remove_rvalue_reference< T1 >::type
-    >::type type;
+    typedef typename sake::operators::result_of::extension::
+        BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )<
+            typename boost_ext::remove_rvalue_reference< T0 >::type,
+            typename boost_ext::remove_rvalue_reference< T1 >::type
+        >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 private:
 #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
@@ -120,12 +121,14 @@ namespace extension
 
 template< class T0, class T1, class Enable >
 struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )
-    : extension::BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )< T0, T1 >
+    : sake::operators::result_of::extension::
+          BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )< T0, T1 >
 { };
 
 template< class T0, class T1, class Enable >
 struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )
-    : default_impl::SAKE_OPERATORS_NAME< T0, T1 >
+    : sake::operators::result_of::default_impl::
+          SAKE_OPERATORS_NAME< T0, T1 >
 { };
 
 } // namespace extension
@@ -143,10 +146,11 @@ namespace BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )
 template< class T0, class T1 >
 class impl
 {
-    typedef typename default_impl::binary_result_types<
-        typename boost_ext::remove_qualifiers< T0 >::type,
-        typename boost_ext::remove_qualifiers< T1 >::type
-    >::type candidates_results_type;
+    typedef typename sake::operators::result_of::default_impl::
+        binary_result_types<
+            typename boost_ext::remove_qualifiers< T0 >::type,
+            typename boost_ext::remove_qualifiers< T1 >::type
+        >::type candidates_results_type;
 public:
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >(),

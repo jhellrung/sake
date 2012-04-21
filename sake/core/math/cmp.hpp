@@ -40,6 +40,7 @@
 #include <boost/type_traits/is_void.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
+#include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
@@ -89,7 +90,7 @@ namespace result_of
 template< class T0, class T1 /*= T0*/ >
 struct cmp
 {
-    typedef typename extension::cmp<
+    typedef typename sake::result_of::extension::cmp<
         typename boost_ext::remove_rvalue_reference< T0 >::type,
         typename boost_ext::remove_rvalue_reference< T1 >::type
     >::type type;
@@ -105,7 +106,7 @@ namespace extension
 
 template< class T0, class T1, class Enable /*= void*/ >
 struct cmp
-    : default_impl::cmp< T0, T1 >
+    : sake::result_of::default_impl::cmp< T0, T1 >
 { };
 
 } // namespace extension
@@ -119,7 +120,7 @@ namespace default_impl
 
 template< class T0, class T1 /*= T0*/ >
 struct cmp
-    : cmp_private::dispatch< T0, T1, void >
+    : sake::cmp_private::dispatch< T0, T1, void >
 { };
 
 } // namespace default_impl
@@ -144,7 +145,7 @@ struct cmp
     typename sake::result_of::cmp< T0, T1 >::type
     operator()(T0&& x0, T1&& x1) const
     {
-        return cmp_private::dispatch< T0, T1 >::apply(
+        return sake::cmp_private::dispatch< T0, T1 >::apply(
             sake::forward< T0 >(x0),
             sake::forward< T1 >(x1)
         );
@@ -156,7 +157,7 @@ struct cmp
     typename sake::result_of::cmp< T0&, T1& >::type
     operator()(T0& x0, T1& x1) const
     {
-        return cmp_private::dispatch<
+        return sake::cmp_private::dispatch<
             typename boost_ext::remove_rvalue_reference< T0& >::type,
             typename boost_ext::remove_rvalue_reference< T1& >::type
         >::apply(x0, x1);
@@ -166,7 +167,7 @@ struct cmp
     typename sake::result_of::cmp< T0&, T1 const & >::type
     operator()(T0& x0, T1 const & x1) const
     {
-        return cmp_private::dispatch<
+        return sake::cmp_private::dispatch<
             typename boost_ext::remove_rvalue_reference< T0& >::type,
             T1 const &
         >::apply(x0, x1);
@@ -176,7 +177,7 @@ struct cmp
     typename sake::result_of::cmp< T0 const &, T1& >::type
     operator()(T0 const & x0, T1& x1) const
     {
-        return cmp_private::dispatch<
+        return sake::cmp_private::dispatch<
             T0 const &,
             typename boost_ext::remove_rvalue_reference< T1& >::type
         >::apply(x0, x1);
@@ -185,7 +186,7 @@ struct cmp
     template< class T0, class T1 >
     typename sake::result_of::cmp< T0 const &, T1 const & >::type
     operator()(T0 const & x0, T1 const & x1) const
-    { return cmp_private::dispatch< T0 const &, T1 const & >::apply(x0, x1); }
+    { return sake::cmp_private::dispatch< T0 const &, T1 const & >::apply(x0, x1); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -214,12 +215,13 @@ namespace sake_cmp_private
 template< class T0, class T1, class Result >
 struct adl
 {
-    template< class T0_, class T1_ >
-    static Result apply(SAKE_FWD2_REF( T0_ ) x0, SAKE_FWD2_REF( T1_ ) x1)
+    typedef typename ::sake::boost_ext::add_rvalue_reference< T0 >::type fwd0_type;
+    typedef typename ::sake::boost_ext::add_rvalue_reference< T1 >::type fwd1_type;
+    static Result apply(fwd0_type x0, fwd1_type x1)
     {
         return static_cast< Result >(cmp(
-            ::sake::forward< T0_ >(x0),
-            ::sake::forward< T1_ >(x1)
+            static_cast< fwd0_type >(x0),
+            static_cast< fwd1_type >(x1)
         ));
     }
 };
@@ -297,8 +299,8 @@ template< class T0, class T1 >
 struct dispatch_index
 {
     static int const value = boost_ext::mpl::
-         if_< cmp_private::is_callable_mem_fun< T0, void ( T1 ) >, sake::int_tag<3> >::type::template
-    else_if < cmp_private::is_callable_mem_fun< T1, void ( T0 ) >, sake::int_tag<2> >::type::template
+         if_< sake::cmp_private::is_callable_mem_fun< T0, void ( T1 ) >, sake::int_tag<3> >::type::template
+    else_if < sake::cmp_private::is_callable_mem_fun< T1, void ( T0 ) >, sake::int_tag<2> >::type::template
     else_if < ::sake_cmp_private::is_callable< void ( T0, T1 ) >, sake::int_tag<1> >::type::template
     else_if < ::sake_cmp_private::is_callable< void ( T1, T0 ) >, sake::int_tag<2> >::type::template
     else_   < sake::int_tag<0> >::type::value;
@@ -363,12 +365,13 @@ struct dispatch< T0&, T1&, void, 3 >
 template< class T0, class T1, class Result >
 struct dispatch< T0, T1, Result, 3 >
 {
-    template< class T0_, class T1_ >
-    static Result apply(SAKE_FWD2_REF( T0_ ) x0, SAKE_FWD2_REF( T1_ ) x1)
+    typedef typename boost_ext::add_rvalue_reference< T0 >::type fwd0_type;
+    typedef typename boost_ext::add_rvalue_reference< T1 >::type fwd1_type;
+    static Result apply(fwd0_type x0, fwd1_type x1)
     {
         return static_cast< Result >(
-            sake::forward< T0_ >(x0).cmp(
-            sake::forward< T1_ >(x1))
+            static_cast< fwd0_type >(x0).cmp(
+            static_cast< fwd1_type >(x1))
         );
     }
 };
@@ -385,12 +388,13 @@ struct dispatch< T0, T1, void, 2 >
 template< class T0, class T1, class Result >
 struct dispatch< T0, T1, Result, 2 >
 {
-    template< class T0_, class T1_ >
-    static Result apply(SAKE_FWD2_REF( T0_ ) x0, SAKE_FWD2_REF( T1_ ) x1)
+    typedef typename boost_ext::add_rvalue_reference< T0 >::type fwd0_type;
+    typedef typename boost_ext::add_rvalue_reference< T1 >::type fwd1_type;
+    static Result apply(fwd0_type x0, fwd1_type x1)
     {
         return -sake::cmp(
-            sake::forward< T1_ >(x1),
-            sake::forward< T0_ >(x0)
+            static_cast< fwd1_type >(x1),
+            static_cast< fwd0_type >(x0)
         );
     }
 };

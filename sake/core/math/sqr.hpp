@@ -92,7 +92,7 @@ namespace result_of
 template< class T >
 struct sqr
 {
-    typedef typename extension::sqr<
+    typedef typename sake::result_of::extension::sqr<
         typename boost_ext::remove_rvalue_reference<T>::type
     >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
@@ -107,7 +107,7 @@ namespace extension
 
 template< class T, class Enable /*= void*/ >
 struct sqr
-    : default_impl::sqr<T>
+    : sake::result_of::default_impl::sqr<T>
 { };
 
 } // namespace extension
@@ -148,7 +148,7 @@ struct result_types_dispatch< T, true >
 
 template< class T >
 struct sqr_result_types
-    : sqr_private::result_types_dispatch<T>
+    : sake::result_of::default_impl::sqr_private::result_types_dispatch<T>
 { };
 
 template< class T >
@@ -177,7 +177,7 @@ struct sqr
     template< class T >
     typename sake::result_of::sqr<T>::type
     operator()(T&& x) const
-    { return sqr_private::dispatch<T>::apply(sake::forward<T>(x)); }
+    { return sake::sqr_private::dispatch<T>::apply(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -185,7 +185,7 @@ struct sqr
     typename sake::result_of::sqr< T& >::type
     operator()(T& x) const
     {
-        return sqr_private::dispatch<
+        return sake::sqr_private::dispatch<
             typename boost_ext::remove_rvalue_reference< T& >::type
         >::apply(x);
     }
@@ -193,7 +193,7 @@ struct sqr
     template< class T >
     typename sake::result_of::sqr< T const & >::type
     operator()(T const & x) const
-    { return sqr_private::dispatch< T const & >::apply(x); }
+    { return sake::sqr_private::dispatch< T const & >::apply(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 };
@@ -221,7 +221,7 @@ namespace sake_sqr_private
 template< class T, class Result >
 struct adl
 {
-    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    typedef typename ::sake::boost_ext::add_rvalue_reference<T>::type fwd_type;
     static Result apply(fwd_type x)
     { return sqr(static_cast< fwd_type >(x)); }
 };

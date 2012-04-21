@@ -87,7 +87,7 @@ namespace result_of
 template< class T >
 struct sign
 {
-    typedef typename extension::sign<
+    typedef typename sake::result_of::extension::sign<
         typename boost_ext::remove_rvalue_reference<T>::type
     >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
@@ -102,7 +102,7 @@ namespace extension
 
 template< class T, class Enable /*= void*/ >
 struct sign
-    : default_impl::sign<T>
+    : sake::result_of::default_impl::sign<T>
 { };
 
 } // namespace extension
@@ -116,7 +116,7 @@ namespace default_impl
 
 template< class T >
 struct sign
-    : sign_private::dispatch< T, void >
+    : sake::sign_private::dispatch< T, void >
 { };
 
 } // namespace default_impl
@@ -140,7 +140,7 @@ struct sign
     template< class T >
     typename sake::result_of::sign<T>::type
     operator()(T&& x) const
-    { return sign_private::dispatch<T>::apply(sake::forward<T>(x)); }
+    { return sake::sign_private::dispatch<T>::apply(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -148,7 +148,7 @@ struct sign
     typename sake::result_of::sign< T& >::type
     operator()(T& x) const
     {
-        return sign_private::dispatch<
+        return sake::sign_private::dispatch<
             typename boost_ext::remove_rvalue_reference< T& >::type
         >::apply(x);
     }
@@ -156,7 +156,7 @@ struct sign
     template< class T >
     typename sake::result_of::sign< T const & >::type
     operator()(T const & x) const
-    { return sign_private::dispatch< T const & >::apply(x); }
+    { return sake::sign_private::dispatch< T const & >::apply(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -185,7 +185,7 @@ namespace sake_sign_private
 template< class T, class Result >
 struct adl
 {
-    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    typedef typename ::sake::boost_ext::add_rvalue_reference<T>::type fwd_type;
     static Result apply(fwd_type x)
     { return static_cast< Result >(sign(static_cast< fwd_type >(x))); }
 };

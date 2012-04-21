@@ -99,7 +99,7 @@ namespace result_of
 template< class T >
 struct abs
 {
-    typedef typename extension::abs<
+    typedef typename sake::result_of::extension::abs<
         typename boost_ext::remove_rvalue_reference<T>::type
     >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
@@ -114,7 +114,7 @@ namespace extension
 
 template< class T, class Enable /*= void*/ >
 struct abs
-    : default_impl::abs<T>
+    : sake::result_of::default_impl::abs<T>
 { };
 
 } // namespace extension
@@ -155,7 +155,7 @@ struct result_types_dispatch< T, true >
 
 template< class T >
 struct abs_result_types
-    : abs_private::result_types_dispatch<T>
+    : sake::result_of::default_impl::abs_private::result_types_dispatch<T>
 { };
 
 template< class T >
@@ -184,7 +184,7 @@ struct abs
     template< class T >
     typename sake::result_of::abs<T>::type
     operator()(T&& x) const
-    { return abs_private::dispatch<T>::apply(sake::forward<T>(x)); }
+    { return sake::abs_private::dispatch<T>::apply(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -192,7 +192,7 @@ struct abs
     typename sake::result_of::abs< T& >::type
     operator()(T& x) const
     {
-        return abs_private::dispatch<
+        return sake::abs_private::dispatch<
             typename boost_ext::remove_rvalue_reference< T& >::type
         >::apply(x);
     }
@@ -200,7 +200,7 @@ struct abs
     template< class T >
     typename sake::result_of::abs< T const & >::type
     operator()(T const & x) const
-    { return abs_private::dispatch< T const & >::apply(x); }
+    { return sake::abs_private::dispatch< T const & >::apply(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -238,7 +238,7 @@ namespace sake_abs_private
 template< class T, class Result >
 struct adl
 {
-    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    typedef typename ::sake::boost_ext::add_rvalue_reference<T>::type fwd_type;
     static Result apply(fwd_type x)
     { return abs(static_cast< fwd_type >(x)); }
 };
@@ -287,8 +287,6 @@ namespace abs_private
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
-using boost_ext::mpl::uint;
-
 template< class T >
 struct dispatch_index
 {
@@ -299,7 +297,7 @@ public:
     static int const value = boost_ext::mpl::
          if_< boost::is_signed< noqual_type >, sake::int_tag<8> >::type::template
     else_if < boost::is_unsigned< noqual_type >, sake::int_tag<7> >::type::template
-    else_if < abs_private::is_callable_mem_fun<T>, sake::int_tag<6> >::type::template
+    else_if < sake::abs_private::is_callable_mem_fun<T>, sake::int_tag<6> >::type::template
     else_if < ::sake_abs_private::is_callable< void ( T ) >, sake::int_tag<5> >::type::template
 #ifndef BOOST_NO_RVALUE_REFERENCES
     else_if < boost_ext::is_reference<T>, sake::int_tag<0> >::type::template

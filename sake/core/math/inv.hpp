@@ -87,7 +87,7 @@ namespace result_of
 template< class T >
 struct inv
 {
-    typedef typename extension::inv<
+    typedef typename sake::result_of::extension::inv<
         typename boost_ext::remove_rvalue_reference<T>::type
     >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
@@ -102,7 +102,7 @@ namespace extension
 
 template< class T, class Enable /*= void*/ >
 struct inv
-    : default_impl::inv<T>
+    : sake::result_of::default_impl::inv<T>
 { };
 
 } // namespace extension
@@ -143,7 +143,7 @@ struct result_types_dispatch< T, true >
 
 template< class T >
 struct inv_result_types
-    : inv_private::result_types_dispatch<T>
+    : sake::result_of::default_impl::inv_private::result_types_dispatch<T>
 { };
 
 template< class T >
@@ -172,7 +172,7 @@ struct inv
     template< class T >
     typename sake::result_of::inv<T>::type
     operator()(T&& x) const
-    { return inv_private::dispatch<T>::apply(sake::forward<T>(x)); }
+    { return sake::inv_private::dispatch<T>::apply(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -180,7 +180,7 @@ struct inv
     typename sake::result_of::inv< T& >::type
     operator()(T& x) const
     {
-        return inv_private::dispatch<
+        return sake::inv_private::dispatch<
             typename boost_ext::remove_rvalue_reference< T& >::type
         >::apply(x);
     }
@@ -188,7 +188,7 @@ struct inv
     template< class T >
     typename sake::result_of::inv< T const & >::type
     operator()(T const & x) const
-    { return inv_private::dispatch< T const & >::apply(x); }
+    { return sake::inv_private::dispatch< T const & >::apply(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -217,7 +217,7 @@ namespace sake_inv_private
 template< class T, class Result >
 struct adl
 {
-    typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
+    typedef typename ::sake::boost_ext::add_rvalue_reference<T>::type fwd_type;
     static Result apply(fwd_type x)
     { return inv(static_cast< fwd_type >(x)); }
 };
