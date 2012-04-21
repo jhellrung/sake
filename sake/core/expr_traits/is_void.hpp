@@ -76,7 +76,7 @@ struct void_detector
     void_detector operator,(void_detector) const;
 #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
     operator void_detector* () const;
-    template< class T > friend non_void operator,(const T&, void_detector*);
+    template< class T > friend non_void operator,(T const &, void_detector*);
 #else // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
     friend non_void operator,(sake::convertible_from_any, void_detector);
 #endif // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
