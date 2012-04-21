@@ -75,7 +75,7 @@ protected:
     template< class T >
     explicit nullary_base(SAKE_FWD2_REF( T ) x,
         typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< nullary_base, x >::value
+            boost_ext::is_base_of_sans_qualifiers< nullary_base, T >::value
         >::type* = 0)
         : impl_(sake::forward<T>(x))
     { }
