@@ -73,7 +73,7 @@ struct tuple<>
 
     SAKE_MEMBERWISE_MEM_FUN(
         tuple,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         BOOST_PP_SEQ_NIL
     )
 
@@ -201,7 +201,7 @@ struct tuple< T0N >
 
     SAKE_MEMBERWISE_MEM_FUN(
         typename tuple,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         T0N_0N_seq
     )
 
@@ -282,9 +282,10 @@ struct tuple< T0N >
     // template< class U0, ... >
     // tuple(U0&& x0, ... );
 #define SAKE_OVERLOAD_T U
-#define SAKE_OVERLOAD_CTOR_NAME \
+#define SAKE_OVERLOAD_CONSTRUCTOR_NAME \
     tuple
-#define SAKE_OVERLOAD_CTOR_INIT_LIST( r, n, U_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST( r, \
+    n, U_tuple, x_tuple, forward_x_tuple ) \
     BOOST_PP_SEQ_FOR_EACH_I_R( r, \
         comma_i_emplacer_construct_Ti_elem, \
         ~, \

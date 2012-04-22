@@ -15,25 +15,19 @@
 #define SAKE_CORE_MATH_INVERSE_HPP
 
 #include <boost/config.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/quote.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
-#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 
 #include <sake/core/functional/construct.hpp>
 #include <sake/core/math/inv_fwd.hpp>
 #include <sake/core/math/inverse_fwd.hpp>
 #include <sake/core/math/one.hpp>
 #include <sake/core/move/forward.hpp>
-#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
@@ -69,51 +63,54 @@ struct inverse
         (( T )( m_value ))
     )
 
+private:
+    template< class U >
+    struct enable_cond_explicit_constructor
+        : boost_ext::is_convertible<U,T>
+    { };
+public:
+
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
     explicit inverse(U&& x,
         typename boost::enable_if_c<
-            boost_ext::is_convertible<U,T>::value >::type* = 0)
+            enable_cond_explicit_constructor<U>::value
+        >::type* = 0)
         : m_value(sake::forward<U>(x))
     { }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    typedef typename sake::rv_sink_traits::rv_param<T>::type rv_param_type;
-    typedef sake::rv_sink<
-        sake::functional::construct<T>, // Visitor
-        T, // Result
-        boost_ext::mpl::and2<
-            boost_ext::is_convertible< boost::mpl::_1, T >,
-            boost::mpl::not_< boost::is_same< T, boost::mpl::_1 > >
-        > // Pred
-    > ctor_rv_sink_type;
+    typedef sake::rv_sink_traits1<
+        T, boost::mpl::quote1< enable_cond_explicit_constructor >
+    > explicit_constructor_rv_sink_traits;
+    typedef typename explicit_constructor_rv_sink_traits::template
+        default_< sake::functional::construct<T> >
+        explicit_constructor_rv_sink_default_type;
 public:
     // lvalues + movable explicit rvalues
     template< class U >
     explicit inverse(U& x,
-        typename boost::enable_if_c<
-            boost_ext::is_convertible< U&, T >::value >::type* = 0)
+        typename explicit_constructor_rv_sink_traits::template
+            enable_ref<U>::type* = 0)
         : m_value(x)
     { }
     // T rvalues
-    explicit inverse(rv_param_type x)
+    explicit inverse(
+        typename explicit_constructor_rv_sink_traits::primary_type x)
         : m_value(x)
     { }
     // movable implicit rvalues
-    explicit inverse(ctor_rv_sink_type x)
+    explicit inverse(explicit_constructor_rv_sink_default_type x)
         : m_value(x())
     { }
     // const lvalues + non-movable rvalues
     template< class U >
     explicit inverse(U const & x,
-        typename boost::disable_if_c< boost_ext::mpl::or3<
-            boost::mpl::not_< boost_ext::is_convertible< U const &, T > >,
-            boost_ext::is_same_sans_qualifiers< U, rv_param_type >,
-            sake::is_movable<U>
-        >::value >::type* = 0)
+        typename explicit_constructor_rv_sink_traits::template
+            enable_cref<U>::type* = 0)
         : m_value(x)
     { }
 

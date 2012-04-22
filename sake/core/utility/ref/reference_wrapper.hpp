@@ -48,7 +48,7 @@
 #include <sake/core/range/begin_end_fwd.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/assert.hpp>
-#include <sake/core/utility/non_copy_assignable.hpp>
+#include <sake/core/utility/noncopy_assignable.hpp>
 #include <sake/core/utility/nullptr.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/ref/fwd.hpp>
@@ -96,15 +96,15 @@ private:
         has_implicitly_convertible_tag,
         private_::dummy,
         T&
-    >::type explicit_ctor_param_type;
+    >::type explicit_constructor_param_type;
     typedef typename boost::mpl::if_c<
         has_implicitly_convertible_tag,
         T&,
         private_::dummy
-    >::type implicit_ctor_param_type;
+    >::type implicit_constructor_param_type;
 public:
-    explicit reference_wrapper(explicit_ctor_param_type x);
-    reference_wrapper(implicit_ctor_param_type x);
+    explicit reference_wrapper(explicit_constructor_param_type x);
+    reference_wrapper(implicit_constructor_param_type x);
 
     template< class T2, class Tags2 >
     reference_wrapper(reference_wrapper< T2, Tags2 > other,
@@ -249,7 +249,7 @@ struct traits
                     boost::mpl::has_key< Tags, sake::ref_tag::default_constructible >
                 >::value,
                 void,
-                sake::non_copy_assignable_base
+                sake::noncopy_assignable_base
             >::type
         >::type
     > forwarding_base;
@@ -269,13 +269,13 @@ reference_wrapper()
 
 template< class T, class Tags >
 reference_wrapper< T, Tags >::
-reference_wrapper(explicit_ctor_param_type x)
+reference_wrapper(explicit_constructor_param_type x)
     : mp(sake::address_of(x))
 { }
 
 template< class T, class Tags >
 reference_wrapper< T, Tags >::
-reference_wrapper(implicit_ctor_param_type x)
+reference_wrapper(implicit_constructor_param_type x)
     : mp(sake::address_of(x))
 { }
 

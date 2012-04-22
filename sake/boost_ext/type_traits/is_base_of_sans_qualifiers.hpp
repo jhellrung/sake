@@ -6,6 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct boost_ext::is_base_of_sans_qualifiers<B,D>
+ * struct boost_ext::not_is_base_of_sans_qualifiers<B,D>
  *
  * Note that, as for boost::is_base_of, this returns true if B and D are the
  * same class type (sans qualifiers).
@@ -31,6 +32,13 @@ struct is_base_of_sans_qualifiers
           typename boost_ext::remove_qualifiers<D>::type
       >
 { };
+
+template< class B, class D >
+struct not_is_base_of_sans_qualifiers
+{
+    static bool const value = !boost_ext::is_base_of_sans_qualifiers<B,D>::value;
+    typedef not_is_base_of_sans_qualifiers type;
+};
 
 } // namespace boost_ext
 

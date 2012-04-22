@@ -63,7 +63,7 @@ struct pair
 
     SAKE_MEMBERWISE_MEM_FUN(
         typename pair,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( T0 )( first )) (( T1 )( second ))
     )
 

@@ -23,7 +23,6 @@
 #include <sake/boost_ext/type_traits/propagate_qualifiers.hpp>
 
 #include <sake/core/data_structures/optional/traits.hpp>
-#include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/cast/implicit.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
@@ -87,17 +86,7 @@ private:
     { };
 public:
 
-#ifndef SAKE_OPTIONAL_REFERENCE
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-
-private:
-    typedef typename sake::rv_sink_traits::rv_param< nocv_type >::type rv_param_type;
-public:
-
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
-
-#else // #ifndef SAKE_OPTIONAL_REFERENCE
+#ifdef SAKE_OPTIONAL_REFERENCE
 
 private:
     T* get_ptr_dispatch(T& x)

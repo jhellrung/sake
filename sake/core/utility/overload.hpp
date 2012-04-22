@@ -40,11 +40,11 @@
  *     [ optional ]
  *     Expands to an invokation of a Boost.MPL metafunction giving the result
  *     type of the overloaded function.  Should not be defined with
- *     SAKE_OVERLOAD_CTOR_NAME.
+ *     SAKE_OVERLOAD_CONSTRUCTOR_NAME.
  * SAKE_OVERLOAD_RESULT_TYPE
  *     [ defaults to "void" ]
  *     Expands to the result type of the overloaded function.  Should not be
- *     defined with SAKE_OVERLOAD_CTOR_NAME.
+ *     defined with SAKE_OVERLOAD_CONSTRUCTOR_NAME.
  *
  * SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( r, n, classT_tuple )
  *     [ defaults to "BOOST_PP_TUPLE_REM_CTOR( n, classT_tuple )" ]
@@ -58,7 +58,7 @@
  * SAKE_OVERLOAD_FUNCTION_NAME
  *     [ optional ]
  *     Expands to the name of the overloaded function.
- * SAKE_OVERLOAD_CTOR_NAME
+ * SAKE_OVERLOAD_CONSTRUCTOR_NAME
  *     [ optional ]
  *     Expands to the name of the overloaded constructor.
  * SAKE_OVERLOAD_DECLARE_PARAMS( r, n, T_tuple, Tx_tuple )
@@ -69,10 +69,11 @@
  *     [ optional ]
  *     Expands to any suffix qualifiers (e.g., "const", "volatile") or
  *     attributes.
- * SAKE_OVERLOAD_CTOR_INIT_LIST( r, n, T_tuple, x_tuple, forward_x_tuple )
+ * SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST(
+ *     r, n, T_tuple, x_tuple, forward_x_tuple )
  *     [ optional ]
- *     Expands to a comma-delimited initializer list (excluding the ":").
- *     Should only be defined with SAKE_OVERLOAD_CTOR_NAME.
+ *     Expands to a comma-delimited initialization list (excluding the ":").
+ *     Should only be defined with SAKE_OVERLOAD_CONSTRUCTOR_NAME.
  * SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple )
  *     Expands to the body of the overloaded function.
  *

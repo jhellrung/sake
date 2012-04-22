@@ -70,7 +70,7 @@ public:
     )
     SAKE_MEMBERWISE_MEM_FUN(
         typename compressed_pair,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( m_storage_type )( m_storage ))
     )
 

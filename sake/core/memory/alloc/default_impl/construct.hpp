@@ -14,16 +14,15 @@
 #ifndef SAKE_CORE_MEMORY_ALLOC_DEFAULT_IMPL_CONSTRUCT_HPP
 #define SAKE_CORE_MEMORY_ALLOC_DEFAULT_IMPL_CONSTRUCT_HPP
 
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/quote.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_void.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/type_traits/is_void.hpp>
 
 #include <sake/core/memory/alloc/is_callable_mem_fun_construct.hpp>
 #include <sake/core/memory/alloc/rebind.hpp>
@@ -60,7 +59,7 @@ construct(A& a,
     Emplacer const & e)
 {
     BOOST_STATIC_ASSERT((sake::is_emplacer<
-        Emplacer, boost::mpl::not_< boost::is_void< boost::mpl::_1 > >
+        Emplacer, boost::mpl::quote1< boost_ext::not_is_void >
     >::value));
     SAKE_ASSERT((p_obj));
     // a.construct(p_obj, e);

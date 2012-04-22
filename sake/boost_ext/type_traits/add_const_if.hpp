@@ -1,12 +1,13 @@
 /*******************************************************************************
  * sake/boost_ext/type_traits/add_const_if.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct boost_ext::add_const_if<C,T>
- * struct boost_ext::add_const_if_c<C,T>
+ * struct boost_ext::add_const_if_c< Cond, T >
+ * struct boost_ext::add_const_if< Cond, T >
+ * struct boost_ext::add_const_if_not< Cond, T >
  *
  * This conditionally adds a const qualifier to T.
  ******************************************************************************/
@@ -22,7 +23,7 @@ namespace sake
 namespace boost_ext
 {
 
-template< bool C, class T >
+template< bool Cond, class T >
 struct add_const_if_c;
 
 template< class T >
@@ -34,9 +35,14 @@ struct add_const_if_c< true, T >
     : boost::add_const<T>
 { };
 
-template< class C, class T >
+template< class Cond, class T >
 struct add_const_if
-    : add_const_if_c< C::value, T >
+    : add_const_if_c< Cond::value, T >
+{ };
+
+template< class Cond, class T >
+struct add_const_if_not
+    : add_const_if_c< !Cond::value, T >
 { };
 
 } // namespace boost_ext

@@ -51,9 +51,9 @@
 #include <sake/core/utility/memberwise/private/assign_body.hpp>
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
-#define SAKE_MEMBERWISE_MOVE_CTOR_param_type( T ) T&&
+#define SAKE_MEMBERWISE_MOVE_ASSIGN_param_type( T ) T&&
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
-#define SAKE_MEMBERWISE_MOVE_CTOR_param_type( T ) this_rvalue_param_type
+#define SAKE_MEMBERWISE_MOVE_ASSIGN_param_type( T ) this_rvalue_param_type
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_impl( r, typename, T, member_seq ) \
@@ -65,14 +65,14 @@
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_impl0( r, typename, T, member_seq ) \
     typedef typename() ::boost::mpl::if_c< \
         SAKE_MEMBERWISE_all_is_assignable( r, member_seq ) ::value, \
-        SAKE_MEMBERWISE_MOVE_CTOR_param_type( T ), \
+        SAKE_MEMBERWISE_MOVE_ASSIGN_param_type( T ), \
         ::sake::memberwise_move_assign_private::disabler \
     >::type _sake_memberwise_move_assign_param_type; \
     T& operator=(_sake_memberwise_move_assign_param_type other) \
     { SAKE_MEMBERWISE_assign_body( r, T, member_seq ) }
 
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_impl1( r, typename, T, member_seq ) \
-    T& operator=(SAKE_MEMBERWISE_MOVE_CTOR_param_type( T )) \
+    T& operator=(SAKE_MEMBERWISE_MOVE_ASSIGN_param_type( T )) \
     { return *this; }
 
 namespace sake

@@ -54,7 +54,7 @@
 #include <sake/core/utility/emplacer/fwd.hpp>
 #include <sake/core/utility/emplacer/private/base.hpp>
 #include <sake/core/utility/emplacer/private/cast.hpp>
-#include <sake/core/utility/non_copy_assignable.hpp>
+#include <sake/core/utility/noncopy_assignable.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
 namespace sake
@@ -167,7 +167,7 @@ class emplacer< void ( U0 ) >
 {
     typedef emplacer_private::base< void ( U0 ) > base_;
 public:
-    SAKE_NON_COPY_ASSIGNABLE( emplacer )
+    SAKE_NONCOPY_ASSIGNABLE( emplacer )
 
     typedef void value_type;
 
@@ -231,7 +231,7 @@ class emplacer< T ( U0 ) >
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
     typedef emplacer_private::base< void ( U0 ) > base_;
 public:
-    SAKE_NON_COPY_ASSIGNABLE( emplacer )
+    SAKE_NONCOPY_ASSIGNABLE( emplacer )
 
     typedef T value_type;
 
@@ -283,7 +283,7 @@ class emplacer< void ( U0, U1, U... ) >
 {
     typedef emplacer_private::base< void ( U0, U1, U... ) > base_;
 public:
-    SAKE_NON_COPY_ASSIGNABLE( emplacer )
+    SAKE_NONCOPY_ASSIGNABLE( emplacer )
 
     typedef void value_type;
 
@@ -361,7 +361,7 @@ class emplacer< T ( U0, U1, U... ) >
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
     typedef emplacer_private::base< void ( U0, U1, U... ) > base_;
 public:
-    SAKE_NON_COPY_ASSIGNABLE( emplacer )
+    SAKE_NONCOPY_ASSIGNABLE( emplacer )
 
     typedef T value_type;
 
@@ -486,7 +486,7 @@ class emplacer< void ( U0N ) >
 {
     typedef emplacer_private::base< void ( U0N ) > base_;
 public:
-    SAKE_NON_COPY_ASSIGNABLE( emplacer )
+    SAKE_NONCOPY_ASSIGNABLE( emplacer )
 
     typedef void value_type;
 
@@ -557,7 +557,7 @@ class emplacer< T ( U0N ) >
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
     typedef emplacer_private::base< void ( U0N ) > base_;
 public:
-    SAKE_NON_COPY_ASSIGNABLE( emplacer )
+    SAKE_NONCOPY_ASSIGNABLE( emplacer )
 
     typedef T value_type;
     typedef T result_type;

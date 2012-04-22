@@ -26,7 +26,7 @@
 
 
 #if defined( SAKE_OVERLOAD_FUNCTION_NAME ) \
-  + defined( SAKE_OVERLOAD_CTOR_NAME ) \
+  + defined( SAKE_OVERLOAD_CONSTRUCTOR_NAME ) \
  != 1
 #error Exactly one of the SAKE_OVERLOAD_XXX_NAME macros must be defined.
 #endif // #if ... != 1
@@ -93,7 +93,7 @@
 
 
 
-#ifdef SAKE_OVERLOAD_CTOR_NAME
+#ifdef SAKE_OVERLOAD_CONSTRUCTOR_NAME
 
 #ifdef SAKE_OVERLOAD_DEFINE_RESULT
 #error Must define SAKE_OVERLOAD_DEFINE_RESULT only with SAKE_OVERLOAD_FUNCTION_NAME.
@@ -105,12 +105,12 @@
 #error Must define SAKE_OVERLOAD_RESULT_TYPE only with SAKE_OVERLOAD_FUNCTION_NAME.
 #endif // #ifdef SAKE_OVERLOAD_RESULT_TYPE
 
-#ifdef SAKE_OVERLOAD_CTOR_INIT_LIST
-#define SAKE_OVERLOAD_colon_ctor_init_list( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    : SAKE_OVERLOAD_CTOR_INIT_LIST( r, n, T_tuple, x_tuple, forward_x_tuple )
-#else // #ifdef SAKE_OVERLOAD_CTOR_INIT_LIST
-#define SAKE_OVERLOAD_colon_ctor_init_list( r, n, T_tuple, x_tuple, forward_x_tuple )
-#endif // #ifdef SAKE_OVERLOAD_CTOR_INIT_LIST
+#ifdef SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST
+#define SAKE_OVERLOAD_colon_initialization_list( r, n, T_tuple, x_tuple, forward_x_tuple ) \
+    : SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST( r, n, T_tuple, x_tuple, forward_x_tuple )
+#else // #ifdef SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST
+#define SAKE_OVERLOAD_colon_initialization_list( r, n, T_tuple, x_tuple, forward_x_tuple )
+#endif // #ifdef SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST
 
 #ifdef SAKE_OVERLOAD_ENABLE
 #define SAKE_OVERLOAD_comma_enable_if_enable( r, n, T_tuple ) \
@@ -120,19 +120,19 @@
 #endif // #ifdef SAKE_OVERLOAD_ENABLE
 
 #define SAKE_OVERLOAD_definition_helper( r, n, T_tuple, Tx_tuple, x_tuple, forward_x_tuple ) \
-    SAKE_OVERLOAD_CTOR_NAME ( \
+    SAKE_OVERLOAD_CONSTRUCTOR_NAME ( \
         SAKE_OVERLOAD_DECLARE_PARAMS( r, n, T_tuple, Tx_tuple ) \
         SAKE_OVERLOAD_comma_enable_if_enable( r, n, T_tuple ) \
     ) \
     SAKE_OVERLOAD_DECLARATION_SUFFIX \
-    SAKE_OVERLOAD_colon_ctor_init_list( r, n, T_tuple, x_tuple, forward_x_tuple ) \
+    SAKE_OVERLOAD_colon_initialization_list( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     { SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) }
 
-#else // #ifdef SAKE_OVERLOAD_CTOR_NAME
+#else // #ifdef SAKE_OVERLOAD_CONSTRUCTOR_NAME
 
-#ifdef SAKE_OVERLOAD_CTOR_INIT_LIST
-#error Must define SAKE_OVERLOAD_CTOR_INIT_LIST only with SAKE_OVERLOAD_CTOR_NAME.
-#endif // #ifdef SAKE_OVERLOAD_CTOR_INIT_LIST
+#ifdef SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST
+#error Must define SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST only with SAKE_OVERLOAD_CONSTRUCTOR_NAME.
+#endif // #ifdef SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST
 
 #ifdef SAKE_OVERLOAD_RESULT
 #ifdef SAKE_OVERLOAD_RESULT_TYPE
@@ -206,7 +206,7 @@
 
 #endif // #ifdef SAKE_OVERLOAD_DEFINE_RESULT
 
-#endif // #ifdef SAKE_OVERLOAD_CTOR_NAME
+#endif // #ifdef SAKE_OVERLOAD_CONSTRUCTOR_NAME
 
 
 
@@ -245,7 +245,7 @@
 
 #undef SAKE_OVERLOAD_definition_helper
 
-#undef SAKE_OVERLOAD_colon_ctor_init_list
+#undef SAKE_OVERLOAD_colon_initialization_list
 #undef SAKE_OVERLOAD_comma_enable_if_enable
 
 #undef SAKE_OVERLOAD_enable_if_enable_result_type
@@ -259,8 +259,8 @@
 #undef SAKE_OVERLOAD_RESULT_TYPE
 #undef SAKE_OVERLOAD_ENABLE
 #undef SAKE_OVERLOAD_FUNCTION_NAME
-#undef SAKE_OVERLOAD_CTOR_NAME
-#undef SAKE_OVERLOAD_CTOR_INIT_LIST
+#undef SAKE_OVERLOAD_CONSTRUCTOR_NAME
+#undef SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST
 #undef SAKE_OVERLOAD_BODY
 #undef SAKE_OVERLOAD_MIN_ARITY
 #undef SAKE_OVERLOAD_PERFECT_MAX_ARITY

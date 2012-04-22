@@ -77,7 +77,7 @@ struct compressed_tuple<>
 
     SAKE_MEMBERWISE_MEM_FUN(
         compressed_tuple,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         BOOST_PP_SEQ_NIL
     )
 
@@ -161,7 +161,7 @@ public:
     )
     SAKE_MEMBERWISE_MEM_FUN(
         typename compressed_tuple,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( base_member_ ))
     )
 
@@ -206,16 +206,17 @@ public:
     )
     SAKE_MEMBERWISE_MEM_FUN(
         typename compressed_tuple,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( m_storage_type )( m_storage ))
     )
 
     // template< class U0, ... >
     // compressed_tuple(U0&& x0, ... );
 #define SAKE_OVERLOAD_T U
-#define SAKE_OVERLOAD_CTOR_NAME \
+#define SAKE_OVERLOAD_CONSTRUCTOR_NAME \
     compressed_tuple
-#define SAKE_OVERLOAD_CTOR_INIT_LIST( r, n, U_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST( r, \
+    n, U_tuple, x_tuple, forward_x_tuple ) \
     m_storage forward_x_tuple
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple )
 #define SAKE_OVERLOAD_MIN_ARITY         N

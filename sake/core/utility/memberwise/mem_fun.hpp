@@ -27,12 +27,12 @@
 #include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
 #include <sake/core/utility/memberwise/copy_assign.hpp>
-#include <sake/core/utility/memberwise/copy_ctor.hpp>
-#include <sake/core/utility/memberwise/default_ctor.hpp>
-#include <sake/core/utility/memberwise/dtor.hpp>
+#include <sake/core/utility/memberwise/copy_constructor.hpp>
+#include <sake/core/utility/memberwise/default_constructor.hpp>
+#include <sake/core/utility/memberwise/destructor.hpp>
 #include <sake/core/utility/memberwise/hash_value.hpp>
 #include <sake/core/utility/memberwise/move_assign.hpp>
-#include <sake/core/utility/memberwise/move_ctor.hpp>
+#include <sake/core/utility/memberwise/move_constructor.hpp>
 #include <sake/core/utility/memberwise/swap.hpp>
 
 #define SAKE_MEMBERWISE_MEM_FUN( T, tag_seq, member_seq ) \
@@ -71,18 +71,18 @@
     SAKE_MEMBERWISE_COPY_ASSIGN_IF_ANY_UMC_R( r, T, member_seq )
 #define SAKE_MEMBERWISE_MEM_FUN_copy_assign_impl( r, T, member_seq ) \
     SAKE_MEMBERWISE_COPY_ASSIGN_IMPL_R( r, T, member_seq )
-#define SAKE_MEMBERWISE_MEM_FUN_copy_ctor( r, T, member_seq ) \
-    SAKE_MEMBERWISE_COPY_CTOR_R( r, T, member_seq )
-#define SAKE_MEMBERWISE_MEM_FUN_default_ctor( r, T, member_seq ) \
-    SAKE_MEMBERWISE_DEFAULT_CTOR_R( r, T, member_seq )
-#define SAKE_MEMBERWISE_MEM_FUN_dtor( r, T, member_seq ) \
-    SAKE_MEMBERWISE_DTOR_R( r, T, member_seq )
+#define SAKE_MEMBERWISE_MEM_FUN_copy_constructor( r, T, member_seq ) \
+    SAKE_MEMBERWISE_COPY_CONSTRUCTOR_R( r, T, member_seq )
+#define SAKE_MEMBERWISE_MEM_FUN_default_constructor( r, T, member_seq ) \
+    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR_R( r, T, member_seq )
+#define SAKE_MEMBERWISE_MEM_FUN_destructor( r, T, member_seq ) \
+    SAKE_MEMBERWISE_DESTRUCTOR_R( r, T, member_seq )
 #define SAKE_MEMBERWISE_MEM_FUN_hash_value( r, T, member_seq ) \
     SAKE_MEMBERWISE_HASH_VALUE_R( r, T, member_seq )
 #define SAKE_MEMBERWISE_MEM_FUN_move_assign( r, T, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, T, member_seq )
-#define SAKE_MEMBERWISE_MEM_FUN_move_ctor( r, T, member_seq ) \
-    SAKE_MEMBERWISE_MOVE_CTOR_R( r, T, member_seq )
+#define SAKE_MEMBERWISE_MEM_FUN_move_constructor( r, T, member_seq ) \
+    SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, T, member_seq )
 #define SAKE_MEMBERWISE_MEM_FUN_swap( r, T, member_seq ) \
     SAKE_MEMBERWISE_SWAP_R( r, T, member_seq )
 

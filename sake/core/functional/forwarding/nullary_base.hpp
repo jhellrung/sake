@@ -27,7 +27,7 @@
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
-#include <sake/core/utility/memberwise/default_ctor.hpp>
+#include <sake/core/utility/memberwise/default_constructor.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 #include <sake/core/utility/void.hpp>
@@ -68,7 +68,7 @@ protected:
         typename nullary_base,
         (( impl_ ))
     )
-    SAKE_MEMBERWISE_DEFAULT_CTOR(
+    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename nullary_base,
         (( impl_ ))
     )
@@ -167,7 +167,7 @@ protected:
         typename impl,
         (( chained_base_type ))
     )
-    SAKE_MEMBERWISE_DEFAULT_CTOR(
+    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename impl,
         (( chained_base_type ))
     )

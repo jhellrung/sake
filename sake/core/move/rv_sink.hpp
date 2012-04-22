@@ -5,48 +5,18 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct rv_sink<
- *     Visitor,
- *     Result = default_tag,
+ * struct rv_sink_traits<
+ *     Sequence = boost::mpl::vector0<>,
  *     Pred = boost::mpl::always< boost::true_type >
  * >
- *
- * struct rv_sink_traits::rv_param<T>
+ * struct rv_sink_traits1<
+ *     T,
+ *     Pred = boost::mpl::always< boost::true_type >
+ * >
  *
  * struct rv_sink_visitors::operator_assign<T>
  * rv_sink_visitors::make_operator_assign(T& x)
  *     -> rv_sink_visitors::operator_assign<T>
- *
- * rv_sink, when used as a function parameter, allows capturing of arbitrary
- * rvalues of types with rvalue reference emulation.
- *
- * Example:
- *
- * struct f
- * {
- *     typedef ... result_type;
- *     typedef rv_sink< f, result_type > rv_sink_type;
- *
- *     // lvalues
- *     template< class T >
- *     result_type
- *     operator()(T& x) const
- *     { ... }
- *
- *     // const lvalues + non-movable rvalues
- *     template< class T >
- *     typename boost::disable_if<
- *         boost_ext::is_convertible< T&, rv_sink_type >,
- *         result_type
- *     >::type
- *     operator()(T const & x) const
- *     { ... }
- *
- *     // movable rvalues
- *     result_type
- *     operator()(rv_sink_type const x) const
- *     { return x(*this); }
- * };
  ******************************************************************************/
 
 #ifndef SAKE_CORE_MOVE_RV_SINK_HPP
@@ -58,12 +28,27 @@
 
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
+#include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/is_sequence.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/quote.hpp>
+#include <boost/mpl/transform.hpp>
+#include <boost/mpl/vector/vector0.hpp>
+#include <boost/mpl/vector/vector10.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/any.hpp>
+#include <sake/boost_ext/mpl/curry_quote.hpp>
 #include <sake/boost_ext/mpl/result_type.hpp>
+#include <sake/boost_ext/type_traits/is_cv_or.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/move.hpp>
@@ -78,29 +63,72 @@ namespace sake
 namespace rv_sink_private
 {
 
-// MSVC9 tends to ICE without this...
-template<
-    class Pred, class T,
-    bool = sake::is_movable<T>::value
->
-struct enable_ctor;
+template< class T > struct sink;
 
 } // namespace rv_sink_private
 
 /*******************************************************************************
- * struct rv_sink<
- *     Visitor,
- *     Result = default_tag,
+ * struct rv_sink_traits<
+ *     Sequence = boost::mpl::vector0<>,
  *     Pred = boost::mpl::always< boost::true_type >
  * >
  ******************************************************************************/
 
 template<
-    class Visitor,
-    class Result = sake::default_tag,
+    class Sequence = boost::mpl::vector0<>,
     class Pred = boost::mpl::always< boost::true_type >
 >
-struct rv_sink
+struct rv_sink_traits
+{
+    BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Sequence >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::mpl::any<
+        Sequence,
+        boost::mpl::quote1< boost_ext::is_cv_or >
+    >::value));
+
+    typedef Sequence values_type;
+
+    typedef typename boost::mpl::transform<
+        Sequence,
+        boost::mpl::quote1< sake::rv_sink_private::sink >,
+        boost::mpl::back_inserter< boost::mpl::vector0<> >
+    >::type primaries_type;
+
+private:
+    template< class U > struct enable_default_constructor;
+public:
+    template<
+        class Visitor,
+        class Result = sake::default_tag
+    >
+    struct default_;
+    template< class, class > friend struct default_;
+
+    template< class U, class Result = void >
+    struct enable_ref;
+
+    template< class U, class Result = void >
+    struct enable_cref;
+};
+
+template< class Sequence, class Pred >
+template< class U >
+struct rv_sink_traits< Sequence, Pred >::
+enable_default_constructor
+    : boost::enable_if_c< boost_ext::mpl::and3<
+          boost::mpl::apply1< Pred, U >,
+          sake::is_movable<U>,
+          boost::mpl::not_< boost_ext::mpl::any<
+              Sequence,
+              typename boost_ext::mpl::curry_quote2< boost::is_same >::apply<U>::type
+          > >
+      >::value >
+{ };
+
+template< class Sequence, class Pred >
+template< class Visitor, class Result >
+struct rv_sink_traits< Sequence, Pred >::
+default_
 {
     typedef typename sake::lazy_replace_default_tag<
         Result,
@@ -111,59 +139,74 @@ struct rv_sink
         >
     >::type result_type;
 
-    // implicit on purpose
-    template< class T >
-    rv_sink(T const & x,
-        typename rv_sink_private::enable_ctor< Pred, T >::type* = 0)
-        : m_apply(apply<T>),
-          mp(static_cast< void* >(sake::address_of(const_cast< T& >(x))))
+    // implicit by design
+    template< class U >
+    default_(U const & x,
+        typename enable_default_constructor<U>::type* = 0)
+        : m_apply(apply<U>),
+          mp(static_cast< void* >(sake::address_of(const_cast< U& >(x))))
     { }
 
     result_type operator()() const
     { return m_apply(Visitor(), mp); }
 
-    result_type operator()(Visitor visitor) const
-    { return m_apply(visitor, mp); }
+    result_type operator()(Visitor v) const
+    { return m_apply(v, mp); }
 
 private:
-    template< class T >
-    static result_type apply(Visitor visitor, void* p)
-    { return visitor(sake::move(*static_cast< T* >(p))); }
+    template< class U >
+    static result_type apply(Visitor v, void* p)
+    { return v(sake::move(*static_cast< U* >(p))); }
 
     result_type (&m_apply)(Visitor, void*);
     void* const mp;
 };
 
-/*******************************************************************************
- * struct rv_sink_traits::rv_param<T>
- ******************************************************************************/
-
-namespace rv_sink_traits
-{
-
-namespace private_
-{
-
-template< class T >
-struct disabler;
-
-template< class T, bool = sake::is_movable<T>::value >
-struct rv_param_dispatch;
-template< class T >
-struct rv_param_dispatch< T, true >
-{ typedef SAKE_RV_REF( T ) type; };
-template< class T >
-struct rv_param_dispatch< T, false >
-{ typedef disabler<T> type; };
-
-} // namespace private_
-
-template< class T >
-struct rv_param
-    : private_::rv_param_dispatch<T>
+template< class Sequence, class Pred >
+template< class U, class Result >
+struct rv_sink_traits< Sequence, Pred >::
+enable_ref
+    : boost::enable_if_c< boost::mpl::apply1<
+          Pred,
+          typename boost_ext::remove_rvalue_reference< U& >::type
+      >::type::value, Result >
 { };
 
-} // namespace rv_sink_traits
+template< class Sequence, class Pred >
+template< class U, class Result >
+struct rv_sink_traits< Sequence, Pred >::
+enable_cref
+    : boost::enable_if_c< boost_ext::mpl::and3<
+          boost::mpl::apply1< Pred, U const & >,
+          boost::mpl::not_< sake::is_movable<U> >,
+          boost::mpl::not_< boost_ext::mpl::any<
+              Sequence,
+              boost_ext::mpl::and2<
+                  sake::is_movable< boost::mpl::_1 >,
+                  boost::is_same< U, boost::mpl::_1 >
+              >
+          > >
+      >::value, Result >
+{ };
+
+/*******************************************************************************
+ * struct rv_sink_traits1<
+ *     T,
+ *     Pred = boost::mpl::always< boost::true_type >
+ * >
+ ******************************************************************************/
+
+template<
+    class T,
+    class Pred = boost::mpl::always< boost::true_type >
+>
+struct rv_sink_traits1
+    : sake::rv_sink_traits< boost::mpl::vector1<T>, Pred >
+{
+    typedef T value_type;
+
+    typedef sake::rv_sink_private::sink<T> primary_type;
+};
 
 /*******************************************************************************
  * struct rv_sink_visitors::operator_assign<T>
@@ -196,14 +239,29 @@ make_operator_assign(T& x)
 namespace rv_sink_private
 {
 
-// MSVC9 tends to ICE without this...
-template< class Pred, class T >
-struct enable_ctor< Pred, T, false >
-{ };
+template< class T >
+struct sink
+{
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
 
-template< class Pred, class T >
-struct enable_ctor< Pred, T, true >
-    : boost::enable_if_c< boost::mpl::apply1< Pred, T >::type::value >
+    T& value;
+
+    typename sake::result_of::move< T& >::type
+    move() const
+    { return sake::move(value); }
+
+    // implicit by design
+    template< class U >
+    sink(U const & value_,
+        typename boost::enable_if_c<
+            boost::is_same<T,U>::value
+        >::type* = 0)
+        : value(const_cast< T& >(value_))
+    { }
+};
+
+template< class T >
+struct sink< T& >
 { };
 
 } // namespace rv_sink_private

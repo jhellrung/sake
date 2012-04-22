@@ -20,6 +20,7 @@
 
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
+#include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/utility/cast/inherit.hpp>
 
@@ -51,7 +52,7 @@
     )
 #define SAKE_MEMBERWISE_assign_body_assign_member_expand( macro, x ) macro x
 #define SAKE_MEMBERWISE_assign_body_assign_member_1( base ) \
-    base::operator=(::sake::move(::sake::inherit_cast< elem >(other)));
+    base::operator=(::sake::move(::sake::inherit_cast< elem >(SAKE_AS_LVALUE(other))));
 #define SAKE_MEMBERWISE_assign_body_assign_member_2( type, name ) \
     name = ::sake::move(other.name);
 
@@ -68,7 +69,7 @@
 #define SAKE_MEMBERWISE_assign_body_01_expand( macro, x ) macro x
 #define SAKE_MEMBERWISE_assign_body_01_1( T, base ) \
     return ::sake::inherit_cast<T>(base::operator=( \
-        ::sake::move(::sake::inherit_cast< base >(other))));
+        ::sake::move(::sake::inherit_cast< base >(SAKE_AS_LVALUE(other)))));
 #define SAKE_MEMBERWISE_assign_body_01_2( T, type, name ) \
     name = ::sake::move(other.name); \
     return *this;

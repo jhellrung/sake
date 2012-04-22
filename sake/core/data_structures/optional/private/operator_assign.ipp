@@ -8,20 +8,18 @@
 
 #ifdef SAKE_OPTIONAL_INCLUDE_HEADERS
 
-#include <boost/mpl/not.hpp>
-#include <boost/type_traits/is_same.hpp>
+#include <boost/config.hpp>
+#include <boost/mpl/quote.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
-#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/data_structures/optional/private/operator_assign_dispatch.hpp>
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/forward.hpp>
-#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/get.hpp>
 
@@ -33,8 +31,7 @@ private:
     template< class U >
     struct enable_cond_operator_assign
         : boost_ext::mpl::and2<
-              boost::mpl::not_<
-                  boost_ext::is_base_of_sans_qualifiers< optional, U > >,
+              boost_ext::not_is_base_of_sans_qualifiers< optional, U >,
               boost_ext::mpl::or3<
                   enable_cond_for_value<U>,
                   enable_cond_for_optional<U>,
@@ -44,7 +41,10 @@ private:
     { };
     template< class U >
     struct enable_operator_assign
-        : boost::enable_if_c< enable_cond_operator_assign<U>::value >
+        : boost::enable_if_c<
+              enable_cond_operator_assign<U>::value,
+              optional&
+          >
     { };
 public:
 
@@ -89,51 +89,35 @@ public:
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    struct operator_assign_rv_sink
-    {
-        template< class U >
-        struct apply
-            : boost_ext::mpl::and2<
-                  enable_cond_operator_assign<U>,
-                  boost::mpl::not_< boost::is_same< U, nocv_type > >
-              >
-        { };
-        typedef sake::rv_sink<
-            sake::rv_sink_visitors::operator_assign< optional >,
-            optional&,
-            operator_assign_rv_sink
-        > type;
-    };
-
-    template< class U >
-    struct enable_operator_assign_cref
-        : boost::disable_if_c< boost_ext::mpl::or3<
-              boost::mpl::not_< enable_cond_operator_assign< U const & > >,
-              boost_ext::is_same_sans_qualifiers< U, rv_param_type >,
-              sake::is_movable<U>
-          >::value, optional& >
-    { };
+    typedef sake::rv_sink_traits1<
+        nocv_type,
+        boost::mpl::quote1< enable_cond_operator_assign >
+    > operator_assign_rv_sink_traits;
+    typedef typename operator_assign_rv_sink_traits::template
+        default_< sake::rv_sink_visitors::operator_assign< optional > >
+        operator_assign_rv_sink_default_type;
 public:
 
     // lvalues + explicit movable rvalues
     template< class U >
-    typename enable_operator_assign<
-        typename boost_ext::remove_rvalue_reference< U& >::type
-    >::type
+    typename operator_assign_rv_sink_traits::template
+        enable_ref< U, optional& >::type
     operator=(U& x)
     { return operator_assign_dispatch(x); }
 
     // T rvalues
-    optional& operator=(rv_param_type x)
-    { return operator_assign_dispatch(x); }
+    optional& operator=(
+        typename operator_assign_rv_sink_traits::primary_type x)
+    { return operator_assign_dispatch(x.move()); }
 
     // movable implicit rvalues
-    optional& operator=(typename operator_assign_rv_sink::type x)
+    optional& operator=(operator_assign_rv_sink_default_type x)
     { return x(sake::rv_sink_visitors::make_operator_assign(*this)); }
 
     // const lvalues + non-movable rvalues
     template< class U >
-    typename enable_operator_assign_cref<U>::type
+    typename operator_assign_rv_sink_traits::template
+        enable_cref< U, optional& >::type
     operator=(U const & x)
     { return operator_assign_dispatch(x); }
 
@@ -158,9 +142,7 @@ public:
     { mp = get_ptr_dispatch(SAKE_AS_LVALUE(x)); return *this; }
 
     template< class U >
-    typename enable_operator_assign<
-        typename boost_ext::remove_rvalue_reference< U const & >::type
-    >::type
+    typename enable_operator_assign< U const & >::type
     operator=(U const & x)
     { mp = get_ptr_dispatch(x); return *this; }
 

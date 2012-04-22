@@ -131,10 +131,10 @@
 
 #include <sake/core/move/move.hpp>
 #include <sake/core/utility/memberwise/copy_assign.hpp>
-#include <sake/core/utility/memberwise/copy_ctor.hpp>
+#include <sake/core/utility/memberwise/copy_constructor.hpp>
 #include <sake/core/utility/memberwise/move_assign.hpp>
-#include <sake/core/utility/memberwise/move_ctor.hpp>
-#include <sake/core/utility/non_copyable.hpp>
+#include <sake/core/utility/memberwise/move_constructor.hpp>
+#include <sake/core/utility/noncopyable.hpp>
 
 #define SAKE_BASIC_MOVABLE_COPYABLE_IF_C( typenameT, cond ) \
     SAKE_BASIC_MOVABLE_COPYABLE_IF_C_impl( \
@@ -363,7 +363,7 @@
     { return *static_cast< _sake_movable_rv_conv_type * >(this); } \
     operator _sake_movable_rv_conv_type const & () const \
     { return *static_cast< _sake_movable_rv_conv_type const * >(this); } \
-    SAKE_MEMBERWISE_MOVE_CTOR_R( r, typename() T, member_seq ) \
+    SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_COPY_ASSIGN_IF_ANY_UMC_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typename() T, member_seq )
 
@@ -393,7 +393,7 @@
     { return *static_cast< _sake_movable_rv_conv_type * >(this); } \
     operator _sake_movable_rv_conv_type const & () const \
     { return *static_cast< _sake_movable_rv_conv_type const * >(this); } \
-    SAKE_MEMBERWISE_MOVE_CTOR_R( r, typename() T, member_seq ) \
+    SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, typename() T, member_seq ) \
     T& operator=(_sake_movable_enable_move_assign_param_type other) \
     { return operator=(const_cast< T const & >(other)); } \
     SAKE_MEMBERWISE_COPY_ASSIGN_R( r, typename() T, member_seq ) \
@@ -424,10 +424,10 @@
     { return *static_cast< _sake_movable_rv_conv_type * >(this); } \
     operator _sake_movable_rv_conv_type const & () const \
     { return *static_cast< _sake_movable_rv_conv_type const * >(this); } \
-    SAKE_MEMBERWISE_MOVE_CTOR_R( r, T, member_seq ) \
+    SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, typename() T, member_seq ) \
     T& operator=(_sake_movable_copy_assign_param_type other) \
     { return operator=(::sake::move(other)); } \
-    SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, T, member_seq )
+    SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typename() T, member_seq )
 
 #define SAKE_FRIENDLY_MOVABLE_COPYABLE_MEMBERWISE_impl1( r, typename, T, member_seq ) \
     typedef ::sake::movable_private::disabler_param<0> this_rvalue_param_type;

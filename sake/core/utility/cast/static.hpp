@@ -15,33 +15,17 @@
 #define SAKE_CORE_UTILITY_CAST_STATIC_HPP
 
 #include <boost/config.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/static_assert.hpp>
 
-#include <sake/boost_ext/mpl/or.hpp>
-#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/is_cv_or.hpp>
 
 #include <sake/core/move/forward.hpp>
-#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
 namespace sake
 {
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-
-namespace static_cast_private
-{
-
-template< class T > struct rv_sink;
-template< class T, class U > struct enable_cref;
-
-} // namespace static_cast_private
-
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
 namespace result_of
 {
@@ -59,6 +43,8 @@ namespace functional
 template< class T = void >
 struct static_cast_
 {
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+
     typedef T result_type;
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -70,22 +56,23 @@ struct static_cast_
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    typedef typename sake::rv_sink_traits::rv_param<T>::type rv_param_type;
-    typedef typename sake::static_cast_private::rv_sink<T>::type rv_sink_type;
+    typedef sake::rv_sink_traits1<T> rv_sink_traits_;
+    typedef typename rv_sink_traits_::template
+        default_< static_cast_ > rv_sink_default_type;
 public:
     // lvalues + movable explicit rvalues
     template< class U >
     T operator()(U& x) const
     { return static_cast<T>(x); }
     // T rvalues
-    T operator()(rv_param_type x) const
-    { return x; }
+    T operator()(typename rv_sink_traits_::primary_type x) const
+    { return x.move(); }
     // movable implicit rvalues
-    T operator()(rv_sink_type x) const
+    T operator()(rv_sink_default_type x) const
     { return x(); }
     // const lvalues + non-movable rvalues
     template< class U >
-    typename sake::static_cast_private::enable_cref<T,U>::type
+    typename rv_sink_traits_::template enable_cref<U,T>::type
     operator()(U const & x) const
     { return static_cast<T>(x); }
 
@@ -117,18 +104,18 @@ struct static_cast_< void >
     // T rvalues
     template< class T >
     T operator()(
-        typename sake::rv_sink_traits::rv_param<T>::type x,
+        typename sake::rv_sink_traits1<T>::primary_type x,
         sake::type_tag<T>) const
-    { return x; }
+    { return x.move(); }
     // movable implicit rvalues
     template< class T >
     T operator()(
-        typename sake::static_cast_private::rv_sink<T>::type x,
+        typename sake::rv_sink_traits1<T>::template default_< static_cast_ > x,
         sake::type_tag<T>) const
     { return x(); }
     // const lvalues + non-movable rvalues
     template< class U, class T >
-    typename sake::static_cast_private::enable_cref<T,U>::type
+    typename sake::rv_sink_traits1<T>::template enable_cref<U,T>::type
     operator()(U const & x, sake::type_tag<T>) const
     { return static_cast<T>(x); }
 
@@ -155,51 +142,24 @@ static_cast_(U& x, sake::type_tag<T>)
 template< class T >
 inline T
 static_cast_(
-    typename sake::rv_sink_traits::rv_param<T>::type x,
+    typename sake::rv_sink_traits1<T>::primary_type x,
     sake::type_tag<T>)
-{ return x; }
+{ return x.move(); }
 
 template< class T >
 inline T
 static_cast_(
-    typename sake::static_cast_private::rv_sink<T>::type x,
+    typename sake::rv_sink_traits1<T>::template
+        default_< sake::functional::static_cast_ > x,
     sake::type_tag<T>)
 { return x(); }
 
 template< class U, class T >
-inline typename sake::static_cast_private::enable_cref<T,U>::type
+inline typename sake::rv_sink_traits1<T>::template enable_cref<U,T>::type
 static_cast_(U const & x, sake::type_tag<T>)
 { return static_cast<T>(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-
-namespace static_cast_private
-{
-
-template< class T >
-struct rv_sink
-{
-    typedef sake::rv_sink<
-        sake::functional::static_cast_<T>, // Visitor
-        T, // Result
-        boost::mpl::not_< boost::is_same< T, boost::mpl::_1 > > // Pred
-    > type;
-};
-
-template< class T, class U >
-struct enable_cref
-    : boost::disable_if_c< boost_ext::mpl::or2<
-          boost_ext::is_same_sans_qualifiers<
-              U, typename sake::rv_sink_traits::rv_param<T>::type >,
-          sake::is_movable<U>
-      >::value, T >
-{ };
-
-} // namespace static_cast_private
-
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
 } // namespace sake
 

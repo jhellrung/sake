@@ -45,7 +45,7 @@ struct storage< T0, T1, false, false >
     )
     SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( T0 )( m_x0 )) (( T1 )( m_x1 ))
     )
 
@@ -99,7 +99,7 @@ struct storage< T0, T1, true, _ >
     )
     SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( T0 )) (( T1 )( m_x1 ))
     )
 
@@ -155,7 +155,7 @@ struct storage< T0, T1, false, true >
     )
     SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( T1 )) (( T0 )( m_x0 ))
     )
 

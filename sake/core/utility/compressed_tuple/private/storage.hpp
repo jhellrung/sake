@@ -93,7 +93,7 @@ public:
     )
     SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( m_pair_type )( m_pair ))
     )
 
@@ -178,7 +178,7 @@ public:
     )
     SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( tuple_ ))
     )
 
@@ -275,7 +275,7 @@ public:
     )
     SAKE_MEMBERWISE_MEM_FUN(
         typename storage,
-        ( default_ctor ) ( swap ) ( hash_value ),
+        ( default_constructor ) ( swap ) ( hash_value ),
         (( m_storage_type )( m_storage ))
     )
 

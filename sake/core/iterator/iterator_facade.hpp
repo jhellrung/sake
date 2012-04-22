@@ -50,7 +50,7 @@
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
 #include <sake/core/utility/emplacer/traits.hpp>
-#include <sake/core/utility/memberwise/default_ctor.hpp>
+#include <sake/core/utility/memberwise/default_constructor.hpp>
 #include <sake/core/utility/void.hpp>
 
 namespace sake
@@ -297,7 +297,7 @@ public:
 protected:
     typedef ChainedBase chained_base_type;
 
-    SAKE_MEMBERWISE_DEFAULT_CTOR( iterator_facade, BOOST_PP_SEQ_NIL )
+    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR( iterator_facade, BOOST_PP_SEQ_NIL )
 
     template< class ChainedBaseConstruct >
     explicit iterator_facade(ChainedBaseConstruct const & chained_base_construct,

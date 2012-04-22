@@ -11,9 +11,9 @@
  *
  * This is a metafunction which should evaluate to true iff T has a private
  * assignment operator.  This is automatically correctly deduced if T uses
- * SAKE_NON_COPYABLE or SAKE_NON_COPY_ASSIGNABLE or derives from
- * non_copyable_base or non_copy_assignable_base, but other types will need to
- * explicitly extend this metafunction.
+ * SAKE_NONCOPYABLE or SAKE_NON_COPY_ASSIGNABLE or derives from noncopyable_base
+ * or noncopy_assignable_base, but other types will need to explicitly extend
+ * this metafunction.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_HAS_PRIVATE_ASSIGN_HPP

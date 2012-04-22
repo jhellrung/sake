@@ -13,21 +13,13 @@
 #define SAKE_CORE_FUNCTIONAL_CONSTRUCT_HPP
 
 #include <boost/config.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/placeholders.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/static_assert.hpp>
 
-#include <sake/boost_ext/mpl/or.hpp>
-#include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
-#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/is_cv_or.hpp>
 
 #include <sake/core/move/forward.hpp>
-#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv_sink.hpp>
-#include <sake/core/utility/call_traits.hpp>
 #include <sake/core/utility/overload.hpp>
 
 #ifndef SAKE_CONSTRUCT_PERFECT_MAX_ARITY
@@ -55,24 +47,14 @@
 namespace sake
 {
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
-
-namespace construct_private
-{
-
-template< class T > struct rv_sink;
-template< class T, class U > struct enable_cref;
-
-} // namespace construct_private
-
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
-
 namespace functional
 {
 
 template< class T = void >
 struct construct
 {
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+
     typedef T result_type;
 
 #if !defined( BOOST_NO_RVALUE_REFERENCES ) \
@@ -96,22 +78,23 @@ struct construct
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    typedef typename sake::rv_sink_traits::rv_param<T>::type rv_param_type;
-    typedef typename sake::construct_private::rv_sink<T>::type rv_sink_type;
+    typedef sake::rv_sink_traits1<T> rv_sink_traits_;
+    typedef typename rv_sink_traits_::template
+        default_< construct > rv_sink_default_type;
 public:
     // lvalues + movable explicit rvalues
     template< class U >
     T operator()(U& x) const
     { return static_cast<T>(x); }
     // T rvalues
-    T operator()(rv_param_type x) const
-    { return static_cast<T>(x); }
+    T operator()(typename rv_sink_traits_::primary_type x) const
+    { return x.move(); }
     // movable implicit rvalues
-    T operator()(rv_sink_type x) const
+    T operator()(rv_sink_default_type x) const
     { return x(); }
     // const lvalues + non-movable rvalues
     template< class U >
-    typename sake::construct_private::enable_cref<T,U>::type
+    typename rv_sink_traits_::template enable_cref<U,T>::type
     operator()(U const & x) const
     { return static_cast<T>(x); }
 
@@ -177,16 +160,18 @@ construct(U& x)
 
 template< class T >
 inline T
-construct(typename sake::rv_sink_traits::rv_param<T>::type x)
-{ return sake::functional::construct<T>()(x); }
+construct(typename sake::rv_sink_traits1<T>::primary_type x)
+{ return sake::functional::construct<T>()(x.move()); }
 
 template< class T >
 inline T
-construct(typename sake::construct_private::rv_sink<T>::type x)
+construct(typename sake::rv_sink_traits1<T>::template
+    default_< construct > x)
 { return x(); }
 
 template< class T, class U >
-inline typename sake::construct_private::enable_cref<T,U>::type
+inline typename sake::rv_sink_traits1<T>::template
+    enable_cref<U,T>::type
 construct(U const & x)
 { return sake::functional::construct<T>()(x); }
 
@@ -207,34 +192,6 @@ construct(U const & x)
 #include SAKE_OVERLOAD_GENERATE()
 
 #endif // #if !defined( ... ) && !defined( ... )
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-
-namespace construct_private
-{
-
-template< class T >
-struct rv_sink
-{
-    typedef sake::rv_sink<
-        sake::functional::construct<T>, // Visitor
-        T, // Result
-        boost::mpl::not_< boost::is_same< T, boost::mpl::_1 > > // Pred
-    > type;
-};
-
-template< class T, class U >
-struct enable_cref
-    : boost::disable_if_c< boost_ext::mpl::or2<
-          boost_ext::is_same_sans_qualifiers<
-              U, typename sake::rv_sink_traits::rv_param<T>::type >,
-          sake::is_movable<U>
-      >::value, T >
-{ };
-
-} // namespace construct_private
-
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
 } // namespace sake
 

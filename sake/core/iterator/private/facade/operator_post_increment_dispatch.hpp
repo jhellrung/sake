@@ -14,24 +14,20 @@
 #include <boost/config.hpp>
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/quote.hpp>
 #include <boost/type_traits/is_object.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <sake/boost_ext/mpl/or.hpp>
+#include <sake/core/introspection/has_operator_assign.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/move/forward.hpp>
-#include <sake/core/move/is_movable.hpp>
 #include <sake/core/move/rv_sink.hpp>
-#include <sake/core/utility/call_traits.hpp>
-#include <sake/core/utility/non_copy_assignable.hpp>
+#include <sake/core/utility/noncopy_assignable.hpp>
 
 namespace sake
 {
@@ -85,7 +81,7 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         proxy(I const & i) : m_i(i), m_x(*i) { }
         friend struct operator_post_increment_dispatch;
     public:
-        SAKE_NON_COPY_ASSIGNABLE( proxy )
+        SAKE_NONCOPY_ASSIGNABLE( proxy )
 
         operator I() const
         { return m_i; }
@@ -99,45 +95,56 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         proxy const & operator*() const
         { return *this; }
 
+    private:
+        template< class T >
+        struct enable_cond_operator_assign
+            : sake::has_operator_assign< Reference, void ( T ) >
+        { };
+        template< class T >
+        struct enable_operator_assign
+            : boost::enable_if_c<
+                  enable_cond_operator_assign<T>::value,
+                  proxy const &
+              >
+        { };
+    public:
+
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
         template< class T >
-        proxy const &
+        typename enable_operator_assign<T>::type
         operator=(T&& x) const
         { *m_i = sake::forward<T>(x); return *this; }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     private:
-        typedef typename sake::rv_sink_traits::rv_param< value_type >::type rv_param_type;
-        typedef sake::rv_sink<
-            sake::rv_sink_visitors::operator_assign< proxy const >, // Visitor
-            proxy const &, // Result
-            boost::mpl::not_< boost::is_same< value_type, boost::mpl::_1 > > // Pred
-        > operator_assign_rv_sink_type;
+        typedef sake::rv_sink_traits1<
+            value_type,
+            boost::mpl::quote1< enable_cond_operator_assign >
+        > operator_assign_rv_sink_traits;
+        typedef typename operator_assign_rv_sink_traits::template
+            default_< sake::rv_sink_visitors::operator_assign< proxy const > >
+            operator_assign_rv_sink_default_type;
     public:
         // lvalues + movable explicit rvalues
         template< class T >
-        proxy const &
+        typename operator_assign_rv_sink_traits::template
+            enable_ref< T, proxy const & >::type
         operator=(T& x) const
         { *m_i = x; return *this; }
         // value_type rvalues
         proxy const &
-        operator=(rv_param_type x) const
-        { *m_i = x; return *this; }
+        operator=(typename operator_assign_rv_sink_traits::primary_type x) const
+        { *m_i = x.move(); return *this; }
         // movable implicit rvalues
         proxy const &
-        operator=(operator_assign_rv_sink_type const x) const
+        operator=(operator_assign_rv_sink_default_type x) const
         { return x(sake::rv_sink_visitors::make_operator_assign(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
-        typename boost::disable_if_c<
-            boost_ext::mpl::or2<
-                boost_ext::is_same_sans_qualifiers< T, rv_param_type >,
-                sake::is_movable<T>
-            >::value,
-            proxy const &
-        >::type
+        typename operator_assign_rv_sink_traits::template
+            enable_cref< T, proxy const & >::type
         operator=(T const & x) const
         { *m_i = x; return *this; }
 
@@ -162,7 +169,7 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, t
         proxy(I const & i) : m_i(i), m_x(*i) { }
         friend struct operator_post_increment_dispatch;
     public:
-        SAKE_NON_COPY_ASSIGNABLE( proxy )
+        SAKE_NONCOPY_ASSIGNABLE( proxy )
         operator I() const
         { return m_i; }
         value_type& operator*() const

@@ -32,7 +32,7 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
 #include <sake/core/utility/emplacer/fwd.hpp>
-#include <sake/core/utility/memberwise/default_ctor.hpp>
+#include <sake/core/utility/memberwise/default_constructor.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 
 namespace sake
@@ -57,7 +57,7 @@ protected:
         typename base_member,
         (( T )( m_member ))
     )
-    SAKE_MEMBERWISE_DEFAULT_CTOR(
+    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename base_member,
         (( T )( m_member ))
     )
@@ -98,7 +98,7 @@ protected:
         typename base_member,
         (( T ))
     )
-    SAKE_MEMBERWISE_DEFAULT_CTOR(
+    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename base_member,
         (( T ))
     )

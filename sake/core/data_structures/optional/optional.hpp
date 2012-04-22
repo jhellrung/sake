@@ -60,8 +60,8 @@
 
 #define SAKE_OPTIONAL_INCLUDE_HEADERS
 #include <sake/core/data_structures/optional/private/common_members.ipp>
-#include <sake/core/data_structures/optional/private/ctor_implicit.ipp>
-#include <sake/core/data_structures/optional/private/ctor_initialize.ipp>
+#include <sake/core/data_structures/optional/private/implicit_constructor.ipp>
+#include <sake/core/data_structures/optional/private/initialize_constructor.ipp>
 #include <sake/core/data_structures/optional/private/operator_assign.ipp>
 #include <sake/core/data_structures/optional/private/reset.ipp>
 #undef SAKE_OPTIONAL_INCLUDE_HEADERS
@@ -140,7 +140,7 @@ public:
 #if 0 // for exposition purposes only
     template< class U >
     optional(U&& x,
-        typename enable_ctor_implicit<U>::type* = 0);
+        typename enable_implicit_constructor<U>::type* = 0);
 
     template< class U >
     optional(U&& x, bool const initialize);
@@ -154,8 +154,8 @@ public:
 #endif // #if 0
 #define SAKE_OPTIONAL_DEFINE_MEMBERS
 #include <sake/core/data_structures/optional/private/common_members.ipp>
-#include <sake/core/data_structures/optional/private/ctor_implicit.ipp>
-#include <sake/core/data_structures/optional/private/ctor_initialize.ipp>
+#include <sake/core/data_structures/optional/private/implicit_constructor.ipp>
+#include <sake/core/data_structures/optional/private/initialize_constructor.ipp>
 #include <sake/core/data_structures/optional/private/operator_assign.ipp>
 #include <sake/core/data_structures/optional/private/reset.ipp>
 #undef SAKE_OPTIONAL_DEFINE_MEMBERS
@@ -223,7 +223,7 @@ struct optional< T& >
 #if 0 // for exposition purposes only
     template< class U >
     optional(U&& x,
-        typename enable_ctor_implicit<U>::type* = 0);
+        typename enable_implicit_constructor<U>::type* = 0);
 
     template< class U >
     optional(U&& x, bool const initialize);
@@ -238,8 +238,8 @@ struct optional< T& >
 #define SAKE_OPTIONAL_REFERENCE
 #define SAKE_OPTIONAL_DEFINE_MEMBERS
 #include <sake/core/data_structures/optional/private/common_members.ipp>
-#include <sake/core/data_structures/optional/private/ctor_implicit.ipp>
-#include <sake/core/data_structures/optional/private/ctor_initialize.ipp>
+#include <sake/core/data_structures/optional/private/implicit_constructor.ipp>
+#include <sake/core/data_structures/optional/private/initialize_constructor.ipp>
 #include <sake/core/data_structures/optional/private/operator_assign.ipp>
 #include <sake/core/data_structures/optional/private/reset.ipp>
 #undef SAKE_OPTIONAL_REFERENCE
@@ -309,14 +309,14 @@ inline
 optional<T>::
 optional(optional const & other)
     : m_initialized(other.m_initialized)
-{ ctor_implicit_dispatch(other); }
+{ implicit_constructor_dispatch(other); }
 
 template< class T >
 inline
 optional<T>::
 optional(this_rvalue_param_type other)
     : m_initialized(other.m_initialized)
-{ ctor_implicit_dispatch(sake::move(other)); }
+{ implicit_constructor_dispatch(sake::move(other)); }
 
 template< class T >
 inline

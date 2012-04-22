@@ -26,7 +26,7 @@
 #include <sake/core/functional/forwarding/nullary_base.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/memberwise/default_ctor.hpp>
+#include <sake/core/utility/memberwise/default_constructor.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/using_typedef.hpp>
@@ -124,7 +124,7 @@ protected:
         typename base,
         (( nullary_base_ ))
     )
-    SAKE_MEMBERWISE_DEFAULT_CTOR(
+    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename base,
         (( nullary_base_ ))
     )

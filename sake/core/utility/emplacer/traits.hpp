@@ -25,6 +25,7 @@
 #include <boost/type_traits/is_void.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/type_traits/is_void.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/utility/default_tag.hpp>
@@ -68,22 +69,46 @@ struct is_emplacer<
 template< class Signature >
 struct is_emplacer<
     sake::emplacer< Signature >,
+    boost::mpl::quote1< boost_ext::is_void >
+>
+    : sake::is_emplacer<
+          sake::emplacer< Signature >,
+          boost::mpl::quote1< boost::is_void >
+      >
+{ };
+
+template< class Signature >
+struct is_emplacer<
+    sake::emplacer< Signature >,
     boost::is_void< boost::mpl::_1 >
 >
-    : boost::is_void< typename sake::emplacer< Signature >::value_type >
+    : sake::is_emplacer<
+          sake::emplacer< Signature >,
+          boost::mpl::quote1< boost::is_void >
+      >
 { };
+
+template< class Signature >
+struct is_emplacer<
+    sake::emplacer< Signature >,
+    boost::mpl::quote1< boost_ext::not_is_void >
+>
+{
+    static bool const value = !boost::is_void<
+        typename sake::emplacer< Signature >::value_type >::value;
+    typedef is_emplacer type;
+};
 
 template< class Signature >
 struct is_emplacer<
     sake::emplacer< Signature >,
     boost::mpl::not_< boost::is_void< boost::mpl::_1 > >
 >
-{
-    static bool const value = !boost::is_void<
-        typename sake::emplacer< Signature >::value_type
-    >::value;
-    typedef is_emplacer type;
-};
+    : sake::is_emplacer<
+          sake::emplacer< Signature >,
+          boost::mpl::quote1< boost_ext::not_is_void >
+      >
+{ };
 
 /*******************************************************************************
  * struct is_emplacer_sans_qualifiers< T, ValuePred = default_tag >

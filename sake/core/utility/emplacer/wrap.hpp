@@ -16,11 +16,9 @@
 #ifndef SAKE_CORE_UTILITY_EMPLACER_WRAP_HPP
 #define SAKE_CORE_UTILITY_EMPLACER_WRAP_HPP
 
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/quote.hpp>
-#include <boost/type_traits/is_void.hpp>
 
+#include <sake/boost_ext/type_traits/is_void.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/move/forward.hpp>
@@ -44,9 +42,9 @@ struct wrap_dispatch;
 template<
     class T, class U,
     bool = sake::is_emplacer_sans_qualifiers<
-               U, boost::mpl::quote1< boost::is_void > >::value,
+               U, boost::mpl::quote1< boost_ext::is_void > >::value,
     bool = sake::is_emplacer_sans_qualifiers<
-               U, boost::mpl::not_< boost::is_void< boost::mpl::_1 > > >::value
+               U, boost::mpl::quote1< boost_ext::not_is_void > >::value
 >
 struct typed_wrap_dispatch;
 

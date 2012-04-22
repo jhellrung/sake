@@ -30,7 +30,6 @@
 #include <sake/boost_ext/type_traits/propagate_cv.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
-#include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
@@ -56,8 +55,8 @@ template< class T, class U >
 inline typename inherit_cast_private::enable< T, U& >::type
 inherit_cast(U& x)
 {
-    // Cast through pointers to avoid triggering implicit constructors.
-    return *sake::inherit_cast<T>(sake::address_of(x));
+    typedef typename boost_ext::propagate_cv<U,T>::type cv_type;
+    return static_cast< cv_type& >(x);
 }
 
 template< class U, class T >

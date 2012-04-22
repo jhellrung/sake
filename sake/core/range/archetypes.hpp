@@ -27,7 +27,7 @@
 
 #include <sake/core/iterator/archetypes.hpp>
 #include <sake/core/range/traits/static_size_fwd.hpp>
-#include <sake/core/utility/non_copyable.hpp>
+#include <sake/core/utility/noncopyable.hpp>
 
 namespace sake
 {
@@ -90,7 +90,7 @@ struct traversal_access_range
     typedef iterator const_iterator;
     iterator begin() const;
     iterator end() const;
-    SAKE_NON_COPYABLE( traversal_access_range )
+    SAKE_NONCOPYABLE( traversal_access_range )
 };
 
 template< class T, int N >
