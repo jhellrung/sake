@@ -17,6 +17,7 @@ void introspection_test(sake::test::environment& env);
 void keyword_test(sake::test::environment& env);
 void math_test(sake::test::environment& env);
 void memory_test(sake::test::environment& env);
+void move_test(sake::test::environment& env);
 void utility_test(sake::test::environment& env);
 
 void core_test(sake::test::environment& env)
@@ -27,6 +28,7 @@ void core_test(sake::test::environment& env)
     env("keyword", &keyword_test);
     env("math", &math_test);
     env("memory", &memory_test);
+    env("move", &move_test);
     env("utility", &utility_test);
 }
 
