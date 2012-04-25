@@ -31,16 +31,16 @@
 
 private:
     template< class U >
-    struct enable_cond_reset
+    struct reset_enable
         : boost_ext::mpl::or3<
-              enable_cond_for_value<U>,
-              enable_cond_for_optional<U>,
-              enable_cond_for_emplacer<U>
+              value_enable<U>,
+              optional_enable<U>,
+              emplacer_enable<U>
           >
     { };
     template< class U >
-    struct enable_reset
-        : boost::enable_if_c< enable_cond_reset<U>::value >
+    struct reset_enabler
+        : boost::enable_if_c< reset_enable<U>::value >
     { };
 public:
 
@@ -48,7 +48,7 @@ public:
 
 private:
     template< class U >
-    typename enable_for_value< SAKE_FWD2_PARAM( U ) >::type
+    typename value_enabler< SAKE_FWD2_PARAM( U ) >::type
     reset_dispatch(SAKE_FWD2_REF( U ) x)
     {
         reset();
@@ -57,7 +57,7 @@ private:
     }
 
     template< class U >
-    typename enable_for_optional< SAKE_FWD2_PARAM( U ) >::type
+    typename optional_enabler< SAKE_FWD2_PARAM( U ) >::type
     reset_dispatch(SAKE_FWD2_REF( U ) x)
     {
         reset();
@@ -68,7 +68,7 @@ private:
     }
 
     template< class Emplacer >
-    typename enable_for_emplacer< Emplacer >::type
+    typename emplacer_enabler< Emplacer >::type
     reset_dispatch(Emplacer e)
     {
         reset();
@@ -80,7 +80,7 @@ public:
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    typename enable_reset<U>::type
+    typename reset_enabler<U>::type
     reset(U&& x)
     { reset_dispatch(sake::forward<U>(x)); }
 
@@ -99,7 +99,7 @@ private:
     };
     typedef sake::rv_sink_traits<
         boost::mpl::vector2< optional, nocv_type >,
-        boost::mpl::quote1< enable_cond_reset >
+        boost::mpl::quote1< reset_enable >
     > reset_rv_sink_traits;
     typedef typename boost::mpl::at_c<
         typename reset_rv_sink_traits::primaries_type, 0
@@ -113,7 +113,7 @@ public:
 
     // lvalues + explicit movable rvalues
     template< class U >
-    typename reset_rv_sink_traits::template enable_ref<U>::type
+    typename reset_rv_sink_traits::template ref_enabler<U>::type
     reset(U& x)
     { reset_dispatch(x); }
 
@@ -131,7 +131,7 @@ public:
 
     // const lvalues + non-movable rvalues
     template< class U >
-    typename reset_rv_sink_traits::template enable_cref<U>::type
+    typename reset_rv_sink_traits::template cref_enabler<U>::type
     reset(U const & x)
     { reset_dispatch(x); }
 
@@ -142,21 +142,21 @@ public:
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    typename enable_reset<U>::type
+    typename reset_enabler<U>::type
     reset(U&& x)
     { mp = get_ptr_dispatch(x); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    typename enable_reset<
+    typename reset_enabler<
         typename boost_ext::remove_rvalue_reference< U& >::type
     >::type
     reset(U& x)
     { mp = get_ptr_dispatch(SAKE_AS_LVALUE(x)); }
 
     template< class U >
-    typename enable_reset< U const & >::type
+    typename reset_enabler< U const & >::type
     reset(U const & x)
     { mp = get_ptr_dispatch(x); }
 

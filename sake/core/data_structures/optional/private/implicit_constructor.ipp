@@ -29,18 +29,15 @@
 
 private:
     template< class U >
-    struct enable_cond_implicit_constructor
+    struct implicit_constructor_enable
         : boost_ext::mpl::and2<
               boost_ext::not_is_base_of_sans_qualifiers< optional, U >,
-              boost_ext::mpl::or2<
-                  enable_cond_for_value<U>,
-                  enable_cond_for_optional<U>
-              >
+              boost_ext::mpl::or2< value_enable<U>, optional_enable<U> >
           >
     { };
     template< class U >
-    struct enable_implicit_constructor
-        : boost::enable_if_c< enable_cond_implicit_constructor<U>::value >
+    struct implicit_constructor_enabler
+        : boost::enable_if_c< implicit_constructor_enable<U>::value >
     { };
 public:
 
@@ -48,19 +45,19 @@ public:
 
 private:
     template< class U >
-    typename enable_for_value< SAKE_FWD2_PARAM( U ), bool >::type
+    typename value_enabler< SAKE_FWD2_PARAM( U ), bool >::type
     static initialize_m_initialized_dispatch(SAKE_FWD2_REF( U ) /*x*/)
     { return true; }
     template< class U >
-    typename enable_for_optional< SAKE_FWD2_PARAM( U ), bool >::type
+    typename optional_enabler< SAKE_FWD2_PARAM( U ), bool >::type
     static initialize_m_initialized_dispatch(SAKE_FWD2_REF( U ) x)
     { return x.initialized(); }
     template< class U >
-    typename enable_for_value< SAKE_FWD2_PARAM( U ) >::type
+    typename value_enabler< SAKE_FWD2_PARAM( U ) >::type
     implicit_constructor_dispatch(SAKE_FWD2_REF( U ) x)
     { new(m_storage._) nocv_type(sake::forward<U>(x)); }
     template< class U >
-    typename enable_for_optional< SAKE_FWD2_PARAM( U ) >::type
+    typename optional_enabler< SAKE_FWD2_PARAM( U ) >::type
     implicit_constructor_dispatch(SAKE_FWD2_REF( U ) x)
     {
         if(m_initialized)
@@ -72,7 +69,7 @@ public:
 
     template< class U >
     optional(U&& x,
-        typename enable_implicit_constructor<U>::type* = 0)
+        typename implicit_constructor_enabler<U>::type* = 0)
         : m_initialized(initialize_m_initialized_dispatch(sake::forward<U>(x)))
     { implicit_constructor_dispatch(sake::forward<U>(x)); }
 
@@ -96,8 +93,7 @@ private:
     };
     friend struct implicit_constructor_rv_sink;
     typedef sake::rv_sink_traits1<
-        nocv_type,
-        boost::mpl::quote1< enable_cond_implicit_constructor >
+        nocv_type, boost::mpl::quote1< implicit_constructor_enable >
     > implicit_constructor_rv_sink_traits;
     typedef typename implicit_constructor_rv_sink_traits::template
         default_< implicit_constructor_rv_sink_visitor >
@@ -108,7 +104,7 @@ public:
     template< class U >
     optional(U& x,
         typename implicit_constructor_rv_sink_traits::template
-            enable_ref<U>::type* = 0)
+            ref_enabler<U>::type* = 0)
         : m_initialized(initialize_m_initialized_dispatch(x))
     { implicit_constructor_dispatch(x); }
 
@@ -125,7 +121,7 @@ public:
     template< class U >
     optional(U const & x,
         typename implicit_constructor_rv_sink_traits::template
-            enable_cref<U>::type* = 0)
+            cref_enabler<U>::type* = 0)
         : m_initialized(initialize_m_initialized_dispatch(x))
     { implicit_constructor_dispatch(x); }
 
@@ -137,7 +133,7 @@ public:
 
     template< class U >
     optional(U&& x,
-        typename enable_implicit_constructor<U>::type* = 0)
+        typename implicit_constructor_enabler<U>::type* = 0)
         : mp(get_ptr_dispatch(x))
     { }
 
@@ -145,7 +141,7 @@ public:
 
     template< class U >
     optional(U& x,
-        typename enable_implicit_constructor<
+        typename implicit_constructor_enabler<
             typename boost_ext::remove_rvalue_reference< U& >::type
         >::type* = 0)
         : mp(get_ptr_dispatch(SAKE_AS_LVALUE(x)))
@@ -153,7 +149,7 @@ public:
 
     template< class U >
     optional(U const & x,
-        typename enable_implicit_constructor< U const & >::type* = 0)
+        typename implicit_constructor_enabler< U const & >::type* = 0)
         : mp(get_ptr_dispatch(x))
     { }
 

@@ -29,15 +29,12 @@
 
 private:
     template< class U >
-    struct enable_cond_initialize_constructor
-        : boost_ext::mpl::or2<
-              enable_cond_for_value<U>,
-              enable_cond_for_emplacer<U>
-          >
+    struct initialize_constructor_enable
+        : boost_ext::mpl::or2< value_enable<U>, emplacer_enable<U> >
     { };
     template< class U >
-    struct enable_initialize_constructor
-        : boost::enable_if_c< enable_cond_initialize_constructor<U>::value >
+    struct initialize_constructor_enabler
+        : boost::enable_if_c< initialize_constructor_enable<U>::value >
     { };
 
     template< class U >
@@ -52,7 +49,7 @@ public:
 
     template< class U >
     optional(U&& x, bool const initialize,
-        typename enable_initialize_constructor<U>::type* = 0)
+        typename initialize_constructor_enabler<U>::type* = 0)
         : m_initialized(initialize)
     { initialize_constructor_impl(sake::forward<U>(x)); }
 
@@ -68,7 +65,7 @@ private:
         template< class U >
         void operator()(SAKE_RV_REF( U ) x) const
         {
-            BOOST_STATIC_ASSERT((enable_cond_for_value<U>::value));
+            BOOST_STATIC_ASSERT((value_enable<U>::value));
             new(m_storage._) nocv_type(x);
         }
     private:
@@ -76,8 +73,7 @@ private:
     };
     friend struct initialize_constructor_rv_sink_visitor;
     typedef sake::rv_sink_traits1<
-        nocv_type,
-        boost::mpl::quote1< enable_cond_initialize_constructor >
+        nocv_type, boost::mpl::quote1< initialize_constructor_enable >
     > initialize_constructor_rv_sink_traits;
     typedef typename initialize_constructor_rv_sink_traits::template
         default_< initialize_constructor_rv_sink_visitor >
@@ -88,7 +84,7 @@ public:
     template< class U >
     optional(U& x, bool const initialize,
         typename initialize_constructor_rv_sink_traits::template
-            enable_ref<U>::type* = 0)
+            ref_enabler<U>::type* = 0)
         : m_initialized(initialize)
     { initialize_constructor_impl(x); }
 
@@ -110,7 +106,7 @@ public:
     template< class U >
     optional(U const & x, bool const initialize,
         typename initialize_constructor_rv_sink_traits::template
-            enable_cref<U>::type* = 0)
+            cref_enabler<U>::type* = 0)
         : m_initialized(initialize)
     { initialize_constructor_impl(x); }
 

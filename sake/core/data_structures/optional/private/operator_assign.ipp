@@ -18,6 +18,7 @@
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/data_structures/optional/private/operator_assign_dispatch.hpp>
+#include <sake/core/introspection/has_operator_assign.hpp>
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/rv_sink.hpp>
@@ -29,22 +30,19 @@
 
 private:
     template< class U >
-    struct enable_cond_operator_assign
+    struct operator_assign_enable
         : boost_ext::mpl::and2<
               boost_ext::not_is_base_of_sans_qualifiers< optional, U >,
               boost_ext::mpl::or3<
-                  enable_cond_for_value<U>,
-                  enable_cond_for_optional<U>,
-                  enable_cond_for_emplacer<U>
+                  value_enable<U>,
+                  optional_enable<U>,
+                  emplacer_enable<U>
               >
           >
     { };
     template< class U >
-    struct enable_operator_assign
-        : boost::enable_if_c<
-              enable_cond_operator_assign<U>::value,
-              optional&
-          >
+    struct operator_assign_enabler
+        : boost::enable_if_c< operator_assign_enable<U>::value, optional& >
     { };
 public:
 
@@ -52,7 +50,7 @@ public:
 
 private:
     template< class U >
-    typename enable_for_value< SAKE_FWD2_PARAM( U ), optional& >::type
+    typename value_enabler< SAKE_FWD2_PARAM( U ), optional& >::type
     operator_assign_dispatch(SAKE_FWD2_REF( U ) x)
     {
         private_::operator_assign_dispatch< T, SAKE_FWD2_PARAM( U ) >::
@@ -61,7 +59,7 @@ private:
     }
 
     template< class U >
-    typename enable_for_optional< SAKE_FWD2_PARAM( U ), optional& >::type
+    typename optional_enabler< SAKE_FWD2_PARAM( U ), optional& >::type
     operator_assign_dispatch(SAKE_FWD2_REF( U ) x)
     {
         if(x.initialized())
@@ -71,7 +69,7 @@ private:
     }
 
     template< class Emplacer >
-    typename enable_for_emplacer< Emplacer, optional& >::type
+    typename emplacer_enabler< Emplacer, optional& >::type
     operator_assign_dispatch(Emplacer e)
     {
         reset(e);
@@ -82,7 +80,7 @@ public:
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    typename enable_operator_assign<U>::type
+    typename operator_assign_enabler<U>::type
     operator=(U&& x)
     { return operator_assign_dispatch(sake::forward<U>(x)); }
 
@@ -90,8 +88,7 @@ public:
 
 private:
     typedef sake::rv_sink_traits1<
-        nocv_type,
-        boost::mpl::quote1< enable_cond_operator_assign >
+        nocv_type, boost::mpl::quote1< operator_assign_enable >
     > operator_assign_rv_sink_traits;
     typedef typename operator_assign_rv_sink_traits::template
         default_< sake::rv_sink_visitors::operator_assign< optional > >
@@ -101,7 +98,7 @@ public:
     // lvalues + explicit movable rvalues
     template< class U >
     typename operator_assign_rv_sink_traits::template
-        enable_ref< U, optional& >::type
+        ref_enabler< U, optional& >::type
     operator=(U& x)
     { return operator_assign_dispatch(x); }
 
@@ -117,7 +114,7 @@ public:
     // const lvalues + non-movable rvalues
     template< class U >
     typename operator_assign_rv_sink_traits::template
-        enable_cref< U, optional& >::type
+        cref_enabler< U, optional& >::type
     operator=(U const & x)
     { return operator_assign_dispatch(x); }
 
@@ -128,21 +125,21 @@ public:
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    typename enable_operator_assign<U>::type
+    typename operator_assign_enabler<U>::type
     operator=(U&& x)
     { mp = get_ptr_dispatch(x); return *this; }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    typename enable_operator_assign<
+    typename operator_assign_enabler<
         typename boost_ext::remove_rvalue_reference< U& >::type
     >::type
     operator=(U& x)
     { mp = get_ptr_dispatch(SAKE_AS_LVALUE(x)); return *this; }
 
     template< class U >
-    typename enable_operator_assign< U const & >::type
+    typename operator_assign_enabler< U const & >::type
     operator=(U const & x)
     { mp = get_ptr_dispatch(x); return *this; }
 

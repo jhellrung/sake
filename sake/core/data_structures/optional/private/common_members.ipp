@@ -11,14 +11,11 @@
 #include <boost/config.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/placeholders.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_void.hpp>
-#include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
-#include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/propagate_qualifiers.hpp>
 
@@ -36,17 +33,17 @@
 
 private:
     template< class U >
-    struct enable_cond_for_value
+    struct value_enable
         : sake::is_convertible_wnrbt< U, value_type >
     { };
 
     template< class U, class Result = void >
-    struct enable_for_value
-        : boost::enable_if_c< enable_cond_for_value<U>::value, Result >
+    struct value_enabler
+        : boost::enable_if_c< value_enable<U>::value, Result >
     { };
 
     template< class U >
-    struct enable_cond_for_optional
+    struct optional_enable
         : boost_ext::mpl::or2<
               boost_ext::is_same_sans_qualifiers< U, optional >,
               boost_ext::mpl::and2<
@@ -63,26 +60,18 @@ private:
     { };
 
     template< class U, class Result = void >
-    struct enable_for_optional
-        : boost::enable_if_c< enable_cond_for_optional<U>::value, Result >
+    struct optional_enabler
+        : boost::enable_if_c< optional_enable<U>::value, Result >
     { };
 
     template< class U >
-    struct enable_cond_for_emplacer
-        : sake::is_emplacer_sans_qualifiers< U,
-              boost_ext::mpl::or2<
-                  boost::is_void< boost::mpl::_1 >,
-                  boost::is_same<
-                      typename boost::remove_cv< value_type >::type,
-                      boost::mpl::_1
-                  >
-              >
-          >
+    struct emplacer_enable
+        : sake::is_emplacer_sans_qualifiers_with_value< U, value_type >
     { };
 
     template< class U, class Result = void >
-    struct enable_for_emplacer
-        : boost::enable_if_c< enable_cond_for_emplacer<U>::value, Result >
+    struct emplacer_enabler
+        : boost::enable_if_c< emplacer_enable<U>::value, Result >
     { };
 public:
 
@@ -93,7 +82,7 @@ private:
     { return sake::address_of(x); }
 
     template< class U >
-    typename enable_for_optional< U&, T* >::type
+    typename optional_enabler< U&, T* >::type
     get_ptr_dispatch(U& x)
     { return get_ptr_dispatch(x.get_ptr()); }
 

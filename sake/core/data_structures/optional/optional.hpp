@@ -140,17 +140,19 @@ public:
 #if 0 // for exposition purposes only
     template< class U >
     optional(U&& x,
-        typename enable_implicit_constructor<U>::type* = 0);
+        typename implicit_constructor_enabler<U>::type* = 0);
 
     template< class U >
-    optional(U&& x, bool const initialize);
+    optional(U&& x, bool const initialize,
+        typename initialize_constructor_enabler<U>::type* = 0);
 
     template< class U >
-    typename enable_operator_assign<U>::type
+    typename operator_assign_enabler<U>::type // -> optional&
     operator=(U&& x);
 
     template< class U >
-    void reset(U&& x);
+    typename reset_enabler<U>::type // -> void
+    reset(U&& x);
 #endif // #if 0
 #define SAKE_OPTIONAL_DEFINE_MEMBERS
 #include <sake/core/data_structures/optional/private/common_members.ipp>
@@ -162,7 +164,8 @@ public:
 
     optional(T* const p);
     template< class Signature >
-    explicit optional(sake::emplacer< Signature > e);
+    explicit optional(sake::emplacer< Signature > e,
+        typename emplacer_enabler< sake::emplacer< Signature > >::type* = 0);
 
     void swap(optional& other);
     inline friend
@@ -223,17 +226,19 @@ struct optional< T& >
 #if 0 // for exposition purposes only
     template< class U >
     optional(U&& x,
-        typename enable_implicit_constructor<U>::type* = 0);
+        typename implicit_constructor_enabler<U>::type* = 0);
 
     template< class U >
-    optional(U&& x, bool const initialize);
+    optional(U&& x, bool const initialize,
+        typename initialize_constructor_enabler<U>::type* = 0);
 
     template< class U >
-    typename enable_operator_assign<U>::type
+    typename operator_assign_enabler<U>::type // -> optional&
     operator=(U&& x);
 
     template< class U >
-    void reset(U&& x);
+    typename reset_enabler<U>::type // -> void
+    reset(U&& x);
 #endif // #if 0
 #define SAKE_OPTIONAL_REFERENCE
 #define SAKE_OPTIONAL_DEFINE_MEMBERS
@@ -247,7 +252,8 @@ struct optional< T& >
 
     optional(T* p);
     template< class Signature >
-    explicit optional(sake::emplacer< Signature > e);
+    explicit optional(sake::emplacer< Signature > e,
+        typename emplacer_enabler< sake::emplacer< Signature > >::type* = 0);
 
     void swap(optional& other);
     inline friend
@@ -378,9 +384,10 @@ template< class T >
 template< class Signature >
 inline
 optional<T>::
-optional(sake::emplacer< Signature > e)
+optional(sake::emplacer< Signature > e,
+    typename emplacer_enabler< sake::emplacer< Signature > >::type*)
     : m_initialized(true)
-{ sake::emplacer_construct< nocv_type >(sake::forward<U>(x), m_storage._); }
+{ sake::emplacer_construct< nocv_type >(e, m_storage._); }
 
 template< class T >
 inline void
@@ -527,7 +534,8 @@ template< class T >
 template< class Signature >
 inline
 optional< T& >::
-optional(sake::emplacer< Signature > e)
+optional(sake::emplacer< Signature > e,
+    typename emplacer_enabler< sake::emplacer< Signature > >::type*)
     : mp(get_ptr_dispatch(e))
 { }
 
