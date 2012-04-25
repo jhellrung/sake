@@ -39,7 +39,8 @@ template< class T, class VectorC, T M >
 struct push_front;
 
 template< class T, T... N, T M >
-struct push_front< boost_ext::mpl::vector< boost::mpl::integral_c<T,N>... >, M >
+struct push_front<
+    boost_ext::mpl::vector< boost::mpl::integral_c<T,N>... >, M >
 { typedef boost_ext::mpl::vector_c< T, M, N... > type; };
 
 } // namespace range_c_private
@@ -47,8 +48,8 @@ struct push_front< boost_ext::mpl::vector< boost::mpl::integral_c<T,N>... >, M >
 template< class T, T A, T B >
 struct range_c
     : range_c_private::push_front<
-          typename range_c< T, A + 1, B >::type,
-          Lo
+          typename boost_ext::mpl::range_c< T, A + 1, B >::type,
+          A
       >::type
 { };
 
