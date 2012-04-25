@@ -153,11 +153,8 @@ struct pop_back< vector< T0 >, vector< U... > >
 
 } // namespace sake
 
-namespace boost
-{
-
-namespace mpl
-{
+namespace boost {
+namespace mpl {
 
 /*******************************************************************************
  * sake::boost_ext::mpl::vector_iterator Random Access Iterator metafunction
@@ -210,10 +207,12 @@ struct end_impl< sake::boost_ext::mpl::vector_tag >
 {
     template< class V >
     struct apply
-        : advance_impl< sake::boost_ext::mpl::vector_iterator_tag >::template apply<
-              typename begin_impl< sake::boost_ext::mpl::vector_tag >::template apply<V>::type,
+        : advance_impl< sake::boost_ext::mpl::vector_iterator_tag >::template
+          apply<
+              typename begin_impl< sake::boost_ext::mpl::vector_tag >::template
+              apply<V>::type,
               boost::mpl::size_t< V::size >
-          > >
+          >
     { };
 };
 
@@ -428,7 +427,6 @@ struct pop_back_impl< sake::boost_ext::mpl::vector_tag >
 };
 
 } // namespace mpl
-
 } // namespace boost
 
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
