@@ -19,6 +19,7 @@
 
 #include <boost/iterator/iterator_traits.hpp>
 
+#include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/add_const_if.hpp>
 
 #include <sake/core/expr_traits/is_convertible.hpp>
@@ -26,6 +27,7 @@
 #include <sake/core/introspection/has_type_value_type.hpp>
 #include <sake/core/introspection/is_incrementable.hpp>
 #include <sake/core/utility/declval.hpp>
+#include <sake/core/utility/int_tag.hpp>
 
 namespace sake
 {
@@ -67,16 +69,27 @@ namespace default_impl
 namespace pointee_private
 {
 
+template< class P >
+struct dispatch_index
+{
+    static int const value = boost_ext::mpl::
+              // iterators
+         if_< sake::is_incrementable<P>, sake::int_tag<3> >::type::template
+              // Boost-style smart pointers
+    else_if < sake::has_type_element_type<P>, sake::int_tag<2> >::type::template
+              // best guess for everything else
+    else_if < sake::has_type_value_type<P>, sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type::value;
+};
+
 template<
     class P,
-    bool = sake::is_incrementable<P>::value,      // iterators
-    bool = sake::has_type_element_type<P>::value, // Boost-style smart pointers
-    bool = sake::has_type_value_type<P>::value    // best guess for everything else
+    int = dispatch_index<P>::value
 >
 struct dispatch;
 
-template< class P, bool HasTypeElementType, bool HasTypeValueType >
-struct dispatch< P, true, HasTypeElementType, HasTypeValueType >
+template< class P >
+struct dispatch<P,3>
 {
 private:
     typedef typename boost::iterator_value<P>::type value_type;
@@ -85,16 +98,16 @@ public:
     typedef typename boost_ext::add_const_if_c< is_const, value_type >::type type;
 };
 
-template< class P, bool HasTypeValueType >
-struct dispatch< P, false, true, HasTypeValueType >
+template< class P >
+struct dispatch<P,2>
 { typedef typename P::element_type type; };
 
 template< class P >
-struct dispatch< P, false, false, true >
+struct dispatch<P,1>
 { typedef typename P::value_type type; };
 
 template< class P >
-struct dispatch< P, false, false, false >
+struct dispatch<P,0>
 // last ditch effort
 { typedef typename P::type type; };
 
