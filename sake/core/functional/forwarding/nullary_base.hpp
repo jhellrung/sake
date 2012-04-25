@@ -26,7 +26,7 @@
 #include <sake/core/functional/forwarding/keyword.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
+#include <sake/core/utility/emplacer/constructible.hpp>
 #include <sake/core/utility/memberwise/default_constructor.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/using_typedef.hpp>
@@ -175,9 +175,8 @@ protected:
     template< class T >
     explicit impl(SAKE_FWD2_REF( T ) x,
         typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< impl, T >::value
-        >::type* = 0)
-        : chained_base_type(sake::emplacer_construct< chained_base_type >(sake::forward<T>(x)))
+            boost_ext::is_base_of_sans_qualifiers< impl, T >::value >::type* = 0)
+        : chained_base_type(sake::emplacer_constructible< chained_base_type >(sake::forward<T>(x)))
     { }
 
     typedef nullary_result_type protected_nullary_result_type;

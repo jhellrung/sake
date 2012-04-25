@@ -48,7 +48,7 @@
 #include <sake/core/math/sign.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
+#include <sake/core/utility/emplacer/constructible.hpp>
 #include <sake/core/utility/emplacer/traits.hpp>
 #include <sake/core/utility/memberwise/default_constructor.hpp>
 #include <sake/core/utility/void.hpp>
@@ -306,7 +306,7 @@ protected:
          && (boost_ext::is_convertible< ChainedBaseConstruct const &, ChainedBase >::value
           || sake::is_emplacer< ChainedBaseConstruct >::value)
         >::type* = 0)
-        : ChainedBase(sake::emplacer_construct< ChainedBase >(chained_base_construct))
+        : ChainedBase(sake::emplacer_constructible< ChainedBase >(chained_base_construct))
     { }
 
     template< class, class, class, class, class, class, class > friend struct iterator_facade;

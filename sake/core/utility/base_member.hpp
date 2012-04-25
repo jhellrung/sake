@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/utility/base_member.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -21,7 +21,11 @@
 #ifndef SAKE_CORE_UTILITY_BASE_MEMBER_HPP
 #define SAKE_CORE_UTILITY_BASE_MEMBER_HPP
 
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_empty.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_void.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
@@ -30,7 +34,8 @@
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
+#include <sake/core/utility/emplacer/constructible.hpp>
+#include <sake/core/utility/emplacer/emplacer.hpp>
 #include <sake/core/utility/emplacer/fwd.hpp>
 #include <sake/core/utility/memberwise/default_constructor.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
@@ -62,12 +67,25 @@ protected:
         (( T )( m_member ))
     )
 
+private:
+    typedef typename boost::remove_cv<T>::type nocv_type;
+protected:
+
+    template< class V >
+    explicit base_member(sake::emplacer< V ( ) >)
+    {
+        BOOST_STATIC_ASSERT((
+            boost::is_void<V>::value
+         || boost::is_same< V, nocv_type >::value
+        ));
+    }
+
     template< class U >
     explicit base_member(SAKE_FWD2_REF( U ) x,
         typename boost::disable_if_c<
             boost_ext::is_base_of_sans_qualifiers< base_member, U >::value
         >::type* = 0)
-        : m_member(sake::emplacer_construct<T>(sake::forward<U>(x)))
+        : m_member(sake::emplacer_constructible< nocv_type >(sake::forward<U>(x)))
     { }
 
     typename boost_ext::add_reference<T>::type
@@ -103,12 +121,25 @@ protected:
         (( T ))
     )
 
+private:
+    typedef typename boost::remove_cv<T>::type nocv_type;
+protected:
+
+    template< class V >
+    explicit base_member(sake::emplacer< V ( ) >)
+    {
+        BOOST_STATIC_ASSERT((
+            boost::is_void<V>::value
+         || boost::is_same< V, nocv_type >::value
+        ));
+    }
+
     template< class U >
     explicit base_member(SAKE_FWD2_REF( U ) x,
         typename boost::disable_if_c<
             boost_ext::is_base_of_sans_qualifiers< base_member, U >::value
         >::type* = 0)
-        : T(sake::emplacer_construct<T>(sake::forward<U>(x)))
+        : T(sake::emplacer_constructible< nocv_type >(sake::forward<U>(x)))
     { }
 
     typename boost_ext::add_reference<T>::type

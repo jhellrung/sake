@@ -6,7 +6,11 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * emplacer_construct<T>(U&& y, void* p) -> void
- * emplacer_construct<T>(U&& y) -> T [qualified]
+ * emplacer_construct<T>(U&& y) -> T
+ *
+ * Constructs a T object from the given argument.
+ *
+ * Note: This is overloaded for sake::emplacer arguments.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_EMPLACER_CONSTRUCT_HPP
@@ -17,7 +21,6 @@
 
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
-#include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
@@ -35,25 +38,7 @@ emplacer_construct(SAKE_FWD2_REF( U ) y, void* const p)
 }
 
 template< class T, class U >
-inline typename boost::enable_if_c<
-    boost_ext::is_same_sans_qualifiers<T,U>::value,
-    SAKE_FWD2_REF( U )
->::type
-emplacer_construct(SAKE_FWD2_REF( U ) y)
-{
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
-    BOOST_STATIC_ASSERT((
-       !boost_ext::is_reference<T>::value
-     || boost_ext::is_reference< SAKE_FWD2_PARAM( U ) >::value
-    ));
-    return sake::forward<U>(y);
-}
-
-template< class T, class U >
-inline typename boost::disable_if_c<
-    boost_ext::is_same_sans_qualifiers<T,U>::value,
-    T
->::type
+inline T
 emplacer_construct(SAKE_FWD2_REF( U ) y)
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));

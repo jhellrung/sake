@@ -5,13 +5,10 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct is_emplacer< T, ValuePred = default_tag >
- * struct is_emplacer_sans_qualifiers< T, ValuePred = default_tag >
- *
- * struct enable_if_is_emplacer< T, Result = void, ValuePred = default_tag >
- * struct disable_if_is_emplacer< T, Result = void, ValuePred = default_tag >
- * struct lazy_enable_if_is_emplacer< T, Result, ValuePred = default_tag >
- * struct lazy_disable_if_is_emplacer< T, Result, ValuePred = default_tag >
+ * struct is_emplacer< Emplacer, ValuePred = default_tag >
+ * struct is_emplacer_sans_qualifiers< Emplacer, ValuePred = default_tag >
+ * struct is_emplacer_with_value< Emplacer, T >
+ * struct is_emplacer_sans_qualifiers_with_value< Emplacer, T >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_EMPLACER_TRAITS_HPP
@@ -22,23 +19,24 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_void.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/is_void.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/utility/default_tag.hpp>
 #include <sake/core/utility/emplacer/fwd.hpp>
+#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
 {
 
 /*******************************************************************************
- * struct is_emplacer< T, ValuePred = default_tag >
+ * struct is_emplacer< Emplacer, ValuePred = default_tag >
  ******************************************************************************/
 
-template< class T, class ValuePred = sake::default_tag >
+template< class Emplacer, class ValuePred = sake::default_tag >
 struct is_emplacer
     : boost::false_type
 { };
@@ -111,54 +109,61 @@ struct is_emplacer<
 { };
 
 /*******************************************************************************
- * struct is_emplacer_sans_qualifiers< T, ValuePred = default_tag >
+ * struct is_emplacer_sans_qualifiers< Emplacer, ValuePred = default_tag >
  ******************************************************************************/
 
-template< class T, class ValuePred = sake::default_tag >
+template< class Emplacer, class ValuePred = sake::default_tag >
 struct is_emplacer_sans_qualifiers
     : sake::is_emplacer<
-          typename boost_ext::remove_qualifiers<T>::type,
+          typename boost_ext::remove_qualifiers<Emplacer>::type,
           ValuePred
       >
 { };
 
 /*******************************************************************************
- * struct enable_if_is_emplacer< T, Result = void, ValuePred = default_tag >
- * struct disable_if_is_emplacer< T, Result = void, ValuePred = default_tag >
- * struct lazy_enable_if_is_emplacer< T, Result, ValuePred = default_tag >
- * struct lazy_disable_if_is_emplacer< T, Result, ValuePred = default_tag >
+ * struct is_emplacer_with_value< Emplacer, T >
  ******************************************************************************/
 
-template< class T, class Result = void, class ValuePred = sake::default_tag >
-struct enable_if_is_emplacer
-    : boost::enable_if_c<
-          sake::is_emplacer< T, ValuePred >::value,
-          Result
-      >
+template< class Emplacer, class T >
+struct is_emplacer_with_value
+    : boost::false_type
 { };
 
-template< class T, class Result = void, class ValuePred = sake::default_tag >
-struct disable_if_is_emplacer
-    : boost::disable_if_c<
-          sake::is_emplacer< T, ValuePred >::value,
-          Result
-      >
+template< class Signature, class T >
+struct is_emplacer_with_value< sake::emplacer< Signature >, T >
+{
+private:
+    SAKE_USING_TYPEDEF( typename sake::emplacer< Signature >, value_type );
+public:
+    static bool const value =
+        boost::is_void< value_type >::value
+     || boost::is_same< value_type, T >::value;
+    typedef is_emplacer_with_value type;
+};
+
+template< class Signature, class T >
+struct is_emplacer_with_value< sake::emplacer< Signature >, T const >
+    : sake::is_emplacer_with_value< sake::emplacer< Signature >, T >
 { };
 
-template< class T, class Result, class ValuePred = sake::default_tag >
-struct lazy_enable_if_is_emplacer
-    : boost::lazy_enable_if_c<
-          sake::is_emplacer< T, ValuePred >::value,
-          Result
-      >
+template< class Signature, class T >
+struct is_emplacer_with_value< sake::emplacer< Signature >, T volatile >
+    : sake::is_emplacer_with_value< sake::emplacer< Signature >, T >
 { };
 
-template< class T, class Result, class ValuePred = sake::default_tag >
-struct lazy_disable_if_is_emplacer
-    : boost::lazy_disable_if_c<
-          sake::is_emplacer< T, ValuePred >::value,
-          Result
-      >
+template< class Signature, class T >
+struct is_emplacer_with_value< sake::emplacer< Signature >, T const volatile >
+    : sake::is_emplacer_with_value< sake::emplacer< Signature >, T >
+{ };
+
+/*******************************************************************************
+ * struct is_emplacer_sans_qualifiers_with_value< Emplacer, T >
+ ******************************************************************************/
+
+template< class Emplacer, class T >
+struct is_emplacer_sans_qualifiers_with_value
+    : sake::is_emplacer_with_value<
+          typename boost_ext::remove_qualifiers<Emplacer>::type, T >
 { };
 
 } // namespace sake
