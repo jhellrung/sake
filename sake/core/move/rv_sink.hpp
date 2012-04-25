@@ -9,6 +9,9 @@
  *     Sequence = boost::mpl::vector0<>,
  *     Pred = boost::mpl::always< boost::true_type >
  * >
+ * struct rv_sink_traits0<
+ *     Pred = boost::mpl::always< boost::true_type >
+ * >
  * struct rv_sink_traits1<
  *     T,
  *     Pred = boost::mpl::always< boost::true_type >
@@ -56,6 +59,7 @@
 #include <sake/core/introspection/has_type_result_type.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/default_tag.hpp>
+#include <sake/core/utility/noncopyable.hpp>
 
 namespace sake
 {
@@ -95,7 +99,7 @@ struct rv_sink_traits
     >::type primaries_type;
 
 private:
-    template< class U > struct enable_default_constructor;
+    template< class U > struct default_constructor_enabler;
 public:
     template<
         class Visitor,
@@ -104,17 +108,21 @@ public:
     struct default_;
     template< class, class > friend struct default_;
 
+    template< class U >
+    struct ref_enable;
     template< class U, class Result = void >
-    struct enable_ref;
+    struct ref_enabler;
 
+    template< class U >
+    struct cref_enable;
     template< class U, class Result = void >
-    struct enable_cref;
+    struct cref_enabler;
 };
 
 template< class Sequence, class Pred >
 template< class U >
 struct rv_sink_traits< Sequence, Pred >::
-enable_default_constructor
+default_constructor_enabler
     : boost::enable_if_c< boost_ext::mpl::and3<
           boost::mpl::apply1< Pred, U >,
           sake::is_movable<U>,
@@ -139,10 +147,12 @@ default_
         >
     >::type result_type;
 
+    SAKE_NONCOPYABLE( default_ )
+
     // implicit by design
     template< class U >
     default_(U const & x,
-        typename enable_default_constructor<U>::type* = 0)
+        typename default_constructor_enabler<U>::type* = 0)
         : m_apply(apply<U>),
           mp(static_cast< void* >(sake::address_of(const_cast< U& >(x))))
     { }
@@ -163,20 +173,26 @@ private:
 };
 
 template< class Sequence, class Pred >
-template< class U, class Result >
+template< class U >
 struct rv_sink_traits< Sequence, Pred >::
-enable_ref
-    : boost::enable_if_c< boost::mpl::apply1<
-          Pred,
-          typename boost_ext::remove_rvalue_reference< U& >::type
-      >::type::value, Result >
+ref_enable
+    : boost::mpl::apply1<
+          Pred, typename boost_ext::remove_rvalue_reference< U& >::type
+      >::type
 { };
 
 template< class Sequence, class Pred >
 template< class U, class Result >
 struct rv_sink_traits< Sequence, Pred >::
-enable_cref
-    : boost::enable_if_c< boost_ext::mpl::and3<
+ref_enabler
+    : boost::enable_if_c< ref_enable<U>::value, Result >
+{ };
+
+template< class Sequence, class Pred >
+template< class U >
+struct rv_sink_traits< Sequence, Pred >::
+cref_enable
+    : boost_ext::mpl::and3<
           boost::mpl::apply1< Pred, U const & >,
           boost::mpl::not_< sake::is_movable<U> >,
           boost::mpl::not_< boost_ext::mpl::any<
@@ -186,7 +202,27 @@ enable_cref
                   boost::is_same< U, boost::mpl::_1 >
               >
           > >
-      >::value, Result >
+      >
+{ };
+
+template< class Sequence, class Pred >
+template< class U, class Result >
+struct rv_sink_traits< Sequence, Pred >::
+cref_enabler
+    : boost::enable_if_c< cref_enable<U>::value, Result >
+{ };
+
+/*******************************************************************************
+ * struct rv_sink_traits0<
+ *     Pred = boost::mpl::always< boost::true_type >
+ * >
+ ******************************************************************************/
+
+template<
+    class Pred = boost::mpl::always< boost::true_type >
+>
+struct rv_sink_traits0
+    : sake::rv_sink_traits< boost::mpl::vector0<>, Pred >
 { };
 
 /*******************************************************************************
@@ -250,12 +286,12 @@ struct sink
     move() const
     { return sake::move(value); }
 
+    SAKE_NONCOPYABLE( sink )
+
     // implicit by design
     template< class U >
     sink(U const & value_,
-        typename boost::enable_if_c<
-            boost::is_same<T,U>::value
-        >::type* = 0)
+        typename boost::enable_if_c< boost::is_same<T,U>::value >::type* = 0)
         : value(const_cast< T& >(value_))
     { }
 };

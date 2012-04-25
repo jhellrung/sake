@@ -94,7 +94,7 @@ public:
     { return x(); }
     // const lvalues + non-movable rvalues
     template< class U >
-    typename rv_sink_traits_::template enable_cref<U,T>::type
+    typename rv_sink_traits_::template cref_enabler<U,T>::type
     operator()(U const & x) const
     { return static_cast<T>(x); }
 
@@ -170,8 +170,7 @@ construct(typename sake::rv_sink_traits1<T>::template
 { return x(); }
 
 template< class T, class U >
-inline typename sake::rv_sink_traits1<T>::template
-    enable_cref<U,T>::type
+inline typename sake::rv_sink_traits1<T>::template cref_enabler<U,T>::type
 construct(U const & x)
 { return sake::functional::construct<T>()(x); }
 

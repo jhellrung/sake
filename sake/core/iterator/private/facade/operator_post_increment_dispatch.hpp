@@ -97,22 +97,20 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
 
     private:
         template< class T >
-        struct enable_cond_operator_assign
+        struct operator_assign_enable
             : sake::has_operator_assign< Reference, void ( T ) >
         { };
         template< class T >
-        struct enable_operator_assign
+        struct operator_assign_enabler
             : boost::enable_if_c<
-                  enable_cond_operator_assign<T>::value,
-                  proxy const &
-              >
+                  operator_assign_enable<T>::value, proxy const & >
         { };
     public:
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
         template< class T >
-        typename enable_operator_assign<T>::type
+        typename operator_assign_enabler<T>::type
         operator=(T&& x) const
         { *m_i = sake::forward<T>(x); return *this; }
 
@@ -120,8 +118,7 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
 
     private:
         typedef sake::rv_sink_traits1<
-            value_type,
-            boost::mpl::quote1< enable_cond_operator_assign >
+            value_type, boost::mpl::quote1< operator_assign_enable >
         > operator_assign_rv_sink_traits;
         typedef typename operator_assign_rv_sink_traits::template
             default_< sake::rv_sink_visitors::operator_assign< proxy const > >
@@ -130,7 +127,7 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         // lvalues + movable explicit rvalues
         template< class T >
         typename operator_assign_rv_sink_traits::template
-            enable_ref< T, proxy const & >::type
+            ref_enabler< T, proxy const & >::type
         operator=(T& x) const
         { *m_i = x; return *this; }
         // value_type rvalues
@@ -144,7 +141,7 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         // const lvalues + non-movable rvalues
         template< class T >
         typename operator_assign_rv_sink_traits::template
-            enable_cref< T, proxy const & >::type
+            cref_enabler< T, proxy const & >::type
         operator=(T const & x) const
         { *m_i = x; return *this; }
 
