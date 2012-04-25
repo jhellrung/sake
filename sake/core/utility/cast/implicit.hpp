@@ -51,6 +51,7 @@ template< class U, class T >
 struct implicit_cast
 {
     typedef typename sake::remove_qualified_type_tag<T>::type type;
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< type >::value));
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
         typename boost_ext::remove_rvalue_reference<U>::type, type >::value));
 };
@@ -71,7 +72,7 @@ struct implicit_cast
 
     template< class U >
     typename boost::enable_if_c<
-        boost_ext::is_convertible<U,T>::type, T >::type
+        boost_ext::is_convertible<U,T>::value, T >::type
     operator()(U&& x) const
     { return static_cast<T>(sake::forward<U>(x)); }
 
@@ -84,7 +85,7 @@ private:
 public:
     // lvalues + movable explicit rvalues
     template< class U >
-    typename rv_sink_traits_::template enable_ref<U,T>::type
+    typename rv_sink_traits_::template ref_enabler<U,T>::type
     operator()(U& x) const
     { return static_cast<T>(x); }
     // T rvalues
@@ -95,7 +96,7 @@ public:
     { return x(); }
     // const lvalues + non-movable rvalues
     template< class U >
-    typename rv_sink_traits_::template enable_cref<U,T>::type
+    typename rv_sink_traits_::template cref_enabler<U,T>::type
     operator()(U const & x) const
     { return static_cast<T>(x); }
 
@@ -121,7 +122,7 @@ struct implicit_cast< void >
     // lvalues + movable explicit rvalues
     template< class U, class T >
     typename implicit_cast_private::rv_sink_traits<T>::template
-        enable_ref<U,T>::type
+        ref_enabler<U,T>::type
     operator()(U& x, sake::type_tag<T>) const
     { return static_cast<T>(x); }
     // T rvalues
@@ -140,7 +141,7 @@ struct implicit_cast< void >
     // const lvalues + non-movable rvalues
     template< class U, class T >
     typename implicit_cast_private::rv_sink_traits<T>::template
-        enable_cref<U,T>::type
+        cref_enabler<U,T>::type
     operator()(U const & x, sake::type_tag<T>) const
     { return static_cast<T>(x); }
 
@@ -168,13 +169,13 @@ implicit_cast(U&& x, sake::type_tag<T>)
 
 template< class T, class U >
 inline typename implicit_cast_private::rv_sink_traits<T>::template
-    enable_ref<U,T>::type
+    ref_enabler<U,T>::type
 implicit_cast(U& x)
 { return static_cast<T>(x); }
 
 template< class U, class T >
 inline typename implicit_cast_private::rv_sink_traits<T>::template
-    enable_ref<U,T>::type
+    ref_enabler<U,T>::type
 implicit_cast(U& x, sake::type_tag<T>)
 { return static_cast<T>(x); }
 
@@ -208,13 +209,13 @@ implicit_cast(
 
 template< class T, class U >
 inline typename implicit_cast_private::rv_sink_traits<T>::template
-    enable_cref<U,T>::type
+    cref_enabler<U,T>::type
 implicit_cast(U const & x)
 { return static_cast<T>(x); }
 
 template< class U, class T >
 inline typename implicit_cast_private::rv_sink_traits<T>::template
-    enable_cref<U,T>::type
+    cref_enabler<U,T>::type
 implicit_cast(U const & x, sake::type_tag<T>)
 { return static_cast<T>(x); }
 
@@ -228,10 +229,8 @@ namespace implicit_cast_private
 template< class T >
 struct rv_sink_traits
     : sake::rv_sink_traits1<
-          T,
-          typename boost_ext::mpl::curry_quote2<
-              boost_ext::is_convertible >::apply<T>::type
-      >
+          T, typename boost_ext::mpl::curry_quote2<
+              boost_ext::is_convertible >::apply<T>::type >
 { };
 
 } // namespace implicit_cast_private

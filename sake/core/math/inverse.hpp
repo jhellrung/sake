@@ -31,7 +31,7 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
+#include <sake/core/utility/emplacer/constructible.hpp>
 #include <sake/core/utility/emplacer/emplacer.hpp>
 #include <sake/core/utility/memberwise/swap.hpp>
 
@@ -65,8 +65,12 @@ struct inverse
 
 private:
     template< class U >
-    struct enable_cond_explicit_constructor
+    struct explicit_constructor_enable
         : boost_ext::is_convertible<U,T>
+    { };
+    template< class U >
+    struct explicit_contructor_enabler
+        : boost::enable_if_c< explicit_constructor_enable<U>::value >
     { };
 public:
 
@@ -74,9 +78,7 @@ public:
 
     template< class U >
     explicit inverse(U&& x,
-        typename boost::enable_if_c<
-            enable_cond_explicit_constructor<U>::value
-        >::type* = 0)
+        typename explicit_contructor_enabler<U>::type* = 0)
         : m_value(sake::forward<U>(x))
     { }
 
@@ -84,7 +86,7 @@ public:
 
 private:
     typedef sake::rv_sink_traits1<
-        T, boost::mpl::quote1< enable_cond_explicit_constructor >
+        T, boost::mpl::quote1< explicit_constructor_enable >
     > explicit_constructor_rv_sink_traits;
     typedef typename explicit_constructor_rv_sink_traits::template
         default_< sake::functional::construct<T> >
@@ -94,13 +96,13 @@ public:
     template< class U >
     explicit inverse(U& x,
         typename explicit_constructor_rv_sink_traits::template
-            enable_ref<U>::type* = 0)
+            ref_enabler<U>::type* = 0)
         : m_value(x)
     { }
     // T rvalues
     explicit inverse(
         typename explicit_constructor_rv_sink_traits::primary_type x)
-        : m_value(x)
+        : m_value(x.move())
     { }
     // movable implicit rvalues
     explicit inverse(explicit_constructor_rv_sink_default_type x)
@@ -110,7 +112,7 @@ public:
     template< class U >
     explicit inverse(U const & x,
         typename explicit_constructor_rv_sink_traits::template
-            enable_cref<U>::type* = 0)
+            cref_enabler<U>::type* = 0)
         : m_value(x)
     { }
 
@@ -118,7 +120,7 @@ public:
 
     template< class Signature >
     explicit inverse(sake::emplacer< Signature > e)
-        : m_value(sake::emplacer_construct<T>(e))
+        : m_value(sake::emplacer_constructible<T>(e))
     { }
 
     T const & value() const
