@@ -15,8 +15,9 @@
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 
+#include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
+#include <sake/core/utility/emplacer/constructible.hpp>
 #include <sake/core/utility/emplacer/emplacer.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 
@@ -54,35 +55,32 @@ private:
     typedef typename boost::remove_cv< T1 >::type nocv1_type;
 public:
 
-    storage(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
+    template< class V0, class V1 >
+    storage(sake::emplacer< V0 ( ) >, sake::emplacer< V1 ( ) >)
     { }
-    template< class Signature0 >
-    storage(sake::emplacer< Signature0 > e0, sake::emplacer< void ( ) >)
-        : m_x0(sake::emplacer_construct< nocv0_type >(e0))
+    template< class U0, class V1 >
+    storage(SAKE_FWD2_REF( U0 ) x0, sake::emplacer< V1 ( ) >)
+        : m_x0(sake::emplacer_constructible< nocv0_type >(x0))
     { }
-    template< class Signature1 >
-    storage(sake::emplacer< void ( ) >, sake::emplacer< Signature1 > e1)
-        : m_x1(sake::emplacer_construct< nocv1_type >(e1))
+    template< class V0, class U1 >
+    storage(sake::emplacer< V0 ( ) >, SAKE_FWD2_REF( U1 ) x1)
+        : m_x1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
-    template< class Signature0, class Signature1 >
-    storage(sake::emplacer< Signature0 > e0, sake::emplacer< Signature1 > e1)
-        : m_x0(sake::emplacer_construct< nocv0_type >(e0)),
-          m_x1(sake::emplacer_construct< nocv1_type >(e1))
+    template< class U0, class U1 >
+    storage(SAKE_FWD2_REF( U0 ) x0, SAKE_FWD2_REF( U1 ) x1)
+        : m_x0(sake::emplacer_constructible< nocv0_type >(x0)),
+          m_x1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
 
     typename boost_ext::add_reference< T0 >::type
-    first()
-    { return m_x0; }
+    first()       { return m_x0; }
     typename boost_ext::add_reference_add_const< T0 >::type
-    first() const
-    { return m_x0; }
+    first() const { return m_x0; }
 
     typename boost_ext::add_reference< T1 >::type
-    second()
-    { return m_x1; }
+    second()       { return m_x1; }
     typename boost_ext::add_reference_add_const< T1 >::type
-    second() const
-    { return m_x1; }
+    second() const { return m_x1; }
 
 private:
     T0 m_x0;
@@ -91,7 +89,7 @@ private:
 
 template< class T0, class T1, bool _ >
 struct storage< T0, T1, true, _ >
-    : private T0
+    : private boost::remove_cv< T0 >::type
 {
     SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
         typename storage,
@@ -108,38 +106,30 @@ private:
     typedef typename boost::remove_cv< T1 >::type nocv1_type;
 public:
 
-    storage(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
+    template< class V0, class V1 >
+    storage(sake::emplacer< V0 ( ) >, sake::emplacer< V1 ( ) >)
+    { }
+    template< class U0, class V1 >
+    storage(SAKE_FWD2_REF( U0 ) x0, sake::emplacer< V1 ( ) >)
+        : T0(sake::emplacer_constructible< nocv0_type >(x0))
+    { }
+    template< class V0, class U1 >
+    storage(sake::emplacer< V0 ( ) >, SAKE_FWD2_REF( U1 ) x1)
+        : m_x1(sake::emplacer_constructible< nocv1_type >(x1))
+    { }
+    template< class U0, class U1 >
+    storage(SAKE_FWD2_REF( U0 ) x0, SAKE_FWD2_REF( U1 ) x1)
+        : T0(sake::emplacer_constructible< nocv0_type >(x0)),
+          m_x1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
 
-    template< class Signature0 >
-    storage(sake::emplacer< Signature0 > e0, sake::emplacer< void ( ) >)
-        : T0(sake::emplacer_construct< nocv0_type >(e0))
-    { }
-
-    template< class Signature1 >
-    storage(sake::emplacer< void ( ) >, sake::emplacer< Signature1 > e1)
-        : m_x1(sake::emplacer_construct< nocv1_type >(e1))
-    { }
-
-    template< class Signature0, class Signature1 >
-    storage(sake::emplacer< Signature0 > e0, sake::emplacer< Signature1 > e1)
-        : T0(sake::emplacer_construct< nocv0_type >(e0)),
-          m_x1(sake::emplacer_construct< nocv1_type >(e1))
-    { }
-
-    T0&
-    first()
-    { return *this; }
-    T0 const &
-    first() const
-    { return *this; }
+    T0       & first()       { return *this; }
+    T0 const & first() const { return *this; }
 
     typename boost_ext::add_reference< T1 >::type
-    second()
-    { return m_x1; }
+    second()       { return m_x1; }
     typename boost_ext::add_reference_add_const< T1 >::type
-    second() const
-    { return m_x1; }
+    second() const { return m_x1; }
 
 private:
     T1 m_x1;
@@ -147,7 +137,7 @@ private:
 
 template< class T0, class T1 >
 struct storage< T0, T1, false, true >
-    : private T1
+    : private boost::remove_cv< T1 >::type
 {
     SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
         typename storage,
@@ -164,38 +154,30 @@ private:
     typedef typename boost::remove_cv< T1 >::type nocv1_type;
 public:
 
-    storage(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
+    template< class V0, class V1 >
+    storage(sake::emplacer< V0 ( ) >, sake::emplacer< V1 ( ) >)
     { }
-
-    template< class Signature0 >
-    storage(sake::emplacer< Signature0 > e0, sake::emplacer< void ( ) >)
-        : m_x0(sake::emplacer_construct< nocv0_type >(e0))
+    template< class U0, class V1 >
+    storage(SAKE_FWD2_REF( U0 ) x0, sake::emplacer< V1 ( ) >)
+        : m_x0(sake::emplacer_constructible< nocv0_type >(x0))
     { }
-
-    template< class Signature1 >
-    storage(sake::emplacer< void ( ) >, sake::emplacer< Signature1 > e1)
-        : T1(sake::emplacer_construct< nocv1_type >(e1))
+    template< class V0, class U1 >
+    storage(sake::emplacer< V0 ( ) >, SAKE_FWD2_REF( U1 ) x1)
+        : T1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
-
-    template< class Signature0, class Signature1 >
-    storage(sake::emplacer< Signature0 > e0, sake::emplacer< Signature1 > e1)
-        : T1(sake::emplacer_construct< nocv1_type >(e1)),
-          m_x0(sake::emplacer_construct< nocv0_type >(e0))
+    template< class U0, class U1 >
+    storage(SAKE_FWD2_REF( U0 ) x0, SAKE_FWD2_REF( U1 ) x1)
+        : T1(sake::emplacer_constructible< nocv1_type >(x1)),
+          m_x0(sake::emplacer_constructible< nocv0_type >(x0))
     { }
 
     typename boost_ext::add_reference< T0 >::type
-    first()
-    { return m_x0; }
+    first()       { return m_x0; }
     typename boost_ext::add_reference_add_const< T0 >::type
-    first() const
-    { return m_x0; }
+    first() const { return m_x0; }
 
-    T1&
-    second()
-    { return *this; }
-    T1 const &
-    second() const
-    { return *this; }
+    T1       & second()       { return *this; }
+    T1 const & second() const { return *this; }
 
 private:
     T0 m_x0;

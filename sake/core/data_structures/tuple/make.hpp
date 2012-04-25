@@ -68,7 +68,7 @@ make_tuple()
  && !defined( BOOST_NO_VARIADIC_TEMPLATES )
 
 template< class... T >
-typename sake::result_of::make_tuple< T... >::type
+inline typename sake::result_of::make_tuple< T... >::type
 make_tuple(T&&... x)
 { return typename sake::result_of::make_tuple< T... >::type(sake::forward<T>(x)...); }
 
@@ -93,15 +93,23 @@ make_tuple(T&&... x)
 
 #define N BOOST_PP_ITERATION()
 
-template< BOOST_PP_ENUM_PARAMS( N, class T ) >
+#define class_T0N BOOST_PP_ENUM_PARAMS( N, class T )
+#define T0N       BOOST_PP_ENUM_PARAMS( N, T )
+
+template< class_T0N >
 #if defined( BOOST_NO_VARIADIC_TEMPLATES ) && N == SAKE_TUPLE_MAX_SIZE
 struct make_tuple
 #else // #if defined( BOOST_NO_VARIADIC_TEMPLATES ) && N == SAKE_TUPLE_MAX_SIZE
-struct make_tuple< BOOST_PP_ENUM_PARAMS( N, T ) >
+struct make_tuple< T0N >
 #endif // #if defined( BOOST_NO_VARIADIC_TEMPLATES ) && N == SAKE_TUPLE_MAX_SIZE
 {
     typedef sake::tuple< BOOST_PP_ENUM( N,
         wrapped_parameter_to_reference_remove_qualifiers_Tn, ~ ) > type;
 };
+
+#undef class_T0N
+#undef T0N
+
+#undef N
 
 #endif // #ifndef BOOST_PP_IS_ITERATING

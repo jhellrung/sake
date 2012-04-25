@@ -11,6 +11,8 @@
 
 #include <cstddef>
 
+#include <boost/config.hpp>
+
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/emplacer/emplacer.hpp>
 
@@ -49,8 +51,10 @@ template< std::size_t J >
 struct package< J, J, false >
 {
     template< class T0, class T1 >
-    // Hack: const-qualified so it can bind to SAKE_FWD2_REF in C++03.
-    static sake::emplacer< void ( SAKE_FWD2_PARAM( T0 ), SAKE_FWD2_PARAM( T1 ) ) > const
+    static sake::emplacer< void ( SAKE_FWD2_PARAM( T0 ), SAKE_FWD2_PARAM( T1 ) ) >
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    const // Hack: const-qualified so it can bind to SAKE_FWD2_REF in C++03.
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
     apply(SAKE_FWD2_REF( T0 ) x0, SAKE_FWD2_REF( T1 ) x1)
     {
         typedef sake::emplacer< void ( SAKE_FWD2_PARAM( T0 ), SAKE_FWD2_PARAM( T1 ) ) > result_type;

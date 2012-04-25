@@ -44,16 +44,17 @@
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/propagate_const.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/data_structures/tuple/private/operator_assign_enable.hpp>
+#include <sake/core/data_structures/tuple/private/sequence_constructor_enable.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/base_member.hpp>
 #include <sake/core/utility/compressed_tuple/fwd.hpp>
 #include <sake/core/utility/compressed_tuple/private/storage.hpp>
-#include <sake/core/utility/emplacer/assign.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
-#include <sake/core/utility/private/is_compatible_sequence.hpp>
 
 namespace sake
 {
@@ -81,18 +82,30 @@ struct compressed_tuple<>
         BOOST_PP_SEQ_NIL
     )
 
+private:
     template< class Sequence >
-    explicit compressed_tuple(Sequence const &,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            compressed_tuple, Sequence const & >::value >::type* = 0)
+    struct sequence_constructor_enabler
+        : sake::tuple_private::sequence_constructor_enabler<
+              compressed_tuple, Sequence >
+    { };
+public:
+    template< class Sequence >
+    compressed_tuple(Sequence const &,
+        typename sequence_constructor_enabler< Sequence const & >::type* = 0)
     { }
 
+    //compressed_tuple& operator=(const compressed_tuple & other)
+
+private:
     template< class Sequence >
-    typename boost::enable_if_c<
-        utility_private::is_compatible_sequence<
-            compressed_tuple, Sequence const & >::value,
-        compressed_tuple&
-    >::type
+    struct operator_assign_enabler
+        : sake::tuple_private::operator_assign_enabler<
+              compressed_tuple, Sequence >
+    { };
+public:
+    template< class Sequence >
+    typename operator_assign_enabler< Sequence const & >::type
+        // -> compressed_tuple&
     operator=(Sequence const &)
     { return *this; }
 };
@@ -107,8 +120,8 @@ struct compressed_tuple<>
     at_c<n>() = boost_ext::fusion::at_c<n>(sake::forward< Sequence >(s));
 #define fwd_ref_Un_xn( z, n, data ) \
     SAKE_FWD_REF( U ## n ) x ## n
-#define emplacer_assign_at_c_n_forward_Un_xn(z, n, data ) \
-    emplacer_assign(at_c<n>(), sake::forward< U ## n >(x ## n));
+#define at_c_n_assign_forward_Un_xn(z, n, data ) \
+    at_c<n>() = sake::forward< U ## n >(x ## n);
 
 #define BOOST_PP_ITERATION_LIMITS ( 1, SAKE_COMPRESSED_TUPLE_MAX_SIZE )
 #define BOOST_PP_FILENAME_1       <sake/core/utility/compressed_tuple/compressed_tuple.hpp>
@@ -117,7 +130,7 @@ struct compressed_tuple<>
 #undef at_c_n_data
 #undef at_c_n_assign_at_c_n_forward_Sequence_s
 #undef fwd_ref_Un_xn
-#undef emplacer_assign_at_c_n_forward_Un_xn
+#undef at_c_n_assign_forward_Un_xn
 
 } // namespace compressed_tuple_adl
 
@@ -230,12 +243,19 @@ public:
 
 #endif // #if N == 1
 
+private:
+    template< class Sequence >
+    struct sequence_constructor_enabler
+        : sake::tuple_private::sequence_constructor_enabler<
+              compressed_tuple, Sequence >
+    { };
+public:
+
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class Sequence >
     compressed_tuple(Sequence&& s,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            compressed_tuple, Sequence >::value >::type* = 0)
+        typename sequence_constructor_enabler< Sequence >::type* = 0)
 #if N == 1
         : base_member_(boost_ext::fusion::front(sake::forward< Sequence >(s)))
 #else // #if N == 1
@@ -247,8 +267,9 @@ public:
 
     template< class Sequence >
     compressed_tuple(Sequence& s,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            compressed_tuple, Sequence& >::value >::type* = 0)
+        typename sequence_constructor_enabler<
+            typename boost_ext::remove_rvalue_reference< Sequence& >::type
+        >::type* = 0)
 #if N == 1
         : base_member_(boost_ext::fusion::front(s))
 #else // #if N == 1
@@ -258,8 +279,7 @@ public:
 
     template< class Sequence >
     compressed_tuple(Sequence const & s,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            compressed_tuple, Sequence const & >::value >::type* = 0)
+        typename sequence_constructor_enabler< Sequence const & >::type* = 0)
 #if N == 1
         : base_member_(boost_ext::fusion::front(s))
 #else // #if N == 1
@@ -269,12 +289,17 @@ public:
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
+private:
     template< class Sequence >
-    typename boost::enable_if_c<
-        utility_private::is_compatible_sequence<
-            compressed_tuple, SAKE_FWD_PARAM( Sequence ) >::value,
-        compressed_tuple&
-    >::type
+    struct operator_assign_enabler
+        : sake::tuple_private::operator_assign_enabler<
+              compressed_tuple, Sequence >
+    { };
+public:
+
+    template< class Sequence >
+    typename operator_assign_enabler< SAKE_FWD_PARAM( Sequence ) >::type
+        // -> compressed_tuple&
     operator=(SAKE_FWD_REF( Sequence ) s)
     {
 #if N == 1
@@ -287,13 +312,11 @@ public:
 
     template< class_U0N >
     void assign( BOOST_PP_ENUM( N, fwd_ref_Un_xn, ~ ) )
-    {
 #if N == 1
-        sake::emplacer_assign(this->member(), sake::forward< U0 >(x0));
+    { this->member() = sake::forward< U0 >(x0); }
 #else // #if N == 1
-        BOOST_PP_REPEAT( N, emplacer_assign_at_c_n_forward_Un_xn, ~ )
+    { BOOST_PP_REPEAT( N, at_c_n_assign_forward_Un_xn, ~ ) }
 #endif // #if N == 1
-    }
 
     struct result_of
     {
@@ -315,10 +338,7 @@ public:
     typename result_of::template at_c< compressed_tuple, I >::type
     at_c()
 #if N == 1
-    {
-        BOOST_STATIC_ASSERT((I == 0));
-        return this->member();
-    }
+    { BOOST_STATIC_ASSERT((I == 0)); return this->member(); }
 #else // #if N == 1
     { return m_storage.template at_c<I>(); }
 #endif // #if N == 1
@@ -326,10 +346,7 @@ public:
     typename result_of::template at_c< compressed_tuple const, I >::type
     at_c() const
 #if N == 1
-    {
-        BOOST_STATIC_ASSERT((I == 0));
-        return this->member();
-    }
+    { BOOST_STATIC_ASSERT((I == 0)); return this->member(); }
 #else // #if N == 1
     { return m_storage.template at_c<I>(); }
 #endif // #if N == 1

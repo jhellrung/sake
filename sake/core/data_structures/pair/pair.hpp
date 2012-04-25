@@ -22,19 +22,19 @@
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/fusion/adapted/pair.hpp>
-#include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
 
 #include <sake/core/data_structures/pair/fwd.hpp>
-#include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/emplacer/assign.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
-#include <sake/core/utility/emplacer/fwd.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
-#include <sake/core/utility/private/is_compatible_sequence.hpp>
+
+#define SAKE_PAIR_INCLUDE_HEADERS
+#include <sake/core/data_structures/pair/private/value_constructor.ipp>
+#include <sake/core/data_structures/pair/private/sequence_constructor.ipp>
+#include <sake/core/data_structures/pair/private/operator_assign.ipp>
+#include <sake/core/data_structures/pair/private/assign.ipp>
+#undef SAKE_PAIR_INCLUDE_HEADERS
 
 namespace sake
 {
@@ -67,123 +67,35 @@ struct pair
         (( T0 )( first )) (( T1 )( second ))
     )
 
-    pair(sake::emplacer< void ( ) >, sake::emplacer< void ( ) >)
-    { }
-
 private:
     typedef typename boost::remove_cv< T0 >::type nocv0_type;
     typedef typename boost::remove_cv< T1 >::type nocv1_type;
 public:
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-
-    template< class U0 >
-    pair(U0&& x0, sake::emplacer< void ( ) >)
-        : first (sake::emplacer_construct< nocv0_type >(sake::forward< U0 >(x0)))
-    { }
-
-    template< class U1 >
-    pair(sake::emplacer< void ( ) >, U1&& x1)
-        : second(sake::emplacer_construct< nocv1_type >(sake::forward< U1 >(x1)))
-    { }
-
+#if 0 // for exposition purposes only
     template< class U0, class U1 >
-    pair(U0&& x0, U1&& x1)
-        : first (sake::emplacer_construct< nocv0_type >(sake::forward< U0 >(x0))),
-          second(sake::emplacer_construct< nocv1_type >(sake::forward< U1 >(x1)))
-    { }
+    pair(U0&& x0, U1&& x1,
+        typename value_constructor_enabler< U0, U1 >::type* = 0);
 
     template< class Sequence >
     pair(Sequence&& s,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            pair, Sequence >::value >::type* = 0)
-        : first (boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s))),
-          second(boost_ext::fusion::at_c<1>(sake::forward< Sequence >(s)))
-    { }
-
-#else // #ifndef BOOST_NO_RVALUE_REFERENCES
-
-    template< class U0 >
-    pair(U0& x0, sake::emplacer< void ( ) >)
-        : first (sake::emplacer_construct< nocv0_type >(x0))
-    { }
-
-    template< class U0 >
-    pair(U0 const & x0, sake::emplacer< void ( ) >)
-        : first (sake::emplacer_construct< nocv0_type >(x0))
-    { }
-
-    template< class U1 >
-    pair(sake::emplacer< void ( ) >, U1& x1)
-        : second(sake::emplacer_construct< nocv1_type >(x1))
-    { }
-
-    template< class U1 >
-    pair(sake::emplacer< void ( ) >, U1 const & x1)
-        : second(sake::emplacer_construct< nocv1_type >(x1))
-    { }
-
-    template< class U0, class U1 >
-    pair(U0& x0, U1& x1)
-        : first (sake::emplacer_construct< nocv0_type >(x0)),
-          second(sake::emplacer_construct< nocv1_type >(x1))
-    { }
-
-    template< class U0, class U1 >
-    pair(U0& x0, U1 const & x1)
-        : first (sake::emplacer_construct< nocv0_type >(x0)),
-          second(sake::emplacer_construct< nocv1_type >(x1))
-    { }
-
-    template< class U0, class U1 >
-    pair(U0 const & x0, U1& x1)
-        : first (sake::emplacer_construct< nocv0_type >(x0)),
-          second(sake::emplacer_construct< nocv1_type >(x1))
-    { }
-
-    template< class U0, class U1 >
-    pair(U0 const & x0, U1 const & x1)
-        : first (sake::emplacer_construct< nocv0_type >(x0)),
-          second(sake::emplacer_construct< nocv1_type >(x1))
-    { }
+        typename sequence_constructor_enabler< Sequence >::type* = 0);
 
     template< class Sequence >
-    pair(Sequence& s,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            pair, Sequence& >::value >::type* = 0)
-        : first (boost_ext::fusion::at_c<0>(s)),
-          second(boost_ext::fusion::at_c<1>(s))
-    { }
-
-    template< class Sequence >
-    pair(Sequence const & s,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            pair, Sequence const & >::value >::type* = 0)
-        : first (boost_ext::fusion::at_c<0>(s)),
-          second(boost_ext::fusion::at_c<1>(s))
-    { }
-
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+    typename operator_assign_enabler< Sequence >::type // -> pair&
+    operator=(Sequence&& s);
 
     template< class U0, class U1 >
-    void assign(SAKE_FWD_REF( U0 ) x0, SAKE_FWD_REF( U1 ) x1)
-    {
-        sake::emplacer_assign(first,  sake::forward< U0 >(x0));
-        sake::emplacer_assign(second, sake::forward< U1 >(x1));
-    }
+    typename assign_enabler< U0, U1 >::type // -> void
+    assign(U0&& x0, U1&& x1);
+#endif
+#define SAKE_PAIR_DEFINE_MEMBERS
+#include <sake/core/data_structures/pair/private/value_constructor.ipp>
+#include <sake/core/data_structures/pair/private/sequence_constructor.ipp>
+#include <sake/core/data_structures/pair/private/operator_assign.ipp>
+#include <sake/core/data_structures/pair/private/assign.ipp>
+#undef SAKE_PAIR_DEFINE_MEMBERS
 
-    template< class Sequence >
-    typename boost::enable_if_c<
-        utility_private::is_compatible_sequence<
-            pair, SAKE_FWD_PARAM( Sequence ) >::value,
-        pair&
-    >::type
-    operator=(SAKE_FWD_REF( Sequence ) s)
-    {
-        first  = boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s));
-        second = boost_ext::fusion::at_c<1>(sake::forward< Sequence >(s));
-        return *this;
-    }
 };
 
 } // namespace pair_adl

@@ -66,7 +66,10 @@ namespace private_
 
 template<
     class Sequence,
-    bool = boost_ext::mpl::any< Sequence, boost::mpl::quote1< boost::is_empty > >::value
+    bool = boost_ext::mpl::any<
+               Sequence,
+               boost::mpl::quote1< boost::is_empty >
+           >::value
 >
 struct storage;
 

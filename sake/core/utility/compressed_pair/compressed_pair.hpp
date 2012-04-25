@@ -22,26 +22,22 @@
 #include <cstddef>
 
 #include <boost/config.hpp>
-#include <boost/functional/hash.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/mpl/vector/vector10.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/fusion/adapted/compressed_pair.hpp>
 #include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/data_structures/tuple/private/operator_assign_enable.hpp>
+#include <sake/core/data_structures/tuple/private/sequence_constructor_enable.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/compressed_pair/fwd.hpp>
 #include <sake/core/utility/compressed_pair/private/storage.hpp>
-#include <sake/core/utility/emplacer/assign.hpp>
-#include <sake/core/utility/emplacer/make.hpp>
-#include <sake/core/utility/emplacer/wrap.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
-#include <sake/core/utility/private/is_compatible_sequence.hpp>
-#include <sake/core/utility/swap.hpp>
 
 namespace sake
 {
@@ -74,103 +70,98 @@ public:
         (( m_storage_type )( m_storage ))
     )
 
+private:
+    template< class Sequence >
+    struct sequence_constructor_enabler
+        : sake::tuple_private::sequence_constructor_enabler<
+              compressed_pair, Sequence >
+    { };
+public:
+
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U0, class U1 >
     compressed_pair(U0&& x0, U1&& x1)
-        : m_storage(
-              sake::emplacer_wrap(sake::forward< U0 >(x0)),
-              sake::emplacer_wrap(sake::forward< U1 >(x1))
-          )
+        : m_storage(sake::forward< U0 >(x0), sake::forward< U1 >(x1))
     { }
 
     template< class Sequence >
     compressed_pair(Sequence&& s,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            compressed_pair, Sequence >::value >::type* = 0)
-        : m_storage(
-              sake::make_emplacer(boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s))),
-              sake::make_emplacer(boost_ext::fusion::at_c<1>(sake::forward< Sequence >(s)))
-          )
+        typename sequence_constructor_enabler< Sequence >::type* = 0)
+        : m_storage(boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s)),
+                    boost_ext::fusion::at_c<1>(sake::forward< Sequence >(s)))
     { }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U0, class U1 >
     compressed_pair(U0& x0, U1& x1)
-        : m_storage(sake::emplacer_wrap(x0), sake::emplacer_wrap(x1))
+        : m_storage(x0, x1)
     { }
-
     template< class U0, class U1 >
     compressed_pair(U0& x0, U1 const & x1)
-        : m_storage(sake::emplacer_wrap(x0), sake::emplacer_wrap(x1))
+        : m_storage(x0, x1)
     { }
-
     template< class U0, class U1 >
     compressed_pair(U0 const & x0, U1& x1)
-        : m_storage(sake::emplacer_wrap(x0), sake::emplacer_wrap(x1))
+        : m_storage(x0, x1)
     { }
-
     template< class U0, class U1 >
     compressed_pair(U0 const & x0, U1 const & x1)
-        : m_storage(sake::emplacer_wrap(x0), sake::emplacer_wrap(x1))
+        : m_storage(x0, x1)
     { }
 
     template< class Sequence >
     compressed_pair(Sequence& s,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            compressed_pair, Sequence& >::value >::type* = 0)
-        : m_storage(
-              sake::make_emplacer(boost_ext::fusion::at_c<0>(s)),
-              sake::make_emplacer(boost_ext::fusion::at_c<1>(s))
-          )
+        typename sequence_constructor_enabler<
+            typename boost_ext::remove_rvalue_reference< Sequence& >::type
+        >::type* = 0)
+        : m_storage(boost_ext::fusion::at_c<0>(s),
+                    boost_ext::fusion::at_c<1>(s))
     { }
 
     template< class Sequence >
     compressed_pair(Sequence const & s,
-        typename boost::enable_if_c< utility_private::is_compatible_sequence<
-            compressed_pair, Sequence const & >::value >::type* = 0)
-        : m_storage(
-              sake::make_emplacer(boost_ext::fusion::at_c<0>(s)),
-              sake::make_emplacer(boost_ext::fusion::at_c<1>(s))
-          )
+        typename sequence_constructor_enabler< Sequence const & >::type* = 0)
+        : m_storage(boost_ext::fusion::at_c<0>(s),
+                    boost_ext::fusion::at_c<1>(s))
     { }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-    template< class U0, class U1 >
-    void assign(SAKE_FWD_REF( U0 ) x0, SAKE_FWD_REF( U1 ) x1)
-    {
-        sake::emplacer_assign(first(),  sake::forward< U0 >(x0));
-        sake::emplacer_assign(second(), sake::forward< U1 >(x1));
-    }
-
+private:
     template< class Sequence >
-    typename boost::enable_if_c<
-        utility_private::is_compatible_sequence<
-            compressed_pair, SAKE_FWD_PARAM( Sequence ) >::value,
-        compressed_pair&
-    >::type
+    struct operator_assign_enabler
+        : sake::tuple_private::operator_assign_enabler<
+              compressed_pair, Sequence >
+    { };
+public:
+    template< class Sequence >
+    typename operator_assign_enabler< SAKE_FWD_PARAM( Sequence ) >::type
+        // -> compressed_pair&
     operator=(SAKE_FWD_REF( Sequence ) s)
     {
-        first()  = boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s));
+        first() = boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s));
         second() = boost_ext::fusion::at_c<1>(sake::forward< Sequence >(s));
         return *this;
     }
 
+    template< class U0, class U1 >
+    void assign(SAKE_FWD_REF( U0 ) x0, SAKE_FWD_REF( U1 ) x1)
+    {
+        first() = sake::forward< U0 >(x0);
+        second() = sake::forward< U1 >(x1);
+    }
+
     typename boost_ext::add_reference< T0 >::type
-    first()
-    { return m_storage.first(); }
+    first()       { return m_storage.first(); }
     typename boost_ext::add_reference_add_const< T0 >::type
-    first() const
-    { return m_storage.first(); }
+    first() const { return m_storage.first(); }
 
     typename boost_ext::add_reference< T1 >::type
-    second()
-    { return m_storage.second(); }
+    second()       { return m_storage.second(); }
     typename boost_ext::add_reference_add_const< T1 >::type
-    second() const
-    { return m_storage.second(); }
+    second() const { return m_storage.second(); }
 
 private:
     m_storage_type m_storage;
