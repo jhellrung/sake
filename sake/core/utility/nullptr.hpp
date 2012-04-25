@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/utility/nullptr.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -71,8 +71,11 @@ struct nullptr_t
     // Must be public in order for nullptr_t to be POD.
     void* _sake_nullptr_sizeof;
 
-private:
-    void operator&() const;
+#ifndef BOOST_NO_DELETED_FUNCTIONS
+    void operator&() const = delete;
+#else // #ifndef BOOST_NO_DELETED_FUNCTIONS
+    private: void operator&() const;
+#endif // #ifndef BOOST_NO_DELETED_FUNCTIONS
 };
 
 BOOST_STATIC_ASSERT( sizeof( sake::nullptr_t ) == sizeof( void* ) );
