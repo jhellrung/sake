@@ -20,18 +20,28 @@ struct special_mem_fun_stats
     unsigned int n_other_constructor;
     unsigned int n_copy_constructor;
     unsigned int n_move_constructor;
-    unsigned int n_destructor;
     unsigned int n_copy_assign;
     unsigned int n_move_assign;
+    unsigned int n_destructor;
 
     special_mem_fun_stats()
         : n_other_constructor(0),
           n_copy_constructor(0),
           n_move_constructor(0),
-          n_destructor(0),
           n_copy_assign(0),
-          n_move_assign(0)
+          n_move_assign(0),
+          n_destructor(0)
     { }
+
+    void reset()
+    {
+        n_other_constructor = 0;
+        n_copy_constructor = 0;
+        n_move_constructor = 0;
+        n_copy_assign = 0;
+        n_move_assign = 0;
+        n_destructor = 0;
+    };
 };
 
 } // namespace models
