@@ -33,6 +33,7 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/filter_view.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/not.hpp>
@@ -49,6 +50,7 @@
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/any.hpp>
 #include <sake/boost_ext/mpl/curry_quote.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/mpl/result_type.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
@@ -119,17 +121,21 @@ public:
     struct cref_enabler;
 };
 
+/*******************************************************************************
+ * rv_sink_traits member definitions
+ ******************************************************************************/
+
 template< class Sequence, class Pred >
 template< class U >
 struct rv_sink_traits< Sequence, Pred >::
 default_constructor_enabler
     : boost::enable_if_c< boost_ext::mpl::and3<
-          boost::mpl::apply1< Pred, U >,
           sake::is_movable<U>,
           boost::mpl::not_< boost_ext::mpl::any<
               Sequence,
               typename boost_ext::mpl::curry_quote2< boost::is_same >::apply<U>::type
-          > >
+          > >,
+          boost::mpl::apply1< Pred, U >
       >::value >
 { };
 
@@ -192,16 +198,18 @@ template< class Sequence, class Pred >
 template< class U >
 struct rv_sink_traits< Sequence, Pred >::
 cref_enable
-    : boost_ext::mpl::and3<
-          boost::mpl::apply1< Pred, U const & >,
-          boost::mpl::not_< sake::is_movable<U> >,
-          boost::mpl::not_< boost_ext::mpl::any<
-              Sequence,
-              boost_ext::mpl::and2<
-                  sake::is_movable< boost::mpl::_1 >,
-                  boost::is_same< U, boost::mpl::_1 >
+    : boost_ext::mpl::and2<
+          boost::mpl::not_< boost_ext::mpl::or3<
+              boost_ext::is_rvalue_reference< U const & >,
+              sake::is_movable<U>,
+              boost_ext::mpl::any<
+                  boost::mpl::filter_view<
+                      Sequence, boost::mpl::quote1< sake::is_movable > >,
+                  typename boost_ext::mpl::curry_quote2<
+                      boost::is_same >::apply<U>::type
               >
-          > >
+          > >,
+          boost::mpl::apply1< Pred, U const & >
       >
 { };
 
