@@ -278,6 +278,7 @@ struct has_nullary< T const, Result, ResultPred, LiteralResult, true >
 template< class T >
 struct fallback : T
 {
+    typedef fallback type;
     // A compiler error here concerning inaccessible overloads or private member
     // indicates that a member function overload of the given name is private.
     // In this case, the only resolution is to explicitly extend the trait for
@@ -295,8 +296,17 @@ struct fallback : T
 #endif // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
 };
 
-template< class T > struct fallback< T const > : fallback<T> { };
-template< class T > struct fallback< T& > : fallback<T> { };
+template< class T >
+struct fallback< T const >
+{ typedef fallback<T> const type; };
+template< class T >
+struct fallback< T& >
+{
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_rvalue_reference< T& >::value));
+#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
+    typedef typename fallback<T>::type & type;
+};
 
 template< class T, class Signature >
 class has_void_result;
@@ -330,7 +340,7 @@ struct dispatch< T, void ( T0, T... ), ResultPred, false >
 template< class T, class T0, class... T >
 class has_void_result< T, void ( T0, T... ) >
 {
-    typedef typename ::sake::boost_ext::propagate_qualifiers< T, fallback<T> >::type fallback_;
+    typedef typename fallback<T>::type fallback_;
 public:
     static bool const value = SAKE_EXPR_IS_VOID(
         ::sake::declval< fallback_ >().
@@ -343,7 +353,7 @@ public:
 template< class T, class Result, class T0, class... T, class ResultPred >
 class non_void_result_helper< T, Result ( T0, T... ), ResultPred >
 {
-    typedef typename ::sake::boost_ext::propagate_qualifiers< T, fallback<T> >::type fallback_;
+    typedef typename fallback<T>::type fallback_;
 public:
     static bool const value =
        !SAKE_EXPR_IS_CONVERTIBLE(
@@ -434,7 +444,7 @@ struct dispatch< T, void ( T0N ), ResultPred, false >
 template< class T, class_T0N >
 class has_void_result< T, void ( T0N ) >
 {
-    typedef typename ::sake::boost_ext::propagate_qualifiers< T, fallback<T> >::type fallback_;
+    typedef typename fallback<T>::type fallback_;
 public:
     static bool const value = SAKE_EXPR_IS_VOID( fallback_member_T0N );
     typedef has_void_result type;
@@ -443,7 +453,7 @@ public:
 template< class T, class Result, class_T0N, class ResultPred >
 class non_void_result_helper< T, Result ( T0N ), ResultPred >
 {
-    typedef typename ::sake::boost_ext::propagate_qualifiers< T, fallback<T> >::type fallback_;
+    typedef typename fallback<T>::type fallback_;
 public:
     static bool const value =
        !SAKE_EXPR_IS_CONVERTIBLE( fallback_member_T0N, ::sake::introspection_private::dummy )
