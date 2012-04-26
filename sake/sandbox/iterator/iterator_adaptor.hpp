@@ -54,12 +54,12 @@
 // #include <sake/core/iterator/iterator_core_access.hpp>
 // #include <sake/core/iterator/iterator_facade.hpp>
 #include <sake/core/iterator/private/adaptor_traits.hpp>
-// #include <sake/core/math/compare.hpp>
+// #include <sake/core/math/cmp.hpp>
 // #include <sake/core/math/sign_t.hpp>
 // #include <sake/core/utility/assignable.hpp>
-// #include <sake/core/utility/autogen_default_ctor.hpp>
+// #include <sake/core/utility/autogen_default_constructor.hpp>
 // #include <sake/core/utility/call_traits.hpp>
-#include <sake/core/utility/compressed_pair.hpp>
+#include <sake/core/utility/compressed_pair/compressed_pair.hpp>
 #include <sake/core/utility/default_tag.hpp>
 // #include <sake/core/utility/default_constructible.hpp>
 // #include <sake/core/utility/emplacer.hpp>
@@ -161,16 +161,18 @@ protected:
 #define SAKE_OVERLOAD_PARAM_SPEC_SEQ \
     (( cref_tag, BaseConstruct, base_construct )) \
     (( perfect_tag, BOOST_PP_SEQ_NIL, member_construct ))
-#define SAKE_OVERLOAD_CTOR_NAME iterator_adaptor
-#define SAKE_OVERLOAD_CTOR_INIT_LIST( n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_CONSTRUCTOR_NAME iterator_adaptor
+#define SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST( r, \
+    n, T_tuple, x_tuple, forward_x_tuple ) \
     m_base_and_member(base_construct, typed_emplacer_wrap< member_type >(member_construct))
 #include SAKE_OVERLOAD_GENERATE()
 #define SAKE_OVERLOAD_PARAM_SPEC_SEQ \
     (( cref_tag, BaseConstruct, base_construct )) \
     (( perfect_tag, BOOST_PP_SEQ_NIL, member_construct )) \
     (( cref_tag, ChainedBaseConstruct, chained_base_construct ))
-#define SAKE_OVERLOAD_CTOR_NAME iterator_adaptor
-#define SAKE_OVERLOAD_CTOR_INIT_LIST( n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_CONSTRUCTOR_NAME iterator_adaptor
+#define SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST( r, \
+    n, T_tuple, x_tuple, forward_x_tuple ) \
     iterator_facade_(chained_base_construct), \
     m_base_and_member(base_construct, typed_emplacer_wrap< member_type >(member_construct))
 #include SAKE_OVERLOAD_GENERATE()
@@ -233,7 +235,7 @@ protected:
     template< class T >
     difference_type difference_impl(const T& other) const { return base() - other.base(); }
     template< class T >
-    sake::sign_t compare_impl(const T& other) const { return adl::compare(base(), other.base()); }
+    sake::sign_t cmp_impl(const T& other) const { return sake::cmp(base(), other.base()); }
     template< class T >
     bool less_impl(const T& other) const { return base() < other.base(); }
     template< class T >
