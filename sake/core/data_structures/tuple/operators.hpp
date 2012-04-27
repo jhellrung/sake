@@ -5,13 +5,13 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct operators::result_of::extension::equal0< ... >
- * struct operators::result_of::extension::not_equal0< ... >
- * struct operators::result_of::extension::less0< ... >
- * struct operators::result_of::extension::greater0< ... >
- * struct operators::result_of::extension::less_equal0< ... >
- * struct operators::result_of::extension::greater_equal0< ... >
- * struct result_of::extension::cmp0< ... >
+ * struct operators::result_of::extension::equal< ... >
+ * struct operators::result_of::extension::not_equal< ... >
+ * struct operators::result_of::extension::less< ... >
+ * struct operators::result_of::extension::greater< ... >
+ * struct operators::result_of::extension::less_equal< ... >
+ * struct operators::result_of::extension::greater_equal< ... >
+ * struct result_of::extension::cmp< ... >
  *
  * operator==(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
  * operator!=(tuple< T0, ... > const & x, tuple< U0, ... > const & y) -> ...
@@ -33,17 +33,9 @@
 #include <sake/boost_ext/fusion/algorithm/query/not_equal.hpp>
 
 #include <sake/core/data_structures/tuple/fwd.hpp>
-#include <sake/core/functional/operators/equal.hpp>
-#include <sake/core/functional/operators/greater.hpp>
-#include <sake/core/functional/operators/greater_equal.hpp>
-#include <sake/core/functional/operators/less.hpp>
-#include <sake/core/functional/operators/less_equal.hpp>
-#include <sake/core/functional/operators/not_equal.hpp>
+#include <sake/core/functional/operators/relational.hpp>
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/zero.hpp>
-
-namespace sake
-{
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 #define class_T0N class... T
@@ -57,61 +49,131 @@ namespace sake
 #define U0N       BOOST_PP_ENUM_PARAMS( SAKE_TUPLE_MAX_SIZE, U )
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
+namespace sake
+{
+
+namespace tuple_adl
+{
+
+namespace operators
+{
+
+namespace result_of
+{
+
+#define define_operator( name ) \
+template< class T, class U > struct name; \
+template< class_T0N, class_U0N > \
+struct name< sake::tuple< T0N >, sake::tuple< U0N > > \
+    : boost_ext::fusion::result_of::name< \
+          sake::tuple< T0N >, \
+          sake::tuple< U0N > \
+      > \
+{ };
+
+define_operator( equal )
+define_operator( not_equal )
+
+#undef define_operator
+
+#define define_operator( name ) \
+template< class T, class U > struct name; \
+template< class_T0N, class_U0N > \
+struct name< sake::tuple< T0N >, sake::tuple< U0N > > \
+    : boost_ext::fusion::result_of::name< \
+          typename sake::result_of::cmp< \
+              sake::tuple< T0N >, \
+              sake::tuple< U0N > \
+          >::type, \
+          sake::zero_t \
+      > \
+{ };
+
+define_operator( less )
+define_operator( greater )
+define_operator( less_equal )
+define_operator( greater_equal )
+
+#undef define_operator
+
+} // namespace result_of
+
+} // namespace operators
+
+#define define_operator( op, name ) \
+template< class_T0N, class_U0N > \
+inline typename sake::tuple_adl::operators::result_of::name< \
+    sake::tuple< T0N >, \
+    sake::tuple< U0N > \
+>::type \
+operator op (sake::tuple< T0N > const & x, sake::tuple< U0N > const & y) \
+{ return boost_ext::fusion::name(x, y); }
+
+define_operator( equal )
+define_operator( not_equal )
+
+#undef define_operator
+
+#define define_operator( op, name ) \
+template< class_T0N, class_U0N > \
+inline typename sake::tuple_adl::operators::result_of::less< \
+    sake::tuple< T0N >, \
+    sake::tuple< U0N > \
+>::type \
+operator op (sake::tuple< T0N > const & x, sake::tuple< U0N > const & y) \
+{ return sake::cmp(x,y) op sake::zero; }
+
+define_operator( less )
+define_operator( greater )
+define_operator( less_equal )
+define_operator( greater_equal )
+
+#undef define_operator
+
+namespace result_of
+{
+
+template< class_T0N, class_U0N >
+struct cmp< sake::tuple< T0N >, sake::tuple< U0N > >
+    : boost_ext::fusion::result_of::cmp<
+          sake::tuple< T0N >,
+          sake::tuple< U0N >
+      >
+{ };
+
+} // namespace result_of
+
+template< class_T0N, class_U0N >
+inline typename sake::tuple_adl::result_of::cmp<
+    sake::tuple< T0N >,
+    sake::tuple< U0N >
+>::type
+cmp(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
+{ return boost_ext::fusion::cmp(x, y); }
+
+} // namespace tuple_adl
+
 namespace operators {
 namespace result_of {
 namespace extension {
 
-template< class_T0N, class_U0N >
-struct equal0< sake::tuple< T0N >, sake::tuple< U0N > >
-    : boost_ext::fusion::result_of::equal<
-          sake::tuple< T0N >, sake::tuple< U0N > >
+#define define_operator( name ) \
+template< class_T0N, class_U0N > \
+struct equal< sake::tuple< T0N >, sake::tuple< U0N >, void > \
+    : sake::tuple_adl::operators::result_of::name< \
+          sake::tuple< T0N >, \
+          sake::tuple< U0N > \
+      > \
 { };
 
-template< class_T0N, class_U0N >
-struct not_equal0< sake::tuple< T0N >, sake::tuple< U0N > >
-    : boost_ext::fusion::result_of::not_equal<
-          sake::tuple< T0N >, sake::tuple< U0N > >
-{ };
+define_operator( equal )
+define_operator( not_equal )
+define_operator( less )
+define_operator( greater )
+define_operator( less_equal )
+define_operator( greater_equal )
 
-template< class_T0N, class_U0N >
-struct less0< sake::tuple< T0N >, sake::tuple< U0N > >
-    : sake::operators::result_of::less<
-          typename sake::result_of::cmp<
-              sake::tuple< T0N >, sake::tuple< U0N >
-          >::type,
-          sake::zero_t
-      >
-{ };
-
-template< class_T0N, class_U0N >
-struct greater0< sake::tuple< T0N >, sake::tuple< U0N > >
-    : sake::operators::result_of::greater<
-          typename sake::result_of::cmp<
-              sake::tuple< T0N >, sake::tuple< U0N >
-          >::type,
-          sake::zero_t
-      >
-{ };
-
-template< class_T0N, class_U0N >
-struct less_equal0< sake::tuple< T0N >, sake::tuple< U0N > >
-    : sake::operators::result_of::less_equal<
-          typename sake::result_of::cmp<
-              sake::tuple< T0N >, sake::tuple< U0N >
-          >::type,
-          sake::zero_t
-      >
-{ };
-
-template< class_T0N, class_U0N >
-struct greater_equal0< sake::tuple< T0N >, sake::tuple< U0N > >
-    : sake::operators::result_of::greater_equal<
-          typename sake::result_of::cmp<
-              sake::tuple< T0N >, sake::tuple< U0N >
-          >::type,
-          sake::zero_t
-      >
-{ };
+#undef define_operator
 
 } // namespace extension
 } // namespace result_of
@@ -121,66 +183,21 @@ namespace result_of {
 namespace extension {
 
 template< class_T0N, class_U0N >
-struct cmp0< sake::tuple< T0N >, sake::tuple< U0N > >
-    : boost_ext::fusion::result_of::cmp<
-          sake::tuple< T0N >, sake::tuple< U0N > >
+struct cmp< sake::tuple< T0N >, sake::tuple< U0N > >
+    : sake::tuple_adl::result_of::cmp<
+          sake::tuple< T0N >,
+          sake::tuple< U0N >
+      >
 { };
 
 } // namespace extension
 } // namespace result_of
 
-namespace tuple_adl
-{
-
-template< class_T0N, class_U0N >
-inline typename sake::operators::result_of::equal<
-    sake::tuple< T0N >, sake::tuple< U0N > >::type
-operator==(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return boost_ext::fusion::equal(x, y); }
-
-template< class_T0N, class_U0N >
-inline typename sake::operators::result_of::not_equal<
-    sake::tuple< T0N >, sake::tuple< U0N > >::type
-operator!=(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return boost_ext::fusion::not_equal(x, y); }
-
-template< class_T0N, class_U0N >
-inline typename sake::operators::result_of::less<
-    sake::tuple< T0N >, sake::tuple< U0N > >::type
-operator<(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return sake::cmp(x,y) < sake::zero; }
-
-template< class_T0N, class_U0N >
-inline typename sake::operators::result_of::greater<
-    sake::tuple< T0N >, sake::tuple< U0N > >::type
-operator>(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return sake::cmp(x,y) > sake::zero; }
-
-template< class_T0N, class_U0N >
-inline typename sake::operators::result_of::less_equal<
-    sake::tuple< T0N >, sake::tuple< U0N > >::type
-operator<=(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return sake::cmp(x,y) <= sake::zero; }
-
-template< class_T0N, class_U0N >
-inline typename sake::operators::result_of::greater_equal<
-    sake::tuple< T0N >, sake::tuple< U0N > >::type
-operator>=(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return sake::cmp(x,y) >= sake::zero; }
-
-template< class_T0N, class_U0N >
-inline typename sake::result_of::cmp<
-    sake::tuple< T0N >, sake::tuple< U0N > >::type
-cmp(sake::tuple< T0N > const & x, sake::tuple< U0N > const & y)
-{ return boost_ext::fusion::cmp(x, y); }
-
-} // namespace tuple_adl
+} // namespace sake
 
 #undef class_T0N
 #undef class_U0N
 #undef T0N
 #undef U0N
-
-} // namespace sake
 
 #endif // #ifndef SAKE_CORE_DATA_STRUCTURES_TUPLE_OPERATORS_HPP

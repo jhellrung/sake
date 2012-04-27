@@ -10,8 +10,7 @@
  * struct operators::functional::shift_left
  *
  * struct operators::result_of::shift_left< T0, T1 >
- * struct operators::result_of::extension::shift_left0< T0, T1, Enable = void >
- * struct operators::result_of::extension::shift_left1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::shift_left< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::shift_left< T0, T1 >
  ******************************************************************************/
 
@@ -29,7 +28,7 @@ namespace operators {
 namespace result_of {
 namespace extension {
 template< class T >
-struct shift_left0< std::ostream&, T >
+struct shift_left< std::ostream&, T >
 { typedef std::ostream& type; };
 } // namespace extension
 } // namespace result_of

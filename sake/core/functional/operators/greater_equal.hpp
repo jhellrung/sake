@@ -10,8 +10,7 @@
  * struct operators::functional::greater_equal
  *
  * struct operators::result_of::greater_equal< T0, T1 >
- * struct operators::result_of::extension::greater_equal0< T0, T1, Enable = void >
- * struct operators::result_of::extension::greater_equal1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::greater_equal< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::greater_equal< T0, T1 >
  ******************************************************************************/
 
@@ -20,6 +19,6 @@
 
 #define SAKE_OPERATORS_NAME greater_equal
 #define SAKE_OPERATORS_OP   >=
-#include <sake/core/functional/operators/private/comparison.ipp>
+#include <sake/core/functional/operators/private/relational.ipp>
 
 #endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_GREATER_EQUAL_HPP

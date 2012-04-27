@@ -56,9 +56,7 @@ struct SAKE_OPERATORS_NAME;
 namespace extension
 {
 template< class T0, class T1, class Enable = void >
-struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 );
-template< class T0, class T1, class Enable = void >
-struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 );
+struct SAKE_OPERATORS_NAME;
 } // namespace extension
 
 namespace default_impl
@@ -74,11 +72,10 @@ struct SAKE_OPERATORS_NAME;
 template< class T0, class T1 >
 struct SAKE_OPERATORS_NAME
 {
-    typedef typename sake::operators::result_of::extension::
-        BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )<
-            typename boost_ext::remove_rvalue_reference< T0 >::type,
-            typename boost_ext::remove_rvalue_reference< T1 >::type
-        >::type type;
+    typedef typename sake::operators::result_of::extension::SAKE_OPERATORS_NAME<
+        typename boost_ext::remove_rvalue_reference< T0 >::type,
+        typename boost_ext::remove_rvalue_reference< T1 >::type
+    >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 private:
 #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
@@ -112,23 +109,15 @@ private:
 };
 
 /*******************************************************************************
- * struct operators::result_of::extension::SAKE_OPERATORS_NAME0< T0, T1, Enable = void >
- * struct operators::result_of::extension::SAKE_OPERATORS_NAME1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::SAKE_OPERATORS_NAME< T0, T1, Enable = void >
  ******************************************************************************/
 
 namespace extension
 {
 
 template< class T0, class T1, class Enable >
-struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )
-    : sake::operators::result_of::extension::
-          BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )< T0, T1 >
-{ };
-
-template< class T0, class T1, class Enable >
-struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )
-    : sake::operators::result_of::default_impl::
-          SAKE_OPERATORS_NAME< T0, T1 >
+struct SAKE_OPERATORS_NAME
+    : sake::operators::result_of::default_impl::SAKE_OPERATORS_NAME< T0, T1 >
 { };
 
 } // namespace extension

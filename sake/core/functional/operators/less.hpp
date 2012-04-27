@@ -10,8 +10,7 @@
  * struct operators::functional::less
  *
  * struct operators::result_of::less< T0, T1 >
- * struct operators::result_of::extension::less0< T0, T1, Enable = void >
- * struct operators::result_of::extension::less1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::less< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::less< T0, T1 >
  ******************************************************************************/
 
@@ -20,6 +19,6 @@
 
 #define SAKE_OPERATORS_NAME less
 #define SAKE_OPERATORS_OP   <
-#include <sake/core/functional/operators/private/comparison.ipp>
+#include <sake/core/functional/operators/private/relational.ipp>
 
 #endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_LESS_HPP

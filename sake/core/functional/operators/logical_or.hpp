@@ -14,8 +14,7 @@
  * struct operators::functional::or_
  *
  * struct operators::result_of::logical_or< T0, T1 >
- * struct operators::result_of::extension::logical_or0< T0, T1, Enable = void >
- * struct operators::result_of::extension::logical_or1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::logical_or< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::logical_or< T0, T1 >
  ******************************************************************************/
 

@@ -10,8 +10,7 @@
  * struct operators::functional::divide
  *
  * struct operators::result_of::divide< T0, T1 >
- * struct operators::result_of::extension::divide0< T0, T1, Enable = void >
- * struct operators::result_of::extension::divide1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::divide< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::divide< T0, T1 >
  ******************************************************************************/
 

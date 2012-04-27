@@ -10,8 +10,7 @@
  * struct operators::functional::shift_right
  *
  * struct operators::result_of::shift_right< T0, T1 >
- * struct operators::result_of::extension::shift_right0< T0, T1, Enable = void >
- * struct operators::result_of::extension::shift_right1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::shift_right< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::shift_right< T0, T1 >
  ******************************************************************************/
 
@@ -29,7 +28,7 @@ namespace operators {
 namespace result_of {
 namespace extension {
 template< class T >
-struct shift_right0< std::istream&, T >
+struct shift_right< std::istream&, T >
 { typedef std::istream& type; };
 } // namespace extension
 } // namespace result_of

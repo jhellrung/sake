@@ -46,9 +46,7 @@ struct SAKE_INTROSPECTION_TRAIT_NAME;
 namespace extension
 {
 template< class T, class U, class Result, class ResultPred, class Enable = void >
-struct BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 );
-template< class T, class U, class Result, class ResultPred, class Enable = void >
-struct BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 1 );
+struct SAKE_INTROSPECTION_TRAIT_NAME;
 } // namespace extension
 
 namespace default_impl
@@ -69,24 +67,18 @@ struct SAKE_INTROSPECTION_TRAIT_NAME;
 
 template< class T, class U, class Result, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME
-    : extension::BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 ) < T, U, Result, ResultPred >
+    : extension::SAKE_INTROSPECTION_TRAIT_NAME< T, U, Result, ResultPred >
 { };
 
 /*******************************************************************************
- * struct extension::SAKE_INTROSPECTION_TRAIT_NAME0< T, U, Result, ResultPred, Enable = void >
- * struct extension::SAKE_INTROSPECTION_TRAIT_NAME1< T, U, Result, ResultPred, Enable = void >
+ * struct extension::SAKE_INTROSPECTION_TRAIT_NAME< T, U, Result, ResultPred, Enable = void >
  ******************************************************************************/
 
 namespace extension
 {
 
 template< class T, class U, class Result, class ResultPred, class Enable /*= void*/ >
-struct BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 0 )
-    : BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 1 )< T, U, Result, ResultPred >
-{ };
-
-template< class T, class U, class Result, class ResultPred, class Enable /*= void*/ >
-struct BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, 1 )
+struct SAKE_INTROSPECTION_TRAIT_NAME
     : default_impl::SAKE_INTROSPECTION_TRAIT_NAME< T, U, Result, ResultPred >
 { };
 

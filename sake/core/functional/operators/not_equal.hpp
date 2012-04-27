@@ -10,8 +10,7 @@
  * struct operators::functional::not_equal
  *
  * struct operators::result_of::not_equal< T0, T1 >
- * struct operators::result_of::extension::not_equal0< T0, T1, Enable = void >
- * struct operators::result_of::extension::not_equal1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::not_equal< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::not_equal< T0, T1 >
  ******************************************************************************/
 
@@ -20,6 +19,6 @@
 
 #define SAKE_OPERATORS_NAME not_equal
 #define SAKE_OPERATORS_OP   !=
-#include <sake/core/functional/operators/private/comparison.ipp>
+#include <sake/core/functional/operators/private/relational.ipp>
 
 #endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_NOT_EQUAL_HPP

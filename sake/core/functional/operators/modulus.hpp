@@ -10,8 +10,7 @@
  * struct operators::functional::modulus
  *
  * struct operators::result_of::modulus< T0, T1 >
- * struct operators::result_of::extension::modulus0< T0, T1, Enable = void >
- * struct operators::result_of::extension::modulus1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::modulus< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::modulus< T0, T1 >
  ******************************************************************************/
 

@@ -10,8 +10,7 @@
  * struct operators::functional::bit_or
  *
  * struct operators::result_of::bit_or< T0, T1 >
- * struct operators::result_of::extension::bit_or0< T0, T1, Enable = void >
- * struct operators::result_of::extension::bit_or1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::bit_or< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::bit_or< T0, T1 >
  ******************************************************************************/
 

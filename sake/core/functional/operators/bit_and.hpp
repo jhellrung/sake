@@ -10,8 +10,7 @@
  * struct operators::functional::bit_and
  *
  * struct operators::result_of::bit_and< T0, T1 >
- * struct operators::result_of::extension::bit_and0< T0, T1, Enable = void >
- * struct operators::result_of::extension::bit_and1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::bit_and< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::bit_and< T0, T1 >
  ******************************************************************************/
 

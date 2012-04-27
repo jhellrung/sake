@@ -75,7 +75,7 @@ namespace result_of {
 namespace extension {
 
 template< class One, class T >
-struct divide0< One, T,
+struct divide< One, T,
     typename boost::enable_if_c<
         boost::is_same<
             typename boost_ext::remove_qualifiers< One >::type,
@@ -86,7 +86,7 @@ struct divide0< One, T,
 { };
 
 template< class T >
-struct bit_and1< T, sake::one_t,
+struct bit_and< T, sake::one_t,
     typename boost::enable_if_c< boost::is_integral<T>::value >::type >
 { typedef bool type; };
 
@@ -96,33 +96,25 @@ struct bit_and1< T, sake::one_t,
 
 template< class T >
 inline typename boost::enable_if_c<
-    boost::is_arithmetic<T>::value,
-    T
->::type
+    boost::is_arithmetic<T>::value, T >::type
 operator<<(T const x, sake::one_t)
 { return x * 2; }
 
 template< class T >
 inline typename boost::enable_if_c<
-    boost::is_arithmetic<T>::value,
-    T
->::type
+    boost::is_arithmetic<T>::value, T >::type
 operator>>(T const x, sake::one_t)
 { return x / 2; }
 
 template< class T >
 inline typename boost::enable_if_c<
-    boost::is_arithmetic<T>::value,
-    T&
->::type
+    boost::is_arithmetic<T>::value, T& >::type
 operator<<=(T& x, sake::one_t)
 { return x *= 2; }
 
 template< class T >
 inline typename boost::enable_if_c<
-    boost::is_arithmetic<T>::value,
-    T&
->::type
+    boost::is_arithmetic<T>::value, T& >::type
 operator>>=(T& x, sake::one_t)
 { return x /= 2; }
 
@@ -149,9 +141,7 @@ operator/(sake::one_t, T const & x)
 
 template< class T >
 inline typename boost::enable_if_c<
-    boost::is_integral<T>::value,
-    bool
->::type
+    boost::is_integral<T>::value, bool >::type
 operator&(T const x, sake::one_t)
 { return (x & 1) != 0; }
 

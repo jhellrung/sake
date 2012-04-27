@@ -10,8 +10,7 @@
  * struct operators::functional::equal
  *
  * struct operators::result_of::equal< T0, T1 >
- * struct operators::result_of::extension::equal0< T0, T1, Enable = void >
- * struct operators::result_of::extension::equal1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::equal< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::equal< T0, T1 >
  ******************************************************************************/
 
@@ -20,6 +19,6 @@
 
 #define SAKE_OPERATORS_NAME equal
 #define SAKE_OPERATORS_OP   ==
-#include <sake/core/functional/operators/private/comparison.ipp>
+#include <sake/core/functional/operators/private/relational.ipp>
 
 #endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_EQUAL_HPP

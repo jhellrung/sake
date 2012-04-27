@@ -10,8 +10,7 @@
  * struct operators::functional::multiply
  *
  * struct operators::result_of::multiply< T0, T1 >
- * struct operators::result_of::extension::multiply0< T0, T1, Enable = void >
- * struct operators::result_of::extension::multiply1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::multiply< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::multiply< T0, T1 >
  ******************************************************************************/
 

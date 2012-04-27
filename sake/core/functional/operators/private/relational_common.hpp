@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/functional/operators/private/comparison_common.hpp
+ * sake/core/functional/operators/private/relational_common.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_COMPARISON_COMMON_HPP
-#define SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_COMPARISON_COMMON_HPP
+#ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_RELATIONAL_COMMON_HPP
+#define SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_RELATIONAL_COMMON_HPP
 
 #include <boost/logic/tribool.hpp>
 #include <boost/mpl/bool.hpp>
@@ -36,7 +36,7 @@ typedef boost::mpl::vector7<
     boost::false_type,
     boost::mpl::true_,
     boost::mpl::false_
-> comparison_result_types;
+> relational_result_types;
 
 } // namespace default_impl
 
@@ -46,4 +46,4 @@ typedef boost::mpl::vector7<
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_COMPARISON_COMMON_HPP
+#endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_PRIVATE_RELATIONAL_COMMON_HPP

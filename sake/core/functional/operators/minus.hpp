@@ -10,8 +10,7 @@
  * struct operators::functional::minus
  *
  * struct operators::result_of::minus< T0, T1 >
- * struct operators::result_of::extension::minus0< T0, T1, Enable = void >
- * struct operators::result_of::extension::minus1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::minus< T0, T1, Enable = void >
  * struct operators::result_of::default_impl::minus< T0, T1 >
  ******************************************************************************/
 

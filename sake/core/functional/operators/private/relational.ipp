@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/functional/operators/private/comparison.ipp
+ * sake/core/functional/operators/private/relational.ipp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -22,7 +22,7 @@
 
 #include <sake/core/expr_traits/apply.hpp>
 #include <sake/core/expr_traits/typeof.hpp>
-#include <sake/core/functional/operators/private/comparison_common.hpp>
+#include <sake/core/functional/operators/private/relational_common.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -50,9 +50,7 @@ struct SAKE_OPERATORS_NAME;
 namespace extension
 {
 template< class T0, class T1, class Enable = void >
-struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 );
-template< class T0, class T1, class Enable = void >
-struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 );
+struct SAKE_OPERATORS_NAME;
 } // namespace extension
 
 namespace default_impl
@@ -76,10 +74,11 @@ template<
 struct dispatch
 {
     typedef typename sake::operators::result_of::extension::
-        BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )< T0, T1 >::type type;
+        SAKE_OPERATORS_NAME< T0, T1 >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
     BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
-        typename boost_ext::mpl::curry_quote2< boost_ext::is_same_sans_rv >::apply< type >::type,
+        typename boost_ext::mpl::curry_quote2<
+            boost_ext::is_same_sans_rv >::apply< type >::type,
         sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >()
     ) );
 };
@@ -99,23 +98,15 @@ struct SAKE_OPERATORS_NAME
 { };
 
 /*******************************************************************************
- * struct operators::result_of::extension::SAKE_OPERATORS_NAME0< T0, T1, Enable = void >
- * struct operators::result_of::extension::SAKE_OPERATORS_NAME1< T0, T1, Enable = void >
+ * struct operators::result_of::extension::SAKE_OPERATORS_NAME< T0, T1, Enable = void >
  ******************************************************************************/
 
 namespace extension
 {
 
 template< class T0, class T1, class Enable >
-struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 0 )
-    : sake::operators::result_of::extension::
-          BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )< T0, T1 >
-{ };
-
-template< class T0, class T1, class Enable >
-struct BOOST_PP_CAT( SAKE_OPERATORS_NAME, 1 )
-    : sake::operators::result_of::default_impl::
-          SAKE_OPERATORS_NAME< T0, T1 >
+struct SAKE_OPERATORS_NAME
+    : sake::operators::result_of::default_impl::SAKE_OPERATORS_NAME< T0, T1 >
 { };
 
 } // namespace extension
@@ -135,7 +126,7 @@ struct impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >(),
-        sake::operators::result_of::default_impl::comparison_result_types,
+        sake::operators::result_of::default_impl::relational_result_types,
         type
     );
 };
