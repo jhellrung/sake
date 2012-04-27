@@ -6,7 +6,10 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
+#include <sake/core/data_structures/optional/operators.hpp>
 #include <sake/core/data_structures/optional/optional.hpp>
+#include <sake/core/math/cmp.hpp>
+#include <sake/core/math/zero.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/utility/nullptr.hpp>
 
@@ -53,6 +56,33 @@ void optional_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, x.get_ptr(), ==, nullptr );
     }
     {
+        sake::optional< int > x;
+        SAKE_TEST_CHECK( env, !x );
+        sake::optional< int > y(x);
+        SAKE_TEST_CHECK( env, !y );
+        x = 0;
+        SAKE_TEST_CHECK( env, x );
+        sake::optional< int > z(x);
+        SAKE_TEST_REQUIRE( env, z );
+        SAKE_TEST_CHECK_RELATION( env, z.get(), ==, 0 );
+        y = x;
+        SAKE_TEST_CHECK( env, y );
+        SAKE_TEST_CHECK_RELATION( env, y.get(), ==, 0 );
+        x.reset();
+        z = x;
+        SAKE_TEST_CHECK( env, !z);
+        x = 1;
+        y.swap(x);
+        SAKE_TEST_REQUIRE( env, x );
+        SAKE_TEST_REQUIRE( env, y );
+        SAKE_TEST_CHECK_RELATION( env, x.get(), ==, 0 );
+        SAKE_TEST_CHECK_RELATION( env, y.get(), ==, 1 );
+        z.swap(x);
+        SAKE_TEST_CHECK( env, !x );
+        SAKE_TEST_REQUIRE( env, z );
+        SAKE_TEST_CHECK_RELATION( env, z.get(), ==, 0 );
+    }
+    {
         typedef models::basic_movable_copyable<> type;
         models::special_mem_fun_stats stats;
         sake::optional< type > x;
@@ -97,6 +127,76 @@ void optional_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 1 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_assign, ==, 1 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 7 );
+    }
+    {
+        sake::optional< int& > x;
+        int i = 0;
+        SAKE_TEST_CHECK( env, !x.initialized() );
+        SAKE_TEST_CHECK( env, !x );
+        SAKE_TEST_CHECK_RELATION( env, x.get_ptr(), ==, nullptr );
+        x = i;
+        SAKE_TEST_CHECK( env, x.initialized() );
+        SAKE_TEST_CHECK( env, x );
+        SAKE_TEST_CHECK_RELATION( env, x.get_ptr(), !=, nullptr );
+        SAKE_TEST_CHECK_RELATION( env, x.get_ptr(), ==, &i );
+        x.reset();
+        SAKE_TEST_CHECK( env, !x.initialized() );
+        SAKE_TEST_CHECK( env, !x );
+        SAKE_TEST_CHECK_RELATION( env, x.get_ptr(), ==, nullptr );
+    }
+    {
+        sake::optional< int& > x;
+        SAKE_TEST_CHECK_RELATION( env, x.get_ptr(), ==, nullptr );
+        sake::optional< int& > y(x);
+        SAKE_TEST_CHECK_RELATION( env, y.get_ptr(), ==, nullptr );
+        int i = 0;
+        x = i;
+        sake::optional< int& > z(x);
+        SAKE_TEST_CHECK_RELATION( env, z.get_ptr(), ==, &i );
+        y = x;
+        SAKE_TEST_CHECK_RELATION( env, y.get_ptr(), ==, &i );
+        x.reset();
+        z = x;
+        SAKE_TEST_CHECK_RELATION( env, z.get_ptr(), ==, nullptr );
+        int j = 1;
+        x = j;
+        y.swap(x);
+        SAKE_TEST_CHECK_RELATION( env, x.get_ptr(), ==, &i );
+        SAKE_TEST_CHECK_RELATION( env, y.get_ptr(), ==, &j );
+        z.swap(x);
+        SAKE_TEST_CHECK_RELATION( env, x.get_ptr(), ==, nullptr );
+        SAKE_TEST_CHECK_RELATION( env, z.get_ptr(), ==, &i );
+    }
+    {
+        sake::optional< int > x;
+        sake::optional< int > y;
+        SAKE_TEST_CHECK_ALL( env, ( (x == y)) ( (x <= y)) ( (x >= y))
+                                  (!(x != y)) (!(x <  y)) (!(x >  y))
+                                  ( (y == x)) ( (y <= x)) ( (y >= x))
+                                  (!(y != x)) (!(y <  x)) (!(y >  x)) );
+        SAKE_TEST_CHECK_RELATION( env, sake::cmp(x,y), ==, sake::zero );
+        SAKE_TEST_CHECK_RELATION( env, sake::cmp(y,x), ==, sake::zero );
+        x = 0;
+        SAKE_TEST_CHECK_ALL( env, (!(x == y)) (!(x <= y)) ( (x >= y))
+                                  ( (x != y)) (!(x <  y)) ( (x >  y))
+                                  (!(y == x)) ( (y <= x)) (!(y >= x))
+                                  ( (y != x)) ( (y <  x)) (!(y >  x)) );
+        SAKE_TEST_CHECK_RELATION( env, sake::cmp(x,y), >, sake::zero );
+        SAKE_TEST_CHECK_RELATION( env, sake::cmp(y,x), <, sake::zero );
+        y = 0;
+        SAKE_TEST_CHECK_ALL( env, ( (x == y)) ( (x <= y)) ( (x >= y))
+                                  (!(x != y)) (!(x <  y)) (!(x >  y))
+                                  ( (y == x)) ( (y <= x)) ( (y >= x))
+                                  (!(y != x)) (!(y <  x)) (!(y >  x)) );
+        SAKE_TEST_CHECK_RELATION( env, sake::cmp(x,y), ==, sake::zero );
+        SAKE_TEST_CHECK_RELATION( env, sake::cmp(y,x), ==, sake::zero );
+        x = 1;
+        SAKE_TEST_CHECK_ALL( env, (!(x == y)) (!(x <= y)) ( (x >= y))
+                                  ( (x != y)) (!(x <  y)) ( (x >  y))
+                                  (!(y == x)) ( (y <= x)) (!(y >= x))
+                                  ( (y != x)) ( (y <  x)) (!(y >  x)) );
+        SAKE_TEST_CHECK_RELATION( env, sake::cmp(x,y), >, sake::zero );
+        SAKE_TEST_CHECK_RELATION( env, sake::cmp(y,x), <, sake::zero );
     }
 }
 
