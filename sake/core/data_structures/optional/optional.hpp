@@ -407,8 +407,9 @@ swap(optional& other)
             reset(sake::move(other.get()));
             destruct_dispatch_::apply_reset(other);
         }
-        else
+        else {
             // nothing
+        }
     }
 }
 

@@ -50,7 +50,7 @@ struct destruct_dispatch< T, true >
     static void apply(This& /*this_*/)
     { }
     template< class This >
-    static void apply_reset(This& /*this_*/)
+    static void apply_reset(This& this_)
     { this_.m_initialized = false; }
     template< class This >
     static void apply_if(This& /*this_*/)
