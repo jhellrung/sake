@@ -8,6 +8,7 @@
 
 #include <sake/core/data_structures/optional/operators.hpp>
 #include <sake/core/data_structures/optional/optional.hpp>
+#include <sake/core/functional/identity.hpp>
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/move.hpp>
@@ -197,6 +198,16 @@ void optional_test(sake::test::environment& env)
                                   ( (y != x)) ( (y <  x)) (!(y >  x)) );
         SAKE_TEST_CHECK_RELATION( env, sake::cmp(x,y), >, sake::zero );
         SAKE_TEST_CHECK_RELATION( env, sake::cmp(y,x), <, sake::zero );
+    }
+    {
+        sake::optional< sake::functional::identity > x;
+        SAKE_TEST_CHECK( env, !x );
+        sake::optional< int > i = x(0);
+        SAKE_TEST_CHECK( env, !i );
+        x = sake::identity;
+        i = x(0);
+        SAKE_TEST_REQUIRE( env, i );
+        SAKE_TEST_CHECK_RELATION( env, i.get(), ==, 0 );
     }
 }
 
