@@ -104,7 +104,7 @@ public:
         typename boost::enable_if_c< boost_ext::mpl::and2<
             sake::data_structures_private::value_constructor_enable<
                 nocv0_type, sake::emplacer< V0 ( ) > >,
-            typename value1_constructor_rv_sink_traits::template ref_enable< U1 >,
+            typename value1_constructor_rv_sink_traits::template ref_enable< U1 >
         >::value >::type* = 0)
         : second(sake::emplacer_constructible< nocv1_type >(x1))
     { }
@@ -160,7 +160,7 @@ public:
         typename boost::enable_if_c< boost_ext::mpl::and2<
             sake::data_structures_private::value_constructor_enable<
                 nocv0_type, sake::emplacer< V0 ( ) > >,
-            typename value1_constructor_rv_sink_traits::template cref_enable< U1 >,
+            typename value1_constructor_rv_sink_traits::template cref_enable< U1 >
         >::value >::type* = 0)
         : second(sake::emplacer_constructible< nocv1_type >(x1))
     { }
