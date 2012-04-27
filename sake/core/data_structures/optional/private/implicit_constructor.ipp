@@ -45,12 +45,12 @@ public:
 
 private:
     template< class U >
-    typename value_enabler< SAKE_FWD2_PARAM( U ), bool >::type
-    static initialize_m_initialized_dispatch(SAKE_FWD2_REF( U ) /*x*/)
+    static typename value_enabler< SAKE_FWD2_PARAM( U ), bool >::type
+    initialize_m_initialized_dispatch(SAKE_FWD2_REF( U ) /*x*/)
     { return true; }
     template< class U >
-    typename optional_enabler< SAKE_FWD2_PARAM( U ), bool >::type
-    static initialize_m_initialized_dispatch(SAKE_FWD2_REF( U ) x)
+    static typename optional_enabler< SAKE_FWD2_PARAM( U ), bool >::type
+    initialize_m_initialized_dispatch(SAKE_FWD2_REF( U ) x)
     { return x.initialized(); }
     template< class U >
     typename value_enabler< SAKE_FWD2_PARAM( U ) >::type
