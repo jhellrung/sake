@@ -363,7 +363,7 @@ protected:
 };
 
 /*******************************************************************************
- * iterator_facade comparison operators
+ * iterator_facade relational operators
  ******************************************************************************/
 
 SAKE_ITERATOR_FACADE_function_prototype( inline, boost::mpl::always< bool >, operator== )
