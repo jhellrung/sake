@@ -16,29 +16,24 @@ namespace sake
 
 struct fuzzy_sign_t;
 
-struct zero_sign_t { };
-struct positive_sign_t { };
-struct negative_sign_t { };
-struct indeterminate_sign_t { };
-zero_sign_t const zero_sign = { };
-positive_sign_t const positive_sign = { };
-negative_sign_t const negative_sign = { };
-indeterminate_sign_t const indeterminate_sign = { };
-
 struct sign_t
 {
+    struct zero_tag { };
+    struct positive_tag { };
+    struct negative_tag { };
+
     sign_t();
-    sign_t(zero_t);
-    sign_t(zero_sign_t);
-    sign_t(positive_sign_t);
-    sign_t(negative_sign_t);
+    sign_t(sake::zero_t);
+    sign_t(zero_tag);
+    sign_t(positive_tag);
+    sign_t(negative_tag);
     explicit sign_t(sake::fuzzy_sign_t const s);
     explicit sign_t(int const s);
 
-    sign_t& operator=(zero_t);
-    sign_t& operator=(zero_sign_t);
-    sign_t& operator=(positive_sign_t);
-    sign_t& operator=(negative_sign_t);
+    sign_t& operator=(sake::zero_t);
+    sign_t& operator=(zero_tag);
+    sign_t& operator=(positive_tag);
+    sign_t& operator=(negative_tag);
 
     sign_t operator-() const;
     sign_t& operator*=(sign_t const other);

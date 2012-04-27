@@ -18,22 +18,24 @@ namespace sake
 
 struct fuzzy_sign_t
 {
+    struct indeterminate_tag { };
+
     fuzzy_sign_t();
     fuzzy_sign_t(sake::zero_t);
     fuzzy_sign_t(sake::functional::indeterminate);
-    fuzzy_sign_t(sake::zero_sign_t);
-    fuzzy_sign_t(sake::positive_sign_t);
-    fuzzy_sign_t(sake::negative_sign_t);
-    fuzzy_sign_t(sake::indeterminate_sign_t);
+    fuzzy_sign_t(sake::sign_t::zero_tag);
+    fuzzy_sign_t(sake::sign_t::positive_tag);
+    fuzzy_sign_t(sake::sign_t::negative_tag);
+    fuzzy_sign_t(indeterminate_tag);
     fuzzy_sign_t(sake::sign_t const s);
     explicit fuzzy_sign_t(int const s);
 
     fuzzy_sign_t& operator=(sake::zero_t);
     fuzzy_sign_t& operator=(sake::functional::indeterminate);
-    fuzzy_sign_t& operator=(sake::zero_sign_t);
-    fuzzy_sign_t& operator=(sake::positive_sign_t);
-    fuzzy_sign_t& operator=(sake::negative_sign_t);
-    fuzzy_sign_t& operator=(sake::indeterminate_sign_t);
+    fuzzy_sign_t& operator=(sake::sign_t::zero_tag);
+    fuzzy_sign_t& operator=(sake::sign_t::positive_tag);
+    fuzzy_sign_t& operator=(sake::sign_t::negative_tag);
+    fuzzy_sign_t& operator=(indeterminate_tag);
     fuzzy_sign_t& operator=(sake::sign_t const s);
 
     fuzzy_sign_t operator-() const;

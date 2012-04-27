@@ -6,6 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct fuzzy_sign_t
+ * ... const fuzzy_sign_t::indeterminate
  * sruct indeterminate_sign_error // thrown in fuzzy_sign_t::as_int
  * operator[op](fuzzy_sign_t s0, fuzzy_sign_t s1) -> boost::logic::tribool
  * operator[op](fuzzy_sign_t s, zero_t) -> boost::logic::tribool
@@ -213,25 +214,25 @@ fuzzy_sign_t(sake::functional::indeterminate)
 
 inline
 fuzzy_sign_t::
-fuzzy_sign_t(sake::zero_sign_t)
+fuzzy_sign_t(sake::sign_t::zero_tag)
     : m_value(zero_sign_value)
 { }
 
 inline
 fuzzy_sign_t::
-fuzzy_sign_t(sake::positive_sign_t)
+fuzzy_sign_t(sake::sign_t::positive_tag)
     : m_value(positive_sign_value)
 { }
 
 inline
 fuzzy_sign_t::
-fuzzy_sign_t(sake::negative_sign_t)
+fuzzy_sign_t(sake::sign_t::negative_tag)
     : m_value(negative_sign_value)
 { }
 
 inline
 fuzzy_sign_t::
-fuzzy_sign_t(sake::indeterminate_sign_t)
+fuzzy_sign_t(sake::fuzzy_sign_t::indeterminate_tag)
     : m_value(indeterminate_sign_value)
 { }
 
@@ -271,7 +272,7 @@ operator=(sake::functional::indeterminate)
 
 inline fuzzy_sign_t&
 fuzzy_sign_t::
-operator=(sake::zero_sign_t)
+operator=(sake::sign_t::zero_tag)
 {
     m_value = zero_sign_value;
     return *this;
@@ -279,7 +280,7 @@ operator=(sake::zero_sign_t)
 
 inline fuzzy_sign_t&
 fuzzy_sign_t::
-operator=(sake::positive_sign_t)
+operator=(sake::sign_t::positive_tag)
 {
     m_value = positive_sign_value;
     return *this;
@@ -287,7 +288,7 @@ operator=(sake::positive_sign_t)
 
 inline fuzzy_sign_t&
 fuzzy_sign_t::
-operator=(sake::negative_sign_t)
+operator=(sake::sign_t::negative_tag)
 {
     m_value = negative_sign_value;
     return *this;
@@ -295,7 +296,7 @@ operator=(sake::negative_sign_t)
 
 inline fuzzy_sign_t&
 fuzzy_sign_t::
-operator=(sake::indeterminate_sign_t)
+operator=(sake::fuzzy_sign_t::indeterminate_tag)
 {
     m_value = indeterminate_sign_value;
     return *this;

@@ -6,10 +6,9 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct sign_t
- * ... const zero_sign
- * ... const positive_sign
- * ... const negative_sign
- * ... const indeterminate_sign
+ * ... const sign_t::zero
+ * ... const sign_t::positive
+ * ... const sign_t::negative
  * operator[op](sign_t, sign_t) -> bool
  * operator[op](sign_t, zero_t) -> bool
  * operator[op](zero_t, sign_t) -> bool
@@ -30,20 +29,20 @@
 namespace sake
 {
 
-#define define_comparison_operator( op ) \
+#define define_relational_operator( op ) \
 inline bool operator op (sake::sign_t const s0, sake::sign_t const s1) \
 { return s0.as_int() op s1.as_int(); } \
 inline bool operator op (sake::sign_t const s, sake::zero_t) \
 { return s.as_int() op 0; } \
 inline bool operator op (sake::zero_t, sake::sign_t const s) \
 { return 0 op s.as_int(); }
-define_comparison_operator( == )
-define_comparison_operator( != )
-define_comparison_operator( < )
-define_comparison_operator( > )
-define_comparison_operator( <= )
-define_comparison_operator( >= )
-#undef define_comparison_operator
+define_relational_operator( == )
+define_relational_operator( != )
+define_relational_operator( < )
+define_relational_operator( > )
+define_relational_operator( <= )
+define_relational_operator( >= )
+#undef define_relational_operator
 
 inline
 sign_t::
@@ -59,19 +58,19 @@ sign_t(sake::zero_t)
 
 inline
 sign_t::
-sign_t(sake::zero_sign_t)
+sign_t(sake::sign_t::zero_tag)
     : m_value(zero_value)
 { }
 
 inline
 sign_t::
-sign_t(sake::positive_sign_t)
+sign_t(sake::sign_t::positive_tag)
     : m_value(positive_value)
 { }
 
 inline
 sign_t::
-sign_t(sake::negative_sign_t)
+sign_t(sake::sign_t::negative_tag)
     : m_value(negative_value)
 { }
 
@@ -97,7 +96,7 @@ operator=(sake::zero_t)
 
 inline sign_t&
 sign_t::
-operator=(sake::zero_sign_t)
+operator=(sake::sign_t::zero_tag)
 {
     m_value = zero_value;
     return *this;
@@ -105,7 +104,7 @@ operator=(sake::zero_sign_t)
 
 inline sign_t&
 sign_t::
-operator=(sake::positive_sign_t)
+operator=(sake::sign_t::positive_tag)
 {
     m_value = positive_value;
     return *this;
@@ -113,7 +112,7 @@ operator=(sake::positive_sign_t)
 
 inline sign_t&
 sign_t::
-operator=(sake::negative_sign_t)
+operator=(sake::sign_t::negative_tag)
 {
     m_value = negative_value;
     return *this;
