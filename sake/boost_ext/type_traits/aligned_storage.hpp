@@ -40,7 +40,11 @@ union aligned_storage_c
     typedef aligned_storage_c type;
     unsigned char _[Size];
     typename boost_ext::aligned_type< Align >::type _aligned;
-};
+}
+#ifdef __GNUC__
+__attribute__ (( __may_alias__ ))
+#endif // #ifdef __GNUC__
+;
 
 template< class T >
 struct aligned_storage
