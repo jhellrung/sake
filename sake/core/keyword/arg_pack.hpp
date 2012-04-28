@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/keyword/arg_pack.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
@@ -74,7 +74,7 @@ struct arg_pack< A0, A... >
 {
     explicit arg_pack(A0 const a0, A const... a)
         : arg_pack< A... >(a...),
-          m_a0(a0)
+          m_a(a0)
     { }
 
 protected:
@@ -87,7 +87,7 @@ protected:
     {
         typedef typename A0::value_type type;
         static type apply(arg_pack const & this_, K const /*k*/)
-        { return this_.m_a0.value(); }
+        { return this_.m_a.value(); }
     };
     template< class, class > friend struct at_impl;
 public:
@@ -106,7 +106,7 @@ public:
     { return at_impl<K>::apply(*this, k); }
 
 private:
-    A0 const m_a0;
+    A0 const m_a;
 };
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
@@ -147,12 +147,12 @@ struct arg_pack< A0N >
 {
 #if N == 1
     explicit arg_pack(A0 const a0)
-        : m_a0(a0)
+        : m_a(a0)
     { }
 #else // #if N == 1
     arg_pack(A0N_const_a0N)
         : arg_pack< A1N >(a1N),
-          m_a0(a0)
+          m_a(a0)
     { }
 #endif // #if N == 1
 
@@ -170,7 +170,7 @@ protected:
     {
         typedef typename A0::value_type type;
         static type apply(arg_pack const & this_, K const /*k*/)
-        { return this_.m_a0.value(); }
+        { return this_.m_a.value(); }
     };
     template< class, class > friend struct at_impl;
 public:
@@ -187,7 +187,7 @@ public:
     { return at_impl<K>::apply(*this, k); }
 
 private:
-    A0 const m_a0;
+    A0 const m_a;
 };
 
 #undef class_A0N

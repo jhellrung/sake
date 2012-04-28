@@ -156,7 +156,9 @@ void keyword_test(sake::test::environment& env)
     sake::keyword::tagged_value< keyword::tag::a, A const & > ka = (keyword::_a = a);
     sake::keyword::tagged_value< keyword::tag::c, C const & > kc = (keyword::_c = c);
     {
-        typedef boost::result_of< arg_packer_type ( A, B, C ) >::type arg_pack_type;
+        typedef boost::result_of< arg_packer_type (
+            A const &, B const &, C const &
+        ) >::type arg_pack_type;
         arg_pack_type arg_pack = arg_packer_type()(a, b, c);
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_a], ==, &a );
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_b], ==, &b );
@@ -167,7 +169,9 @@ void keyword_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_d | d2], ==, &d2 );
     }
     {
-        typedef boost::result_of< arg_packer_type ( A, B, C, D ) >::type arg_pack_type;
+        typedef boost::result_of< arg_packer_type (
+            A const &, B const &, C const &, D const &
+        ) >::type arg_pack_type;
         arg_pack_type arg_pack = arg_packer_type()(a, b, c, d);
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_a], ==, &a );
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_b], ==, &b );
@@ -179,7 +183,9 @@ void keyword_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_d | d2], ==, &d  );
     }
     {
-        typedef boost::result_of< arg_packer_type ( A, B, D, C ) >::type arg_pack_type;
+        typedef boost::result_of< arg_packer_type (
+            A const &, B const &, D const &, C const &
+        ) >::type arg_pack_type;
         arg_pack_type arg_pack = arg_packer_type()(a, b, d, c);
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_a], ==, &a );
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_b], ==, &b );
@@ -192,7 +198,7 @@ void keyword_test(sake::test::environment& env)
     }
     {
         typedef boost::result_of< arg_packer_type (
-            A,
+            A const &,
             sake::keyword::tagged_value< keyword::tag::c, C const & >
         ) >::type arg_pack_type;
         arg_pack_type arg_pack = arg_packer_type()(a, kc);
@@ -220,7 +226,7 @@ void keyword_test(sake::test::environment& env)
         typedef boost::result_of< arg_packer_type (
             sake::keyword::tagged_value< keyword::tag::c, C const & >,
             sake::keyword::tagged_value< keyword::tag::a, A const & >,
-            D
+            D const &
         ) >::type arg_pack_type;
         arg_pack_type arg_pack = arg_packer_type()(kc, ka, d);
         SAKE_TEST_CHECK_RELATION( env, &arg_pack[keyword::_a], ==, &a );

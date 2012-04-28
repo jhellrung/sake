@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/keyword/satisfies.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
@@ -28,8 +28,24 @@ namespace sake
 namespace keyword
 {
 
-template< class A, class P >
-struct satisfies;
+namespace satisfies_private
+{
+template< class TaggedArgs >
+struct pred;
+} // namespace satisfies_private
+
+template< class TaggedArgs, class ParamSpecs >
+struct satisfies
+    : boost_ext::mpl::all<
+          ParamSpecs,
+          satisfies_private::pred< TaggedArgs >
+      >
+{ };
+
+template< class ParamSpecs >
+struct satisfies< void, ParamSpecs >
+    : boost::false_type
+{ };
 
 namespace satisfies_private
 {
@@ -67,7 +83,7 @@ struct tag_counter< Tag, void >
     { typedef boost::mpl::int_<2> type; };
 };
 
-template< class A >
+template< class TaggedArgs >
 struct pred
 {
     template< class Tag >
@@ -79,7 +95,7 @@ struct pred
     struct apply< keyword::optional< Tag, Pred > >
     {
         static bool const value = boost::mpl::fold<
-            A,
+            TaggedArgs,
             boost::mpl::int_<0>,
             tag_counter< Tag, typename boost::mpl::lambda< Pred >::type >
         >::type::value <= 1;
@@ -90,7 +106,7 @@ struct pred
     struct apply< keyword::required< Tag, Pred > >
     {
         static bool const value = boost::mpl::fold<
-            A,
+            TaggedArgs,
             boost::mpl::int_<0>,
             tag_counter< Tag, typename boost::mpl::lambda< Pred >::type >
         >::type::value == 1;
@@ -108,16 +124,6 @@ struct pred
 };
 
 } // namespace satisfies_private
-
-template< class A, class P >
-struct satisfies
-    : boost_ext::mpl::all< P, satisfies_private::pred<A> >
-{ };
-
-template< class P >
-struct satisfies< void, P >
-    : boost::false_type
-{ };
 
 } // namespace keyword
 

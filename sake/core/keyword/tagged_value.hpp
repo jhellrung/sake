@@ -11,7 +11,7 @@
 
 #include <boost/static_assert.hpp>
 
-#include <sake/boost_ext/type_traits/is_reference.hpp>
+#include <sake/core/utility/is_by_value_optimal.hpp>
 
 namespace sake
 {
@@ -22,7 +22,7 @@ namespace keyword
 template< class Tag, class T >
 struct tagged_value
 {
-    BOOST_STATIC_ASSERT((boost_ext::is_reference<T>::value));
+    BOOST_STATIC_ASSERT((sake::is_by_value_optimal<T>::value));
 
     typedef Tag tag;
     typedef T value_type;
