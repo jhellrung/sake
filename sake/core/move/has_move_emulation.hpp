@@ -1,19 +1,19 @@
 /*******************************************************************************
- * sake/core/move/is_movable.hpp
+ * sake/core/move/has_move_emulation.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * [only for C++03]
- * struct is_movable<T>
+ * struct has_move_emulation<T>
  *
- * is_movable is a Boost.MPL metafunction that determines if the given type has
- * move emulation enabled.
+ * has_move_emulation is a Boost.MPL metafunction that determines if the given
+ * type has move emulation enabled.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_MOVE_IS_MOVABLE_HPP
-#define SAKE_CORE_MOVE_IS_MOVABLE_HPP
+#ifndef SAKE_CORE_MOVE_HAS_MOVE_EMULATION_HPP
+#define SAKE_CORE_MOVE_HAS_MOVE_EMULATION_HPP
 
 #include <boost/config.hpp>
 
@@ -31,7 +31,7 @@ namespace sake
 {
 
 template< class T >
-struct is_movable
+struct has_move_emulation
     : boost_ext::mpl::and2<
           boost::is_class<T>,
           sake::has_mem_fun_operator< T, boost::rv<T>& >
@@ -39,12 +39,12 @@ struct is_movable
 { };
 
 template< class T >
-struct is_movable< T const >
+struct has_move_emulation< T const >
     : boost::false_type
 { };
 
 template< class T >
-struct is_movable< T& >
+struct has_move_emulation< T& >
     : boost::false_type
 { };
 
@@ -52,4 +52,4 @@ struct is_movable< T& >
 
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
-#endif // #ifndef SAKE_CORE_MOVE_IS_MOVABLE_HPP
+#endif // #ifndef SAKE_CORE_MOVE_HAS_MOVE_EMULATION_HPP

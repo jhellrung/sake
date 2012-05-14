@@ -44,15 +44,18 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_object.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
+#include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/add_const_remove_volatile.hpp>
 #include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
 
-#include <sake/core/move/is_movable.hpp>
+#include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/utility/call_traits_fwd.hpp>
+#include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/is_by_value_optimal.hpp>
 
 namespace sake
@@ -94,35 +97,27 @@ namespace call_traits_private
 template< class, int = 0 >
 struct disabler;
 
+template< class T >
+struct dispatch_index
+{
+    static int const value = boost_ext::mpl::
+         if_< sake::is_by_value_optimal<T>, sake::int_tag<2> >::type::template
+#ifndef BOOST_NO_RVALUE_REFERENCES
+    else_   < sake::int_tag<1> >::type::value;
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+    else_if < sake::has_move_emulation<T>, sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type::value;
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+};
+
 template<
     class T,
-    bool = sake::is_by_value_optimal<T>::value,
-#ifndef BOOST_NO_RVALUE_REFERENCES
-    bool = true
-#else // #ifndef BOOST_NO_RVALUE_REFERENCES
-    bool = sake::is_movable< typename boost::remove_cv<T>::type >::value
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+    int = dispatch_index< typename boost::remove_cv<T>::type >::value
 >
 class dispatch;
 
 template< class T >
-class dispatch< T, false, false >
-{
-    BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-    BOOST_STATIC_ASSERT((boost::is_array<T>::value));
-    typedef typename boost_ext::add_const_remove_volatile<T>::type const_type;
-public:
-    typedef T value_type;
-    typedef const_type& param_type;
-    typedef const_type& fwd_param_type;
-    typedef const_type& fwd_cast_type;
-    static fwd_cast_type
-    fwd_cast(const_type& x)
-    { return x; }
-};
-
-template< class T, bool IsMovable >
-class dispatch< T, true, IsMovable >
+class dispatch<T,2>
 {
     typedef typename boost_ext::add_const_remove_volatile<T>::type const_type;
 public:
@@ -136,10 +131,10 @@ public:
 };
 
 template< class T >
-class dispatch< T, false, true >
+class dispatch<T,1>
 {
-    typedef typename boost_ext::add_const_remove_volatile<T>::type const_type;
     typedef typename boost::remove_cv<T>::type nocv_type;
+    typedef typename boost::add_const<T>::type const_type;
 public:
     typedef T value_type;
     typedef const_type& param_type;
@@ -148,6 +143,22 @@ public:
     static fwd_cast_type
     fwd_cast(nocv_type& x)
     { return static_cast< fwd_cast_type >(x); }
+};
+
+template< class T >
+class dispatch<T,0>
+{
+    BOOST_STATIC_ASSERT((boost::is_object<T>::value));
+    BOOST_STATIC_ASSERT((!boost::is_array<T>::value));
+    typedef typename boost_ext::add_const_remove_volatile<T>::type const_type;
+public:
+    typedef T value_type;
+    typedef const_type& param_type;
+    typedef const_type& fwd_param_type;
+    typedef const_type& fwd_cast_type;
+    static fwd_cast_type
+    fwd_cast(const_type& x)
+    { return x; }
 };
 
 } // namespace call_traits_private

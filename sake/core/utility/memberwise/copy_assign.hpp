@@ -122,7 +122,7 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
-#include <sake/core/move/is_unfriendly_movable_copyable.hpp>
+#include <sake/core/move/has_unfriendly_move_emulation.hpp>
 #include <sake/core/utility/memberwise/private/all_is_assignable.hpp>
 #include <sake/core/utility/memberwise/private/assign_body.hpp>
 
@@ -156,9 +156,9 @@
     >
 #define SAKE_MEMBERWISE_COPY_ASSIGN_comma_is_umc_member( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
-    ::sake::is_unfriendly_movable_copyable< BOOST_PP_SEQ_HEAD( elem ) >
+    ::sake::has_unfriendly_move_emulation< BOOST_PP_SEQ_HEAD( elem ) >
 #define SAKE_MEMBERWISE_COPY_ASSIGN_any_is_umc_1( r, member_seq ) \
-    ::sake::is_unfriendly_movable_copyable< BOOST_PP_SEQ_HEAD( BOOST_PP_SEQ_HEAD( member_seq ) ) >
+    ::sake::has_unfriendly_move_emulation< BOOST_PP_SEQ_HEAD( BOOST_PP_SEQ_HEAD( member_seq ) ) >
 
 #define SAKE_MEMBERWISE_COPY_ASSIGN_IF_ANY_UMC_impl1( r, typename, T, member_seq )
 

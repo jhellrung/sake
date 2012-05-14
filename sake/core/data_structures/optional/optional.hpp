@@ -46,7 +46,7 @@
 #include <sake/core/data_structures/optional/private/swap_dispatch.hpp>
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/move/as_lvalue.hpp>
-#include <sake/core/move/is_movable.hpp>
+#include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/utility/address_of.hpp>
@@ -117,7 +117,7 @@ public:
 
     SAKE_OPTIMAL_MOVABLE_COPYABLE_IF_C(
         typename optional,
-        (sake::is_movable<T>::value)
+        (sake::has_move_emulation<T>::value)
     )
 
     optional();

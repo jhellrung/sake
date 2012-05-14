@@ -55,7 +55,7 @@
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
-#include <sake/core/move/is_movable.hpp>
+#include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/introspection/has_type_result_type.hpp>
@@ -130,7 +130,7 @@ template< class U >
 struct rv_sink_traits< Sequence, Pred >::
 default_constructor_enabler
     : boost::enable_if_c< boost_ext::mpl::and3<
-          sake::is_movable<U>,
+          sake::has_move_emulation<U>,
           boost::mpl::not_< boost_ext::mpl::any<
               Sequence,
               typename boost_ext::mpl::curry_quote2< boost::is_same >::apply<U>::type
@@ -201,10 +201,10 @@ cref_enable
     : boost_ext::mpl::and2<
           boost::mpl::not_< boost_ext::mpl::or3<
               boost_ext::is_rvalue_reference< U const & >,
-              sake::is_movable<U>,
+              sake::has_move_emulation<U>,
               boost_ext::mpl::any<
                   boost::mpl::filter_view<
-                      Sequence, boost::mpl::quote1< sake::is_movable > >,
+                      Sequence, boost::mpl::quote1< sake::has_move_emulation > >,
                   typename boost_ext::mpl::curry_quote2<
                       boost::is_same >::apply<U>::type
               >

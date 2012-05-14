@@ -64,7 +64,7 @@
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/forward.hpp>
-#include <sake/core/move/is_movable.hpp>
+#include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/int_tag.hpp>
@@ -302,7 +302,7 @@ public:
 #ifndef BOOST_NO_RVALUE_REFERENCES
     else_if < boost_ext::is_reference<T>, sake::int_tag<0> >::type::template
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
-    else_if_not< sake::is_movable<T>, sake::int_tag<0> >::type::template
+    else_if_not< sake::has_move_emulation<T>, sake::int_tag<0> >::type::template
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
     else_if < abs_ip_private::is_callable_mem_fun< ref_type, ref_type ( ) >, sake::int_tag<4> >::type::template
     else_if < abs_ip_private::is_callable_mem_fun< ref_type               >, sake::int_tag<3> >::type::template

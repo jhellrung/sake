@@ -20,7 +20,7 @@
 
 #include <boost/config.hpp>
 
-#include <sake/core/move/is_movable.hpp>
+#include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/rv.hpp>
 
 namespace sake
@@ -43,7 +43,7 @@ template<> struct add_rvalue_reference< void const volatile > { typedef void con
 namespace add_rvalue_reference_private
 {
 
-template< class T, bool = sake::is_movable<T>::value >
+template< class T, bool = sake::has_move_emulation<T>::value >
 struct impl;
 
 template< class T >

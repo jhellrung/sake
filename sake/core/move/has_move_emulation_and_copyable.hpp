@@ -1,19 +1,19 @@
 /*******************************************************************************
- * sake/core/move/is_movable_copyable.hpp
+ * sake/core/move/has_move_emulation_and_copyable.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * [only for C++03]
- * struct is_movable_copyable<T>
+ * struct has_move_emulation_and_copyable<T>
  *
  * This is a metafunction evaluating to true only if T is both movable and
  * copyable.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_MOVE_IS_MOVABLE_COPYABLE_HPP
-#define SAKE_CORE_MOVE_IS_MOVABLE_COPYABLE_HPP
+#ifndef SAKE_CORE_MOVE_HAS_MOVE_EMULATION_AND_COPYABLE_HPP
+#define SAKE_CORE_MOVE_HAS_MOVE_EMULATION_AND_COPYABLE_HPP
 
 #include <boost/config.hpp>
 
@@ -24,22 +24,22 @@
 #include <sake/boost_ext/mpl/and.hpp>
 
 #include <sake/core/introspection/has_mem_fun_operator.hpp>
-#include <sake/core/move/is_movable.hpp>
+#include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/rv.hpp>
 
 namespace sake
 {
 
 template< class T >
-struct is_movable_copyable
+struct has_move_emulation_and_copyable
     : boost_ext::mpl::and2<
-          sake::is_movable<T>,
+          sake::has_move_emulation<T>,
           sake::has_mem_fun_operator< T const, boost::rv<T> const & >
       >
 { };
 
 template< class T >
-struct is_movable_copyable< T& >
+struct has_move_emulation_and_copyable< T& >
     : boost::false_type
 { };
 
@@ -47,4 +47,4 @@ struct is_movable_copyable< T& >
 
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
-#endif // #ifndef SAKE_CORE_MOVE_IS_MOVABLE_COPYABLE_HPP
+#endif // #ifndef SAKE_CORE_MOVE_HAS_MOVE_EMULATION_AND_COPYABLE_HPP

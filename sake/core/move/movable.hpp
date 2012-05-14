@@ -256,7 +256,7 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
-#include <sake/core/move/is_movable.hpp>
+#include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 #include <sake/core/utility/memberwise/private/all_is_assignable.hpp>
@@ -442,14 +442,14 @@
 #define SAKE_MOVABLE_sake_movable_enable_0( r, member_seq ) \
     ::sake::boost_ext::mpl::BOOST_PP_CAT( or, BOOST_PP_SEQ_SIZE( member_seq ) ) < \
         BOOST_PP_SEQ_FOR_EACH_I_R( r, \
-            SAKE_MOVABLE_comma_is_movable, ~, member_seq ) \
+            SAKE_MOVABLE_comma_has_move_emulation, ~, member_seq ) \
     >
-#define SAKE_MOVABLE_comma_is_movable( r, data, i, elem ) \
+#define SAKE_MOVABLE_comma_has_move_emulation( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
-    ::sake::is_movable< BOOST_PP_SEQ_HEAD( elem ) >
+    ::sake::has_move_emulation< BOOST_PP_SEQ_HEAD( elem ) >
 
 #define SAKE_MOVABLE_sake_movable_enable_1( r, member_seq ) \
-    ::sake::is_movable< BOOST_PP_SEQ_HEAD( BOOST_PP_SEQ_HEAD( member_seq ) ) >
+    ::sake::has_move_emulation< BOOST_PP_SEQ_HEAD( BOOST_PP_SEQ_HEAD( member_seq ) ) >
 
 namespace sake
 {
