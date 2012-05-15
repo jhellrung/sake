@@ -17,7 +17,7 @@
 
 #include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/core/utility/has_private_operator_assign.hpp>
+#include <sake/core/type_traits/has_private_operator_assign.hpp>
 #include <sake/core/utility/convertible_from_any.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/true_false_tag.hpp>

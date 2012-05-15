@@ -24,12 +24,13 @@
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
+#include <sake/core/type_traits/has_nothrow_copy_constructor.hpp>
+#include <sake/core/utility/memberwise/private/typedef_has_xxx_tag.hpp>
+
 #define SAKE_MEMBERWISE_COPY_CONSTRUCTOR( T, member_seq ) \
-    SAKE_MEMBERWISE_COPY_CONSTRUCTOR_impl( BOOST_PP_DEDUCE_R(), \
-        SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
-        member_seq \
-    )
+    SAKE_MEMBERWISE_COPY_CONSTRUCTOR_R( BOOST_PP_DEDUCE_R(), T, member_seq )
 #define SAKE_MEMBERWISE_COPY_CONSTRUCTOR_R( r, T, member_seq ) \
+    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_copy_constructor ) \
     SAKE_MEMBERWISE_COPY_CONSTRUCTOR_impl( r, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
         member_seq \
@@ -48,6 +49,7 @@
 
 #define SAKE_MEMBERWISE_COPY_CONSTRUCTOR_impl( r, T, member_seq ) \
     T(T const & other) \
+        BOOST_NOEXCEPT_IF((has_nothrow_copy_constructor_tag::value)) \
     SAKE_MEMBERWISE_initialization_list( r, member_seq ) \
     { }
 

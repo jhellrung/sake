@@ -27,7 +27,7 @@
 #define SAKE_CORE_MOVE_MOVE_HPP
 
 #include <boost/config.hpp>
-#include <boost/mpl/assert.hpp>
+#include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
@@ -86,7 +86,7 @@ struct move< T& >
 template< class T >
 struct move< T const & >
 {
-    BOOST_MPL_ASSERT_NOT((boost_ext::is_rvalue_reference< T& >));
+    BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference< T& >::value));
     typedef T const & type;
 };
 

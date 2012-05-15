@@ -9,6 +9,7 @@
 #ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_ASSIGN_HPP
 #define SAKE_CORE_INTROSPECTION_HAS_OPERATOR_ASSIGN_HPP
 
+#include <boost/config.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/type_traits/integral_constant.hpp>
@@ -24,8 +25,9 @@
 #include <sake/core/introspection/has_member_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/introspection/private/builtin_has_operator_assign.hpp>
+#include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/rv.hpp>
-#include <sake/core/utility/has_private_operator_assign.hpp>
+#include <sake/core/type_traits/has_private_operator_assign.hpp>
 
 namespace sake
 {
@@ -71,7 +73,12 @@ struct impl< T, void, ResultPred >
 
 template< class T, class Result, class ResultPred >
 struct impl< T, Result ( T ), ResultPred >
+#ifndef BOOST_NO_RVALUE_REFERENCES
     : boost_ext::mpl::and3<
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+    : boost_ext::mpl::and4<
+          sake::has_move_emulation<T>,
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
           sake::has_mem_fun_operator_assign< T, T& ( SAKE_RV_REF( T ) ) >,
           boost_ext::is_convertible< T&, Result >,
           boost::mpl::apply1< ResultPred, T& >

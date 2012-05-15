@@ -1,7 +1,7 @@
 /*******************************************************************************
- * sake/core/utility/has_private_operator_assign.hpp
+ * sake/core/type_traits/has_private_operator_assign.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -11,20 +11,20 @@
  *
  * This is a metafunction which should evaluate to true iff T has a private
  * assignment operator.  This is automatically correctly deduced if T uses
- * SAKE_NONCOPYABLE or SAKE_NON_COPY_ASSIGNABLE or derives from noncopyable_base
+ * SAKE_NONCOPYABLE or SAKE_NONCOPY_ASSIGNABLE or derives from noncopyable_base
  * or noncopy_assignable_base, but other types will need to explicitly extend
  * this metafunction.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_HAS_PRIVATE_ASSIGN_HPP
-#define SAKE_CORE_UTILITY_HAS_PRIVATE_ASSIGN_HPP
+#ifndef SAKE_CORE_TYPE_TRAITS_HAS_PRIVATE_ASSIGN_HPP
+#define SAKE_CORE_TYPE_TRAITS_HAS_PRIVATE_ASSIGN_HPP
 
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/core/introspection/has_type.hpp>
-#include <sake/core/utility/has_private_operator_assign_fwd.hpp>
+#include <sake/core/type_traits/has_private_operator_assign_fwd.hpp>
 
 namespace sake
 {
@@ -74,4 +74,4 @@ struct has_private_operator_assign
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_HAS_PRIVATE_ASSIGN_HPP
+#endif // #ifndef SAKE_CORE_TYPE_TRAITS_HAS_PRIVATE_ASSIGN_HPP

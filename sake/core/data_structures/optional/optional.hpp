@@ -26,10 +26,13 @@
 
 #include <cstddef>
 
+#include <boost/config.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
@@ -45,10 +48,16 @@
 #include <sake/core/data_structures/optional/private/operator_assign_dispatch.hpp>
 #include <sake/core/data_structures/optional/private/swap_dispatch.hpp>
 #include <sake/core/functional/forwarding/core_access.hpp>
+#include <sake/core/introspection/has_operator_assign.hpp>
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/move.hpp>
+#include <sake/core/type_traits/has_nothrow_copy_assign.hpp>
+#include <sake/core/type_traits/has_nothrow_copy_constructor.hpp>
+#include <sake/core/type_traits/has_nothrow_destructor.hpp>
+#include <sake/core/type_traits/has_nothrow_move_assign.hpp>
+#include <sake/core/type_traits/has_nothrow_move_constructor.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
@@ -120,15 +129,32 @@ public:
         (sake::has_move_emulation<T>::value)
     )
 
-    optional();
-    typedef boost::true_type has_default_constructor_tag;
-    optional(optional const & other);
-    optional(this_rvalue_param_type other);
+    typedef boost::true_type has_nothrow_default_constructor_tag;
+    optional()
+        BOOST_NOEXCEPT;
 
-    ~optional();
+    typedef sake::has_nothrow_copy_constructor< nocv_type >
+        has_nothrow_copy_constructor_tag;
+    optional(optional const & other)
+        BOOST_NOEXCEPT_IF((has_nothrow_copy_constructor_tag::value));
 
-    optional& operator=(this_copy_assign_param_type other);
-    optional& operator=(this_rvalue_param_type other);
+    typedef sake::has_nothrow_move_constructor< nocv_type >
+        has_nothrow_move_constructor_tag;
+    optional(this_rvalue_param_type other)
+        BOOST_NOEXCEPT_IF((has_nothrow_move_constructor_tag::value));
+
+    typedef sake::has_nothrow_destructor< nocv_type >
+        has_nothrow_destructor_tag;
+    ~optional()
+        BOOST_NOEXCEPT_IF((has_nothrow_destructor_tag::value));
+
+    struct has_nothrow_copy_assign_tag;
+    optional& operator=(this_copy_assign_param_type other)
+        BOOST_NOEXCEPT_IF((has_nothrow_copy_assign_tag::value));
+
+    struct has_nothrow_move_assign_tag;
+    optional& operator=(this_rvalue_param_type other)
+        BOOST_NOEXCEPT_IF((has_nothrow_move_assign_tag::value));
 
     optional(sake::optional<>);
 
@@ -209,11 +235,13 @@ struct optional< T& >
 {
     typedef T& value_type;
 
-    optional();
-    typedef boost::true_type has_default_constructor_tag;
+    typedef boost::true_type has_nothrow_default_constructor_tag;
+    optional() BOOST_NOEXCEPT;
+    typedef boost::true_type has_nothrow_copy_constructor_tag;
     //optional(optional const &);
     //~optional();
 
+    typedef boost::true_type has_nothrow_copy_assign_tag;
     //optional& operator=(optional const &);
 
     optional(sake::optional<>);
@@ -307,6 +335,7 @@ template< class T >
 inline
 optional<T>::
 optional()
+    BOOST_NOEXCEPT
     : m_initialized(false)
 { }
 
@@ -314,6 +343,7 @@ template< class T >
 inline
 optional<T>::
 optional(optional const & other)
+    BOOST_NOEXCEPT_IF((has_nothrow_copy_constructor_tag::value))
     : m_initialized(other.m_initialized)
 { implicit_constructor_dispatch(other); }
 
@@ -321,6 +351,7 @@ template< class T >
 inline
 optional<T>::
 optional(this_rvalue_param_type other)
+    BOOST_NOEXCEPT_IF((has_nothrow_move_constructor_tag::value))
     : m_initialized(other.m_initialized)
 { implicit_constructor_dispatch(sake::move(other)); }
 
@@ -328,18 +359,47 @@ template< class T >
 inline
 optional<T>::
 ~optional()
+    BOOST_NOEXCEPT_IF((has_nothrow_destructor_tag::value))
 { destruct_dispatch_::apply_if(*this); }
+
+template< class T >
+struct optional<T>::
+has_nothrow_copy_assign_tag
+    : boost::mpl::if_c<
+          sake::has_operator_assign< T&, void ( T const & ) >::value,
+          sake::has_nothrow_copy_assign<T>,
+          boost_ext::mpl::and2<
+              has_nothrow_destructor_tag,
+              has_nothrow_copy_constructor_tag
+          >
+      >::type
+{ };
 
 template< class T >
 inline optional<T>&
 optional<T>::
 operator=(this_copy_assign_param_type other)
+    BOOST_NOEXCEPT_IF((has_nothrow_copy_assign_tag::value))
 { return operator_assign_dispatch(SAKE_AS_LVALUE(other)); }
+
+template< class T >
+struct optional<T>::
+has_nothrow_move_assign_tag
+    : boost::mpl::if_c<
+          sake::has_operator_assign< T&, void ( nocv_type ) >::value,
+          sake::has_nothrow_move_assign<T>,
+          boost_ext::mpl::and2<
+              has_nothrow_destructor_tag,
+              has_nothrow_move_constructor_tag
+          >
+      >::type
+{ };
 
 template< class T >
 inline optional<T>&
 optional<T>::
 operator=(this_rvalue_param_type other)
+    BOOST_NOEXCEPT_IF((has_nothrow_move_assign_tag::value))
 { return operator_assign_dispatch(sake::move(other)); }
 
 template< class T >
@@ -492,7 +552,7 @@ hash_value() const
 template< class T >
 inline
 optional< T& >::
-optional()
+optional() BOOST_NOEXCEPT
     : mp(0)
 { }
 

@@ -33,6 +33,7 @@
 #include <boost/range/mutable_iterator.hpp>
 #include <boost/ref.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/fusion/adapted/reference_wrapper.hpp>
@@ -86,8 +87,17 @@ public:
     typedef T type;
     typedef Tags tags;
 
-    // Fails unless boost::mpl::has_key< Tags, ref_tag::default_constructible >
-    reference_wrapper();
+    typedef boost::mpl::has_key< Tags, sake::ref_tag::default_constructible >
+        has_nothrow_default_constructor_tag;
+    // Fails unless has_nothrow_default_constructor_tag::value.
+    reference_wrapper()
+        BOOST_NOEXCEPT_IF((has_nothrow_default_constructor_tag::value));
+
+    //reference_wrapper(reference_wrapper const &);
+    //~reference_wrapper();
+
+    typedef boost::true_type has_nothrow_copy_assign_tag;
+    //reference_wrapper& operator=(reference_wrapper const &);
 
 private:
     static bool const has_implicitly_convertible_tag =
@@ -264,8 +274,9 @@ struct traits
 template< class T, class Tags >
 reference_wrapper< T, Tags >::
 reference_wrapper()
+    BOOST_NOEXCEPT_IF((has_nothrow_default_constructor_tag::value))
     : mp(nullptr)
-{ BOOST_STATIC_ASSERT((boost::mpl::has_key< Tags, sake::ref_tag::default_constructible >::value)); }
+{ BOOST_STATIC_ASSERT((has_nothrow_default_constructor_tag::value)); }
 
 template< class T, class Tags >
 reference_wrapper< T, Tags >::

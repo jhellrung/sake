@@ -67,8 +67,8 @@
 
 #define SAKE_MEMBERWISE_MEM_FUN_copy_assign( r, T, member_seq ) \
     SAKE_MEMBERWISE_COPY_ASSIGN_R( r, T, member_seq )
-#define SAKE_MEMBERWISE_MEM_FUN_copy_assign_if_any_umc( r, T, member_seq ) \
-    SAKE_MEMBERWISE_COPY_ASSIGN_IF_ANY_UMC_R( r, T, member_seq )
+#define SAKE_MEMBERWISE_MEM_FUN_copy_assign_if_any_has_ume( r, T, member_seq ) \
+    SAKE_MEMBERWISE_COPY_ASSIGN_IF_ANY_HAS_UME_R( r, T, member_seq )
 #define SAKE_MEMBERWISE_MEM_FUN_copy_assign_impl( r, T, member_seq ) \
     SAKE_MEMBERWISE_COPY_ASSIGN_IMPL_R( r, T, member_seq )
 #define SAKE_MEMBERWISE_MEM_FUN_copy_constructor( r, T, member_seq ) \

@@ -25,9 +25,13 @@
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
+#include <sake/core/type_traits/has_nothrow_move_assign.hpp>
+#include <sake/core/utility/memberwise/private/typedef_has_xxx_tag.hpp>
+
 #define SAKE_MEMBERWISE_MOVE_ASSIGN( typenameT, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( BOOST_PP_DEDUCE_R(), typenameT, member_seq )
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typenameT, member_seq ) \
+    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_move_assign ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_impl( r, \
         SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( typenameT ) BOOST_PP_EMPTY, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( typenameT ), \
@@ -69,10 +73,12 @@
         ::sake::memberwise_move_assign_private::disabler \
     >::type _sake_memberwise_move_assign_param_type; \
     T& operator=(_sake_memberwise_move_assign_param_type other) \
+        BOOST_NOEXCEPT_IF((has_nothrow_move_assign_tag::value)) \
     { SAKE_MEMBERWISE_assign_body( r, T, member_seq ) }
 
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_impl1( r, typename, T, member_seq ) \
     T& operator=(SAKE_MEMBERWISE_MOVE_ASSIGN_param_type( T )) \
+        BOOST_NOEXCEPT \
     { return *this; }
 
 namespace sake
