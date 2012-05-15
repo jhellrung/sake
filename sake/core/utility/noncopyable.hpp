@@ -35,7 +35,6 @@
     private: void operator=(T&); \
     public: typedef ::boost::false_type has_copy_constructor_tag; \
     public: typedef ::boost::false_type has_nothrow_copy_constructor_tag; \
-    public: typedef ::boost::false_type has_copy_assign_tag; \
     public: typedef ::boost::false_type has_nothrow_copy_assign_tag; \
     public: typedef ::boost::true_type has_private_operator_assign_tag;
 

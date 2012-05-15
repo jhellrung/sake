@@ -1,15 +1,15 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/private/all_is_assignable.hpp
+ * sake/core/utility/memberwise/private/move_assign_enable.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_MEMBERWISE_all_is_assignable( r, member_seq )
+ * #define SAKE_MEMBERWISE_move_assign_enable( r, member_seq )
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_ALL_IS_ASSIGNABLE_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_ALL_IS_ASSIGNABLE_HPP
+#ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_MOVE_ASSIGN_ENABLE_HPP
+#define SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_MOVE_ASSIGN_ENABLE_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
@@ -20,25 +20,25 @@
 
 #include <sake/boost_ext/mpl/and.hpp>
 
-#include <sake/core/utility/memberwise/private/is_assignable.hpp>
+#include <sake/core/utility/memberwise/private/member_move_assign_enable.hpp>
 
-#define SAKE_MEMBERWISE_all_is_assignable( r, member_seq ) \
+#define SAKE_MEMBERWISE_move_assign_enable( r, member_seq ) \
     BOOST_PP_CAT( \
-        SAKE_MEMBERWISE_all_is_assignable_, \
+        SAKE_MEMBERWISE_move_assign_enable_, \
         BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( member_seq ) ) \
     ) ( r, member_seq )
 
-#define SAKE_MEMBERWISE_all_is_assignable_0( r, member_seq ) \
+#define SAKE_MEMBERWISE_move_assign_enable_0( r, member_seq ) \
     ::sake::boost_ext::mpl::BOOST_PP_CAT( and, BOOST_PP_SEQ_SIZE( member_seq ) )< \
         BOOST_PP_SEQ_FOR_EACH_I_R( r, \
-            SAKE_MEMBERWISE_comma_is_assignable_member, ~, member_seq ) \
+            SAKE_MEMBERWISE_comma_member_move_assign_enable, ~, member_seq ) \
     >
-#define SAKE_MEMBERWISE_comma_is_assignable_member( r, data, i, elem ) \
+#define SAKE_MEMBERWISE_comma_member_move_assign_enable( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
-    ::sake::memberwise_private::is_assignable< BOOST_PP_SEQ_HEAD( elem ) >
+    ::sake::memberwise_private::member_move_assign_enable< BOOST_PP_SEQ_HEAD( elem ) >
 
-#define SAKE_MEMBERWISE_all_is_assignable_1( r, member_seq ) \
-    ::sake::memberwise_private::is_assignable< \
+#define SAKE_MEMBERWISE_move_assign_enable_1( r, member_seq ) \
+    ::sake::memberwise_private::member_move_assign_enable< \
         BOOST_PP_SEQ_HEAD( BOOST_PP_SEQ_HEAD( member_seq ) ) >
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_ALL_IS_ASSIGNABLE_HPP
+#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_MOVE_ASSIGN_ENABLE_HPP

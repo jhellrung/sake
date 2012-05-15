@@ -9,10 +9,7 @@
  * struct extension::has_default_constructor< T, Enable = void >
  * struct default_impl::has_default_constructor<T>
  *
- * Evaluates to true only if T has a default constructor.  Since there's no way,
- * in general, to determine this in C++03, the default implementation relies on
- * boost::has_trivial_default_constructor, and additional non-pod classes should
- * be specialized explicitly.
+ * Evaluates to true only if T has a default constructor.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_TYPE_TRAITS_HAS_DEFAULT_CONSTRUCTOR_HPP

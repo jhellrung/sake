@@ -26,12 +26,12 @@
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
 #include <sake/core/type_traits/has_nothrow_move_assign.hpp>
-#include <sake/core/utility/memberwise/private/typedef_has_xxx_tag.hpp>
+#include <sake/core/utility/memberwise/type_trait_tag.hpp>
 
 #define SAKE_MEMBERWISE_MOVE_ASSIGN( typenameT, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( BOOST_PP_DEDUCE_R(), typenameT, member_seq )
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typenameT, member_seq ) \
-    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_move_assign ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_move_assign ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_impl( r, \
         SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( typenameT ) BOOST_PP_EMPTY, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( typenameT ), \
@@ -51,8 +51,8 @@
 
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
-#include <sake/core/utility/memberwise/private/all_is_assignable.hpp>
 #include <sake/core/utility/memberwise/private/assign_body.hpp>
+#include <sake/core/utility/memberwise/private/move_assign_enable.hpp>
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_param_type( T ) T&&
@@ -68,7 +68,7 @@
 
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_impl0( r, typename, T, member_seq ) \
     typedef typename() ::boost::mpl::if_c< \
-        SAKE_MEMBERWISE_all_is_assignable( r, member_seq ) ::value, \
+        SAKE_MEMBERWISE_move_assign_enable( r, member_seq )::value, \
         SAKE_MEMBERWISE_MOVE_ASSIGN_param_type( T ), \
         ::sake::memberwise_move_assign_private::disabler \
     >::type _sake_memberwise_move_assign_param_type; \

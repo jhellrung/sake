@@ -128,10 +128,11 @@
 #include <boost/preprocessor/repetition/deduce_r.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
 #include <sake/core/move/move.hpp>
+#include <sake/core/type_traits/has_copy_constructor.hpp>
+#include <sake/core/type_traits/has_move_constructor.hpp>
 #include <sake/core/type_traits/has_nothrow_copy_assign.hpp>
 #include <sake/core/type_traits/has_nothrow_copy_constructor.hpp>
 #include <sake/core/type_traits/has_nothrow_move_assign.hpp>
@@ -140,8 +141,7 @@
 #include <sake/core/utility/memberwise/copy_constructor.hpp>
 #include <sake/core/utility/memberwise/move_assign.hpp>
 #include <sake/core/utility/memberwise/move_constructor.hpp>
-#include <sake/core/utility/memberwise/private/all_is_assignable.hpp>
-#include <sake/core/utility/memberwise/private/typedef_has_xxx_tag.hpp>
+#include <sake/core/utility/memberwise/type_trait_tag.hpp>
 #include <sake/core/utility/noncopyable.hpp>
 
 #define SAKE_BASIC_MOVABLE_COPYABLE_IF_C( typenameT, cond ) \
@@ -192,10 +192,12 @@
 
 
 #define SAKE_MOVABLE_MEMBERWISE_typedef_has_xxx_tags( r, member_seq ) \
-    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_copy_constructor ) \
-    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_move_constructor ) \
-    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_copy_assign ) \
-    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_move_assign )
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_copy_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_move_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_move_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_assign ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_move_assign )
 
 
 
@@ -263,6 +265,7 @@
 
 
 
+#include <boost/mpl/if.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
@@ -271,13 +274,14 @@
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/preprocessor/seq/size.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
 #include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/using_typedef.hpp>
-#include <sake/core/utility/memberwise/private/all_is_assignable.hpp>
+#include <sake/core/utility/memberwise/private/copy_assign_enable.hpp>
 
 #define SAKE_BASIC_MOVABLE_COPYABLE( T ) \
     typedef ::boost::rv<T>& this_rvalue_param_type; \
@@ -370,9 +374,9 @@
     ) ( r, typename, T, member_seq )
 
 #define SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE_impl0( r, typename, T, member_seq ) \
-    SAKE_MOVABLE_define_sake_movable_emulation_enable( r, member_seq ) \
     typedef ::sake::movable_private::basic_traits< \
-        T, _sake_movable_emulation_enable \
+        T, \
+        SAKE_MOVABLE_MEMBERWISE_emulation_enable( r, member_seq )::value \
     > _sake_movable_traits; \
     SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_rvalue_param_type ); \
     typedef typename() _sake_movable_traits::rv_conv_type \
@@ -381,7 +385,8 @@
     { return *static_cast< _sake_movable_rv_conv_type * >(this); } \
     operator _sake_movable_rv_conv_type const & () const \
     { return *static_cast< _sake_movable_rv_conv_type const * >(this); } \
-    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_copy_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_copy_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_constructor ) \
     SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_COPY_ASSIGN_IF_ANY_HAS_UME_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typename() T, member_seq )
@@ -397,11 +402,10 @@
     ) ( r, typename, T, member_seq )
 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE_impl0( r, typename, T, member_seq ) \
-    SAKE_MOVABLE_define_sake_movable_emulation_enable( r, member_seq ) \
-    static bool const _sake_movable_assignable = \
-        SAKE_MEMBERWISE_all_is_assignable( r, member_seq ) ::value; \
     typedef ::sake::movable_private::optimal_traits< \
-        T, _sake_movable_emulation_enable, _sake_movable_assignable \
+        T, \
+        SAKE_MOVABLE_MEMBERWISE_emulation_enable( r, member_seq )::value, \
+        SAKE_MEMBERWISE_copy_assign_enable( r, member_seq )::value \
     > _sake_movable_traits; \
     SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_rvalue_param_type ); \
     SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_copy_assign_param_type ); \
@@ -413,7 +417,8 @@
     { return *static_cast< _sake_movable_rv_conv_type * >(this); } \
     operator _sake_movable_rv_conv_type const & () const \
     { return *static_cast< _sake_movable_rv_conv_type const * >(this); } \
-    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_copy_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_copy_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_constructor ) \
     SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_COPY_ASSIGN_R( r, typename() T, member_seq ) \
     T& operator=(_sake_movable_emulation_enable_move_assign_param_type other) \
@@ -432,11 +437,12 @@
     ) ( r, typename, T, member_seq )
 
 #define SAKE_FRIENDLY_MOVABLE_COPYABLE_MEMBERWISE_impl0( r, typename, T, member_seq ) \
-    SAKE_MOVABLE_define_sake_movable_emulation_enable( r, member_seq ) \
-    static bool const _sake_movable_assignable = \
-        SAKE_MEMBERWISE_all_is_assignable( r, member_seq ) ::value; \
+    static bool const _sake_movable_emulation_enable = \
+        SAKE_MOVABLE_MEMBERWISE_emulation_enable( r, member_seq )::value; \
     typedef ::sake::movable_private::friendly_traits< \
-        T, _sake_movable_emulation_enable, _sake_movable_assignable \
+        T, \
+        _sake_movable_emulation_enable, \
+        SAKE_MEMBERWISE_copy_assign_enable( r, member_seq )::value \
     > _sake_movable_traits; \
     SAKE_USING_TYPEDEF( typename() _sake_movable_traits, this_rvalue_param_type ); \
     typedef typename() _sake_movable_traits::rv_conv_type \
@@ -447,13 +453,19 @@
     { return *static_cast< _sake_movable_rv_conv_type * >(this); } \
     operator _sake_movable_rv_conv_type const & () const \
     { return *static_cast< _sake_movable_rv_conv_type const * >(this); } \
-    SAKE_MEMBERWISE_typedef_has_xxx_tag( r, member_seq, has_nothrow_copy_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_copy_constructor ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_constructor ) \
     SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typename() T, member_seq ) \
-    typedef ::sake::boost_ext::mpl::and2< \
-        has_nothrow_copy_constructor_tag, \
-        has_nothrow_move_assign_tag \
-    > has_nothrow_copy_assign_tag; \
+    typedef typename() ::boost::mpl::if_c< \
+        _sake_movable_emulation_enable, \
+        ::sake::boost_ext::mpl::and2< \
+            has_nothrow_copy_constructor_tag, \
+            has_nothrow_move_assign_tag \
+        >, \
+        SAKE_MEMBERWISE_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_assign ) \
+    >::type has_nothrow_copy_assign_tag; \
+    template< class, class > friend class ::sake::has_type_has_nothrow_copy_assign_tag; \
     T& operator=(_sake_movable_copy_assign_param_type other) \
         BOOST_NOEXCEPT_IF((has_nothrow_copy_assign_tag::value)) \
     { return operator=(::sake::move(other)); }
@@ -462,14 +474,14 @@
     typedef ::sake::movable_private::disabler_param<0> this_rvalue_param_type; \
     SAKE_MOVABLE_MEMBERWISE_typedef_has_xxx_tags( r, member_seq )
 
-#define SAKE_MOVABLE_define_sake_movable_emulation_enable( r, member_seq ) \
-    static bool const _sake_movable_emulation_enable = \
-        BOOST_PP_CAT( \
-            SAKE_MOVABLE_sake_movable_emulation_enable_, \
-            BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( member_seq ) ) \
-        ) ( r, member_seq ) ::value;
 
-#define SAKE_MOVABLE_sake_movable_emulation_enable_0( r, member_seq ) \
+
+#define SAKE_MOVABLE_MEMBERWISE_emulation_enable( r, member_seq ) \
+    BOOST_PP_CAT( \
+        SAKE_MOVABLE_MEMBERWISE_emulation_enable_, \
+        BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( member_seq ) ) \
+    ) ( r, member_seq )
+#define SAKE_MOVABLE_MEMBERWISE_emulation_enable_0( r, member_seq ) \
     ::sake::boost_ext::mpl::BOOST_PP_CAT( or, BOOST_PP_SEQ_SIZE( member_seq ) ) < \
         BOOST_PP_SEQ_FOR_EACH_I_R( r, \
             SAKE_MOVABLE_comma_has_move_emulation, ~, member_seq ) \
@@ -477,8 +489,7 @@
 #define SAKE_MOVABLE_comma_has_move_emulation( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
     ::sake::has_move_emulation< BOOST_PP_SEQ_HEAD( elem ) >
-
-#define SAKE_MOVABLE_sake_movable_emulation_enable_1( r, member_seq ) \
+#define SAKE_MOVABLE_MEMBERWISE_emulation_enable_1( r, member_seq ) \
     ::sake::has_move_emulation< BOOST_PP_SEQ_HEAD( BOOST_PP_SEQ_HEAD( member_seq ) ) >
 
 namespace sake
@@ -496,9 +507,9 @@ struct disabler_conv;
 
 template< class T, bool Enable >
 struct basic_traits;
-template< class T, bool Enable, bool Assignable >
+template< class T, bool Enable, bool CopyAssignEnable >
 struct optimal_traits;
-template< class T, bool Enable, bool Assignable >
+template< class T, bool Enable, bool CopyAssignEnable >
 struct friendly_traits;
 
 template< class T >
@@ -533,8 +544,8 @@ struct optimal_traits< T, true, false >
     typedef disabler_param<1> enable_move_assign_param_type;
 };
 
-template< class T, bool Assignable >
-struct optimal_traits< T, false, Assignable >
+template< class T, bool CopyAssignEnable >
+struct optimal_traits< T, false, CopyAssignEnable >
 {
     typedef disabler_conv<T>  rv_conv_type;
     typedef disabler_param<0> this_rvalue_param_type;
@@ -560,8 +571,8 @@ struct friendly_traits< T, true, false >
     typedef disabler_param<1> copy_assign_by_cref_param_type;
 };
 
-template< class T, bool Assignable >
-struct friendly_traits< T, false, Assignable >
+template< class T, bool CopyAssignEnable >
+struct friendly_traits< T, false, CopyAssignEnable >
 {
     typedef disabler_conv<T>  rv_conv_type;
     typedef disabler_param<0> this_rvalue_param_type;

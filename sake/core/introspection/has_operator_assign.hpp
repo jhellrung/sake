@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/introspection/has_operator_assign.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
@@ -47,10 +47,9 @@ SAKE_INTROSPECTION_DEFINE_HAS_MEMBER_FUNCTION(
     ::sake::introspection_private::builtin_has_operator_assign< T, Signature, ResultPred >
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
-// Since it is not uncommon for a class to declare its copy assignment operator
-// private, we take extra pains to easily support this (via extension of the
-// has_private_assign metafunction) and still be able to identify move
-// assignable types.
+// Since it is not uncommon for a class to declare a private assignment
+// operator, and since nearly every such case is to disable all assignment
+// *except* perhaps move assignment, we take extra pains to address this.
 
 namespace extension
 {
