@@ -143,6 +143,8 @@ struct at_c_dispatch;
     _ ## n = boost_ext::fusion::at_c<n>(sake::forward< Sequence >(s));
 #define fwd_ref_Un_xn( z, n, data ) \
     SAKE_FWD_REF( U ## n ) x ## n
+#define fwd2_param_Un( z, n, data ) \
+    SAKE_FWD2_PARAM( U ## n )
 #define fwd2_ref_Un_xn( z, n, data ) \
     SAKE_FWD2_REF( U ## n ) x ## n
 #define forward_Un_xn( z, n, data ) \
@@ -163,6 +165,7 @@ struct at_c_dispatch;
 #undef _n_data_at_n
 #undef _n_assign_at_c_n_forward_Sequence_s
 #undef fwd_ref_Un_xn
+#undef fwd2_param_Un
 #undef fwd2_ref_Un_xn
 #undef forward_Un_xn
 #undef _n_assign_forward_Un_xn

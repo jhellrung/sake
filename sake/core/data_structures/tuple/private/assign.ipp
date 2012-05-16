@@ -60,7 +60,7 @@ public:
 #if !defined( BOOST_NO_RVALUE_REFERENCES ) || N > 2
 
     template< class_U0N >
-    typename assign_enabler< U0N >::type
+    typename assign_enabler< BOOST_PP_ENUM( N, fwd2_param_Un, ~ ) >::type
     assign( BOOST_PP_ENUM( N, fwd_ref_Un_xn, ~ ) )
     { assign_impl(BOOST_PP_ENUM( N, forward_Un_xn, ~ )); }
 
@@ -106,7 +106,7 @@ public:
     // const lvalues + non-movable rvalues
     template< class U0 >
     typename assign0_rv_sink_traits::template cref_enabler< U0 >::type
-    assign(U0& x0)
+    assign(U0 const & x0)
     { assign_impl(x0); }
 
 #else // #if N == 1
