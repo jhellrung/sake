@@ -139,11 +139,11 @@ class impl
         binary_result_types<
             typename boost_ext::remove_qualifiers< T0 >::type,
             typename boost_ext::remove_qualifiers< T1 >::type
-        >::type candidates_results_type;
+        >::type candidate_result_types;
 public:
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >(),
-        candidates_results_type,
+        candidate_result_types,
         type
     );
 };

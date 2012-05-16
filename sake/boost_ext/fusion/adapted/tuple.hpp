@@ -56,7 +56,7 @@ struct tuple_iterator
     struct value_of
     {
         static std::size_t const i = This::i;
-        typedef typename boost::mpl::at_c< typename T::values_type, i >::type type;
+        typedef typename boost::mpl::at_c< typename T::value_types, i >::type type;
     };
     template< class > friend struct value_of;
 
@@ -223,7 +223,7 @@ struct value_at_impl< sake::boost_ext::fusion::tuple_tag >
 {
     template< class This, class I >
     struct apply
-        : boost::mpl::at< typename This::values_type, I >
+        : boost::mpl::at< typename This::value_types, I >
     { };
 };
 

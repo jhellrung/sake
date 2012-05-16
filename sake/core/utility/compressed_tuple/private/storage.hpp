@@ -81,9 +81,9 @@ struct storage< boost::mpl::vector2< T0, T1 >, _ >
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 {
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost_ext::mpl::vector< T0, T1 > values_type;
+    typedef boost_ext::mpl::vector< T0, T1 > value_types;
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost::mpl::vector2< T0, T1 > values_type;
+    typedef boost::mpl::vector2< T0, T1 > value_types;
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 private:
@@ -107,14 +107,14 @@ public:
 
     template< std::size_t I >
     typename boost_ext::add_reference<
-        typename boost::mpl::at_c< values_type, I >::type
+        typename boost::mpl::at_c< value_types, I >::type
     >::type
     at_c()
     { return boost_ext::fusion::at_c<I>(m_pair); }
 
     template< std::size_t I >
     typename boost_ext::add_reference_add_const<
-        typename boost::mpl::at_c< values_type, I >::type
+        typename boost::mpl::at_c< value_types, I >::type
     >::type
     at_c() const
     { return boost_ext::fusion::at_c<I>(m_pair); }
@@ -199,16 +199,16 @@ struct storage< boost::mpl::BOOST_PP_CAT( vector, N )< T0N >, true >
 #endif // BOOST_NO_VARIADIC_TEMPLATES
 {
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost_ext::mpl::vector< T0N > values_type;
+    typedef boost_ext::mpl::vector< T0N > value_types;
 #else // BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost::mpl::BOOST_PP_CAT( vector, N )< T0N > values_type;
+    typedef boost::mpl::BOOST_PP_CAT( vector, N )< T0N > value_types;
 #endif // BOOST_NO_VARIADIC_TEMPLATES
 
 private:
     static std::size_t const j = sake::static_clamp_c<
         0,
         boost_ext::mpl::reverse_adjacent_find_index<
-            values_type,
+            value_types,
             boost::mpl::not_equal_to<
                 boost::is_empty< boost::mpl::_1 >,
                 boost::is_empty< boost::mpl::_2 >
@@ -218,18 +218,18 @@ private:
     >::value;
     // Assert that at least one of T[j] and T[j+1] are empty.
     BOOST_STATIC_ASSERT((
-        boost::is_empty< typename boost::mpl::at_c< values_type, j+0 >::type >::value
-     || boost::is_empty< typename boost::mpl::at_c< values_type, j+1 >::type >::value
+        boost::is_empty< typename boost::mpl::at_c< value_types, j+0 >::type >::value
+     || boost::is_empty< typename boost::mpl::at_c< value_types, j+1 >::type >::value
     ));
     // Assert that if *both* T[j] and T[j+1] are empty, then *all* T[i] must be
     // empty.
     BOOST_STATIC_ASSERT((
-       !boost::is_empty< typename boost::mpl::at_c< values_type, j+0 >::type >::value
-    || !boost::is_empty< typename boost::mpl::at_c< values_type, j+1 >::type >::value
-    ||  boost_ext::mpl::all< values_type, boost::mpl::quote1< boost::is_empty > >::value
+       !boost::is_empty< typename boost::mpl::at_c< value_types, j+0 >::type >::value
+    || !boost::is_empty< typename boost::mpl::at_c< value_types, j+1 >::type >::value
+    ||  boost_ext::mpl::all< value_types, boost::mpl::quote1< boost::is_empty > >::value
     ));
-    typedef typename boost::mpl::begin< values_type >::type begin_values;
-    typedef typename boost::mpl::end< values_type >::type end_values;
+    typedef typename boost::mpl::begin< value_types >::type begin_values;
+    typedef typename boost::mpl::end< value_types >::type end_values;
     typedef private_::storage<
         // candidate for abstracting into a mpl::flatten algorithm?
         typename boost_ext::mpl::as_vector<
@@ -262,8 +262,8 @@ private:
                         >::type,
                         // compressed_pair< T[j], T[j+1] >
                         sake::compressed_pair<
-                            typename boost::mpl::at_c< values_type, j+0 >::type,
-                            typename boost::mpl::at_c< values_type, j+1 >::type
+                            typename boost::mpl::at_c< value_types, j+0 >::type,
+                            typename boost::mpl::at_c< value_types, j+1 >::type
                         >
                     >::type
                 >
@@ -290,14 +290,14 @@ public:
 
     template< std::size_t I >
     typename boost_ext::add_reference<
-        typename boost::mpl::at_c< values_type, I >::type
+        typename boost::mpl::at_c< value_types, I >::type
     >::type
     at_c()
     { return private_::at_c_dispatch<I,j>::apply(m_storage); }
 
     template< std::size_t I >
     typename boost_ext::add_reference_add_const<
-        typename boost::mpl::at_c< values_type, I >::type
+        typename boost::mpl::at_c< value_types, I >::type
     >::type
     at_c() const
     { return private_::at_c_dispatch<I,j>::apply(m_storage); }

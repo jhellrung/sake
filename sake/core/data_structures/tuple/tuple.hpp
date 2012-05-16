@@ -29,6 +29,7 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/seq/cat.hpp>
 #include <boost/preprocessor/seq/seq.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -64,9 +65,9 @@ template<>
 struct tuple<>
 {
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost_ext::mpl::vector<> values_type;
+    typedef boost_ext::mpl::vector<> value_types;
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost::mpl::vector0<> values_type;
+    typedef boost::mpl::vector0<> value_types;
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
@@ -126,6 +127,8 @@ struct at_c_dispatch;
     T ## n _ ## n;
 #define typedef_remove_cv_Tn_nocvn_type( z, n, data ) \
     typedef typename boost::remove_cv< T ## n >::type nocv ## n ## _type;
+#define nocvn_type( z, n, data ) \
+    nocv ## n ## _type
 #define comma_i_emplacer_constructible_nocvi_type_elem( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) BOOST_PP_CAT( _, i ) ( \
         sake::emplacer_constructible< \
@@ -134,6 +137,8 @@ struct at_c_dispatch;
     )
 #define _n_at_c_n_data( z, n, data ) \
     _ ## n (boost_ext::fusion::at_c<n>(data))
+#define _n_data_at_n( z, n, data ) \
+    _ ## n (data[boost::integral_constant< std::size_t, n >()])
 #define _n_assign_at_c_n_forward_Sequence_s( z, n, data ) \
     _ ## n = boost_ext::fusion::at_c<n>(sake::forward< Sequence >(s));
 #define fwd_ref_Un_xn( z, n, data ) \
@@ -152,8 +157,10 @@ struct at_c_dispatch;
 #undef Tn_n_seq
 #undef Tn_n
 #undef typedef_remove_cv_Tn_nocvn_type
+#undef nocvn_type
 #undef comma_i_emplacer_constructible_nocvi_type_elem
 #undef _n_at_c_n_data
+#undef _n_data_at_n
 #undef _n_assign_at_c_n_forward_Sequence_s
 #undef fwd_ref_Un_xn
 #undef fwd2_ref_Un_xn
@@ -201,9 +208,9 @@ struct tuple< T0N >
 #endif // #if defined( BOOST_NO_VARIADIC_TEMPLATES ) && N == SAKE_TUPLE_MAX_SIZE
 {
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost_ext::mpl::vector< T0N > values_type;
+    typedef boost_ext::mpl::vector< T0N > value_types;
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost::mpl::BOOST_PP_CAT( vector, N )< T0N > values_type;
+    typedef boost::mpl::BOOST_PP_CAT( vector, N )< T0N > value_types;
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     static std::size_t const static_size = N;
@@ -223,6 +230,12 @@ struct tuple< T0N >
 
 private:
     BOOST_PP_REPEAT( N, typedef_remove_cv_Tn_nocvn_type, ~ )
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost_ext::mpl::vector<
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+    typedef boost::mpl::BOOST_PP_CAT( vector, N )<
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+        BOOST_PP_ENUM( N, nocvn_type, ~ ) > nocv_types;
 public:
 
 #if 0 // for exposition purposes only

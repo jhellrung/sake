@@ -94,9 +94,9 @@ public:
     explicit tuple(value0_constructor_rv_sink_default_type x0)
         : _0(x0())
     { }
-    // const lvalue + non-movable rvalues
+    // const lvalues + non-movable rvalues
     template< class U0 >
-    explicit tuple(U0& x0,
+    explicit tuple(U0 const & x0,
         typename value0_constructor_rv_sink_traits::template
             cref_enabler< U0 >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0))
@@ -110,7 +110,7 @@ private:
     template< class_U0N >
     struct value_constructor_enable
         : boost::mpl::equal<
-              values_type,
+              value_types,
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
               boost_ext::mpl::vector< U0N >,
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES

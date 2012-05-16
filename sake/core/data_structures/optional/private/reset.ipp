@@ -102,10 +102,10 @@ private:
         boost::mpl::quote1< reset_enable >
     > reset_rv_sink_traits;
     typedef typename boost::mpl::at_c<
-        typename reset_rv_sink_traits::primaries_type, 0
+        typename reset_rv_sink_traits::primary_types, 0
     >::type reset_rv_sink_primary0_type;
     typedef typename boost::mpl::at_c<
-        typename reset_rv_sink_traits::primaries_type, 1
+        typename reset_rv_sink_traits::primary_types, 1
     >::type reset_rv_sink_primary1_type;
     typedef typename reset_rv_sink_traits::template
         default_< reset_rv_sink_visitor > reset_rv_sink_default_type;

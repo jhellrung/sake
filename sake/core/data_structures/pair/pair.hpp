@@ -51,7 +51,7 @@ struct pair
 {
     typedef T0 first_type;
     typedef T1 second_type;
-    typedef boost::mpl::vector2< T0, T1 > values_type;
+    typedef boost::mpl::vector2< T0, T1 > value_types;
 
     T0 first;
     T1 second;
@@ -70,6 +70,7 @@ struct pair
 private:
     typedef typename boost::remove_cv< T0 >::type nocv0_type;
     typedef typename boost::remove_cv< T1 >::type nocv1_type;
+    typedef boost::mpl::vector2< nocv0_type, nocv1_type > nocv_types;
 public:
 
 #if 0 // for exposition purposes only

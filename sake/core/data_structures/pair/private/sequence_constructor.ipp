@@ -9,12 +9,15 @@
 #ifdef SAKE_PAIR_INCLUDE_HEADERS
 
 #include <boost/config.hpp>
+#include <boost/mpl/quote.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
+#include <sake/boost_ext/fusion/sequence/default_rv_sink.hpp>
 #include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
-#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/data_structures/tuple/private/sequence_constructor_enable.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/rv_sink.hpp>
 
 #endif // #ifdef SAKE_PAIR_INCLUDE_HEADERS
 
@@ -38,18 +41,37 @@ public:
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
+private:
+    template< class Sequence >
+    struct sequence_constructor_enable
+        : sake::tuple_private::sequence_constructor_enable< pair, Sequence >
+    { };
+    typedef sake::rv_sink_traits0<
+        boost::mpl::quote1< sequence_constructor_enable >
+    > sequence_constructor_rv_sink_traits;
+    typedef boost_ext::fusion::default_rv_sink0<
+        nocv_types,
+        boost::mpl::quote1< sequence_constructor_enable >
+    > sequence_constructor_rv_sink_default_type;
+public:
+    // lvalues + explicit movable rvalues
     template< class Sequence >
     pair(Sequence& s,
-        typename sequence_constructor_enabler<
-            typename boost_ext::remove_rvalue_reference< Sequence& >::type
-        >::type* = 0)
+        typename sequence_constructor_rv_sink_traits::template
+            ref_enabler< Sequence >::type* = 0)
         : first (boost_ext::fusion::at_c<0>(s)),
           second(boost_ext::fusion::at_c<1>(s))
     { }
-
+    // implicit movable rvalues
+    pair(sequence_constructor_rv_sink_default_type s)
+        : first (s[boost::integral_constant< std::size_t, 0 >()]),
+          second(s[boost::integral_constant< std::size_t, 1 >()])
+    { }
+    // const lvalues + non-movable rvalues
     template< class Sequence >
     pair(Sequence const & s,
-        typename sequence_constructor_enabler< Sequence const & >::type* = 0)
+        typename sequence_constructor_rv_sink_traits::template
+            cref_enabler< Sequence >::type* = 0)
         : first(boost_ext::fusion::at_c<0>(s)),
           second(boost_ext::fusion::at_c<1>(s))
     { }

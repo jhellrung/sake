@@ -39,7 +39,7 @@ struct has_operator_assign
 template< class T, class Sequence >
 struct operator_assign_enable_helper
     : boost::mpl::equal<
-          typename T::values_type,
+          typename T::value_types,
           typename boost_ext::fusion::result_of::
               forward_as_mpl_sequence< Sequence >::type,
           boost::mpl::quote2< sake::tuple_private::has_operator_assign >

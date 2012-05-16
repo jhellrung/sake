@@ -5,15 +5,15 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_EXPR_TYPEOF( expression, candidates_type )
- * #define SAKE_EXPR_TYPEOF_TYPEDEF( expression, candidates_type, type )
+ * #define SAKE_EXPR_TYPEOF( expression, candidate_types )
+ * #define SAKE_EXPR_TYPEOF_TYPEDEF( expression, candidate_types, type )
  *
  * SAKE_EXPR_TYPEOF expands to the type within the Boost.MPL sequence
- * candidates_type matching the type of the given expression.
+ * candidate_types matching the type of the given expression.
  * SAKE_EXPR_TYPEOF_TYPEDEF defines a typedef for the result of SAKE_EXPR_TYPEOF
  * as a workaround for deficient compilers.
  * If the type of the given expression is not among the types given by
- * candidates_type, the result evaluates to void.
+ * candidate_types, the result evaluates to void.
  *
  * Note: expression must have non-void type.
  ******************************************************************************/
@@ -33,22 +33,22 @@
 // The trouble appears to be the use of a sizeof expression as an integral
 // template parameter in boost_ext::mpl::at_c.  As a workaround, the TYPEDEF
 // macro is provided.
-#define SAKE_EXPR_TYPEOF( expression, candidates_type ) \
+#define SAKE_EXPR_TYPEOF( expression, candidate_types ) \
     ::sake::boost_ext::mpl::at_c< \
-        candidates_type, \
-        SAKE_EXPR_TYPEOF_INDEX( expression, candidates_type ), \
+        candidate_types, \
+        SAKE_EXPR_TYPEOF_INDEX( expression, candidate_types ), \
         void \
     >
 
-#define SAKE_EXPR_TYPEOF_TYPEDEF( expression, candidates_type, type_ ) \
+#define SAKE_EXPR_TYPEOF_TYPEDEF( expression, candidate_types, type_ ) \
     static int const BOOST_PP_CAT( _sake_expr_typeof_index_for_, type_ ) = \
         SAKE_EXPR_TYPEOF_INDEX( \
             SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( expression ), \
-            candidates_type \
+            candidate_types \
         ); \
     typedef SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( expression ) \
         ::sake::boost_ext::mpl::at_c< \
-            candidates_type, \
+            candidate_types, \
             BOOST_PP_CAT( _sake_expr_typeof_index_for_, type_ ), \
             void \
         >::type type_

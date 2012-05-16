@@ -33,7 +33,7 @@ struct sequence_constructor_enable_helper
     : boost::mpl::equal<
           typename boost_ext::fusion::result_of::
               forward_as_mpl_sequence< Sequence >::type,
-          typename T::values_type,
+          typename T::value_types,
           boost::mpl::quote2< sake::is_convertible_wnrbt >
       >
 { };

@@ -41,7 +41,7 @@ struct at_c_dispatch<I,J,0>
         typename boost_ext::propagate_const<
             Storage,
             typename boost::mpl::at_c<
-                typename Storage::values_type, I
+                typename Storage::value_types, I
             >::type
         >::type
     >::type
@@ -58,7 +58,7 @@ struct at_c_dispatch<I,J,1>
         typename boost_ext::propagate_const<
             Storage,
             typename boost::mpl::at_c<
-                typename Storage::values_type, J
+                typename Storage::value_types, J
             >::type::first_type
         >::type
     >::type
@@ -75,7 +75,7 @@ struct at_c_dispatch<I,J,2>
         typename boost_ext::propagate_const<
             Storage,
             typename boost::mpl::at_c<
-                typename Storage::values_type, J
+                typename Storage::value_types, J
             >::type::second_type
         >::type
     >::type
@@ -92,7 +92,7 @@ struct at_c_dispatch<I,J,3>
         typename boost_ext::propagate_const<
             Storage,
             typename boost::mpl::at_c<
-                typename Storage::values_type, I-1
+                typename Storage::value_types, I-1
             >::type
         >::type
     >::type

@@ -54,7 +54,7 @@ struct compressed_pair
 {
     typedef T0 first_type;
     typedef T1 second_type;
-    typedef boost::mpl::vector2< T0, T1 > values_type;
+    typedef boost::mpl::vector2< T0, T1 > value_types;
 
 private:
     typedef private_::storage< T0, T1 > m_storage_type;

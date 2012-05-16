@@ -16,6 +16,7 @@
  *     T,
  *     Pred = boost::mpl::always< boost::true_type >
  * >
+ * struct primary_rv_sink<T>
  *
  * struct rv_sink_visitors::operator_assign<T>
  * rv_sink_visitors::make_operator_assign(T& x)
@@ -66,10 +67,14 @@
 namespace sake
 {
 
+template< class T >
+struct primary_rv_sink;
+
 namespace rv_sink_private
 {
 
-template< class T > struct sink;
+template< class Visitor, class Result >
+struct default_base;
 
 } // namespace rv_sink_private
 
@@ -92,13 +97,13 @@ struct rv_sink_traits
         boost::mpl::quote1< boost_ext::is_cv_or >
     >::value));
 
-    typedef Sequence values_type;
+    typedef Sequence value_types;
 
     typedef typename boost::mpl::transform<
         Sequence,
-        boost::mpl::quote1< sake::rv_sink_private::sink >,
+        boost::mpl::quote1< sake::primary_rv_sink >,
         boost::mpl::back_inserter< boost::mpl::vector0<> >
-    >::type primaries_type;
+    >::type primary_types;
 
 private:
     template< class U > struct default_constructor_enabler;
@@ -107,8 +112,8 @@ public:
         class Visitor,
         class Result = sake::default_tag
     >
-    struct default_;
-    template< class, class > friend struct default_;
+    class default_;
+    template< class, class > friend class default_;
 
     template< class U >
     struct ref_enable;
@@ -141,41 +146,18 @@ default_constructor_enabler
 
 template< class Sequence, class Pred >
 template< class Visitor, class Result >
-struct rv_sink_traits< Sequence, Pred >::
+class rv_sink_traits< Sequence, Pred >::
 default_
+    : public rv_sink_private::default_base< Visitor, Result >
 {
-    typedef typename sake::lazy_replace_default_tag<
-        Result,
-        boost::mpl::eval_if<
-            sake::has_type_result_type< Visitor >,
-            boost_ext::mpl::result_type< Visitor >,
-            boost::mpl::identity< void >
-        >
-    >::type result_type;
-
-    SAKE_NONCOPYABLE( default_ )
-
+    typedef rv_sink_private::default_base< Visitor, Result > default_base_;
+public:
     // implicit by design
     template< class U >
     default_(U const & x,
         typename default_constructor_enabler<U>::type* = 0)
-        : m_apply(apply<U>),
-          mp(static_cast< void* >(sake::address_of(const_cast< U& >(x))))
+        : default_base_(const_cast< U& >(x))
     { }
-
-    result_type operator()() const
-    { return m_apply(Visitor(), mp); }
-
-    result_type operator()(Visitor v) const
-    { return m_apply(v, mp); }
-
-private:
-    template< class U >
-    static result_type apply(Visitor v, void* p)
-    { return v(sake::move(*static_cast< U* >(p))); }
-
-    result_type (&m_apply)(Visitor, void*);
-    void* const mp;
 };
 
 template< class Sequence, class Pred >
@@ -249,7 +231,7 @@ struct rv_sink_traits1
 {
     typedef T value_type;
 
-    typedef sake::rv_sink_private::sink<T> primary_type;
+    typedef sake::primary_rv_sink<T> primary_type;
 };
 
 /*******************************************************************************
@@ -280,11 +262,12 @@ make_operator_assign(T& x)
 
 } // namespace rv_sink_visitors
 
-namespace rv_sink_private
-{
+/*******************************************************************************
+ * struct primary_rv_sink<T>
+ ******************************************************************************/
 
 template< class T >
-struct sink
+struct primary_rv_sink
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
 
@@ -294,19 +277,58 @@ struct sink
     move() const
     { return sake::move(value); }
 
-    SAKE_NONCOPYABLE( sink )
+    SAKE_NONCOPYABLE( primary_rv_sink )
 
     // implicit by design
     template< class U >
-    sink(U const & value_,
+    primary_rv_sink(U const & value_,
         typename boost::enable_if_c< boost::is_same<T,U>::value >::type* = 0)
         : value(const_cast< T& >(value_))
     { }
 };
 
 template< class T >
-struct sink< T& >
+struct primary_rv_sink< T& >
 { };
+
+namespace rv_sink_private
+{
+
+template< class Visitor, class Result >
+struct default_base
+{
+    typedef typename sake::lazy_replace_default_tag<
+        Result,
+        boost::mpl::eval_if<
+            sake::has_type_result_type< Visitor >,
+            boost_ext::mpl::result_type< Visitor >,
+            boost::mpl::identity< void >
+        >
+    >::type result_type;
+
+    SAKE_NONCOPYABLE( default_base )
+
+    result_type operator()() const
+    { return m_apply(Visitor(), mp); }
+
+    result_type operator()(Visitor v) const
+    { return m_apply(v, mp); }
+
+protected:
+    template< class U >
+    explicit default_base(U& x)
+        : m_apply(apply<U>),
+          mp(static_cast< void* >(sake::address_of(x)))
+    { }
+
+private:
+    template< class U >
+    static result_type apply(Visitor v, void* p)
+    { return v(sake::move(*static_cast< U* >(p))); }
+
+    result_type (&m_apply)(Visitor, void*);
+    void* const mp;
+};
 
 } // namespace rv_sink_private
 

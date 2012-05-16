@@ -37,7 +37,7 @@ private:
     template< class_U0N >
     struct assign_enable
         : boost::mpl::equal<
-              values_type,
+              value_types,
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
               boost_ext::mpl::vector< U0N >,
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES

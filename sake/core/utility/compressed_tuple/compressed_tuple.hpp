@@ -70,9 +70,9 @@ template<>
 struct compressed_tuple<>
 {
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost_ext::mpl::vector<> values_type;
+    typedef boost_ext::mpl::vector<> value_types;
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost::mpl::vector0<> values_type;
+    typedef boost::mpl::vector0<> value_types;
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = 0;
 
@@ -157,9 +157,9 @@ struct compressed_tuple< T0N >
 #endif // #if N == 1
 {
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost_ext::mpl::vector< T0N > values_type;
+    typedef boost_ext::mpl::vector< T0N > value_types;
 #else // BOOST_NO_VARIADIC_TEMPLATES
-    typedef boost::mpl::BOOST_PP_CAT( vector, N )< T0N > values_type;
+    typedef boost::mpl::BOOST_PP_CAT( vector, N )< T0N > value_types;
 #endif // BOOST_NO_VARIADIC_TEMPLATES
     static std::size_t const static_size = N;
 
@@ -195,7 +195,7 @@ public:
         typename boost::disable_if_c<
             boost_ext::is_base_of_sans_qualifiers< compressed_tuple, U0 >::value
         >::type* = 0)
-        : base_member_(sake::forward< U0 >(x0))
+        : base_member_(x0)
     { }
 
     template< class U0 >
@@ -203,7 +203,7 @@ public:
         typename boost::disable_if_c<
             boost_ext::is_base_of_sans_qualifiers< compressed_tuple, U0 >::value
         >::type* = 0)
-        : base_member_(sake::forward< U0 >(x0))
+        : base_member_(x0)
     { }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -211,7 +211,7 @@ public:
 #else // #if N == 1
 
 private:
-    typedef private_::storage< values_type > m_storage_type;
+    typedef private_::storage< value_types > m_storage_type;
 public:
     SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
         typename compressed_tuple,
@@ -324,7 +324,7 @@ public:
         struct at_c
             : boost_ext::add_reference<
                   typename boost_ext::propagate_const<
-                      This, typename boost::mpl::at_c< values_type, I >::type
+                      This, typename boost::mpl::at_c< value_types, I >::type
                   >::type
               >
         { };

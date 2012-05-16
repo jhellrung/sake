@@ -25,7 +25,7 @@
         struct at_c
             : boost_ext::add_reference<
                   typename boost_ext::propagate_const<
-                      This, typename boost::mpl::at_c< values_type, I >::type
+                      This, typename boost::mpl::at_c< value_types, I >::type
                   >::type
               >
         { };

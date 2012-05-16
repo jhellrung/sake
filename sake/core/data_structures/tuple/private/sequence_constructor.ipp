@@ -9,13 +9,14 @@
 #ifdef SAKE_TUPLE_INCLUDE_HEADERS
 
 #include <boost/config.hpp>
+#include <boost/mpl/quote.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 
-#include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
-#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
+#include <sake/boost_ext/fusion/sequence/default_rv_sink.hpp>
 
 #include <sake/core/data_structures/tuple/private/sequence_constructor_enable.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/rv_sink.hpp>
 
 #endif // #ifdef SAKE_TUPLE_INCLUDE_HEADERS
 
@@ -42,18 +43,36 @@ public:
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
+private:
+    template< class Sequence >
+    struct sequence_constructor_enable
+        : sake::tuple_private::sequence_constructor_enable< tuple, Sequence >
+    { };
+    typedef sake::rv_sink_traits0<
+        boost::mpl::quote1< sequence_constructor_enable >
+    > sequence_constructor_rv_sink_traits;
+    typedef boost_ext::fusion::default_rv_sink0<
+        nocv_types,
+        boost::mpl::quote1< sequence_constructor_enable >
+    > sequence_constructor_rv_sink_default_type;
+public:
+    // lvalues + explicit movable rvalues
     template< class Sequence >
     tuple(Sequence& s,
-        typename sequence_constructor_enabler<
-            typename boost_ext::remove_rvalue_reference< Sequence& >::type
-        >::type* = 0)
-        : BOOST_PP_ENUM( N, _n_at_c_n_data, sake::forward< Sequence >(s) )
+        typename sequence_constructor_rv_sink_traits::template
+            ref_enabler< Sequence >::type* = 0)
+        : BOOST_PP_ENUM( N, _n_at_c_n_data, s )
     { }
-
+    // implicit movable rvalues
+    tuple(sequence_constructor_rv_sink_default_type s)
+        : BOOST_PP_ENUM( N, _n_data_at_n, s )
+    { }
+    // const lvalues + non-movable rvalues
     template< class Sequence >
     tuple(Sequence const & s,
-        typename sequence_constructor_enabler< Sequence const & >::type* = 0)
-        : BOOST_PP_ENUM( N, _n_at_c_n_data, sake::forward< Sequence >(s) )
+        typename sequence_constructor_rv_sink_traits::template
+            cref_enabler< Sequence >::type* = 0)
+        : BOOST_PP_ENUM( N, _n_at_c_n_data, s )
     { }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES

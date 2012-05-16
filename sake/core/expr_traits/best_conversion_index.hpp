@@ -5,14 +5,14 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_EXPR_BEST_CONVERSION_INDEX( expression, candidates_type )
+ * #define SAKE_EXPR_BEST_CONVERSION_INDEX( expression, candidate_types )
  *
  * Evaluates (at compile-time) to the index within the Boost.MPL sequence
- * candidates_type corresponding to the type with the best conversion from the
+ * candidate_types corresponding to the type with the best conversion from the
  * type of the given expression.
  * If the type of the given expression is not convertible to any of the types
- * given by candidates_type, or if the best conversion is ambiguous, the result
- * evaluates to the size of candidates_type.
+ * given by candidate_types, or if the best conversion is ambiguous, the result
+ * evaluates to the size of candidate_types.
  *
  * Note: expression must have non-void type.
  ******************************************************************************/
@@ -28,8 +28,8 @@
 
 #include <sake/core/utility/sizeof_t.hpp>
 
-#define SAKE_EXPR_BEST_CONVERSION_INDEX( expression, candidates_type ) \
-    ( sizeof( ::sake::expr_best_conversion_index_private::overloads< candidates_type >::apply( expression ) ) - 1 )
+#define SAKE_EXPR_BEST_CONVERSION_INDEX( expression, candidate_types ) \
+    ( sizeof( ::sake::expr_best_conversion_index_private::overloads< candidate_types >::apply( expression ) ) - 1 )
 
 namespace sake
 {
