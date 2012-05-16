@@ -309,16 +309,16 @@ struct default_base
     SAKE_NONCOPYABLE( default_base )
 
     result_type operator()() const
-    { return m_apply(Visitor(), mp); }
+    { return m_apply(Visitor(), m_p); }
 
     result_type operator()(Visitor v) const
-    { return m_apply(v, mp); }
+    { return m_apply(v, m_p); }
 
 protected:
     template< class U >
     explicit default_base(U& x)
         : m_apply(apply<U>),
-          mp(static_cast< void* >(sake::address_of(x)))
+          m_p(static_cast< void* >(sake::address_of(x)))
     { }
 
 private:
@@ -326,8 +326,8 @@ private:
     static result_type apply(Visitor v, void* p)
     { return v(sake::move(*static_cast< U* >(p))); }
 
-    result_type (&m_apply)(Visitor, void*);
-    void* const mp;
+    result_type (&m_apply)( Visitor, void* );
+    void* const m_p;
 };
 
 } // namespace rv_sink_private

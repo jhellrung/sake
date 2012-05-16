@@ -300,7 +300,7 @@ struct optional< T& >
     std::size_t hash_value(optional x) { return x.hash_value(); }
 
 private:
-    T* mp;
+    T* m_p;
 };
 
 /*******************************************************************************
@@ -553,14 +553,14 @@ template< class T >
 inline
 optional< T& >::
 optional() BOOST_NOEXCEPT
-    : mp(0)
+    : m_p(0)
 { }
 
 template< class T >
 inline
 optional< T& >::
 optional(sake::optional<>)
-    : mp(0)
+    : m_p(0)
 { }
 
 template< class T >
@@ -576,7 +576,7 @@ template< class T >
 inline void
 optional< T& >::
 reset()
-{ mp = 0; }
+{ m_p = 0; }
 
 template< class T >
 inline void
@@ -588,7 +588,7 @@ template< class T >
 inline
 optional< T& >::
 optional(T* const p)
-    : mp(p)
+    : m_p(p)
 { }
 
 template< class T >
@@ -597,26 +597,26 @@ inline
 optional< T& >::
 optional(sake::emplacer< Signature > e,
     typename emplacer_enabler< sake::emplacer< Signature > >::type*)
-    : mp(get_ptr_dispatch(e))
+    : m_p(get_ptr_dispatch(e))
 { }
 
 template< class T >
 inline void
 optional< T& >::
 swap(optional& other)
-{ sake::swap(mp, other.mp); }
+{ sake::swap(m_p, other.m_p); }
 
 template< class T >
 inline T&
 optional< T& >::
 get() const
-{ SAKE_ASSERT((mp)); return *mp; }
+{ SAKE_ASSERT((m_p)); return *m_p; }
 
 template< class T >
 inline T*
 optional< T& >::
 get_ptr() const
-{ return mp; }
+{ return m_p; }
 
 template< class T >
 inline T&
@@ -634,13 +634,13 @@ template< class T >
 inline bool
 optional< T& >::
 initialized() const
-{ return mp != 0; }
+{ return m_p != 0; }
 
 template< class T >
 inline std::size_t
 optional< T& >::
 hash_value() const
-{ return mp ? sake::hash_value(*mp) : 0; }
+{ return m_p ? sake::hash_value(*m_p) : 0; }
 
 } // namespace optional_adl
 

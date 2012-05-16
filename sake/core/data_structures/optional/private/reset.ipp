@@ -144,7 +144,7 @@ public:
     template< class U >
     typename reset_enabler<U>::type
     reset(U&& x)
-    { mp = get_ptr_dispatch(x); }
+    { m_p = get_ptr_dispatch(x); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -153,12 +153,12 @@ public:
         typename boost_ext::remove_rvalue_reference< U& >::type
     >::type
     reset(U& x)
-    { mp = get_ptr_dispatch(SAKE_AS_LVALUE(x)); }
+    { m_p = get_ptr_dispatch(SAKE_AS_LVALUE(x)); }
 
     template< class U >
     typename reset_enabler< U const & >::type
     reset(U const & x)
-    { mp = get_ptr_dispatch(x); }
+    { m_p = get_ptr_dispatch(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 

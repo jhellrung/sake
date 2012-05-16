@@ -115,12 +115,12 @@ public:
 #else // #ifndef SAKE_OPTIONAL_REFERENCE
 
     optional(T& x, bool const initialize)
-        : mp(initialize ? get_ptr_dispatch(x) : 0)
+        : m_p(initialize ? get_ptr_dispatch(x) : 0)
     { }
 
     template< class Signature >
     optional(sake::emplacer< Signature > e, bool const initialize)
-        : mp(initialize ? get_ptr_dispatch(e) : 0)
+        : m_p(initialize ? get_ptr_dispatch(e) : 0)
     { }
 
 #endif // #ifndef SAKE_OPTIONAL_REFERENCE

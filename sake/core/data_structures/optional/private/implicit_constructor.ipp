@@ -134,7 +134,7 @@ public:
     template< class U >
     optional(U&& x,
         typename implicit_constructor_enabler<U>::type* = 0)
-        : mp(get_ptr_dispatch(x))
+        : m_p(get_ptr_dispatch(x))
     { }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -144,13 +144,13 @@ public:
         typename implicit_constructor_enabler<
             typename boost_ext::remove_rvalue_reference< U& >::type
         >::type* = 0)
-        : mp(get_ptr_dispatch(SAKE_AS_LVALUE(x)))
+        : m_p(get_ptr_dispatch(SAKE_AS_LVALUE(x)))
     { }
 
     template< class U >
     optional(U const & x,
         typename implicit_constructor_enabler< U const & >::type* = 0)
-        : mp(get_ptr_dispatch(x))
+        : m_p(get_ptr_dispatch(x))
     { }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES

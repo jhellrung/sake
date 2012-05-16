@@ -127,7 +127,7 @@ public:
     template< class U >
     typename operator_assign_enabler<U>::type
     operator=(U&& x)
-    { mp = get_ptr_dispatch(x); return *this; }
+    { m_p = get_ptr_dispatch(x); return *this; }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -136,12 +136,12 @@ public:
         typename boost_ext::remove_rvalue_reference< U& >::type
     >::type
     operator=(U& x)
-    { mp = get_ptr_dispatch(SAKE_AS_LVALUE(x)); return *this; }
+    { m_p = get_ptr_dispatch(SAKE_AS_LVALUE(x)); return *this; }
 
     template< class U >
     typename operator_assign_enabler< U const & >::type
     operator=(U const & x)
-    { mp = get_ptr_dispatch(x); return *this; }
+    { m_p = get_ptr_dispatch(x); return *this; }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 

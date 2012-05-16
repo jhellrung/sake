@@ -145,7 +145,7 @@ public:
     T* operator->() const;
 
 private:
-    T* mp;
+    T* m_p;
 
     friend class forwarding::core_access;
 
@@ -162,7 +162,7 @@ private:
     template< class... T >
     typename result_impl< reference_wrapper ( T... ) >::type
     apply_impl(SAKE_FWD2_REF( T )... x) const
-    { return (*mp)(sake::forward<T>(x)...); }
+    { return (*m_p)(sake::forward<T>(x)...); }
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
@@ -173,7 +173,7 @@ private:
 #define SAKE_OVERLOAD_DECLARATION_SUFFIX \
     const
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    return (*mp) forward_x_tuple ;
+    return (*m_p) forward_x_tuple ;
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY SAKE_FORWARDING_BASE_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
 
@@ -275,19 +275,19 @@ template< class T, class Tags >
 reference_wrapper< T, Tags >::
 reference_wrapper()
     BOOST_NOEXCEPT_IF((has_nothrow_default_constructor_tag::value))
-    : mp(nullptr)
+    : m_p(nullptr)
 { BOOST_STATIC_ASSERT((has_nothrow_default_constructor_tag::value)); }
 
 template< class T, class Tags >
 reference_wrapper< T, Tags >::
 reference_wrapper(explicit_constructor_param_type x)
-    : mp(sake::address_of(x))
+    : m_p(sake::address_of(x))
 { }
 
 template< class T, class Tags >
 reference_wrapper< T, Tags >::
 reference_wrapper(implicit_constructor_param_type x)
-    : mp(sake::address_of(x))
+    : m_p(sake::address_of(x))
 { }
 
 template< class T, class Tags >
@@ -295,7 +295,7 @@ template< class T2, class Tags2 >
 reference_wrapper< T, Tags >::
 reference_wrapper(reference_wrapper< T2, Tags2 > other,
     typename boost::enable_if_c< boost_ext::is_convertible< T2*, T* >::value >::type*)
-    : mp(other.get_ptr())
+    : m_p(other.get_ptr())
 { }
 
 template< class T, class Tags >
@@ -303,7 +303,7 @@ template< class T2 >
 reference_wrapper< T, Tags >::
 reference_wrapper(boost::reference_wrapper< T2 > other,
     typename boost::enable_if_c< boost_ext::is_convertible< T2*, T* >::value >::type*)
-    : mp(other.get_pointer())
+    : m_p(other.get_pointer())
 { }
 
 template< class T, class Tags >
@@ -311,7 +311,7 @@ inline reference_wrapper< T, Tags >&
 reference_wrapper< T, Tags >::
 operator=(assign_param_type x)
 {
-    mp = sake::address_of(x);
+    m_p = sake::address_of(x);
     return *this;
 }
 
@@ -320,8 +320,8 @@ inline
 reference_wrapper< T, Tags >::
 operator T&() const
 {
-    SAKE_ASSERT_RELATION( mp, !=, nullptr );
-    return *mp;
+    SAKE_ASSERT_RELATION( m_p, !=, nullptr );
+    return *m_p;
 }
 
 template< class T, class Tags >
@@ -329,8 +329,8 @@ inline
 reference_wrapper< T, Tags >::
 operator boost::reference_wrapper<T>() const
 {
-    SAKE_ASSERT_RELATION( mp, !=, nullptr );
-    return boost::ref(*mp);
+    SAKE_ASSERT_RELATION( m_p, !=, nullptr );
+    return boost::ref(*m_p);
 }
 
 template< class T, class Tags >
@@ -338,23 +338,23 @@ inline T&
 reference_wrapper< T, Tags >::
 get() const
 {
-    SAKE_ASSERT_RELATION( mp, !=, nullptr );
-    return *mp;
+    SAKE_ASSERT_RELATION( m_p, !=, nullptr );
+    return *m_p;
 }
 
 template< class T, class Tags >
 inline T*
 reference_wrapper< T, Tags >::
 get_ptr() const
-{ return mp; }
+{ return m_p; }
 
 template< class T, class Tags >
 inline T&
 reference_wrapper< T, Tags >::
 operator*() const
 {
-    SAKE_ASSERT_RELATION( mp, !=, nullptr );
-    return *mp;
+    SAKE_ASSERT_RELATION( m_p, !=, nullptr );
+    return *m_p;
 }
 
 template< class T, class Tags >
@@ -362,8 +362,8 @@ inline T*
 reference_wrapper< T, Tags >::
 operator->() const
 {
-    SAKE_ASSERT_RELATION( mp, !=, nullptr );
-    return mp;
+    SAKE_ASSERT_RELATION( m_p, !=, nullptr );
+    return m_p;
 }
 
 template< class T, class Tags >
@@ -384,7 +384,7 @@ template< class T, class Tags >
 inline typename reference_wrapper< T, Tags >::private_nullary_result_type
 reference_wrapper< T, Tags >::
 apply_impl() const
-{ return (*mp)(); }
+{ return (*m_p)(); }
 
 } // namespace reference_wrapper_adl
 
