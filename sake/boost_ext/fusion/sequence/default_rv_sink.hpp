@@ -77,7 +77,7 @@ template<
     class Results,
     std::size_t N = boost::mpl::size< Results >::value
 >
-class apply_dispatch_base;
+class at_dispatch_base;
 
 } // namespace default_rv_sink_private
 
@@ -95,7 +95,7 @@ template<
     class Pred = boost::mpl::always< boost::true_type >
 >
 class default_rv_sink
-    : public default_rv_sink_private::apply_dispatch_base< Results >
+    : public default_rv_sink_private::at_dispatch_base< Results >
 {
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Results >::value));
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Sequence >::value));
@@ -103,7 +103,7 @@ class default_rv_sink
         Sequence,
         boost::mpl::quote1< boost_ext::is_cv_or >
     >::value));
-    typedef default_rv_sink_private::apply_dispatch_base< Results > apply_dispatch_base_;
+    typedef default_rv_sink_private::at_dispatch_base< Results > at_dispatch_base_;
 public:
     SAKE_NONCOPYABLE( default_rv_sink )
 
@@ -130,7 +130,7 @@ public:
     template< class U >
     default_rv_sink(U const & x,
         typename constructor_enabler<U>::type* = 0)
-        : apply_dispatch_base_(const_cast< U& >(x))
+        : at_dispatch_base_(const_cast< U& >(x))
     { }
 
     template< class N >
@@ -138,7 +138,7 @@ public:
     operator[](N) const
     {
         typedef boost::integral_constant< std::size_t, N::value > N_;
-        return apply_dispatch_base_::m_apply(N_());
+        return at_dispatch_base_::at_impl(N_());
     }
 };
 
@@ -196,50 +196,70 @@ namespace default_rv_sink_private
 {
 
 template< class Result, std::size_t N, class U >
-inline Result
-apply(void* p)
+Result at_impl(void* p)
 {
     return sake::implicit_cast< Result >(
         boost_ext::fusion::at_c<N>(
             sake::move(*static_cast< U* >(p))));
 }
 
+#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+
+template< class Result >
+inline typename boost::enable_if_c<
+    sake::has_move_emulation< Result >::value, Result >::type
+at_helper(Result (&at_impl_)( void* ), void* const p)
+{ return static_cast< SAKE_RV_REF( Result ) >(at_impl_(p)); }
+
+template< class Result >
+inline typename boost::disable_if_c<
+    sake::has_move_emulation< Result >::value, Result >::type
+at_helper(Result (&at_impl_)( void* ), void* const p)
+{ return at_impl_(p); }
+
+#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+
 template< class Results, std::size_t N >
-class apply_dispatch_base
-    : public apply_dispatch_base< Results, N-1 >
+class at_dispatch_base
+    : public at_dispatch_base< Results, N-1 >
 {
-    typedef apply_dispatch_base< Results, N-1 > apply_dispatch_base_;
+    typedef at_dispatch_base< Results, N-1 > at_dispatch_base_;
     typedef typename boost::mpl::at_c< Results, N-1 >::type result_type;
 protected:
 
     template< class U >
-    explicit apply_dispatch_base(U& x)
-        : apply_dispatch_base_(x),
-          m_apply_(default_rv_sink_private::apply< result_type, N-1, U >)
+    explicit at_dispatch_base(U& x)
+        : at_dispatch_base_(x),
+          m_at_impl(default_rv_sink_private::at_impl< result_type, N-1, U >)
     { }
 
-    using apply_dispatch_base_::mp;
-    using apply_dispatch_base_::m_apply;
+    using at_dispatch_base_::m_p;
+    using at_dispatch_base_::at_impl;
 
-    result_type m_apply(boost::integral_constant< std::size_t, N-1 >) const
-    { return m_apply_(mp); }
+    result_type at_impl(boost::integral_constant< std::size_t, N-1 >) const
+#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+    // MSVC9 won't elide copying of the result, so we explicitly move.
+    { return default_rv_sink_private::at_helper(m_at_impl, m_p); }
+#else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+    { return m_at_impl(m_p); }
+#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
 
 private:
-    result_type (&m_apply_)(void*);
+    result_type (&m_at_impl)( void* );
 };
 
 template< class Results >
-class apply_dispatch_base< Results, 0 >
+class at_dispatch_base< Results, 0 >
 {
 protected:
     template< class U >
-    explicit apply_dispatch_base(U& x)
-        : mp(static_cast< void* >(sake::address_of(x)))
+    explicit at_dispatch_base(U& x)
+        : m_p(static_cast< void* >(sake::address_of(x)))
     { }
 
-    void* const mp;
+    void* const m_p;
 
-    void m_apply(...) const;
+    void at_impl(...) const;
 };
 
 } // namespace default_rv_sink_private

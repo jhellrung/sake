@@ -6,6 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
+#include <sake/core/data_structures/pair/make.hpp>
 #include <sake/core/data_structures/pair/operators.hpp>
 #include <sake/core/data_structures/pair/pair.hpp>
 #include <sake/core/math/cmp.hpp>
@@ -101,6 +102,22 @@ void pair_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 2 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_assign, ==, 4 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 12 );
+        stats.reset();
+        {
+            sake::pair< char, type > w(static_cast< char >(0), (type(stats)));
+            sake::pair< short, type > x(w);
+            sake::pair< int, type > y(sake::move(x));
+            sake::pair< long, type > z(sake::make_pair(0, sake::move(x.second)));
+            x = w;
+            y = sake::move(x);
+            z = sake::make_pair(0, sake::move(x.second));
+        }
+        SAKE_TEST_CHECK_RELATION( env, stats.n_other_constructor, ==, 1 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 1 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_move_constructor, ==, 6 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 1 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_move_assign, ==, 2 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 8 );
         stats.reset();
     }
     {

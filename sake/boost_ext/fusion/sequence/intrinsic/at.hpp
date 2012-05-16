@@ -85,9 +85,7 @@ struct dispatch< Sequence&, N >
 template< class Sequence, int N >
 struct at_c
     : at_private::dispatch<
-          typename boost_ext::remove_rvalue_reference< Sequence >::type,
-          N
-      >
+          typename boost_ext::remove_rvalue_reference< Sequence >::type, N >
 { };
 
 template< class Sequence, class N >
@@ -120,10 +118,7 @@ at(Sequence&& s)
 template< int N, class Sequence >
 inline typename boost_ext::fusion::result_of::at_c< Sequence&, N >::type
 at_c(Sequence& s)
-{
-    typedef typename boost_ext::fusion::result_of::at_c< Sequence&, N >::type result_type;
-    return static_cast< result_type >(boost::fusion::at_c<N>(SAKE_AS_LVALUE( s )));
-}
+{ return boost::fusion::at_c<N>(SAKE_AS_LVALUE( s )); }
 
 template< int N, class Sequence >
 inline typename boost_ext::fusion::result_of::at_c< Sequence const &, N >::type
@@ -131,10 +126,12 @@ at_c(Sequence const & s)
 { boost::fusion::at_c<N>(s); }
 
 template< class N, class Sequence >
-inline typename boost_ext::fusion::result_of::at< Sequence&, N >::type
+inline typename boost_ext::fusion::result_of::at<
+    typename boost_ext::remove_rvalue_reference< Sequence& >::type, N >::type
 at(Sequence& s)
 {
-    typedef typename boost_ext::fusion::result_of::at< Sequence&, N >::type result_type;
+    typedef typename boost_ext::fusion::result_of::at<
+        typename boost_ext::remove_rvalue_reference< Sequence& >::type, N >::type result_type;
     return static_cast< result_type >(boost::fusion::at<N>(SAKE_AS_LVALUE( s )));
 }
 

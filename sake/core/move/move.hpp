@@ -33,6 +33,7 @@
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/expr_traits/type_tag_of.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -76,10 +77,12 @@ struct move
 
 template< class T >
 struct move< T& >
-    : boost_ext::add_reference<
-          typename boost_ext::add_rvalue_reference<T>::type
-      >
-{ };
+{
+    BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference< T& >::value));
+    typedef typename boost_ext::add_reference<
+        typename boost_ext::add_rvalue_reference<T>::type
+    >::type type;
+};
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -109,14 +112,10 @@ struct move
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename sake::result_of::move< T& >::type
+    typename sake::result_of::move<
+        typename boost_ext::remove_rvalue_reference< T& >::type >::type
     operator()(T& x) const
-    { return static_cast< typename sake::result_of::move< T& >::type >(x); }
-
-    template< class T >
-    typename sake::result_of::move< T const & >::type
-    operator()(T const & x) const
-    { return static_cast< typename sake::result_of::move< T const & >::type >(x); }
+    { return x; }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
