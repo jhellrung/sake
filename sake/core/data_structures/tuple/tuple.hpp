@@ -280,6 +280,7 @@ public:
 } // namespace tuple_adl
 
 #undef class_U0N
+#undef U0N
 
 #undef T0N_0N_seq
 

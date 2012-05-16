@@ -19,7 +19,9 @@
 #ifndef SAKE_BOOST_EXT_FUSION_CONVERT_AS_MPL_SEQUENCE_HPP
 #define SAKE_BOOST_EXT_FUSION_CONVERT_AS_MPL_SEQUENCE_HPP
 
+#include <boost/fusion/support/is_sequence.hpp>
 #include <boost/mpl/is_sequence.hpp>
+#include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/fusion/convert/as_mpl_vector.hpp>
 
@@ -38,13 +40,18 @@ namespace result_of
 namespace as_mpl_sequence_private
 {
 
-template< class Sequence, bool = boost::mpl::is_sequence< Sequence >::value >
+template<
+    class Sequence,
+    bool = boost::mpl::is_sequence< Sequence >::value
+>
 struct dispatch;
 
 template< class Sequence >
 struct dispatch< Sequence, false >
-    : boost_ext::fusion::result_of::as_mpl_vector< Sequence >
-{ };
+{
+    BOOST_STATIC_ASSERT((boost::fusion::traits::is_sequence< Sequence >::value));
+    typedef typename boost_ext::fusion::result_of::as_mpl_vector< Sequence >::type type;
+};
 
 template< class Sequence >
 struct dispatch< Sequence, true >

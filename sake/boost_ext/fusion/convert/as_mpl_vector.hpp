@@ -21,8 +21,10 @@
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/support/is_sequence.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/vector/vector0.hpp>
+#include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/mpl/as_vector.hpp>
 #include <sake/boost_ext/mpl/vector.hpp>
@@ -52,16 +54,18 @@ struct iterate;
 
 template< class Sequence >
 struct as_mpl_vector
-    : as_mpl_vector_private::iterate<
-          typename boost::fusion::result_of::begin< Sequence >::type,
-          typename boost::fusion::result_of::end< Sequence >::type,
+{
+    BOOST_STATIC_ASSERT((boost::fusion::traits::is_sequence< Sequence >::value));
+    typedef typename as_mpl_vector_private::iterate<
+        typename boost::fusion::result_of::begin< Sequence >::type,
+        typename boost::fusion::result_of::end< Sequence >::type,
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
-          boost_ext::mpl::vector<>
+        boost_ext::mpl::vector<>
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-          boost::mpl::vector0<>
+        boost::mpl::vector0<>
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-      >
-{ };
+    >::type type;
+};
 
 namespace as_mpl_vector_private
 {

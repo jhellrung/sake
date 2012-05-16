@@ -73,6 +73,9 @@ namespace fusion
 namespace default_rv_sink_private
 {
 
+template< class Results, class U >
+struct equal_is_convertible_wnrbt_helper;
+
 template<
     class Results,
     std::size_t N = boost::mpl::size< Results >::value
@@ -113,11 +116,7 @@ protected:
         : boost::enable_if_c< boost_ext::mpl::and5<
               sake::has_move_emulation<U>,
               boost_ext::fusion::traits::is_random_access_sequence<U>,
-              boost::mpl::equal<
-                  typename boost_ext::fusion::result_of::forward_as_mpl_sequence<U>::type,
-                  Results,
-                  boost::mpl::quote2< sake::is_convertible_wnrbt >
-              >,
+              default_rv_sink_private::equal_is_convertible_wnrbt_helper< Results, U >,
               boost::mpl::not_< boost_ext::mpl::any<
                   Sequence,
                   typename boost_ext::mpl::curry_quote2< boost::is_same >::apply<U>::type
@@ -194,6 +193,15 @@ public:
 
 namespace default_rv_sink_private
 {
+
+template< class Results, class U >
+struct equal_is_convertible_wnrbt_helper
+    : boost::mpl::equal<
+          typename boost_ext::fusion::result_of::forward_as_mpl_sequence<U>::type,
+          Results,
+          boost::mpl::quote2< sake::is_convertible_wnrbt >
+      >
+{ };
 
 template< class Result, std::size_t N, class U >
 Result at_impl(void* p)

@@ -82,7 +82,7 @@ template< class T, class U > struct name; \
 template< class_T0N, class_U0N > \
 struct name< sake::compressed_tuple< T0N >, \
              sake::compressed_tuple< U0N > > \
-    : boost_ext::fusion::result_of::name< \
+    : sake::operators::result_of::name< \
           typename sake::result_of::cmp< \
               sake::compressed_tuple< T0N >, \
               sake::compressed_tuple< U0N > \
@@ -112,8 +112,8 @@ operator op (sake::compressed_tuple< T0N > const & x, \
              sake::compressed_tuple< U0N > const & y) \
 { return boost_ext::fusion::name(x, y); }
 
-define_operator( equal )
-define_operator( not_equal )
+define_operator( ==, equal )
+define_operator( !=, not_equal )
 
 #undef define_operator
 
@@ -127,16 +127,17 @@ operator op (sake::compressed_tuple< T0N > const & x, \
              sake::compressed_tuple< U0N > const & y) \
 { return sake::cmp(x,y) op sake::zero; }
 
-define_operator( less )
-define_operator( greater )
-define_operator( less_equal )
-define_operator( greater_equal )
+define_operator( <, less )
+define_operator( >, greater )
+define_operator( <=, less_equal )
+define_operator( >=, greater_equal )
 
 #undef define_operator
 
 namespace result_of
 {
 
+template< class T, class U > struct cmp;
 template< class_T0N, class_U0N >
 struct cmp< sake::compressed_tuple< T0N >,
             sake::compressed_tuple< U0N > >
@@ -165,8 +166,8 @@ namespace extension {
 
 #define define_operator( name ) \
 template< class_T0N, class_U0N > \
-struct equal< sake::compressed_tuple< T0N >, \
-              sake::compressed_tuple< U0N >, void > \
+struct name< sake::compressed_tuple< T0N >, \
+             sake::compressed_tuple< U0N >, void > \
     : sake::compressed_tuple_adl::operators::result_of::name< \
           sake::compressed_tuple< T0N >, \
           sake::compressed_tuple< U0N > \
@@ -191,7 +192,7 @@ namespace extension {
 
 template< class_T0N, class_U0N >
 struct cmp< sake::compressed_tuple< T0N >,
-            sake::compressed_tuple< U0N > >
+            sake::compressed_tuple< U0N >, void >
     : sake::compressed_tuple_adl::result_of::cmp<
           sake::compressed_tuple< T0N >,
           sake::compressed_tuple< U0N >

@@ -69,7 +69,7 @@ struct dispatch< I0, I1, Cmp, false, false >
     { return cmp_(i0, i1); }
 };
 
-template< class I0, class I1, class Cmp >
+template< class I0, class I1 >
 struct dispatch< I0, I1, sake::functional::cmp, false, false >
 {
     typedef boost::mpl::int_<
@@ -83,17 +83,12 @@ struct dispatch< I0, I1, sake::functional::cmp, false, false >
 
 template< class Sequence0, class Sequence1, class Cmp >
 struct dispatch< Sequence0, Sequence1, Cmp, true, true >
-    : impl< Sequence0, Sequence1, Cmp >
-{ };
-
-template< class Sequence0, class Sequence1, class Cmp >
-struct impl
 {
     static int const N0 = boost::fusion::result_of::size< Sequence0 >::value;
     static int const N1 = boost::fusion::result_of::size< Sequence1 >::value;
     static int const N = sake::static_min_c< N0, N1 >::value;
     static int const S = sake::static_cmp_c< N0, N1 >::value;
-    typedef typename iterate_dispatch<
+    typedef typename cmp_private::iterate_dispatch<
         N, S,
         typename boost::fusion::result_of::begin< const Sequence0 >::type,
         typename boost::fusion::result_of::begin< const Sequence1 >::type,
@@ -132,7 +127,7 @@ struct iterate_dispatch
         typename boost::fusion::result_of::deref< I0 >::type,
         typename boost::fusion::result_of::deref< I1 >::type
     ) >::type curr_type;
-    typedef typename iterate_dispatch<
+    typedef typename cmp_private::iterate_dispatch<
         N-1, S,
         typename boost::fusion::result_of::next< I0 >::type,
         typename boost::fusion::result_of::next< I1 >::type,
@@ -143,8 +138,11 @@ struct iterate_dispatch
     {
         curr_type const s = cmp_(*i0, *i1);
         return s == sake::zero ?
-               cmp_private::iterate< N-1, S >(boost::fusion::next(i0), boost::fusion::next(i1), cmp_) :
-               s;
+               cmp_private::iterate< N-1, S >(
+                   boost::fusion::next(i0),
+                   boost::fusion::next(i1),
+                   cmp_
+               ) : s;
     }
 };
 
@@ -158,7 +156,7 @@ template<
     class Cmp = sake::functional::cmp
 >
 struct cmp
-    : cmp_private::impl<
+    : cmp_private::dispatch<
           typename boost_ext::remove_qualifiers< Sequence0 >::type,
           typename boost_ext::remove_qualifiers< Sequence1 >::type,
           typename boost_ext::remove_qualifiers< Cmp >::type

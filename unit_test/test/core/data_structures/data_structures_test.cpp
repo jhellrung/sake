@@ -13,11 +13,13 @@ namespace sake_unit_test
 
 void optional_test(sake::test::environment& env);
 void pair_test(sake::test::environment& env);
+void tuple_test(sake::test::environment& env);
 
 void data_structures_test(sake::test::environment& env)
 {
     env("optional", &optional_test);
     env("pair", &pair_test);
+    env("tuple", &tuple_test);
 }
 
 } // namespace sake_unit_test
