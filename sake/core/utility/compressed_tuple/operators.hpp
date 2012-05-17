@@ -209,6 +209,4 @@ struct cmp< sake::compressed_tuple< T0N >,
 #undef T0N
 #undef U0N
 
-} // namespace sake
-
 #endif // #ifndef SAKE_CORE_UTILITY_COMPRESSED_TUPLE_OPERATORS_HPP
