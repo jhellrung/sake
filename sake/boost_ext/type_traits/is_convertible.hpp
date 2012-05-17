@@ -22,6 +22,7 @@
 
 #include <sake/core/expr_traits/is_convertible.hpp>
 #include <sake/core/utility/declval.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -31,8 +32,11 @@ namespace boost_ext
 
 #ifdef _MSC_VER
 #pragma warning( push )
-#pragma warning( disable : 4244 ) // warning C4244: 'argument' : conversion from 'From' to 'To', possible loss of data
-#pragma warning( disable : 4800 ) // warning C4800: 'argument *' : forcing value to bool 'true' or 'false' (performance warning)
+#pragma warning( disable : 4244 ) // warning C4244: 'argument' : conversion from
+                                  // 'From' to 'To', possible loss of data
+#pragma warning( disable : 4800 ) // warning C4800: 'argument *' : forcing value
+                                  // to bool 'true' or 'false' (performance
+                                  // warning)
 #endif // #ifdef _MSC_VER
 
 template< class From, class To >
@@ -45,6 +49,13 @@ struct is_convertible
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif // #ifdef _MSC_VER
+
+#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+// MSVC9 ICE's on some uses of is_convertible< From, To > when To has a user-
+// defined destructor. This is certainly an imperfect workaround but it's the
+// best we can do at the moment.
+template< class T > struct is_convertible<T,T> : boost::true_type { };
+#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
 
 template<> struct is_convertible< void, void > : boost::true_type { };
 template<> struct is_convertible< void, void const > : boost::true_type { };
