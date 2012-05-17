@@ -43,13 +43,28 @@
 namespace sake
 {
 
+namespace base_member_adl
+{
+
 template< class T, class Tag = void, class Enable = void >
 struct base_member;
+
+} // namespace base_member_adl
+
+using base_member_adl::base_member;
+
+namespace base_member_adl
+{
 
 template< class T, class Tag >
 struct base_member< T, Tag,
     typename boost::disable_if_c< boost::is_empty<T>::value >::type >
 {
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+        typename base_member,
+        (( T )( m_member ))
+    )
+
     SAKE_MEMBERWISE_MEM_FUN(
         typename base_member,
         ( swap ) ( hash_value ),
@@ -58,10 +73,6 @@ struct base_member< T, Tag,
 protected:
     friend class emplacer_access;
 
-    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
-        typename base_member,
-        (( T )( m_member ))
-    )
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename base_member,
         (( T )( m_member ))
@@ -104,6 +115,11 @@ struct base_member< T, Tag,
     typename boost::enable_if_c< boost::is_empty<T>::value >::type >
     : T
 {
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+        typename base_member,
+        (( T ))
+    )
+
     SAKE_MEMBERWISE_MEM_FUN(
         typename base_member,
         ( swap ) ( hash_value ),
@@ -112,10 +128,6 @@ struct base_member< T, Tag,
 protected:
     friend class emplacer_access;
 
-    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
-        typename base_member,
-        (( T ))
-    )
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename base_member,
         (( T ))
@@ -156,6 +168,8 @@ private:
     struct result_type_disabler;
     template< result_type_disabler* > struct result_type;
 };
+
+} // namespace base_member_adl
 
 } // namespace sake
 
