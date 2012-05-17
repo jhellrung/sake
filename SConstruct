@@ -18,8 +18,13 @@ vars.AddVariables(
 env = Environment(variables=vars)
 Help(vars.GenerateHelpText(env))
 
+## Boost location.
 if not env.has_key('BOOST_ROOT'):
+    if not os.environ.has_key('BOOST_ROOT'):
+        print("*** ERROR: Undefined BOOST_ROOT")
+        Exit(2)
     env['BOOST_ROOT'] = os.environ.get('BOOST_ROOT')
+print("BOOST_ROOT =", env['BOOST_ROOT'])
 
 env.Append(CPPPATH=['#'])
 env.Append(CPPPATH=[env['BOOST_ROOT']])
@@ -37,7 +42,7 @@ link_flags = ''
 if build_config != 'debug':
     cpp_defines.extend(['NDEBUG'])
 if platform == 'win32':
-    print("Unknown CXX:", env['CXX'])
+    print("*** ERROR: Unknown CXX:", env['CXX'])
     Exit(2)
     cpp_defines.extend(['NOMINMAX'])
     cxx_flags += ' /nologo /errorReport:none'
