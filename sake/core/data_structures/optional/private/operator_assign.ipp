@@ -21,6 +21,7 @@
 #include <sake/core/introspection/has_operator_assign.hpp>
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/get.hpp>
 
@@ -105,7 +106,7 @@ public:
     // T rvalues
     optional& operator=(
         typename operator_assign_rv_sink_traits::primary_type x)
-    { return operator_assign_dispatch(x.move()); }
+    { return operator_assign_dispatch(sake::move(x.value)); }
 
     // movable implicit rvalues
     optional& operator=(operator_assign_rv_sink_default_type x)

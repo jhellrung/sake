@@ -273,9 +273,12 @@ struct primary_rv_sink
 
     T& value;
 
-    typename sake::result_of::move< T& >::type
-    move() const
-    { return sake::move(value); }
+    // This *almost* works, except when the compiler attempts to instantiate
+    // primary_rv_sink<T> with an incomplete type T, which would be the case if
+    // such an instantiation were to happen within the definition of T.
+    //typename sake::result_of::move< T& >::type
+    //move() const
+    //{ return sake::move(value); }
 
     SAKE_NONCOPYABLE( primary_rv_sink )
 

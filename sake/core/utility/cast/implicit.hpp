@@ -26,6 +26,7 @@
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
@@ -90,7 +91,7 @@ public:
     { return static_cast<T>(x); }
     // T rvalues
     T operator()(typename rv_sink_traits_::primary_type x) const
-    { return x.move(); }
+    { return sake::move(x.value); }
     // movable implicit rvalues
     T operator()(rv_sink_default_type x) const
     { return x(); }
@@ -130,7 +131,7 @@ struct implicit_cast< void >
     T operator()(
         typename implicit_cast_private::rv_sink_traits<T>::primary_type x,
         sake::type_tag<T>) const
-    { return x.move(); }
+    { return sake::move(x.value); }
     // movable implicit rvalues
     template< class T >
     T operator()(
@@ -183,14 +184,14 @@ template< class T >
 inline T
 implicit_cast(
     typename implicit_cast_private::rv_sink_traits<T>::primary_type x)
-{ return x.move(); }
+{ return sake::move(x.value); }
 
 template< class T >
 inline T
 implicit_cast(
     typename implicit_cast_private::rv_sink_traits<T>::primary_type x,
     sake::type_tag<T>)
-{ return x.move(); }
+{ return sake::move(x.value); }
 
 template< class T >
 inline T

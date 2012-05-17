@@ -19,6 +19,7 @@
 
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/get.hpp>
@@ -110,8 +111,8 @@ public:
 
     // T rvalues
     optional(typename implicit_constructor_rv_sink_traits::primary_type x)
-        : m_initialized(initialize_m_initialized_dispatch(x.move()))
-    { implicit_constructor_dispatch(x.move()); }
+        : m_initialized(initialize_m_initialized_dispatch(sake::move(x.value)))
+    { implicit_constructor_dispatch(sake::move(x.value)); }
 
     // movable implicit rvalues
     optional(implicit_constructor_rv_sink_default_type x)

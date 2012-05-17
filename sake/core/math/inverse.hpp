@@ -102,7 +102,7 @@ public:
     // T rvalues
     explicit inverse(
         typename explicit_constructor_rv_sink_traits::primary_type x)
-        : m_value(x.move())
+        : m_value(sake::move(x.value))
     { }
     // movable implicit rvalues
     explicit inverse(explicit_constructor_rv_sink_default_type x)

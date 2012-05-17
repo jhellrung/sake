@@ -16,6 +16,7 @@
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
@@ -93,7 +94,7 @@ public:
         typename initialize_constructor_rv_sink_traits::primary_type x,
         bool const initialize)
         : m_initialized(initialize)
-    { initialize_constructor_impl(x.move()); }
+    { initialize_constructor_impl(sake::move(x.value)); }
 
     // movable implicit rvalues
     optional(

@@ -27,6 +27,7 @@
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/rv_sink.hpp>
+#include <sake/core/move/move.hpp>
 #include <sake/core/utility/noncopy_assignable.hpp>
 
 namespace sake
@@ -133,7 +134,7 @@ struct operator_post_increment_dispatch< Value, Reference, Traversal, I, true, f
         // value_type rvalues
         proxy const &
         operator=(typename operator_assign_rv_sink_traits::primary_type x) const
-        { *m_i = x.move(); return *this; }
+        { *m_i = sake::move(x.value); return *this; }
         // movable implicit rvalues
         proxy const &
         operator=(operator_assign_rv_sink_default_type x) const

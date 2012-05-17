@@ -20,6 +20,7 @@
 
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
@@ -119,11 +120,11 @@ public:
 
     // this rvalues
     void reset(reset_rv_sink_primary0_type x)
-    { reset_dispatch(x.move()); }
+    { reset_dispatch(sake::move(x.value)); }
 
     // T rvalues
     void reset(reset_rv_sink_primary1_type x)
-    { reset_dispatch(x.move()); }
+    { reset_dispatch(sake::move(x.value)); }
 
     // movable implicit rvalues
     void reset(reset_rv_sink_default_type x)

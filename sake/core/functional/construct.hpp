@@ -19,6 +19,7 @@
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/overload.hpp>
 
@@ -88,7 +89,7 @@ public:
     { return static_cast<T>(x); }
     // T rvalues
     T operator()(typename rv_sink_traits_::primary_type x) const
-    { return x.move(); }
+    { return sake::move(x.value); }
     // movable implicit rvalues
     T operator()(rv_sink_default_type x) const
     { return x(); }
@@ -161,7 +162,7 @@ construct(U& x)
 template< class T >
 inline T
 construct(typename sake::rv_sink_traits1<T>::primary_type x)
-{ return sake::functional::construct<T>()(x.move()); }
+{ return sake::functional::construct<T>()(sake::move(x.value)); }
 
 template< class T >
 inline T

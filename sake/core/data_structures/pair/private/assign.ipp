@@ -15,6 +15,7 @@
 
 #include <sake/core/data_structures/private/assign_enable.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/move/rv_sink.hpp>
 
@@ -98,7 +99,7 @@ public:
     assign(
         U0& x0,
         typename assign1_rv_sink_traits::primary_type x1)
-    { assign_impl(x0, x1.move()); }
+    { assign_impl(x0, sake::move(x1.value)); }
 
     template< class U0 >
     typename assign0_rv_sink_traits::template ref_enabler< U0 >::type
@@ -125,20 +126,20 @@ public:
     assign(
         typename assign0_rv_sink_traits::primary_type x0,
         U1& x1)
-    { assign_impl(x0.move(), x1); }
+    { assign_impl(sake::move(x0.value), x1); }
 
     void
     assign(
         typename assign0_rv_sink_traits::primary_type x0,
         typename assign1_rv_sink_traits::primary_type x1)
-    { assign_impl(x0.move(), x1.move()); }
+    { assign_impl(sake::move(x0.value), sake::move(x1.value)); }
 
     void
     assign(
         typename assign0_rv_sink_traits::primary_type x0,
         assign1_rv_sink_default_type x1)
     {
-        first = x0.move();
+        first = sake::move(x0.value);
         x1(assign1_rv_sink_visitor(*this));
     }
 
@@ -147,7 +148,7 @@ public:
     assign(
         typename assign0_rv_sink_traits::primary_type x0,
         U1 const & x1)
-    { assign_impl(x0.move(), x1); }
+    { assign_impl(sake::move(x0.value), x1); }
 
     template< class U1 >
     typename assign1_rv_sink_traits::template ref_enabler< U1 >::type
@@ -165,7 +166,7 @@ public:
         typename assign1_rv_sink_traits::primary_type x1)
     {
         x0(assign0_rv_sink_visitor(*this));
-        second = x1.move();
+        second = sake::move(x1.value);
     }
 
     void
@@ -202,7 +203,7 @@ public:
     assign(
         U0 const & x0,
         typename assign1_rv_sink_traits::primary_type x1)
-    { assign_impl(x0, x1.move()); }
+    { assign_impl(x0, sake::move(x1.value)); }
 
     template< class U0 >
     typename assign0_rv_sink_traits::template cref_enabler< U0 >::type
