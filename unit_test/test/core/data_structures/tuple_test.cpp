@@ -12,7 +12,9 @@
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/move.hpp>
+#include <sake/core/move/rv_cast.hpp>
 #include <sake/core/utility/emplacer/make.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 #include <sake/test/environment.hpp>
 #include <sake/test/test.hpp>
@@ -179,7 +181,10 @@ void tuple_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 12 );
         stats.reset();
         {
-            sake::tuple< char, type > w(static_cast< char >(0), (type(stats)));
+            sake::tuple< char, type > w(
+                static_cast< char >(0),
+                (type(stats))
+            );
             sake::tuple< short, type > x(w);
             sake::tuple< int, type > y(sake::move(x));
             sake::tuple< long, type > z(sake::make_tuple(0, sake::move(x._1)));
@@ -264,16 +269,18 @@ void tuple_test(sake::test::environment& env)
         models::special_mem_fun_stats stats;
         typedef models::basic_movable_copyable<> type;
         {
-            type y(stats);
-            sake::tuple< type, type, type > x(y, sake::move(y), y);
-            x.assign(sake::move(y), y, sake::move(y));
+            type z(stats);
+            sake::tuple< type, type, type > x(z, z, sake::move(z));
+            sake::tuple< type, type, type > y(z, SAKE_RV_CAST(type(stats)), z);
+            x.assign(sake::move(z), z, z);
+            y.assign(z, z, SAKE_RV_CAST(type(stats)));
         }
-        SAKE_TEST_CHECK_RELATION( env, stats.n_other_constructor, ==, 1 );
-        SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 2 );
-        SAKE_TEST_CHECK_RELATION( env, stats.n_move_constructor, ==, 1 );
-        SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 1 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_other_constructor, ==, 3 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 4 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_move_constructor, ==, 2 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 4 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_assign, ==, 2 );
-        SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 4 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 9 );
         stats.reset();
         {
             sake::tuple< type, type, type > x(
