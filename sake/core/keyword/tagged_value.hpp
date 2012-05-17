@@ -27,7 +27,7 @@ struct tagged_value
     typedef Tag tag;
     typedef T value_type;
 
-    // implicit on purpose
+    // implicit by design
     tagged_value(T value_) : m_value(value_) { }
 
     T value() const
