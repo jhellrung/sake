@@ -10,6 +10,13 @@
  *
  * has_move_emulation is a Boost.MPL metafunction that determines if the given
  * type has move emulation enabled.
+ *
+ * Implementation notes:
+ * - Since this is widely used (indirectly) throughout Sake, even among some
+ *   lower-level components, we aim to minimize dependencies.
+ * - MSVC9 seems to have some strange, unpredictable, and not easily replicable
+ *   issues with the use of has_mem_fun_operator, so we fall back to testing for
+ *   convertibility to boost::rv<T>&.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_MOVE_HAS_MOVE_EMULATION_HPP
@@ -22,21 +29,14 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_class.hpp>
 
-#include <sake/boost_ext/mpl/and.hpp>
-
-#include <sake/core/introspection/has_mem_fun_operator.hpp>
 #include <sake/core/move/rv.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
 
 template< class T >
-struct has_move_emulation
-    : boost_ext::mpl::and2<
-          boost::is_class<T>,
-          sake::has_mem_fun_operator< T, boost::rv<T>& >
-      >
-{ };
+struct has_move_emulation;
 
 template< class T >
 struct has_move_emulation< T const >
@@ -49,6 +49,66 @@ struct has_move_emulation< T& >
 { };
 
 } // namespace sake
+
+#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+
+#include <sake/core/utility/true_false_tag.hpp>
+
+namespace sake
+{
+
+namespace has_move_emulation_private
+{
+
+template< class T, bool = boost::is_class<T>::value >
+struct dispatch;
+
+template< class T >
+struct dispatch< T, false >
+    : boost::false_type
+{ };
+
+template< class T >
+struct dispatch< T, true >
+{
+private:
+    static T& ref();
+    static sake::true_tag test(boost::rv<T>&);
+    static sake::false_tag test(...);
+public:
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test(ref()) );
+    typedef dispatch type;
+};
+
+} // namespace has_move_emulation_private
+
+template< class T >
+struct has_move_emulation
+    : has_move_emulation_private::dispatch<T>
+{ };
+
+} // namespace sake
+
+#else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+
+#include <sake/boost_ext/mpl/and.hpp>
+
+#include <sake/core/introspection/has_mem_fun_operator.hpp>
+
+namespace sake
+{
+
+template< class T >
+struct has_move_emulation
+    : boost_ext::mpl::and2<
+          boost::is_class<T>,
+          sake::has_mem_fun_operator< T, boost::rv<T>& >
+      >
+{ };
+
+} // namespace sake
+
+#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
 
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
