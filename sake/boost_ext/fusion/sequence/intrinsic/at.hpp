@@ -123,7 +123,7 @@ at_c(Sequence& s)
 template< int N, class Sequence >
 inline typename boost_ext::fusion::result_of::at_c< Sequence const &, N >::type
 at_c(Sequence const & s)
-{ boost::fusion::at_c<N>(s); }
+{ return boost::fusion::at_c<N>(s); }
 
 template< class N, class Sequence >
 inline typename boost_ext::fusion::result_of::at<
@@ -138,7 +138,7 @@ at(Sequence& s)
 template< class N, class Sequence >
 inline typename boost_ext::fusion::result_of::at< Sequence const &, N >::type
 at(Sequence const & s)
-{ boost::fusion::at<N>(s); }
+{ return boost::fusion::at<N>(s); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
