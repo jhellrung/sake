@@ -45,7 +45,7 @@
         expression, \
         ::sake::expr_is_void_private::void_detector(), \
         ::sake::expr_is_void_private::void_detector() \
-    ))
+    )) \
  && SAKE_EXPR_IS_VOID_is_void_detector(( \
         ::sake::expr_is_void_private::void_detector(), \
         expression, \
