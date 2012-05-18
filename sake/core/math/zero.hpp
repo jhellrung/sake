@@ -218,11 +218,11 @@ inline T
 as_impl()
 {
     typedef typename boost_ext::mpl::
-         if_< boost_ext::is_convertible< sake::zero_t, T >      , sake::int_tag<3> >::type::template
-    else_if < boost_ext::is_convertible< boost::mpl::int_<0>    , sake::int_tag<2> >::type::template
-    else_if < boost_ext::is_convertible< boost_ext::mpl::uint<0>, sake::int_tag<1> >::type::template
+         if_< boost_ext::is_convertible< sake::zero_t, T >           , sake::int_tag<3> >::type::template
+    else_if < boost_ext::is_convertible< boost::mpl::int_<0>, T >    , sake::int_tag<2> >::type::template
+    else_if < boost_ext::is_convertible< boost_ext::mpl::uint<0>, T >, sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    return zero_private::as_dispatch<T>(typename as_dispatch_index<T>::type());
+    return zero_private::as_dispatch<T>(int_tag_());
 }
 
 } // namespace zero_private
