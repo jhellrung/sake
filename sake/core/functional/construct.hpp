@@ -107,7 +107,7 @@ public:
     operator()
 #define SAKE_OVERLOAD_DECLARATION_SUFFIX \
     const
-#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_BODY( r, n, U_tuple, x_tuple, forward_x_tuple ) \
     return T forward_x_tuple ;
 #define SAKE_OVERLOAD_MIN_ARITY         2
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_CONSTRUCT_PERFECT_MAX_ARITY
@@ -123,9 +123,30 @@ template<>
 struct construct< void >
 {
     typedef void result_type;
-    void
-    operator()(...) const
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+    template< class... U >
+    void operator()(U const &...) const
     { }
+
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+    void operator()() const { }
+
+#define SAKE_OVERLOAD_RESULT_TYPE \
+    void
+#define SAKE_OVERLOAD_FUNCTION_NAME \
+    operator()
+#define SAKE_OVERLOAD_DECLARATION_SUFFIX \
+    const
+#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple )
+#define SAKE_OVERLOAD_MIN_ARITY     1
+#define SAKE_OVERLOAD_FWD_MAX_ARITY SAKE_CONSTRUCT_FWD_MAX_ARITY
+#include SAKE_OVERLOAD_GENERATE()
+
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+
 };
 
 } // namespace functional
