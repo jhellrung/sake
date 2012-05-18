@@ -31,7 +31,7 @@
 
 #include <sake/core/data_structures/optional/fwd.hpp>
 #include <sake/core/functional/operators/relational.hpp>
-#include <sake/core/math/cmp_fwd.hpp>
+#include <sake/core/math/cmp.hpp>
 #include <sake/core/math/sign_t.hpp>
 
 namespace sake
