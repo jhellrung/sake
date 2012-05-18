@@ -32,6 +32,13 @@ struct inv;
 
 } // namespace result_of
 
+namespace functional
+{
+
+struct inv;
+
+} // namespace functional
+
 } // namespace sake
 
 #endif // #ifndef SAKE_CORE_MATH_INV_FWD_HPP

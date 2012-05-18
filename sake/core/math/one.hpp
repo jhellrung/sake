@@ -123,19 +123,22 @@ operator>>=(T& x, sake::one_t)
 template< class T >
 inline typename sake::result_of::inv<T>::type
 operator/(sake::one_t, T&& x)
-{ return sake::inv(sake::forward<T>(x)); }
+//{ return sake::inv(sake::forward<T>(x)); }
+{ return sake::functional::inv()(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T >
 inline typename sake::result_of::inv< T& >::type
 operator/(sake::one_t, T& x)
-{ return sake::inv(x); }
+//{ return sake::inv(x); }
+{ return sake::functional::inv()(x); }
 
 template< class T >
 inline typename sake::result_of::inv< T const & >::type
 operator/(sake::one_t, T const & x)
-{ return sake::inv(x); }
+//{ return sake::inv(x); }
+{ return sake::functional::inv()(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 

@@ -27,6 +27,7 @@
 #include <sake/core/math/inv_fwd.hpp>
 #include <sake/core/math/inverse_fwd.hpp>
 #include <sake/core/math/one.hpp>
+#include <sake/core/math/one_fwd.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/move.hpp>
