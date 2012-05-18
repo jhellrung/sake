@@ -22,26 +22,7 @@ namespace models
 {
 
 template< class T = void >
-struct basic_movable_copyable
-    : basic_movable_copyable<>
-{
-    T value;
-
-    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
-        typename basic_movable_copyable,
-        (( basic_movable_copyable<> )) (( T )( value ))
-    )
-
-    explicit basic_movable_copyable(special_mem_fun_stats& stats)
-        : basic_movable_copyable<>(stats)
-    { }
-
-    template< class Signature >
-    basic_movable_copyable(special_mem_fun_stats& stats, T value_)
-        : basic_movable_copyable<>(stats),
-          value(sake::move(value_))
-    { }
-};
+struct basic_movable_copyable;
 
 template<>
 struct basic_movable_copyable< void >
@@ -79,6 +60,28 @@ struct basic_movable_copyable< void >
 
 private:
     special_mem_fun_stats& m_stats;
+};
+
+template< class T >
+struct basic_movable_copyable
+    : basic_movable_copyable<>
+{
+    T value;
+
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+        typename basic_movable_copyable,
+        (( basic_movable_copyable<> )) (( T )( value ))
+    )
+
+    explicit basic_movable_copyable(special_mem_fun_stats& stats)
+        : basic_movable_copyable<>(stats)
+    { }
+
+    template< class Signature >
+    basic_movable_copyable(special_mem_fun_stats& stats, T value_)
+        : basic_movable_copyable<>(stats),
+          value(sake::move(value_))
+    { }
 };
 
 } // namespace models

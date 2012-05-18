@@ -22,7 +22,7 @@ namespace sake_unit_test
 namespace models
 {
 
-template< class T = void >
+template< class T = void, class = void >
 struct movable_noncopyable
     : basic_movable_copyable<T>
 {
@@ -43,13 +43,13 @@ struct movable_noncopyable
     { }
 };
 
-template<>
-struct movable_noncopyable< void >
+template< class _ >
+struct movable_noncopyable< void, _ >
     : basic_movable_copyable<>
 {
     SAKE_MOVABLE_NONCOPYABLE( movable_noncopyable )
     SAKE_MEMBERWISE_MEM_FUN(
-        movable_noncopyable,
+        typename movable_noncopyable,
         ( move_constructor ) ( move_assign ),
         (( basic_movable_copyable<> ))
     )
