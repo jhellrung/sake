@@ -83,7 +83,7 @@ private:
             typename boost_ext::remove_qualifiers<T>::type
         >::value;
     // Sadly, MSVC tends to get lvalue/rvalue-ness wrong for unary operations
-    // on lvalues of bulitin types.
+    // on lvalues of builtin types.
     typedef typename boost::mpl::if_c<
         is_builtin_object_,
         boost::mpl::quote2< boost_ext::is_same_sans_qualifiers >,
