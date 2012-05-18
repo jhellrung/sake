@@ -63,7 +63,7 @@ private:
     {
         reset();
         if(x.initialized()) {
-            new(m_storage._) nocv_type(sake::get(boost_ext::forward<U>(x)));
+            new(m_storage._) nocv_type(sake::get(sake::forward<U>(x)));
             m_initialized = true;
         }
     }
