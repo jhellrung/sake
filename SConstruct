@@ -59,6 +59,7 @@ if platform == 'win32':
         link_flags += ' /LTCG'
 elif platform == 'posix':
     if env['CXX'] == 'g++':
+        cxxversion = tuple(map(int, env['CXXVERSION'].split('.')))
         if env.has_key('MARCH'):
             march = env['MARCH']
             plat_arch = march
@@ -110,6 +111,10 @@ elif platform == 'posix':
                      ' -Wshadow' \
                      ' -Wpointer-arith' \
                      ' -Wwrite-strings'
+        if (4,3,6) <= cxxversion < (4,7,0):
+            cxx_flags += ' -Wno-c++0x-compat'
+        if (4,7,0) <= cxxversion:
+            cxx_flags += ' -Wno-c++11-compat'
         if build_config == 'debug':
             cxx_flags += ' -g'
             link_flags += ' -g'
