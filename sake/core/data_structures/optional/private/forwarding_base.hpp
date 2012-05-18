@@ -108,13 +108,13 @@ public:
     // typename result_impl< optional<T> ( T0, ... ) >::type
     // apply_impl(T0&& x0, ... );
 #define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
-    result_impl< optional<T> T_tuple >
+    result_impl< sake::optional<T> T_tuple >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     apply_impl
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return derived().initialized() ? \
            derived().get() forward_x_tuple : \
-           sake::construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple ) ::type >();
+           sake::construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple )::type >();
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY SAKE_FORWARDING_BASE_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
 
@@ -122,7 +122,7 @@ public:
     // typename result_impl< optional<T> const ( T0, ... ) >::type
     // apply_impl(T0&& x0, ... ) const;
 #define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
-    result_impl< optional<T> const T_tuple >
+    result_impl< sake::optional<T> const T_tuple >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     apply_impl
 #define SAKE_OVERLOAD_DECLARATION_SUFFIX \
@@ -130,7 +130,7 @@ public:
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return derived().initialized() ? \
            derived().get() forward_x_tuple : \
-           sake::construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple ) ::type >();
+           sake::construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple )::type >();
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY SAKE_FORWARDING_BASE_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
 
