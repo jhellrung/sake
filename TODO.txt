@@ -1,0 +1,2 @@
+pull out subdirectories cast, emplacer, memberwise, and ref from utility
+create and incorporate the use of a SAKE_BOOST_EXT_PP_SEQ_SIZE_012 macro
