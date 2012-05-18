@@ -75,7 +75,7 @@
     typedef typename() ::boost::mpl::if_c< \
         SAKE_MEMBERWISE_copy_assign_enable( r, member_seq )::value, \
         SAKE_MEMBERWISE_COPY_ASSIGN_param_type( T ), \
-        ::sake::memberwise_copy_assign_private::disabler \
+        ::sake::memberwise_copy_assign_private::disabler<T>& \
     >::type _sake_memberwise_copy_assign_param_type; \
     T& operator=(_sake_memberwise_copy_assign_param_type other) \
         BOOST_NOEXCEPT_IF((has_nothrow_copy_assign_tag::value)) \
@@ -146,7 +146,7 @@
             SAKE_MEMBERWISE_COPY_ASSIGN_any_has_ume( r, member_seq ) \
         >::value, \
         T const &, \
-        ::sake::memberwise_copy_assign_private::disabler \
+        ::sake::memberwise_copy_assign_private::disabler<T>& \
     >::type _sake_memberwise_copy_assign_param_type; \
     T& operator=(_sake_memberwise_copy_assign_param_type other) \
         BOOST_NOEXCEPT_IF((has_nothrow_copy_assign_tag::value)) \
@@ -196,8 +196,14 @@ namespace sake
 namespace memberwise_copy_assign_private
 {
 
-struct disabler
-{ };
+template< class T >
+class disabler : public T
+{
+    disabler();
+    disabler(disabler&);
+    ~disabler();
+    void operator=(disabler&);
+};
 
 } // namespace memberwise_copy_assign_private
 

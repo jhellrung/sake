@@ -70,7 +70,7 @@
     typedef typename() ::boost::mpl::if_c< \
         SAKE_MEMBERWISE_move_assign_enable( r, member_seq )::value, \
         SAKE_MEMBERWISE_MOVE_ASSIGN_param_type( T ), \
-        ::sake::memberwise_move_assign_private::disabler \
+        ::sake::memberwise_move_assign_private::disabler<T>& \
     >::type _sake_memberwise_move_assign_param_type; \
     T& operator=(_sake_memberwise_move_assign_param_type other) \
         BOOST_NOEXCEPT_IF((has_nothrow_move_assign_tag::value)) \
@@ -87,8 +87,14 @@ namespace sake
 namespace memberwise_move_assign_private
 {
 
-struct disabler
-{ };
+template< class T >
+class disabler : public T
+{
+    disabler();
+    disabler(disabler&);
+    ~disabler();
+    void operator=(disabler&);
+};
 
 } // namespace memberwise_move_assign_private
 
