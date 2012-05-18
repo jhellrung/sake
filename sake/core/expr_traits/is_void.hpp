@@ -16,49 +16,41 @@
 
 #include <boost/static_assert.hpp>
 
-#include <sake/core/expr_traits/is_convertible.hpp>
-#include <sake/core/utility/convertible_from_any.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/identity_type.hpp>
 #include <sake/core/utility/workaround.hpp>
+#include <sake/core/utility/true_false_tag.hpp>
 
-#if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 4, 3 ) )
+#if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 6, 3 ) )
 #define SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-#endif // SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 4, 3 ) )
+#endif // SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 6, 3 ) )
+
+#define SAKE_EXPR_IS_VOID_is_void_detector( expression ) \
+    ( SAKE_SIZEOF_TRUE_TAG \
+   == sizeof( ::sake::expr_is_void_private::is_void_detector( expression ) ) )
 
 #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 
 #define SAKE_EXPR_IS_VOID( expression ) \
-    SAKE_EXPR_IS_CONVERTIBLE( \
-        ( \
-            expression, \
-            ::sake::expr_is_void_private::void_detector(), \
-            ::sake::expr_is_void_private::void_detector() \
-        ), \
-        ::sake::expr_is_void_private::void_detector \
-    )
+    SAKE_EXPR_IS_VOID_is_void_detector(( \
+        expression, \
+        ::sake::expr_is_void_private::void_detector(), \
+        ::sake::expr_is_void_private::void_detector() \
+    ))
 
 #else // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 
 #define SAKE_EXPR_IS_VOID( expression ) \
-    ( \
-        SAKE_EXPR_IS_CONVERTIBLE( \
-            ( \
-                expression, \
-                ::sake::expr_is_void_private::void_detector(), \
-                ::sake::expr_is_void_private::void_detector() \
-            ), \
-            ::sake::expr_is_void_private::void_detector \
-        ) \
-     && SAKE_EXPR_IS_CONVERTIBLE( \
-            ( \
-                ::sake::expr_is_void_private::void_detector(), \
-                expression, \
-                ::sake::expr_is_void_private::void_detector() \
-            ), \
-            ::sake::expr_is_void_private::void_detector \
-        ) \
-    )
+    ( SAKE_EXPR_IS_VOID_is_void_detector(( \
+        expression, \
+        ::sake::expr_is_void_private::void_detector(), \
+        ::sake::expr_is_void_private::void_detector() \
+    ))
+ && SAKE_EXPR_IS_VOID_is_void_detector(( \
+        ::sake::expr_is_void_private::void_detector(), \
+        expression, \
+        ::sake::expr_is_void_private::void_detector() \
+    )))
 
 #endif // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 
@@ -68,25 +60,27 @@ namespace sake
 namespace expr_is_void_private
 {
 
-struct non_void;
-struct convertible_from_void_detector;
-
 struct void_detector
-{
-    void_detector operator,(void_detector) const;
-#ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-    operator void_detector* () const;
-    template< class T > friend non_void operator,(T const &, void_detector*);
-#else // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-    friend non_void operator,(sake::convertible_from_any, void_detector);
-#endif // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-    non_void operator,(sake::convertible_from_any) const;
-};
-
+{ void_detector operator,(void_detector) const; };
 struct non_void
+{ non_void operator,(void_detector) const; };
+
+struct from_any
 {
-    non_void operator,(void_detector) const;
+#ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
+    template< class T > from_any(T const &);
+#else // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
+    from_any(...);
+#endif // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 };
+struct from_void_detector
+{ from_void_detector(void_detector); };
+
+non_void operator,(from_any, from_void_detector);
+non_void operator,(from_void_detector, from_any);
+
+sake::true_tag is_void_detector(void_detector);
+template< class T > sake::false_tag is_void_detector(T const &);
 
 namespace
 {
@@ -94,22 +88,22 @@ namespace
 BOOST_STATIC_ASSERT( SAKE_EXPR_IS_VOID( sake::declval< void >() ) );
 
 struct dummy { };
-template< class L, class R > struct dummy_tmpl { };
-template< class T, class L, class R >
-L operator,(T, dummy_tmpl<L,R>);
+template< class L, class R > struct dummy_template { };
 template< class L, class R, class T >
-R operator,(dummy_tmpl<L,R>, T);
+L operator,(dummy_template<L,R>, T);
+template< class T, class L, class R >
+R operator,(T, dummy_template<L,R>);
 
 #define test( T ) \
     BOOST_STATIC_ASSERT( !SAKE_EXPR_IS_VOID( (sake::declval<T>()) ) );
 test( int )
 test( dummy )
-test( SAKE_IDENTITY_TYPE_WRAP(( dummy_tmpl< int, int > )) )
+test( SAKE_IDENTITY_TYPE_WRAP(( dummy_template< int, int > )) )
+test( SAKE_IDENTITY_TYPE_WRAP(( dummy_template< int, void > )) )
 #ifndef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-test( SAKE_IDENTITY_TYPE_WRAP(( dummy_tmpl< int, void > )) )
+test( SAKE_IDENTITY_TYPE_WRAP(( dummy_template< void, int > )) )
 #endif // #ifndef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-test( SAKE_IDENTITY_TYPE_WRAP(( dummy_tmpl< void, int > )) )
-//test( dummy_tmpl< void, void > )
+//test( SAKE_IDENTITY_TYPE_WRAP(( dummy_template< void, void > )) )
 #undef test
 
 } // namespace
