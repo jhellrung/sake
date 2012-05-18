@@ -52,7 +52,7 @@
     )
 #define SAKE_MEMBERWISE_assign_body_assign_member_expand( macro, x ) macro x
 #define SAKE_MEMBERWISE_assign_body_assign_member_1( base ) \
-    base::operator=(::sake::move(::sake::inherit_cast< elem >(SAKE_AS_LVALUE(other))));
+    base::operator=(::sake::move(::sake::inherit_cast< base >(SAKE_AS_LVALUE(other))));
 #define SAKE_MEMBERWISE_assign_body_assign_member_2( type, name ) \
     name = ::sake::move(other.name);
 
