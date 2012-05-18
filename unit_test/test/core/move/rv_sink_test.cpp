@@ -11,7 +11,6 @@
 
 #include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
 
-#include <sake/core/functional/construct.hpp>
 #include <sake/core/move/rv_sink.hpp>
 
 #include <sake/test/environment.hpp>
@@ -47,7 +46,7 @@ public:
 
     // lvalues + movable explicit rvalues
     template< class U >
-    int operator()(U& x) const
+    int operator()(U&) const
     { return sake::boost_ext::is_rvalue_reference< U& >::value; }
 
     // T rvalues
@@ -88,7 +87,7 @@ public:
 
     // lvalues + movable explicit rvalues
     template< class U >
-    int operator()(U& x) const
+    int operator()(U&) const
     { return sake::boost_ext::is_rvalue_reference< U& >::value; }
 
     // movable implicit rvalues
@@ -123,13 +122,13 @@ void rv_sink_test(sake::test::environment& env)
     SAKE_TEST_CHECK_RELATION( env, 1, ==, helper<>()(sake::move(x)) );
     SAKE_TEST_CHECK_RELATION( env, 0, ==, helper<>()(sake::move(cx)) );
     SAKE_TEST_CHECK_RELATION( env, 0, ==, helper<>()(0) );
-    SAKE_TEST_CHECK_RELATION( env, 0, ==, helper<>()(sake::construct< int >(0)) );
+    SAKE_TEST_CHECK_RELATION( env, 0, ==, helper<>()((int(0))) );
 #ifndef BOOST_NO_RVALUE_REFERENCES
-    SAKE_TEST_CHECK_RELATION( env, 1, ==, helper<>()(sake::construct< type >(stats)) );
-    SAKE_TEST_CHECK_RELATION( env, 1, ==, helper<>()(sake::construct< int_type >(stats)) );
+    SAKE_TEST_CHECK_RELATION( env, 1, ==, helper<>()((type(stats))) );
+    SAKE_TEST_CHECK_RELATION( env, 1, ==, helper<>()((int_type(stats))) );
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
-    SAKE_TEST_CHECK_RELATION( env, 2, ==, helper<>()(sake::construct< type >(stats)) );
-    SAKE_TEST_CHECK_RELATION( env, 2, ==, helper<>()(sake::construct< int_type >(stats)) );
+    SAKE_TEST_CHECK_RELATION( env, 2, ==, helper<>()((type(stats))) );
+    SAKE_TEST_CHECK_RELATION( env, 2, ==, helper<>()((int_type(stats))) );
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     SAKE_TEST_CHECK_RELATION( env, 0, ==, helper< type >()(i) );
@@ -138,13 +137,13 @@ void rv_sink_test(sake::test::environment& env)
     SAKE_TEST_CHECK_RELATION( env, 0, ==, helper< type >()(sake::move(i)) );
     SAKE_TEST_CHECK_RELATION( env, 1, ==, helper< type >()(sake::move(x)) );
     SAKE_TEST_CHECK_RELATION( env, 0, ==, helper< type >()(sake::move(cx)) );
-    SAKE_TEST_CHECK_RELATION( env, 1, ==, helper< type >()(sake::construct< type >(stats)) );
+    SAKE_TEST_CHECK_RELATION( env, 1, ==, helper< type >()((type(stats))) );
     SAKE_TEST_CHECK_RELATION( env, 0, ==, helper< type >()(0) );
-    SAKE_TEST_CHECK_RELATION( env, 0, ==, helper< type >()(sake::construct< int >(0)) );
+    SAKE_TEST_CHECK_RELATION( env, 0, ==, helper< type >()((int(0))) );
 #ifndef BOOST_NO_RVALUE_REFERENCES
-    SAKE_TEST_CHECK_RELATION( env, 1, ==, helper< type >()(sake::construct< int_type >(stats)) );
+    SAKE_TEST_CHECK_RELATION( env, 1, ==, helper< type >()((int_type(stats))) );
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
-    SAKE_TEST_CHECK_RELATION( env, 2, ==, helper< type >()(sake::construct< int_type >(stats)) );
+    SAKE_TEST_CHECK_RELATION( env, 2, ==, helper< type >()((int_type(stats))) );
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 }
