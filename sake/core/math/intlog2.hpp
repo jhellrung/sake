@@ -383,8 +383,8 @@ template< class T >
 inline int
 float_impl(T const x)
 {
-    typedef typename boost::uint_t< sake::iec559_traits<T>::bits >::fast uint;
-    union { T x; uint i; } u = { x };
+    typedef typename boost::uint_t< sake::iec559_traits<T>::bits >::fast uint_;
+    union { T x; uint_ i; } u = { x };
     int const biased_exponent = static_cast< int >(u.i >> iec559_traits<T>::significand_bits);
     return biased_exponent != 0 ?
            biased_exponent - sake::iec559_traits<T>::exponent_bias :
