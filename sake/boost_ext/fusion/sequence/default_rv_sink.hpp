@@ -160,7 +160,7 @@ public:
     // implicit by design
     template< class U >
     default_rv_sink0(U const & x,
-        typename default_rv_sink_::constructor_enabler<U>::type* = 0)
+        typename default_rv_sink_::template constructor_enabler<U>::type* = 0)
         : default_rv_sink_(x)
     { }
 };
@@ -186,7 +186,7 @@ public:
     // implicit by design
     template< class U >
     default_rv_sink1(U const & x,
-        typename default_rv_sink_::constructor_enabler<U>::type* = 0)
+        typename default_rv_sink_::template constructor_enabler<U>::type* = 0)
         : default_rv_sink_(x)
     { }
 };
