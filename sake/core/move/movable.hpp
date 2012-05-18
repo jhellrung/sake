@@ -423,7 +423,7 @@
     SAKE_MEMBERWISE_COPY_ASSIGN_R( r, typename() T, member_seq ) \
     T& operator=(_sake_movable_emulation_enable_move_assign_param_type other) \
         BOOST_NOEXCEPT_IF((has_nothrow_copy_assign_tag::value)) \
-    { return operator=(const_cast< T const & >(other)); } \
+    { return operator=(static_cast< T const & >(other)); } \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typename() T, member_seq )
 
 #define SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE_impl1( r, typename, T, member_seq ) \
@@ -498,12 +498,23 @@ namespace sake
 namespace movable_private
 {
 
-template< int >
-struct disabler_param
-{ };
+template< class T, int >
+class disabler_param : public T
+{
+    disabler_param();
+    disabler_param(disabler_param&);
+    ~disabler_param();
+    void operator=(disabler_param&);
+};
 
 template< class T >
-struct disabler_conv;
+class disabler_conv : public T
+{
+    disabler_conv();
+    disabler_conv(disabler_conv&);
+    ~disabler_conv();
+    void operator=(disabler_conv&);
+};
 
 template< class T, bool Enable >
 struct basic_traits;
@@ -522,8 +533,8 @@ struct basic_traits< T, true >
 template< class T >
 struct basic_traits< T, false >
 {
-    typedef disabler_conv<T>  rv_conv_type;
-    typedef disabler_param<0> this_rvalue_param_type;
+    typedef disabler_conv<T>     rv_conv_type;
+    typedef disabler_param<T,0>& this_rvalue_param_type;
 };
 
 template< class T >
@@ -538,46 +549,46 @@ struct optimal_traits< T, true, true >
 template< class T >
 struct optimal_traits< T, true, false >
 {
-    typedef boost::rv<T>      rv_conv_type;
-    typedef boost::rv<T>&     this_rvalue_param_type;
-    typedef disabler_param<0> this_copy_assign_param_type;
-    typedef disabler_param<1> enable_move_assign_param_type;
+    typedef boost::rv<T>         rv_conv_type;
+    typedef boost::rv<T>&        this_rvalue_param_type;
+    typedef disabler_param<T,0>& this_copy_assign_param_type;
+    typedef disabler_param<T,1>& enable_move_assign_param_type;
 };
 
 template< class T, bool CopyAssignEnable >
 struct optimal_traits< T, false, CopyAssignEnable >
 {
-    typedef disabler_conv<T>  rv_conv_type;
-    typedef disabler_param<0> this_rvalue_param_type;
-    typedef disabler_param<1> this_copy_assign_param_type;
-    typedef disabler_param<2> enable_move_assign_param_type;
+    typedef disabler_conv<T>     rv_conv_type;
+    typedef disabler_param<T,0>& this_rvalue_param_type;
+    typedef disabler_param<T,1>& this_copy_assign_param_type;
+    typedef disabler_param<T,2>& enable_move_assign_param_type;
 };
 
 template< class T >
 struct friendly_traits< T, true, true >
 {
-    typedef boost::rv<T>      rv_conv_type;
-    typedef boost::rv<T>&     this_rvalue_param_type;
-    typedef T                 copy_assign_by_value_param_type;
-    typedef disabler_param<0> copy_assign_by_cref_param_type;
+    typedef boost::rv<T>         rv_conv_type;
+    typedef boost::rv<T>&        this_rvalue_param_type;
+    typedef T                    copy_assign_by_value_param_type;
+    typedef disabler_param<T,0>& copy_assign_by_cref_param_type;
 };
 
 template< class T >
 struct friendly_traits< T, true, false >
 {
-    typedef boost::rv<T>      rv_conv_type;
-    typedef boost::rv<T>&     this_rvalue_param_type;
-    typedef disabler_param<0> copy_assign_by_value_param_type;
-    typedef disabler_param<1> copy_assign_by_cref_param_type;
+    typedef boost::rv<T>         rv_conv_type;
+    typedef boost::rv<T>&        this_rvalue_param_type;
+    typedef disabler_param<T,0>& copy_assign_by_value_param_type;
+    typedef disabler_param<T,1>& copy_assign_by_cref_param_type;
 };
 
 template< class T, bool CopyAssignEnable >
 struct friendly_traits< T, false, CopyAssignEnable >
 {
-    typedef disabler_conv<T>  rv_conv_type;
-    typedef disabler_param<0> this_rvalue_param_type;
-    typedef disabler_param<1> copy_assign_by_value_param_type;
-    typedef T const &         copy_assign_by_cref_param_type;
+    typedef disabler_conv<T>     rv_conv_type;
+    typedef disabler_param<T,0>& this_rvalue_param_type;
+    typedef disabler_param<T,1>& copy_assign_by_value_param_type;
+    typedef T const &            copy_assign_by_cref_param_type;
 };
 
 } // namespace movable_private
