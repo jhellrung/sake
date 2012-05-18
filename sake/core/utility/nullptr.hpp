@@ -31,7 +31,6 @@
 #define SAKE_CORE_UTILITY_NULLPTR_HPP
 
 #include <boost/config.hpp>
-#include <boost/static_assert.hpp>
 
 #ifndef BOOST_NO_NULLPTR
 
@@ -47,6 +46,8 @@ typedef std::nullptr_t nullptr_t;
 #else // #ifndef BOOST_NO_NULLPTR
 
 #include <ostream>
+
+#include <boost/static_assert.hpp>
 
 #include <sake/core/utility/explicit_operator_bool.hpp>
 
