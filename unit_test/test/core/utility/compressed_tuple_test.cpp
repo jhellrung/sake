@@ -32,19 +32,22 @@ struct X { };
 struct Y { };
 struct Z { char _[42]; };
 
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< int, X, Y > ) == sizeof( int )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, int, Y > ) == sizeof( int )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Y, int > ) == sizeof( int )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Y, Z > ) == sizeof( Z )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Z, Y > ) == sizeof( Z )));
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< Z, X, Y > ) == sizeof( Z )));
+
+#ifndef __GNUC__
 BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, X, X > ) == sizeof( X )));
 BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< int, X, X > ) == sizeof( int )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< int, X, Y > ) == sizeof( int )));
 BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, int, X > ) == sizeof( int )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, int, Y > ) == sizeof( int )));
 BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, X, int > ) == sizeof( int )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Y, int > ) == sizeof( int )));
 BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, X, Z > ) == sizeof( Z )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Y, Z > ) == sizeof( Z )));
 BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Z, X > ) == sizeof( Z )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< X, Z, Y > ) == sizeof( Z )));
 BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< Z, X, X > ) == sizeof( Z )));
-BOOST_STATIC_ASSERT((sizeof( sake::compressed_tuple< Z, X, Y > ) == sizeof( Z )));
+#endif // #ifndef __GNUC__
 
 } // namespace
 
