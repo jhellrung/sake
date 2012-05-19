@@ -84,6 +84,16 @@ void compressed_pair_test(sake::test::environment& env)
     {
         models::special_mem_fun_stats stats;
         typedef models::basic_movable_copyable<> type;
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        BOOST_STATIC_ASSERT((!sake::has_move_emulation<
+           sake::compressed_pair< int, int > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_pair< int, type > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_pair< type, int > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_pair< type, type > >::value));
+#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
         {
             type y(stats);
             sake::compressed_pair< type, type > x(y, sake::move(y));

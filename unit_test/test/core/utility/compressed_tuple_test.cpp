@@ -6,6 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
+#include <boost/config.hpp>
 #include <boost/static_assert.hpp>
 
 #include <sake/core/math/cmp.hpp>
@@ -85,10 +86,12 @@ void compressed_tuple_test(sake::test::environment& env)
     {
         models::special_mem_fun_stats stats;
         typedef models::basic_movable_copyable<> type;
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        BOOST_STATIC_ASSERT((!sake::has_move_emulation<
+           sake::compressed_tuple< int > >::value));
         BOOST_STATIC_ASSERT((sake::has_move_emulation<
-           sake::compressed_pair< type, type > >::value));
-        BOOST_STATIC_ASSERT((sake::has_move_emulation<
-           sake::compressed_tuple< type, type > >::value));
+           sake::compressed_tuple< type > >::value));
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
         {
             type z(stats);
             sake::compressed_tuple< type > w(z);
@@ -181,6 +184,16 @@ void compressed_tuple_test(sake::test::environment& env)
     {
         models::special_mem_fun_stats stats;
         typedef models::basic_movable_copyable<> type;
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        BOOST_STATIC_ASSERT((!sake::has_move_emulation<
+           sake::compressed_tuple< int, int > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_tuple< int, type > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_tuple< type, int > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_tuple< type, type > >::value));
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
         {
             type z(stats);
             sake::compressed_tuple< type, type > x(z, sake::move(z));
@@ -294,6 +307,24 @@ void compressed_tuple_test(sake::test::environment& env)
     {
         models::special_mem_fun_stats stats;
         typedef models::basic_movable_copyable<> type;
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        BOOST_STATIC_ASSERT((!sake::has_move_emulation<
+           sake::compressed_tuple< int, int, int > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_tuple< int, int, type > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_tuple< int, type, int > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_tuple< int, type, type > >::value));
+        BOOST_STATIC_ASSERT((!sake::has_move_emulation<
+           sake::compressed_tuple< type, int, int > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_tuple< type, int, type > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_tuple< type, type, int > >::value));
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
+           sake::compressed_tuple< type, type, type > >::value));
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
         {
             type y(stats);
             sake::compressed_tuple< type, type, type > x(y, sake::move(y), y);
