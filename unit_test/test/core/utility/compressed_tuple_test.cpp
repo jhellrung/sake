@@ -316,7 +316,7 @@ void compressed_tuple_test(sake::test::environment& env)
            sake::compressed_tuple< int, type, int > >::value));
         BOOST_STATIC_ASSERT((sake::has_move_emulation<
            sake::compressed_tuple< int, type, type > >::value));
-        BOOST_STATIC_ASSERT((!sake::has_move_emulation<
+        BOOST_STATIC_ASSERT((sake::has_move_emulation<
            sake::compressed_tuple< type, int, int > >::value));
         BOOST_STATIC_ASSERT((sake::has_move_emulation<
            sake::compressed_tuple< type, int, type > >::value));
