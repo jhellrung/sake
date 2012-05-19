@@ -279,10 +279,10 @@ template< class T >
 struct fallback : T
 {
     typedef fallback type;
-    // A compiler error here concerning inaccessible overloads or private member
-    // indicates that a member function overload of the given name is private.
-    // In this case, the only resolution is to explicitly extend the trait for
-    // this class.
+    // A compiler error here concerning inaccessible overloads or private
+    // members indicates that a member function overload of the given name is
+    // private. In this case, the only resolution is to explicitly extend the
+    // trait for this class.
     using T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME;
     ::sake::introspection_private::dummy
     SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
@@ -318,8 +318,13 @@ class non_void_result_helper;
 
 template< class T, class Result, class T0, class... T, class ResultPred >
 struct dispatch< T, Result ( T0, T... ), ResultPred, false >
+#if defined( __GNUC__ ) \
+ && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
+    : ::sake::boost_ext::mpl::and2<
+#else // #if defined( __GNUC__ ) ## defined( ... )
     : ::sake::boost_ext::mpl::and3<
           dispatch<T>,
+#endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::not_< has_void_result< T, void ( T0, T... ) > >,
           non_void_result_helper< T, Result ( T0, T... ), ResultPred >
       >
@@ -327,8 +332,13 @@ struct dispatch< T, Result ( T0, T... ), ResultPred, false >
 
 template< class T, class T0, class... T, class ResultPred >
 struct dispatch< T, void ( T0, T... ), ResultPred, false >
+#if defined( __GNUC__ ) \
+ && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
+    : ::sake::boost_ext::mpl::and1<
+#else // #if defined( __GNUC__ ) ## defined( ... )
     : ::sake::boost_ext::mpl::and2<
           dispatch<T>,
+#endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::eval_if<
               has_void_result< T, void ( T0, T... ) >,
               ::boost::mpl::apply1< ResultPred, void >,
@@ -337,16 +347,16 @@ struct dispatch< T, void ( T0, T... ), ResultPred, false >
       >
 { };
 
+#define fallback_member_T0T \
+    ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( \
+         ::sake::declval< T0 >(), ::sake::declval<T>()... )
+
 template< class T, class T0, class... T >
 class has_void_result< T, void ( T0, T... ) >
 {
     typedef typename fallback<T>::type fallback_;
 public:
-    static bool const value = SAKE_EXPR_IS_VOID(
-        ::sake::declval< fallback_ >().
-            SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
-                ( ::sake::declval< T0 >(), ::sake::declval<T>()... )
-    );
+    static bool const value = SAKE_EXPR_IS_VOID( fallback_member_T0T );
     typedef has_void_result type;
 };
 
@@ -356,26 +366,13 @@ class non_void_result_helper< T, Result ( T0, T... ), ResultPred >
     typedef typename fallback<T>::type fallback_;
 public:
     static bool const value =
-       !SAKE_EXPR_IS_CONVERTIBLE(
-            ::sake::declval< fallback_ >().
-                SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
-                    ( ::sake::declval< T0 >(), ::sake::declval<T>()... ),
-            ::sake::introspection_private::dummy
-        )
-     && SAKE_EXPR_IS_CONVERTIBLE(
-            ::sake::declval< fallback_ >().
-                SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
-                    ( ::sake::declval< T0 >(), ::sake::declval<T>()... ),
-            Result
-        )
-     && SAKE_EXPR_APPLY(
-            ResultPred,
-            ::sake::declval< fallback_ >().
-                SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
-                    ( ::sake::declval< T0 >(), ::sake::declval<T>()... ),
-        );
+       !SAKE_EXPR_IS_CONVERTIBLE( fallback_member_T0T, ::sake::introspection_private::dummy )
+     && SAKE_EXPR_IS_CONVERTIBLE( fallback_member_T0T, Result )
+     && SAKE_EXPR_APPLY( ResultPred, fallback_member_T0T );
     typedef non_void_result_helper type;
 };
+
+#undef fallback_member_T0T
 
 #else // #if !defined( ... ) && !defined( ... )
 
@@ -404,6 +401,7 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 
 #undef SAKE_INTROSPECTION_TRAIT_NAME
 #undef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
+#undef SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN
 #undef SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE
 #undef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
 #undef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS
@@ -417,13 +415,17 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 #define T0N         BOOST_PP_ENUM_PARAMS( N, T )
 #define fallback_member_T0N \
     ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( \
-        BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< T, >() BOOST_PP_INTERCEPT ) \
-    )
+        BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< T, >() BOOST_PP_INTERCEPT ) )
 
 template< class T, class Result, class_T0N, class ResultPred >
 struct dispatch< T, Result ( T0N ), ResultPred, false >
+#if defined( __GNUC__ ) \
+ && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
+    : ::sake::boost_ext::mpl::and2<
+#else // #if defined( __GNUC__ ) ## defined( ... )
     : ::sake::boost_ext::mpl::and3<
           dispatch<T>,
+#endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::not_< has_void_result< T, void ( T0N ) > >,
           non_void_result_helper< T, Result ( T0N ), ResultPred >
       >
@@ -431,8 +433,13 @@ struct dispatch< T, Result ( T0N ), ResultPred, false >
 
 template< class T, class_T0N, class ResultPred >
 struct dispatch< T, void ( T0N ), ResultPred, false >
+#if defined( __GNUC__ ) \
+ && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
+    : ::sake::boost_ext::mpl::and1<
+#else // #if defined( __GNUC__ ) ## defined( ... )
     : ::sake::boost_ext::mpl::and2<
           dispatch<T>,
+#endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::eval_if<
               has_void_result< T, void ( T0N ) >,
               ::boost::mpl::apply1< ResultPred, void >,

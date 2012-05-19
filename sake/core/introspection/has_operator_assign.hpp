@@ -39,6 +39,7 @@ SAKE_INTROSPECTION_DEFINE_HAS_MEMBER_FUNCTION(
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           has_operator_assign
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME operator=
+#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T ) \
     typename ::sake::boost_ext::add_reference<T>::type \
         ( typename ::sake::boost_ext::add_reference_add_const<T>::type )
