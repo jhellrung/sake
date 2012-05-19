@@ -50,7 +50,8 @@ struct has_move_emulation< T& >
 
 } // namespace sake
 
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 ) \
+ || SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
 
 #include <sake/core/utility/true_false_tag.hpp>
 
@@ -89,7 +90,7 @@ struct has_move_emulation
 
 } // namespace sake
 
-#else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#else // #if SAKE_WORKAROUND ...
 
 #include <sake/boost_ext/mpl/and.hpp>
 
@@ -108,7 +109,7 @@ struct has_move_emulation
 
 } // namespace sake
 
-#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_WORKAROUND ...
 
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
