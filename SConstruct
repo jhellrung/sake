@@ -24,7 +24,7 @@ if not env.has_key('BOOST_ROOT'):
         print("*** ERROR: Undefined BOOST_ROOT")
         Exit(2)
     env['BOOST_ROOT'] = os.environ.get('BOOST_ROOT')
-print("BOOST_ROOT =", env['BOOST_ROOT'])
+print("BOOST_ROOT = " + env['BOOST_ROOT'])
 
 env.Append(CPPPATH=['#'])
 env.Append(CPPPATH=[env['BOOST_ROOT']])
