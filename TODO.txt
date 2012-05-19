@@ -2,3 +2,5 @@
 - create and incorporate the use of a SAKE_BOOST_EXT_PP_SEQ_SIZE_012 macro
 - check for returns of type common_type and ensure each branch in the conditional
   is_convertible_wnrbt to the common_type
+- rework the workaround macros to check compiler versions using the usual
+  relational operators
