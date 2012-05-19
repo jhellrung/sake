@@ -15,8 +15,8 @@
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/introspection/private/builtin_has_operator_crement.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -39,7 +39,7 @@ struct builtin_has_operator_post_crement< T&, Result, ResultPred >
 { };
 
 // For some reason, the type of declval< bool& >()++ is bool& on MSVC9.
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#if SAKE_MSC_VERSION <= 1500
 
 template< class Result, class ResultPred >
 struct builtin_has_operator_post_crement< bool&, Result, ResultPred >
@@ -49,7 +49,7 @@ struct builtin_has_operator_post_crement< bool&, Result, ResultPred >
       >
 { };
 
-#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_MSC_VERSION <= 1500
 
 } // namespace introspection_private
 

@@ -25,10 +25,10 @@
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/math/private/sqr_common.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {

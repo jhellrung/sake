@@ -45,6 +45,7 @@
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/expr_traits/typeof.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
@@ -57,7 +58,6 @@
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {

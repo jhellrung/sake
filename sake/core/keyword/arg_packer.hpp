@@ -27,12 +27,12 @@
 
 #include <sake/boost_ext/mpl/vector.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/keyword/arg_pack.hpp>
 #include <sake/core/keyword/fwd.hpp>
 #include <sake/core/keyword/satisfies.hpp>
 #include <sake/core/keyword/tag_args.hpp>
 #include <sake/core/move/forward.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -89,23 +89,22 @@ struct arg_packer
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
-#pragma warning( push )
-// 'sake::keyword::arg_packer< ParamSpecs >::enable' : redefinition of default
-// parameter : parameter n
-// 'sake::keyword::arg_packer< ParamSpecs >::enabler' : redefinition of default
-// parameter : parameter n
+#if SAKE_MSC_VERSION <= 1500
+#pragma warning( push ) // 'sake::keyword::arg_packer< ParamSpecs >::enable' :
+                        // redefinition of default parameter : parameter n
+                        // 'sake::keyword::arg_packer< ParamSpecs >::enabler' :
+                        // redefinition of default parameter : parameter n
 #pragma warning( disable : 4348 )
-#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_MSC_VERSION <= 1500
     template< BOOST_PP_ENUM_BINARY_PARAMS(
         SAKE_KEYWORD_MAX_ARITY, class A, = void BOOST_PP_INTERCEPT ) >
     struct enable;
     template< BOOST_PP_ENUM_BINARY_PARAMS(
         SAKE_KEYWORD_MAX_ARITY, class A, = void BOOST_PP_INTERCEPT ) >
     struct enabler;
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#if SAKE_MSC_VERSION <= 1500
 #pragma warning( pop )
-#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_MSC_VERSION <= 1500
 
     template< class > struct result;
 

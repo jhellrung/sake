@@ -32,12 +32,12 @@
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/math/neg_ip.hpp>
 #include <sake/core/math/private/abs_common.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -92,11 +92,11 @@ struct abs_ip
     long long&
     operator()(long long& x) const
     {
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#if SAKE_MSC_VERSION <= 1500
         return x < 0 ? (x = -x) : x;
-#else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#else // #if SAKE_MSC_VERSION <= 1500
         return x = std::abs(x);
-#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_MSC_VERSION <= 1500
     }
 #endif // #ifndef BOOST_NO_LONG_LONG
 

@@ -32,8 +32,8 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_class.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/move/rv.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -53,8 +53,8 @@ struct has_move_emulation< T& >
 
 } // namespace sake
 
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 ) \
- || SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
+#if SAKE_MSC_VERSION <= 1500 \
+ || SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
 
 #include <sake/core/utility/true_false_tag.hpp>
 
@@ -93,7 +93,7 @@ struct has_move_emulation
 
 } // namespace sake
 
-#else // #if SAKE_WORKAROUND ...
+#else // #if XXX_VERSION <= ...
 
 #include <sake/boost_ext/mpl/and.hpp>
 
@@ -112,7 +112,7 @@ struct has_move_emulation
 
 } // namespace sake
 
-#endif // #if SAKE_WORKAROUND ...
+#endif // #if XXX_VERSION <= ...
 
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 

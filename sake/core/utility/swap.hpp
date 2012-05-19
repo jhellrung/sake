@@ -27,11 +27,11 @@
 
 #include <sake/boost_ext/mpl/if.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/utility/int_tag.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {

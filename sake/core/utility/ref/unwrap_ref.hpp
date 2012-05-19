@@ -13,8 +13,8 @@
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/utility/ref/unwrap_reference.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -25,14 +25,14 @@ unwrap_ref(T& x)
 { return x; }
 
 template< class T >
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#if SAKE_MSC_VERSION <= 1500
 // Otherwise, MSVC9 complains about a const U -> U& conversion :/
 inline typename boost_ext::add_reference<
     typename sake::unwrap_reference< T const >::type
 >::type
-#else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#else // #if SAKE_MSC_VERSION <= 1500
 inline typename sake::unwrap_reference< T const >::type &
-#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_MSC_VERSION <= 1500
 unwrap_ref(T const & x)
 { return x; }
 

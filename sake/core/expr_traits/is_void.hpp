@@ -16,23 +16,23 @@
 
 #include <boost/static_assert.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/identity_type.hpp>
-#include <sake/core/utility/workaround.hpp>
 #include <sake/core/utility/true_false_tag.hpp>
 
-#if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 6, 3 ) )
+#if SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
 #define SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-#endif // SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( ( 4, 6, 3 ) )
+#endif // #if SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
 
-#define SAKE_EXPR_IS_VOID_is_void_detector( expression ) \
+#define SAKE_EXPR_IS_VOID_is_void( expression ) \
     ( SAKE_SIZEOF_TRUE_TAG \
-   == sizeof( ::sake::expr_is_void_private::is_void_detector( expression ) ) )
+   == sizeof( ::sake::expr_is_void_private::is_void( expression ) ) )
 
 #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 
 #define SAKE_EXPR_IS_VOID( expression ) \
-    SAKE_EXPR_IS_VOID_is_void_detector(( \
+    SAKE_EXPR_IS_VOID_is_void(( \
         expression, \
         ::sake::expr_is_void_private::void_detector(), \
         ::sake::expr_is_void_private::void_detector() \
@@ -41,14 +41,15 @@
 #else // #ifdef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 
 #define SAKE_EXPR_IS_VOID( expression ) \
-    ( SAKE_EXPR_IS_VOID_is_void_detector(( \
+    ( SAKE_EXPR_IS_VOID_is_void(( \
         expression, \
         ::sake::expr_is_void_private::void_detector(), \
         ::sake::expr_is_void_private::void_detector() \
     )) \
- && SAKE_EXPR_IS_VOID_is_void_detector(( \
+ && SAKE_EXPR_IS_VOID_is_void(( \
         ::sake::expr_is_void_private::void_detector(), \
         expression, \
+        ::sake::expr_is_void_private::void_detector(), \
         ::sake::expr_is_void_private::void_detector() \
     )))
 
@@ -60,8 +61,13 @@ namespace sake
 namespace expr_is_void_private
 {
 
+struct void_;
+struct non_void;
+
 struct void_detector
-{ void_detector operator,(void_detector) const; };
+{ void_ operator,(void_detector) const; };
+struct void_
+{ void_ operator,(void_detector) const; };
 struct non_void
 { non_void operator,(void_detector) const; };
 
@@ -79,8 +85,8 @@ struct from_void_detector
 non_void operator,(from_any, from_void_detector);
 non_void operator,(from_void_detector, from_any);
 
-sake::true_tag is_void_detector(void_detector);
-template< class T > sake::false_tag is_void_detector(T const &);
+sake::true_tag is_void(void_);
+template< class T > sake::false_tag is_void(T const &);
 
 namespace
 {
@@ -102,8 +108,8 @@ test( SAKE_IDENTITY_TYPE_WRAP(( dummy_template< int, int > )) )
 test( SAKE_IDENTITY_TYPE_WRAP(( dummy_template< int, void > )) )
 #ifndef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
 test( SAKE_IDENTITY_TYPE_WRAP(( dummy_template< void, int > )) )
+test( SAKE_IDENTITY_TYPE_WRAP(( dummy_template< void, void > )) )
 #endif // #ifndef SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-//test( SAKE_IDENTITY_TYPE_WRAP(( dummy_template< void, void > )) )
 #undef test
 
 } // namespace

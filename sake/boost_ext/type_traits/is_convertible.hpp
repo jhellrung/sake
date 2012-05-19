@@ -20,9 +20,9 @@
 
 #include <boost/type_traits/integral_constant.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/expr_traits/is_convertible.hpp>
 #include <sake/core/utility/declval.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -50,12 +50,12 @@ struct is_convertible
 #pragma warning( pop )
 #endif // #ifdef _MSC_VER
 
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#if SAKE_MSC_VERSION <= 1500
 // MSVC9 ICE's on some uses of is_convertible< From, To > when To has a user-
 // defined destructor. This is certainly an imperfect workaround but it's the
 // best we can do at the moment.
 template< class T > struct is_convertible<T,T> : boost::true_type { };
-#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_MSC_VERSION <= 1500
 
 template<> struct is_convertible< void, void > : boost::true_type { };
 template<> struct is_convertible< void, void const > : boost::true_type { };

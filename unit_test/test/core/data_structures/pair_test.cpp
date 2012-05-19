@@ -6,13 +6,13 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
+#include <sake/core/config.hpp>
 #include <sake/core/data_structures/pair/make.hpp>
 #include <sake/core/data_structures/pair/operators.hpp>
 #include <sake/core/data_structures/pair/pair.hpp>
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/move.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 #include <sake/test/environment.hpp>
 #include <sake/test/test.hpp>
@@ -115,18 +115,18 @@ void pair_test(sake::test::environment& env)
         }
         SAKE_TEST_CHECK_RELATION( env, stats.n_other_constructor, ==, 1 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 1 );
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#if SAKE_MSC_VERSION <= 1500
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_constructor, ==, 6 );
-#else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#else // #if SAKE_MSC_VERSION <= 1500
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_constructor, ==, 5 );
-#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_MSC_VERSION <= 1500
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 1 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_assign, ==, 2 );
-#if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#if SAKE_MSC_VERSION <= 1500
         SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 8 );
-#else // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#else // #if SAKE_MSC_VERSION <= 1500
         SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 7 );
-#endif // #if SAKE_WORKAROUND_MSC_VERSION_LESS_EQUAL( 1500 )
+#endif // #if SAKE_MSC_VERSION <= 1500
         stats.reset();
     }
     {

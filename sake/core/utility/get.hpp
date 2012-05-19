@@ -22,13 +22,13 @@
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/get_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
-#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {

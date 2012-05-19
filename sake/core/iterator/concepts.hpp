@@ -31,16 +31,14 @@
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
-#include <sake/core/utility/workaround.hpp>
+#include <sake/core/config.hpp>
 
-//#if BOOST_VERSION <= 104900
-// && SAKE_WORKAROUND_GNUC_VERSION_GREATER_EQUAL( (4,6,3) )
-#if BOOST_VERSION <= 104900 && defined( __GNUC__ )
+#if BOOST_VERSION <= 104900 && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshadow"
 #endif // #if ...
 #include <boost/iterator/iterator_concepts.hpp>
-#if BOOST_VERSION <= 104900 && defined( __GNUC__ )
+#if BOOST_VERSION <= 104900 && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 #pragma GCC diagnostic pop
 #endif // #if ...
 
