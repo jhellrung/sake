@@ -7,7 +7,6 @@
  ******************************************************************************/
 
 #include <boost/config.hpp>
-#include <boost/mpl/vector/vector10.hpp>
 
 #include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
 
