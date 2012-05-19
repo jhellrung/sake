@@ -17,6 +17,9 @@
  * - MSVC9 seems to have some strange, unpredictable, and not easily replicable
  *   issues with the use of has_mem_fun_operator, so we fall back to testing for
  *   convertibility to boost::rv<T>&.
+ * - GCC <= 4.6.3 has issues with has_mem_fun_operator when the target type may
+ *   alias, apparently, so we fall back to testing for convertibility to
+ *   boost::rv<T>&.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_MOVE_HAS_MOVE_EMULATION_HPP
