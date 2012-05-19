@@ -21,15 +21,28 @@
 #ifndef SAKE_CORE_ITERATOR_CONCEPTS_HPP
 #define SAKE_CORE_ITERATOR_CONCEPTS_HPP
 
+#include <boost/config.hpp>
 #include <boost/concept/assert.hpp>
 #include <boost/concept/usage.hpp>
-#include <boost/iterator/iterator_concepts.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/seq/elem.hpp>
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
+
+#include <sake/core/utility/workaround.hpp>
+
+//#if BOOST_VERSION <= 104900
+// && SAKE_WORKAROUND_GNUC_VERSION_GREATER_EQUAL( (4,6,3) )
+#if BOOST_VERSION <= 104900 && defined( __GNUC__ )
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
+#endif // #if ...
+#include <boost/iterator/iterator_concepts.hpp>
+#if BOOST_VERSION <= 104900 && defined( __GNUC__ )
+#pragma GCC diagnostic pop
+#endif // #if ...
 
 namespace sake
 {
