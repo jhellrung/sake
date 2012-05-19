@@ -36,6 +36,10 @@ BOOST_STATIC_ASSERT((sizeof( sake::compressed_pair< X, int > ) == sizeof( int ))
 BOOST_STATIC_ASSERT((sizeof( sake::compressed_pair< X, Y > ) == sizeof( Y )));
 BOOST_STATIC_ASSERT((sizeof( sake::compressed_pair< Y, X > ) == sizeof( Y )));
 
+#ifndef __GNUC__
+BOOST_STATIC_ASSERT((sizeof( sake::compressed_pair< X, X > ) == sizeof( X )));
+#endif // #ifndef __GNUC__
+
 } // namespace
 
 void compressed_pair_test(sake::test::environment& env)
