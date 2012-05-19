@@ -62,7 +62,9 @@
 #include <sake/core/introspection/has_type_result_type.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/default_tag.hpp>
+#include <sake/core/utility/noncopy_assignable.hpp>
 #include <sake/core/utility/noncopyable.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -280,7 +282,13 @@ struct primary_rv_sink
     //move() const
     //{ return sake::move(value); }
 
+#if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
+    // GCC 4.6.3 requires primary_rv_sink to be copy constructible in order for
+    // function arguments to bind to it.
+    SAKE_NONCOPY_ASSIGNABLE( primary_rv_sink )
+#else // #if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
     SAKE_NONCOPYABLE( primary_rv_sink )
+#endif // #if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
 
     // implicit by design
     template< class U >
@@ -309,7 +317,13 @@ struct default_base
         >
     >::type result_type;
 
+#if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
+    // GCC 4.6.3 requires default_base to be copy constructible in order for
+    // function arguments to bind to default_<...>.
+    SAKE_NONCOPY_ASSIGNABLE( default_base )
+#else // #if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
     SAKE_NONCOPYABLE( default_base )
+#endif // #if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
 
     result_type operator()() const
     { return m_apply(Visitor(), m_p); }

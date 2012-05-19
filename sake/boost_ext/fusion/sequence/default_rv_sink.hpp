@@ -59,7 +59,9 @@
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/cast/implicit.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
+#include <sake/core/utility/noncopy_assignable.hpp>
 #include <sake/core/utility/noncopyable.hpp>
+#include <sake/core/utility/workaround.hpp>
 
 namespace sake
 {
@@ -108,7 +110,13 @@ class default_rv_sink
     >::value));
     typedef default_rv_sink_private::at_dispatch_base< Results > at_dispatch_base_;
 public:
+#if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
+    // GCC 4.6.3 requires default_base to be copy constructible in order for
+    // function arguments to bind to default_<...>.
+    SAKE_NONCOPY_ASSIGNABLE( default_rv_sink )
+#else // #if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
     SAKE_NONCOPYABLE( default_rv_sink )
+#endif // #if SAKE_WORKAROUND_GNUC_VERSION_LESS_EQUAL( (4,6,3) )
 
 protected:
     template< class U >
