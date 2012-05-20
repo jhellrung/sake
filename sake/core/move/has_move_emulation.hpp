@@ -53,8 +53,8 @@ struct has_move_emulation< T& >
 
 } // namespace sake
 
-#if SAKE_MSC_VERSION <= 1500 \
- || SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500 \
+ || SAKE_GNUC_VERSION && SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
 
 #include <sake/core/utility/true_false_tag.hpp>
 

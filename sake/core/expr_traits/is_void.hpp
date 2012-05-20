@@ -21,9 +21,9 @@
 #include <sake/core/utility/identity_type.hpp>
 #include <sake/core/utility/true_false_tag.hpp>
 
-#if SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
 #define SAKE_EXPR_IS_VOID_USE_WEAK_IMPL
-#endif // #if SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
 
 #define SAKE_EXPR_IS_VOID_is_void( expression ) \
     ( SAKE_SIZEOF_TRUE_TAG \

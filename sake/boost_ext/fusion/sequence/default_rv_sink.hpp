@@ -110,7 +110,7 @@ class default_rv_sink
     >::value));
     typedef default_rv_sink_private::at_dispatch_base< Results > at_dispatch_base_;
 public:
-#if SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
     // GCC 4.6.3 requires default_base to be copy constructible in order for
     // function arguments to bind to default_<...>.
     SAKE_NONCOPY_ASSIGNABLE( default_rv_sink )
@@ -219,7 +219,7 @@ Result at_impl(void* p)
             sake::move(*static_cast< U* >(p))));
 }
 
-#if SAKE_MSC_VERSION <= 1500
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
 template< class Result >
 inline typename boost::enable_if_c<
@@ -233,7 +233,7 @@ inline typename boost::disable_if_c<
 at_helper(Result (&at_impl_)( void* ), void* const p)
 { return at_impl_(p); }
 
-#endif // #if SAKE_MSC_VERSION <= 1500
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
 template< class Results, std::size_t N >
 class at_dispatch_base
@@ -253,12 +253,12 @@ protected:
     using at_dispatch_base_::at_impl;
 
     result_type at_impl(boost::integral_constant< std::size_t, N-1 >) const
-#if SAKE_MSC_VERSION <= 1500
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     // MSVC9 won't elide copying of the result, so we explicitly move.
     { return default_rv_sink_private::at_helper(m_at_impl, m_p); }
-#else // #if SAKE_MSC_VERSION <= 1500
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     { return m_at_impl(m_p); }
-#endif // #if SAKE_MSC_VERSION <= 1500
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
 private:
     result_type (&m_at_impl)( void* );

@@ -53,10 +53,9 @@ struct yes_callable2
     int operator()(int, int);
 };
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2 >));
-#if !defined( SAKE_GNUC_VERSION ) \
- || SAKE_GNUC_VERSION > SAKE_GNUC_VERSION_OF(4,4,3)
+#if !SAKE_GNUC_VERSION || SAKE_GNUC_VERSION > SAKE_GNUC_VERSION_OF(4,4,3)
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2, void* ( void* ) >));
-#endif // #if ...
+#endif // #if !SAKE_GNUC_VERSION || SAKE_GNUC_VERSION > SAKE_GNUC_VERSION_OF(4,4,3)
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2, void ( void* ) >));
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2, void ( int* ) >));
 BOOST_MPL_ASSERT((sake::is_callable< yes_callable2 const, void* ( void* ) >));

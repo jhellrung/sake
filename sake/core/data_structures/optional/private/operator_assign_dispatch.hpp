@@ -27,14 +27,14 @@ template<
     class T, class U,
     bool = sake::has_operator_assign< T&, void ( U ) >::value
 >
-#if SAKE_MSC_VERSION <= 1500
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 // A definition must be provided for the primary template to prevent MSVC9 from
 // giving
 //     error C2065: 'T' : undeclared identifier
 struct operator_assign_dispatch { };
-#else // #if SAKE_MSC_VERSION <= 1500
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 struct operator_assign_dispatch;
-#endif // #if SAKE_MSC_VERSION <= 1500
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
 template< class T, class U >
 struct operator_assign_dispatch< T, U, false >

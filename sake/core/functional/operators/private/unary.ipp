@@ -78,7 +78,7 @@ struct SAKE_OPERATORS_NAME
         >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 private:
-#if SAKE_MSC_VERSION <= 1500
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     static bool const is_builtin_object_ =
         boost_ext::is_builtin_object<
             typename boost_ext::remove_qualifiers<T>::type
@@ -92,10 +92,10 @@ private:
     >::type is_same_type;
     typedef typename boost_ext::mpl::curry2< is_same_type >::template
         apply< type >::type assert_pred_type;
-#else // #if SAKE_MSC_VERSION <= 1500
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     typedef typename boost_ext::mpl::curry_quote2< boost_ext::is_same_sans_rv >::
         apply< type >::type assert_pred_type;
-#endif // #if SAKE_MSC_VERSION <= 1500
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     // MSVC9, at least, sometimes doesn't like such expressions within a
     // BOOST_STATIC_ASSERT.
     static bool const assert_value = SAKE_EXPR_APPLY(

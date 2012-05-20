@@ -36,8 +36,8 @@ template< class T >
 struct has_move_emulation_and_copyable
     : boost_ext::mpl::and2<
           sake::has_move_emulation<T>,
-#if SAKE_MSC_VERSION <= 1500 \
- || SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500 \
+ || SAKE_GNUC_VERSION && SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
           boost_ext::is_convertible< T const &, boost::rv<T> const & >
 #else // #if XXX_VERSION <= ...
           sake::has_mem_fun_operator< T const, boost::rv<T> const & >

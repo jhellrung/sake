@@ -92,11 +92,11 @@ struct abs_ip
     long long&
     operator()(long long& x) const
     {
-#if SAKE_MSC_VERSION <= 1500
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
         return x < 0 ? (x = -x) : x;
-#else // #if SAKE_MSC_VERSION <= 1500
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
         return x = std::abs(x);
-#endif // #if SAKE_MSC_VERSION <= 1500
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     }
 #endif // #ifndef BOOST_NO_LONG_LONG
 

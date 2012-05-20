@@ -51,13 +51,13 @@ struct builtin_has_operator_star_dispatch_on_function< T, Result, ResultPred, fa
 template< class T, class Result, class ResultPred >
 struct builtin_has_operator_star_dispatch_on_function< T, Result, ResultPred, true >
     : boost_ext::mpl::and2<
-#if SAKE_MSC_VERSION <= 1500
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
           boost_ext::is_convertible< T*, Result >,
           boost::mpl::apply1< ResultPred, T* >
-#else // #if SAKE_MSC_VERSION <= 1500
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
           boost_ext::is_convertible< T&, Result >,
           boost::mpl::apply1< ResultPred, T& >
-#endif // #if SAKE_MSC_VERSION <= 1500
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
       >
 { };
 
@@ -90,11 +90,11 @@ namespace
     ) );
 test( int*, int& )
 test( int const *, int const & )
-#if SAKE_MSC_VERSION <= 1500
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 test( void (*)( ), void (*)( ) )
-#else // #if SAKE_MSC_VERSION <= 1500
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 test( void (*)( ), void (&)( ) )
-#endif // #if SAKE_MSC_VERSION <= 1500
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 #undef test
 
 } // namespace
