@@ -23,7 +23,6 @@
 
 #include <boost/functional/hash.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/seq.hpp>
@@ -31,7 +30,7 @@
 #include <boost/preprocessor/seq/to_tuple.hpp>
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
-#include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
+#include <sake/boost_ext/preprocessor/seq/size_01x.hpp>
 
 #include <sake/core/utility/hash_value.hpp>
 
@@ -49,23 +48,40 @@
 #define SAKE_MEMBERWISE_HASH_VALUE_impl( r, T, member_seq ) \
     BOOST_PP_CAT( \
         SAKE_MEMBERWISE_HASH_VALUE_impl, \
-        SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_seq ) \
-    ) ( r, T, member_seq ) \
+        SAKE_BOOST_EXT_PP_SEQ_SIZE_01X( member_seq, x ) \
+    ) ( r, member_seq ) \
     inline friend ::std::size_t hash_value(T const & x) \
     { return x.hash_value(); }
 
-#define SAKE_MEMBERWISE_HASH_VALUE_impl0( r, T, member_seq ) \
-    ::std::size_t hash_value() const \
-    { BOOST_PP_CAT( \
-        SAKE_MEMBERWISE_HASH_VALUE_impl0, \
-        BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( member_seq ) ) \
-    ) ( r, member_seq ); }
+#define SAKE_MEMBERWISE_HASH_VALUE_impl0( r, member_seq ) \
+    static std::size_t hash_value() \
+    { return 0; }
 
-#define SAKE_MEMBERWISE_HASH_VALUE_impl00( r, member_seq ) \
-    std::size_t result = 0; \
-    BOOST_PP_SEQ_FOR_EACH_R( r, \
-        SAKE_MEMBERWISE_HASH_VALUE_hash_combine_member, ~, member_seq ) \
-    return result;
+#define SAKE_MEMBERWISE_HASH_VALUE_impl1( r, member_seq ) \
+    ::std::size_t hash_value() const \
+    { SAKE_MEMBERWISE_HASH_VALUE_impl1_impl( \
+        BOOST_PP_SEQ_SIZE( BOOST_PP_SEQ_HEAD( member_seq ) ), \
+        BOOST_PP_SEQ_TO_TUPLE( BOOST_PP_SEQ_HEAD( member_seq ) ) \
+    ) }
+#define SAKE_MEMBERWISE_HASH_VALUE_impl1_impl( n, member_spec ) \
+    SAKE_MEMBERWISE_HASH_VALUE_impl1_expand( \
+        BOOST_PP_CAT( SAKE_MEMBERWISE_HASH_VALUE_impl1_, n ), \
+        member_spec \
+    )
+#define SAKE_MEMBERWISE_HASH_VALUE_impl1_expand( macro, x ) macro x
+#define SAKE_MEMBERWISE_HASH_VALUE_impl1_1( base ) \
+    return ::sake::hash_value(static_cast< base const & >(*this));
+#define SAKE_MEMBERWISE_HASH_VALUE_impl1_2( type, name ) \
+    return ::sake::hash_value(name);
+
+#define SAKE_MEMBERWISE_HASH_VALUE_implx( r, member_seq ) \
+    ::std::size_t hash_value() const \
+    { \
+        std::size_t result = 0; \
+        BOOST_PP_SEQ_FOR_EACH_R( r, \
+            SAKE_MEMBERWISE_HASH_VALUE_hash_combine_member, ~, member_seq ) \
+        return result; \
+    }
 #define SAKE_MEMBERWISE_HASH_VALUE_hash_combine_member( r, data, elem ) \
     SAKE_MEMBERWISE_HASH_VALUE_hash_combine_member_impl( \
         BOOST_PP_SEQ_SIZE( elem ), \
@@ -81,25 +97,5 @@
     ::boost::hash_combine(result, static_cast< base const & >(*this));
 #define SAKE_MEMBERWISE_HASH_VALUE_hash_combine_member_2( type, name ) \
     ::boost::hash_combine(result, name);
-
-#define SAKE_MEMBERWISE_HASH_VALUE_impl01( r, member_seq ) \
-    SAKE_MEMBERWISE_HASH_VALUE_impl01_impl( \
-        BOOST_PP_SEQ_SIZE( BOOST_PP_SEQ_HEAD( member_seq ) ), \
-        BOOST_PP_SEQ_TO_TUPLE( BOOST_PP_SEQ_HEAD( member_seq ) ) \
-    )
-#define SAKE_MEMBERWISE_HASH_VALUE_impl01_impl( n, member_spec ) \
-    SAKE_MEMBERWISE_HASH_VALUE_impl01_expand( \
-        BOOST_PP_CAT( SAKE_MEMBERWISE_HASH_VALUE_impl01_, n ), \
-        member_spec \
-    )
-#define SAKE_MEMBERWISE_HASH_VALUE_impl01_expand( macro, x ) macro x
-#define SAKE_MEMBERWISE_HASH_VALUE_impl01_1( base ) \
-    return ::sake::hash_value(static_cast< base const & >(*this));
-#define SAKE_MEMBERWISE_HASH_VALUE_impl01_2( type, name ) \
-    return ::sake::hash_value(name);
-
-#define SAKE_MEMBERWISE_HASH_VALUE_impl1( r, T, member_seq ) \
-    static std::size_t hash_value() \
-    { return 0; }
 
 #endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_HASH_VALUE_HPP

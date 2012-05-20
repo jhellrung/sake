@@ -125,6 +125,7 @@
 #define SAKE_CORE_MOVE_MOVABLE_HPP
 
 #include <boost/config.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
@@ -267,7 +268,6 @@
 
 #include <boost/mpl/if.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
@@ -277,6 +277,7 @@
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
+#include <sake/boost_ext/preprocessor/seq/size_01x.hpp>
 
 #include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/rv.hpp>
@@ -474,14 +475,16 @@
     typedef ::sake::movable_private::disabler_param<0> this_rvalue_param_type; \
     SAKE_MOVABLE_MEMBERWISE_typedef_has_xxx_tags( r, member_seq )
 
-
-
 #define SAKE_MOVABLE_MEMBERWISE_emulation_enable( r, member_seq ) \
     BOOST_PP_CAT( \
         SAKE_MOVABLE_MEMBERWISE_emulation_enable_, \
-        BOOST_PP_EQUAL( 1, BOOST_PP_SEQ_SIZE( member_seq ) ) \
+        SAKE_BOOST_EXT_PP_SEQ_SIZE_01X( member_seq, x ) \
     ) ( r, member_seq )
 #define SAKE_MOVABLE_MEMBERWISE_emulation_enable_0( r, member_seq ) \
+    ::boost::false_type
+#define SAKE_MOVABLE_MEMBERWISE_emulation_enable_1( r, member_seq ) \
+    ::sake::has_move_emulation< BOOST_PP_SEQ_HEAD( BOOST_PP_SEQ_HEAD( member_seq ) ) >
+#define SAKE_MOVABLE_MEMBERWISE_emulation_enable_x( r, member_seq ) \
     ::sake::boost_ext::mpl::BOOST_PP_CAT( or, BOOST_PP_SEQ_SIZE( member_seq ) ) < \
         BOOST_PP_SEQ_FOR_EACH_I_R( r, \
             SAKE_MOVABLE_comma_has_move_emulation, ~, member_seq ) \
@@ -489,8 +492,6 @@
 #define SAKE_MOVABLE_comma_has_move_emulation( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
     ::sake::has_move_emulation< BOOST_PP_SEQ_HEAD( elem ) >
-#define SAKE_MOVABLE_MEMBERWISE_emulation_enable_1( r, member_seq ) \
-    ::sake::has_move_emulation< BOOST_PP_SEQ_HEAD( BOOST_PP_SEQ_HEAD( member_seq ) ) >
 
 namespace sake
 {
