@@ -17,6 +17,7 @@
 
 #include <sake/boost_ext/mpl/curry.hpp>
 #include <sake/boost_ext/mpl/curry_quote.hpp>
+#include <sake/boost_ext/type_traits/is_builtin_object.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_rv.hpp>
