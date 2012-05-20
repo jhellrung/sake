@@ -45,9 +45,8 @@
 #include <boost/type_traits/make_unsigned.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
-#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/type_traits/common_type.hpp>
+#include <sake/boost_ext/type_traits/common_return_type.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
@@ -70,7 +69,6 @@
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/int_tag.hpp>
-#include <sake/core/utility/is_convertible_wnrbt.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -147,7 +145,7 @@ struct result_types_dispatch< T, true >
 {
     typedef boost::mpl::vector2<
         typename boost_ext::remove_qualifiers<T>::type,
-        typename boost_ext::common_type<
+        typename boost_ext::common_return_type<
             T, typename sake::operators::result_of::unary_minus<T>::type
         >::type
     > type;
@@ -425,16 +423,8 @@ template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
     typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
-    typedef typename sake::operators::result_of::unary_minus<T>::type unary_minus_type;
-    typedef typename boost_ext::common_type< T, unary_minus_type >::type nominal_type;
-    typedef typename boost::mpl::eval_if_c<
-        boost_ext::mpl::and2<
-            sake::is_convertible_wnrbt< T, nominal_type >,
-            sake::is_convertible_wnrbt< unary_minus_type, nominal_type >
-        >::value,
-        boost::mpl::identity< nominal_type >,
-        boost_ext::remove_qualifiers< nominal_type >
-    >::type type;
+    typedef typename boost_ext::common_return_type<
+        T, typename sake::operators::result_of::unary_minus<T>::type >::type type;
     static type apply(fwd_type x)
     {
         return SAKE_AS_LVALUE( x ) < sake::zero ?

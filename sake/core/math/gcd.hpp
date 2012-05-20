@@ -11,7 +11,7 @@
 #ifndef SAKE_CORE_MATH_GCD_HPP
 #define SAKE_CORE_MATH_GCD_HPP
 
-#include <sake/boost_ext/type_traits/common_type.hpp>
+#include <sake/boost_ext/type_traits/common_return_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/math/abs_ip.hpp>
@@ -27,7 +27,7 @@ namespace gcd_private
 
 template<
     class T0, class T1,
-    class T = typename boost_ext::common_type< T0, T1 >::type
+    class T = typename boost_ext::common_return_type< T0, T1 >::type
 >
 struct narrow;
 
@@ -42,7 +42,7 @@ namespace result_of
 
 template< class T0, class T1 >
 struct gcd
-    : boost_ext::common_type<
+    : boost_ext::common_return_type<
           typename boost_ext::remove_qualifiers< T0 >::type,
           typename boost_ext::remove_qualifiers< T1 >::type
       >

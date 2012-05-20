@@ -22,7 +22,7 @@
 #include <boost/iterator/iterator_traits.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/type_traits/common_type.hpp>
+#include <sake/boost_ext/type_traits/common_return_type.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -97,7 +97,7 @@ struct dispatch< T, true >
 template< class T0, class T1 /*= T0*/ >
 struct distance
     : distance_private::dispatch<
-          typename boost_ext::common_type<
+          typename boost_ext::common_return_type<
               typename boost_ext::remove_qualifiers< T0 >::type,
               typename boost_ext::remove_qualifiers< T1 >::type
           >::type
@@ -113,7 +113,7 @@ template< class T0, class T1 >
 struct dispatch_index
 {
 private:
-    typedef typename boost_ext::common_type< T0, T1 >::type common_type_;
+    typedef typename boost_ext::common_return_type< T0, T1 >::type common_type_;
     typedef typename sake::result_of::distance< T0, T1 >::type result_type;
 public:
     static int const value = boost_ext::mpl::
@@ -125,7 +125,7 @@ public:
 template< class T0, class T1 >
 struct dispatch< T0, T1, 2 >
 {
-    typedef typename boost_ext::common_type< T0, T1 >::type common_type_;
+    typedef typename boost_ext::common_return_type< T0, T1 >::type common_type_;
     typedef typename sake::result_of::distance< T0, T1 >::type result_type;
 
     static result_type

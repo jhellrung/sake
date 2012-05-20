@@ -1,3 +1,1 @@
 - pull out subdirectories cast, emplacer, memberwise, and ref from utility
-- check for returns of type common_type and ensure each branch in the conditional
-  is_convertible_wnrbt to the common_type

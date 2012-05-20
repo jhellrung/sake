@@ -19,6 +19,7 @@
 
 #include <boost/config.hpp>
 
+#include <sake/boost_ext/type_traits/common_return_type.hpp>
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -42,7 +43,7 @@ template<
     class U_ = typename boost_ext::remove_qualifiers<U>::type
 >
 struct dispatch
-    : boost_ext::common_type<
+    : boost_ext::common_return_type<
           typename boost_ext::common_type<T,L>::type,
           U
       >
@@ -50,12 +51,12 @@ struct dispatch
 
 template< class L, class T, class U, class L_ >
 struct dispatch< L, T, U, L_, sake::unbounded_tag >
-    : boost_ext::common_type<T,L>
+    : boost_ext::common_return_type<T,L>
 { };
 
 template< class L, class T, class U, class U_ >
 struct dispatch< L, T, U, sake::unbounded_tag, U_ >
-    : boost_ext::common_type<T,U>
+    : boost_ext::common_return_type<T,U>
 { };
 
 template< class L, class T, class U >

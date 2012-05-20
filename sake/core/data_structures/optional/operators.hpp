@@ -25,7 +25,7 @@
 #ifndef SAKE_CORE_DATA_STRUCTURES_OPTIONAL_OPERATORS_HPP
 #define SAKE_CORE_DATA_STRUCTURES_OPTIONAL_OPERATORS_HPP
 
-#include <sake/boost_ext/type_traits/common_type.hpp>
+#include <sake/boost_ext/type_traits/common_return_type.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_pointer_remove_reference_add_const.hpp>
 
@@ -51,7 +51,7 @@ namespace private_
 
 template< class T, class U, template< class T_, class U_ > class ResultOfOp >
 struct impl
-    : boost_ext::common_type<
+    : boost_ext::common_return_type<
           typename ResultOfOp<
               typename boost_ext::add_reference_add_const<
                   typename T::value_type >::type,
@@ -108,7 +108,7 @@ namespace result_of
 
 template< class T, class U >
 struct cmp
-    : boost_ext::common_type<
+    : boost_ext::common_return_type<
           typename sake::result_of::cmp<
               typename boost_ext::add_reference_add_const<
                   typename T::value_type >::type,

@@ -26,7 +26,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/utility/result_of.hpp>
 
-#include <sake/boost_ext/type_traits/common_type.hpp>
+#include <sake/boost_ext/type_traits/common_return_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/functional/operators/equal.hpp>
@@ -145,7 +145,7 @@ struct iterate_dispatch
         typename boost::fusion::result_of::next< I1 >::type,
         Equal
     >::type next_type;
-    typedef typename boost_ext::common_type< curr_type, next_type >::type type;
+    typedef typename boost_ext::common_return_type< curr_type, next_type >::type type;
     static type apply(I0 const & i0, I1 const & i1, Equal equal_)
     {
         curr_type const curr_result = equal_(*i0, *i1);
