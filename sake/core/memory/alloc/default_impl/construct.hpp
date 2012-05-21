@@ -24,11 +24,11 @@
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_void.hpp>
 
+#include <sake/core/emplacer/traits.hpp>
 #include <sake/core/memory/alloc/is_callable_mem_fun_construct.hpp>
 #include <sake/core/memory/alloc/rebind.hpp>
 #include <sake/core/memory/alloc/traits_fwd.hpp>
 #include <sake/core/utility/assert.hpp>
-#include <sake/core/utility/emplacer/traits.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 

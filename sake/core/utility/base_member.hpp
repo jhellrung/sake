@@ -32,11 +32,11 @@
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
+#include <sake/core/emplacer/constructible.hpp>
+#include <sake/core/emplacer/emplacer.hpp>
+#include <sake/core/emplacer/fwd.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/emplacer/constructible.hpp>
-#include <sake/core/utility/emplacer/emplacer.hpp>
-#include <sake/core/utility/emplacer/fwd.hpp>
 #include <sake/core/utility/memberwise/default_constructor.hpp>
 #include <sake/core/utility/memberwise/mem_fun.hpp>
 

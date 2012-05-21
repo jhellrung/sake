@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/emplacer/private/base.hpp
+ * sake/core/emplacer/private/base.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,8 +8,8 @@
 
 #ifndef BOOST_PP_IS_ITERATING
 
-#ifndef SAKE_CORE_UTILITY_EMPLACER_PRIVATE_BASE_HPP
-#define SAKE_CORE_UTILITY_EMPLACER_PRIVATE_BASE_HPP
+#ifndef SAKE_CORE_EMPLACER_PRIVATE_BASE_HPP
+#define SAKE_CORE_EMPLACER_PRIVATE_BASE_HPP
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -19,8 +19,8 @@
 #include <boost/preprocessor/repetition/enum_shifted.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
 
-#include <sake/core/utility/emplacer/fwd.hpp>
-#include <sake/core/utility/emplacer/private/cast.hpp>
+#include <sake/core/emplacer/fwd.hpp>
+#include <sake/core/emplacer/private/cast.hpp>
 
 namespace sake
 {
@@ -82,7 +82,7 @@ private:
     emplacer_private::cast< BOOST_PP_CAT( U, n ) >::apply( BOOST_PP_CAT( y, n ) )
 
 #define BOOST_PP_ITERATION_LIMITS ( 1, SAKE_EMPLACER_MAX_ARITY )
-#define BOOST_PP_FILENAME_1       <sake/core/utility/emplacer/private/base.hpp>
+#define BOOST_PP_FILENAME_1       <sake/core/emplacer/private/base.hpp>
 #include BOOST_PP_ITERATE()
 
 #undef cast_Un_type_yn
@@ -94,7 +94,7 @@ private:
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_PRIVATE_BASE_HPP
+#endif // #ifndef SAKE_CORE_EMPLACER_PRIVATE_BASE_HPP
 
 #else // #ifndef BOOST_PP_IS_ITERATING
 

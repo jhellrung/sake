@@ -30,8 +30,8 @@
 
 #ifndef BOOST_PP_IS_ITERATING
 
-#ifndef SAKE_CORE_UTILITY_EMPLACER_HPP
-#define SAKE_CORE_UTILITY_EMPLACER_HPP
+#ifndef SAKE_CORE_EMPLACER_HPP
+#define SAKE_CORE_EMPLACER_HPP
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -48,10 +48,10 @@
 
 #include <sake/boost_ext/mpl/or.hpp>
 
-#include <sake/core/utility/emplacer/access.hpp>
-#include <sake/core/utility/emplacer/fwd.hpp>
-#include <sake/core/utility/emplacer/private/base.hpp>
-#include <sake/core/utility/emplacer/private/cast.hpp>
+#include <sake/core/emplacer/access.hpp>
+#include <sake/core/emplacer/fwd.hpp>
+#include <sake/core/emplacer/private/base.hpp>
+#include <sake/core/emplacer/private/cast.hpp>
 #include <sake/core/utility/noncopy_assignable.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
@@ -238,7 +238,7 @@ public:
     emplacer_private::cast< BOOST_PP_CAT( U, n ) >::apply( BOOST_PP_CAT( y, n ) )
 
 #define BOOST_PP_ITERATION_LIMITS ( 1, SAKE_EMPLACER_MAX_ARITY )
-#define BOOST_PP_FILENAME_1       <sake/core/utility/emplacer/emplacer.hpp>
+#define BOOST_PP_FILENAME_1       <sake/core/emplacer/emplacer.hpp>
 #include BOOST_PP_ITERATE()
 
 #undef cast_Un_type_yn
@@ -294,7 +294,7 @@ emplacer_constructible(sake::emplacer< V ( U0 ) > e)
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_HPP
+#endif // #ifndef SAKE_CORE_EMPLACER_HPP
 
 #else // #ifndef BOOST_PP_IS_ITERATING
 

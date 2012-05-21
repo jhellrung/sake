@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/emplacer/wrap.hpp
+ * sake/core/emplacer/wrap.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -13,19 +13,19 @@
  * in which case it amounts to an identity operation.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_EMPLACER_WRAP_HPP
-#define SAKE_CORE_UTILITY_EMPLACER_WRAP_HPP
+#ifndef SAKE_CORE_EMPLACER_WRAP_HPP
+#define SAKE_CORE_EMPLACER_WRAP_HPP
 
 #include <boost/mpl/quote.hpp>
 
 #include <sake/boost_ext/type_traits/is_void.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/emplacer/emplacer.hpp>
+#include <sake/core/emplacer/fwd.hpp>
+#include <sake/core/emplacer/private/cast.hpp>
+#include <sake/core/emplacer/traits.hpp>
 #include <sake/core/move/forward.hpp>
-#include <sake/core/utility/emplacer/emplacer.hpp>
-#include <sake/core/utility/emplacer/fwd.hpp>
-#include <sake/core/utility/emplacer/private/cast.hpp>
-#include <sake/core/utility/emplacer/traits.hpp>
 
 namespace sake
 {
@@ -129,4 +129,4 @@ struct typed_wrap_dispatch< T, U, false, true >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_WRAP_HPP
+#endif // #ifndef SAKE_CORE_EMPLACER_WRAP_HPP

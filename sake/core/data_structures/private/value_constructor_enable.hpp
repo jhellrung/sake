@@ -13,7 +13,7 @@
 
 #include <sake/boost_ext/mpl/or.hpp>
 
-#include <sake/core/utility/emplacer/traits.hpp>
+#include <sake/core/emplacer/traits.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
 
 namespace sake

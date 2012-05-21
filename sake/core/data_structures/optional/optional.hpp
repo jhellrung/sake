@@ -47,6 +47,8 @@
 #include <sake/core/data_structures/optional/private/initialized_type.hpp>
 #include <sake/core/data_structures/optional/private/operator_assign_dispatch.hpp>
 #include <sake/core/data_structures/optional/private/swap_dispatch.hpp>
+#include <sake/core/emplacer/construct.hpp>
+#include <sake/core/emplacer/traits.hpp>
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/introspection/has_operator_assign.hpp>
 #include <sake/core/move/as_lvalue.hpp>
@@ -60,8 +62,6 @@
 #include <sake/core/type_traits/has_nothrow_move_constructor.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/assert.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
-#include <sake/core/utility/emplacer/traits.hpp>
 #include <sake/core/utility/explicit_operator_bool.hpp>
 #include <sake/core/utility/get_fwd.hpp>
 #include <sake/core/utility/hash_value.hpp>

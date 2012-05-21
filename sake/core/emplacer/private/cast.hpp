@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/utility/emplacer/private/cast.hpp
+ * sake/core/emplacer/private/cast.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_EMPLACER_PRIVATE_CAST_HPP
-#define SAKE_CORE_UTILITY_EMPLACER_PRIVATE_CAST_HPP
+#ifndef SAKE_CORE_EMPLACER_PRIVATE_CAST_HPP
+#define SAKE_CORE_EMPLACER_PRIVATE_CAST_HPP
 
 #include <boost/static_assert.hpp>
 
@@ -52,4 +52,4 @@ struct cast< U, true >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_PRIVATE_CAST_HPP
+#endif // #ifndef SAKE_CORE_EMPLACER_PRIVATE_CAST_HPP

@@ -15,12 +15,12 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/emplacer/construct.hpp>
+#include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/move/rv.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
-#include <sake/core/utility/emplacer/emplacer.hpp>
 
 #endif // #ifdef SAKE_OPTIONAL_INCLUDE_HEADERS
 

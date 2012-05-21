@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/emplacer/access.hpp
+ * sake/core/emplacer/access.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -13,8 +13,8 @@
 
 #ifndef BOOST_PP_IS_ITERATING
 
-#ifndef SAKE_CORE_UTILITY_EMPLACER_ACCESS_HPP
-#define SAKE_CORE_UTILITY_EMPLACER_ACCESS_HPP
+#ifndef SAKE_CORE_EMPLACER_ACCESS_HPP
+#define SAKE_CORE_EMPLACER_ACCESS_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/not.hpp>
@@ -35,8 +35,8 @@
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
-#include <sake/core/utility/emplacer/fwd.hpp>
-#include <sake/core/utility/emplacer/private/cast.hpp>
+#include <sake/core/emplacer/fwd.hpp>
+#include <sake/core/emplacer/private/cast.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
 
 namespace sake
@@ -147,7 +147,7 @@ class emplacer_access
 #define e_at_c_n( z, n, data ) e.template at_c<n>()
 
 #define BOOST_PP_ITERATION_LIMITS ( 0, SAKE_EMPLACER_MAX_ARITY )
-#define BOOST_PP_FILENAME_1       <sake/core/utility/emplacer/access.hpp>
+#define BOOST_PP_FILENAME_1       <sake/core/emplacer/access.hpp>
 #include BOOST_PP_ITERATE()
 
 #undef e_at_c_n
@@ -158,7 +158,7 @@ class emplacer_access
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_ACCESS_HPP
+#endif // #ifndef SAKE_CORE_EMPLACER_ACCESS_HPP
 
 #else // #ifndef BOOST_PP_IS_ITERATING
 

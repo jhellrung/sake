@@ -21,10 +21,10 @@
 
 #include <sake/core/cast/implicit.hpp>
 #include <sake/core/data_structures/optional/traits.hpp>
+#include <sake/core/emplacer/construct.hpp>
+#include <sake/core/emplacer/emplacer.hpp>
+#include <sake/core/emplacer/traits.hpp>
 #include <sake/core/utility/address_of.hpp>
-#include <sake/core/utility/emplacer/construct.hpp>
-#include <sake/core/utility/emplacer/emplacer.hpp>
-#include <sake/core/utility/emplacer/traits.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
 
 #endif // #ifdef SAKE_OPTIONAL_INCLUDE_HEADERS

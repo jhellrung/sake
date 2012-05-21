@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/emplacer/traits.hpp
+ * sake/core/emplacer/traits.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -11,8 +11,8 @@
  * struct is_emplacer_sans_qualifiers_with_value< Emplacer, T >
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_EMPLACER_TRAITS_HPP
-#define SAKE_CORE_UTILITY_EMPLACER_TRAITS_HPP
+#ifndef SAKE_CORE_EMPLACER_TRAITS_HPP
+#define SAKE_CORE_EMPLACER_TRAITS_HPP
 
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/not.hpp>
@@ -25,8 +25,8 @@
 #include <sake/boost_ext/type_traits/is_void.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/emplacer/fwd.hpp>
 #include <sake/core/utility/default_tag.hpp>
-#include <sake/core/utility/emplacer/fwd.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
@@ -168,4 +168,4 @@ struct is_emplacer_sans_qualifiers_with_value
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_TRAITS_HPP
+#endif // #ifndef SAKE_CORE_EMPLACER_TRAITS_HPP

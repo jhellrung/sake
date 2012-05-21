@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/emplacer/constructible.hpp
+ * sake/core/emplacer/constructible.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -13,8 +13,8 @@
  * Note: This is overloaded for sake::emplacer arguments.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_EMPLACER_CONSTRUCTIBLE_HPP
-#define SAKE_CORE_UTILITY_EMPLACER_CONSTRUCTIBLE_HPP
+#ifndef SAKE_CORE_EMPLACER_CONSTRUCTIBLE_HPP
+#define SAKE_CORE_EMPLACER_CONSTRUCTIBLE_HPP
 
 #include <boost/mpl/not.hpp>
 #include <boost/static_assert.hpp>
@@ -43,4 +43,4 @@ emplacer_constructible(SAKE_FWD2_REF( U ) y)
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_CONSTRUCTIBLE_HPP
+#endif // #ifndef SAKE_CORE_EMPLACER_CONSTRUCTIBLE_HPP

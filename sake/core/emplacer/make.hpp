@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/emplacer/make.hpp
+ * sake/core/emplacer/make.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -9,16 +9,16 @@
  * make_emplacer<T>(U0&& y0, ...) -> emplacer< T ( U0, ... ) >
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_EMPLACER_MAKE_HPP
-#define SAKE_CORE_UTILITY_EMPLACER_MAKE_HPP
+#ifndef SAKE_CORE_EMPLACER_MAKE_HPP
+#define SAKE_CORE_EMPLACER_MAKE_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 
+#include <sake/core/emplacer/emplacer.hpp>
+#include <sake/core/emplacer/fwd.hpp>
 #include <sake/core/move/forward.hpp>
-#include <sake/core/utility/emplacer/emplacer.hpp>
-#include <sake/core/utility/emplacer/fwd.hpp>
 #include <sake/core/utility/overload.hpp>
 
 namespace sake
@@ -76,4 +76,4 @@ make_emplacer()
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_EMPLACER_MAKE_HPP
+#endif // #ifndef SAKE_CORE_EMPLACER_MAKE_HPP
