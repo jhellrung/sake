@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/cast/const.hpp
+ * sake/core/cast/const.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -12,8 +12,8 @@
  * struct functional::const_cast_<>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_CAST_CONST_HPP
-#define SAKE_CORE_UTILITY_CAST_CONST_HPP
+#ifndef SAKE_CORE_CAST_CONST_HPP
+#define SAKE_CORE_CAST_CONST_HPP
 
 #include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -158,4 +158,4 @@ struct enable< T*, U* >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_CAST_CONST_HPP
+#endif // #ifndef SAKE_CORE_CAST_CONST_HPP

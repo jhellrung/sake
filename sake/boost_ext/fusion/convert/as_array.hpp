@@ -37,7 +37,7 @@
 #include <sake/boost_ext/fusion/convert/as_mpl_vector.hpp>
 #include <sake/boost_ext/fusion/support/is_sequence_with_category.hpp>
 #include <sake/boost_ext/mpl/all.hpp>
-#include <sake/boost_ext/mpl/common_type.hpp>
+#include <sake/boost_ext/mpl/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #ifndef SAKE_FUSION_AS_ARRAY_LIMIT
@@ -61,7 +61,7 @@ struct as_array
 {
     BOOST_STATIC_ASSERT((boost_ext::fusion::traits::is_random_access_sequence< Sequence >::value));
     typedef typename boost_ext::fusion::result_of::as_mpl_vector< Sequence >::type mpl_vector_type;
-    typedef typename boost_ext::mpl::common_type< mpl_vector_type >::type value_type;
+    typedef typename boost_ext::mpl::common_result_type< mpl_vector_type >::type value_type;
     BOOST_STATIC_ASSERT(!(boost::is_void< value_type >::value));
     BOOST_STATIC_ASSERT((boost_ext::mpl::all<
         mpl_vector_type,

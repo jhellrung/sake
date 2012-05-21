@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/cast/reinterpret.hpp
+ * sake/core/cast/reinterpret.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -11,8 +11,8 @@
  * struct functional::reinterpret_cast_<>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_CAST_REINTERPRET_HPP
-#define SAKE_CORE_UTILITY_CAST_REINTERPRET_HPP
+#ifndef SAKE_CORE_CAST_REINTERPRET_HPP
+#define SAKE_CORE_CAST_REINTERPRET_HPP
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -94,4 +94,4 @@ struct reinterpret_cast_
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_CAST_REINTERPRET_HPP
+#endif // #ifndef SAKE_CORE_CAST_REINTERPRET_HPP

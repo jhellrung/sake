@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/cast/static.hpp
+ * sake/core/cast/static.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -11,8 +11,8 @@
  * struct functional::static_cast_<>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_CAST_STATIC_HPP
-#define SAKE_CORE_UTILITY_CAST_STATIC_HPP
+#ifndef SAKE_CORE_CAST_STATIC_HPP
+#define SAKE_CORE_CAST_STATIC_HPP
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
@@ -164,4 +164,4 @@ static_cast_(U const & x, sake::type_tag<T>)
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_CAST_STATIC_HPP
+#endif // #ifndef SAKE_CORE_CAST_STATIC_HPP

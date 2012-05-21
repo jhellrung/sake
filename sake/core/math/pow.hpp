@@ -22,7 +22,6 @@
 #include <boost/type_traits/is_signed.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/functional/operators/multiply.hpp>

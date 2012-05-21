@@ -19,9 +19,9 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/propagate_qualifiers.hpp>
 
+#include <sake/core/cast/implicit.hpp>
 #include <sake/core/data_structures/optional/traits.hpp>
 #include <sake/core/utility/address_of.hpp>
-#include <sake/core/utility/cast/implicit.hpp>
 #include <sake/core/utility/emplacer/construct.hpp>
 #include <sake/core/utility/emplacer/emplacer.hpp>
 #include <sake/core/utility/emplacer/traits.hpp>

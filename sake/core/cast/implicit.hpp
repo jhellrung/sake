@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/cast/implicit.hpp
+ * sake/core/cast/implicit.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -15,8 +15,8 @@
  * explicit conversions (e.g., explicit constructors).
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_CAST_IMPLICIT_HPP
-#define SAKE_CORE_UTILITY_CAST_IMPLICIT_HPP
+#ifndef SAKE_CORE_CAST_IMPLICIT_HPP
+#define SAKE_CORE_CAST_IMPLICIT_HPP
 
 #include <boost/config.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -240,4 +240,4 @@ struct rv_sink_traits
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_CAST_IMPLICIT_HPP
+#endif // #ifndef SAKE_CORE_CAST_IMPLICIT_HPP

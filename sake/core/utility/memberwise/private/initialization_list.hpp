@@ -19,9 +19,9 @@
 
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
+#include <sake/core/cast/inherit.hpp>
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/move.hpp>
-#include <sake/core/utility/cast/inherit.hpp>
 
 #define SAKE_MEMBERWISE_initialization_list( r, member_seq ) \
     BOOST_PP_CAT( \

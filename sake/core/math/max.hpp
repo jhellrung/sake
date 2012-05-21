@@ -18,7 +18,7 @@
 
 #include <boost/config.hpp>
 
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -31,7 +31,7 @@ namespace result_of
 
 template< class T0, class T1, class Less = void >
 struct max
-    : boost_ext::common_return_type< T0, T1 >
+    : boost_ext::common_result_type< T0, T1 >
 { };
 
 } // namespace result_of

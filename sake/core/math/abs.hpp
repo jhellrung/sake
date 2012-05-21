@@ -46,7 +46,7 @@
 #include <boost/type_traits/remove_cv.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
@@ -145,7 +145,7 @@ struct result_types_dispatch< T, true >
 {
     typedef boost::mpl::vector2<
         typename boost_ext::remove_qualifiers<T>::type,
-        typename boost_ext::common_return_type<
+        typename boost_ext::common_result_type<
             T, typename sake::operators::result_of::unary_minus<T>::type
         >::type
     > type;
@@ -423,7 +423,7 @@ template< class T, class Result >
 struct dispatch< T, Result, 0 >
 {
     typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
-    typedef typename boost_ext::common_return_type<
+    typedef typename boost_ext::common_result_type<
         T, typename sake::operators::result_of::unary_minus<T>::type >::type type;
     static type apply(fwd_type x)
     {

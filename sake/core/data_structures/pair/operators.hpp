@@ -28,7 +28,7 @@
 #include <boost/preprocessor/cat.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 
 #include <sake/core/data_structures/pair/fwd.hpp>
 #include <sake/core/functional/operators/logical.hpp>
@@ -195,7 +195,7 @@ namespace private_
 
 template< class T0, class T1, class U0, class U1 >
 struct cmp_impl
-    : boost_ext::common_return_type<
+    : boost_ext::common_result_type<
           typename sake::result_of::cmp< T0, U0 >::type,
           typename sake::result_of::cmp< T1, U1 >::type
       >

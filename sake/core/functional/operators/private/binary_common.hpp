@@ -15,7 +15,7 @@
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/type_traits/integral_promotion.hpp>
 
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/make_signed.hpp>
 #include <sake/boost_ext/type_traits/make_unsigned.hpp>
 
@@ -36,7 +36,7 @@ namespace default_impl
 template< class T0, class T1 >
 class binary_result_types
 {
-    typedef typename boost_ext::common_return_type< T0, T1 >::type common_type_;
+    typedef typename boost_ext::common_result_type< T0, T1 >::type common_type_;
 public:
     typedef boost::mpl::vector10<
         common_type_,

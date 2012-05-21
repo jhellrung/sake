@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/cast/polymorphic_down.hpp
+ * sake/core/cast/polymorphic_down.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -10,8 +10,8 @@
  * struct functional::polymorphic_downcast<>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_CAST_POLYMORPHIC_DOWN_HPP
-#define SAKE_CORE_UTILITY_CAST_POLYMORPHIC_DOWN_HPP
+#ifndef SAKE_CORE_CAST_POLYMORPHIC_DOWN_HPP
+#define SAKE_CORE_CAST_POLYMORPHIC_DOWN_HPP
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -145,4 +145,4 @@ struct enable< D*, B* >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_CAST_POLYMORPHIC_DOWN_HPP
+#endif // #ifndef SAKE_CORE_CAST_POLYMORPHIC_DOWN_HPP

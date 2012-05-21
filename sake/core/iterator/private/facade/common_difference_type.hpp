@@ -9,7 +9,7 @@
 #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_COMMON_DIFFERENCE_TYPE_HPP
 #define SAKE_CORE_ITERATOR_PRIVATE_FACADE_COMMON_DIFFERENCE_TYPE_HPP
 
-#include <sake/core/utility/common_type.hpp>
+#include <sake/boost_ext/type_traits/common_type.hpp>
 
 namespace sake
 {
@@ -19,7 +19,7 @@ namespace iterator_facade_private
 
 template< class T, class U >
 struct common_difference_type
-    : sake::common_type<
+    : boost_ext::common_type<
           typename T::difference_type,
           typename U::difference_type
       >

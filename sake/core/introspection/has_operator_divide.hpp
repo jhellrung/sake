@@ -7,7 +7,7 @@
  *
  * struct has_operator_divide<
  *     T, U,
- *     Result = typename boost_ext::common_return_type<
+ *     Result = typename boost_ext::common_result_type<
  *         typename boost_ext::remove_qualifiers<T>::type,
  *         typename boost_ext::remove_qualifiers<U>::type
  *     >::type,
@@ -18,7 +18,7 @@
 #ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_DIVIDE_HPP
 #define SAKE_CORE_INTROSPECTION_HAS_OPERATOR_DIVIDE_HPP
 
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/introspection/has_operator_binary.hpp>
@@ -30,7 +30,7 @@ namespace sake
 #define SAKE_INTROSPECTION_TRAIT_NAME    has_operator_divide
 #define SAKE_INTROSPECTION_OPERATOR_NAME /
 #define SAKE_INTROSPECTION_OPERATOR_DEFAULT_RESULT( T, U ) \
-    typename boost_ext::common_return_type< \
+    typename boost_ext::common_result_type< \
         typename boost_ext::remove_qualifiers<T>::type, \
         typename boost_ext::remove_qualifiers<U>::type \
     >::type

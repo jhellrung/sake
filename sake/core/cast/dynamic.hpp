@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/cast/dynamic.hpp
+ * sake/core/cast/dynamic.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -12,8 +12,8 @@
  * struct functional::dynamic_cast_<>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_CAST_DYNAMIC_HPP
-#define SAKE_CORE_UTILITY_CAST_DYNAMIC_HPP
+#ifndef SAKE_CORE_CAST_DYNAMIC_HPP
+#define SAKE_CORE_CAST_DYNAMIC_HPP
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -174,4 +174,4 @@ struct enable< T*, U* >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_CAST_DYNAMIC_HPP
+#endif // #ifndef SAKE_CORE_CAST_DYNAMIC_HPP

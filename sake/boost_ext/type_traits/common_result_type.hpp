@@ -1,11 +1,11 @@
 /*******************************************************************************
- * sake/boost_ext/type_traits/common_return_type.hpp
+ * sake/boost_ext/type_traits/common_result_type.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * class boost_ext::common_return_type< T0, T1 >
+ * class boost_ext::common_result_type< T0, T1 >
  *
  * This is identical to boost_ext::common_type except it may have reference
  * qualifiers removed to make it safe to use as a return type (it prevents
@@ -32,7 +32,7 @@ namespace boost_ext
 {
 
 template< class T0, class T1 >
-class common_return_type
+class common_result_type
 {
     typedef typename boost_ext::common_type< T0, T1 >::type nominal_type;
 public:

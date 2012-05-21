@@ -16,8 +16,7 @@
 
 #include <boost/config.hpp>
 
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
-#include <sake/boost_ext/type_traits/common_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/move/forward.hpp>
@@ -31,8 +30,8 @@ namespace result_of
 
 template< class T0, class T1, class T2, class Less = void >
 struct median
-    : boost_ext::common_return_type<
-          typename boost_ext::common_type< T0, T1 >::type,
+    : boost_ext::common_result_type<
+          typename boost_ext::common_result_type< T0, T1 >::type,
           T2
       >
 { };

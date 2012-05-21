@@ -11,7 +11,7 @@
 #ifndef SAKE_CORE_MATH_LCM_HPP
 #define SAKE_CORE_MATH_LCM_HPP
 
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/core/functional/result_from_metafunction.hpp>
@@ -27,7 +27,7 @@ namespace result_of
 
 template< class T0, class T1 >
 struct lcm
-    : boost_ext::common_return_type<
+    : boost_ext::common_result_type<
           typename boost_ext::remove_qualifiers< T0 >::type,
           typename boost_ext::remove_qualifiers< T1 >::type
       >

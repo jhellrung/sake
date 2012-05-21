@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/cast/inherit.hpp
+ * sake/core/cast/inherit.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -16,8 +16,8 @@
  * objects and get cv-qualifications correctly propagated.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_CAST_INHERIT_HPP
-#define SAKE_CORE_UTILITY_CAST_INHERIT_HPP
+#ifndef SAKE_CORE_CAST_INHERIT_HPP
+#define SAKE_CORE_CAST_INHERIT_HPP
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -204,4 +204,4 @@ struct enable< T, U* >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_CAST_INHERIT_HPP
+#endif // #ifndef SAKE_CORE_CAST_INHERIT_HPP

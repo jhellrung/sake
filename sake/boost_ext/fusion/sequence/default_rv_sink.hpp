@@ -54,11 +54,11 @@
 #include <sake/boost_ext/mpl/curry_quote.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 
+#include <sake/core/cast/implicit.hpp>
 #include <sake/core/config.hpp>
 #include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/utility/address_of.hpp>
-#include <sake/core/utility/cast/implicit.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
 #include <sake/core/utility/noncopy_assignable.hpp>
 #include <sake/core/utility/noncopyable.hpp>

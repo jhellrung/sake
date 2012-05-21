@@ -12,7 +12,7 @@
 #include <boost/mpl/apply.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/is_arithmetic_or_enum.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -34,8 +34,8 @@ struct builtin_has_operator_arithmetic_impl
     : boost_ext::mpl::and4<
           boost_ext::is_arithmetic_or_enum<T>,
           boost_ext::is_arithmetic_or_enum<U>,
-          boost_ext::is_convertible< typename boost_ext::common_return_type<T,U>::type, Result >,
-          boost::mpl::apply1< ResultPred, typename boost_ext::common_return_type<T,U>::type >
+          boost_ext::is_convertible< typename boost_ext::common_result_type<T,U>::type, Result >,
+          boost::mpl::apply1< ResultPred, typename boost_ext::common_result_type<T,U>::type >
       >
 { };
 

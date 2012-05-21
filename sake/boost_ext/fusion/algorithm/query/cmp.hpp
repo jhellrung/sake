@@ -24,7 +24,7 @@
 #include <boost/mpl/int.hpp>
 #include <boost/utility/result_of.hpp>
 
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
 #include <sake/core/math/cmp.hpp>
@@ -133,7 +133,7 @@ struct iterate_dispatch
         typename boost::fusion::result_of::next< I1 >::type,
         Cmp
     >::type next_type;
-    typedef typename boost_ext::common_return_type< curr_type, next_type >::type type;
+    typedef typename boost_ext::common_result_type< curr_type, next_type >::type type;
     static type apply(I0 const & i0, I1 const & i1, Cmp cmp_)
     {
         curr_type const s = cmp_(*i0, *i1);

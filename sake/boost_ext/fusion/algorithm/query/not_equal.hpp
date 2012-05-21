@@ -26,7 +26,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/utility/result_of.hpp>
 
-#include <sake/boost_ext/type_traits/common_return_type.hpp>
+#include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -146,7 +146,7 @@ struct iterate_dispatch
         typename boost::fusion::result_of::next< I1 >::type,
         NotEqual
     >::type next_type;
-    typedef typename boost_ext::common_return_type< curr_type, next_type >::type type;
+    typedef typename boost_ext::common_result_type< curr_type, next_type >::type type;
     static type apply(I0 const & i0, I1 const & i1, NotEqual not_equal_)
     {
         BOOST_STATIC_ASSERT((boost_ext::is_convertible< curr_type, bool >::value));

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/cast/polymorphic.hpp
+ * sake/core/cast/polymorphic.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -11,8 +11,8 @@
  * struct functional::polymorphic_cast<>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_CAST_POLYMORPHIC_HPP
-#define SAKE_CORE_UTILITY_CAST_POLYMORPHIC_HPP
+#ifndef SAKE_CORE_CAST_POLYMORPHIC_HPP
+#define SAKE_CORE_CAST_POLYMORPHIC_HPP
 
 #include <typeinfo>
 
@@ -144,4 +144,4 @@ struct enable< T*, U* >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_CAST_POLYMORPHIC_HPP
+#endif // #ifndef SAKE_CORE_CAST_POLYMORPHIC_HPP

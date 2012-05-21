@@ -28,7 +28,6 @@
 #include <boost/preprocessor/cat.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
-#include <sake/boost_ext/type_traits/common_type.hpp>
 
 #include <sake/core/data_structures/pair/operators.hpp>
 #include <sake/core/math/cmp_fwd.hpp>
