@@ -9,19 +9,21 @@
 #ifndef SAKE_CORE_DATA_STRUCTURES_OPTIONAL_PRIVATE_FORWARDING_BASE_HPP
 #define SAKE_CORE_DATA_STRUCTURES_OPTIONAL_PRIVATE_FORWARDING_BASE_HPP
 
+#include <boost/config.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_void.hpp>
 
 #include <sake/boost_ext/mpl/at.hpp>
 
 #include <sake/core/data_structures/optional/fwd.hpp>
-#include <sake/core/functional/construct.hpp>
+#include <sake/core/functional/default_construct.hpp>
 #include <sake/core/functional/forwarding/base.hpp>
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/functional/forwarding/deduced_enable.hpp>
 #include <sake/core/functional/forwarding/deduced_params.hpp>
 #include <sake/core/functional/forwarding/deduced_result.hpp>
 #include <sake/core/functional/forwarding/keyword.hpp>
+#include <sake/core/move/forward.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/template_keyword.hpp>
 
@@ -44,8 +46,8 @@ class forwarding_base_params
         void
     >::type result_type;
 public:
-    typedef typename sake::insert_keyword_value_if_not_c<
-        boost::is_void< result_type >::value,
+    typedef typename sake::insert_keyword_value_if_c<
+        !boost::is_void< result_type >::value,
         deduced_params_,
         sake::forwarding::keyword::result,
         sake::optional< result_type >
@@ -62,7 +64,7 @@ struct forwarding_base
 private:
     typedef sake::forwarding::base<
         sake::optional<T>,
-        typename sake::forwarding::deduced_params<T>::type
+        typename private_::forwarding_base_params<T>::type
     > forwarding_base_;
 protected:
     using forwarding_base_::derived;
@@ -95,18 +97,40 @@ public:
     {
         return derived().initialized() ?
                derived().get()() :
-               sake::construct< private_nullary_result_type >();
+               sake::default_construct< private_nullary_result_type >();
     }
     private_nullary_result_type apply_impl() const
     {
         return derived().initialized() ?
                derived().get()() :
-               sake::construct< private_nullary_result_type >();
+               sake::default_construct< private_nullary_result_type >();
     }
 
-    // template< class T0, ... >
-    // typename result_impl< optional<T> ( T0, ... ) >::type
-    // apply_impl(T0&& x0, ... );
+#if !defined( BOOST_NO_RVALUE_REFERENCES )
+ && !defined( BOOST_NO_VARIADIC_TEMPLATES )
+
+    template< class... U >
+    typename result_impl< sake::optional<T> ( U... ) >::type
+    apply_impl(U&&... x)
+    {
+        typedef typename result_impl< sake::optional<T> ( U... ) >::type result_type;
+        return derived().initialized() ?
+               derived().get()(sake::forward<U>(x)...) :
+               sake::default_construct< result_type >();
+    }
+
+    template< class... U >
+    typename result_impl< sake::optional<T> const ( U... ) >::type
+    apply_impl(U&&... x) const
+    {
+        typedef typename result_impl< sake::optional<T> const ( U... ) >::type result_type;
+        return derived().initialized() ?
+               derived().get()(sake::forward<U>(x)...) :
+               sake::default_construct< result_type >();
+    }
+
+#else // #if !defined( ... ) && ...
+
 #define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
     result_impl< sake::optional<T> T_tuple >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
@@ -114,13 +138,10 @@ public:
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return derived().initialized() ? \
            derived().get() forward_x_tuple : \
-           sake::construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple )::type >();
+           sake::default_construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple )::type >();
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY SAKE_FORWARDING_BASE_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
 
-    // template< class T0, ... >
-    // typename result_impl< optional<T> const ( T0, ... ) >::type
-    // apply_impl(T0&& x0, ... ) const;
 #define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
     result_impl< sake::optional<T> const T_tuple >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
@@ -130,9 +151,11 @@ public:
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
     return derived().initialized() ? \
            derived().get() forward_x_tuple : \
-           sake::construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple )::type >();
+           sake::default_construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple )::type >();
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY SAKE_FORWARDING_BASE_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
+
+#endif // #if !defined( ... ) && ...
 
 };
 
