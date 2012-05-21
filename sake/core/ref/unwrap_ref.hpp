@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/ref/unwrap_ref.hpp
+ * sake/core/ref/unwrap_ref.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,13 +8,13 @@
  * unwrap_ref(T& x) -> unwrap_reference<T>::type&
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_REF_UNWRAP_REF_HPP
-#define SAKE_CORE_UTILITY_REF_UNWRAP_REF_HPP
+#ifndef SAKE_CORE_REF_UNWRAP_REF_HPP
+#define SAKE_CORE_REF_UNWRAP_REF_HPP
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 
 #include <sake/core/config.hpp>
-#include <sake/core/utility/ref/unwrap_reference.hpp>
+#include <sake/core/ref/unwrap_reference.hpp>
 
 namespace sake
 {
@@ -28,8 +28,7 @@ template< class T >
 #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 // Otherwise, MSVC9 complains about a const U -> U& conversion :/
 inline typename boost_ext::add_reference<
-    typename sake::unwrap_reference< T const >::type
->::type
+    typename sake::unwrap_reference< T const >::type >::type
 #else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 inline typename sake::unwrap_reference< T const >::type &
 #endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
@@ -38,4 +37,4 @@ unwrap_ref(T const & x)
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_REF_UNWRAP_REF_HPP
+#endif // #ifndef SAKE_CORE_REF_UNWRAP_REF_HPP

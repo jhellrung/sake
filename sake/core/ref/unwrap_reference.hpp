@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/ref/unwrap_reference.hpp
+ * sake/core/ref/unwrap_reference.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -14,10 +14,10 @@
  * boost::reference_wrapper are examples of reference wrappers.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_REF_UNWRAP_REFERENCE_HPP
-#define SAKE_CORE_UTILITY_REF_UNWRAP_REFERENCE_HPP
+#ifndef SAKE_CORE_REF_UNWRAP_REFERENCE_HPP
+#define SAKE_CORE_REF_UNWRAP_REFERENCE_HPP
 
-#include <sake/core/utility/ref/fwd.hpp>
+#include <sake/core/ref/fwd.hpp>
 
 namespace sake
 {
@@ -91,4 +91,4 @@ struct unwrap_reference
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_REF_UNWRAP_REFERENCE_HPP
+#endif // #ifndef SAKE_CORE_REF_UNWRAP_REFERENCE_HPP

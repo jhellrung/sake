@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/ref/ref_if_nbvo.hpp
+ * sake/core/ref/ref_if_nbvo.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -19,15 +19,15 @@
  * The default tag set is boost::mpl::set1< ref_tag::parameter >.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_REF_REF_OPTIMAL_HPP
-#define SAKE_CORE_UTILITY_REF_REF_OPTIMAL_HPP
+#ifndef SAKE_CORE_REF_REF_OPTIMAL_HPP
+#define SAKE_CORE_REF_REF_OPTIMAL_HPP
 
 #include <boost/mpl/set/set10.hpp>
 #include <boost/type_traits/add_const.hpp>
 
+#include <sake/core/ref/reference_wrapper.hpp>
+#include <sake/core/ref/tag.hpp>
 #include <sake/core/utility/is_by_value_optimal.hpp>
-#include <sake/core/utility/ref/reference_wrapper.hpp>
-#include <sake/core/utility/ref/tag.hpp>
 #include <sake/core/utility/referent.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
@@ -119,4 +119,4 @@ cref_if_nbvo(T const & x, sake::type_tag< Tags >)
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_REF_REF_OPTIMAL_HPP
+#endif // #ifndef SAKE_CORE_REF_REF_OPTIMAL_HPP

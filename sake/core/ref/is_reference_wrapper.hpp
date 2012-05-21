@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/ref/is_reference_wrapper.hpp
+ * sake/core/ref/is_reference_wrapper.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -12,13 +12,13 @@
  * unwrap_reference<T>::type.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_REF_IS_REFERENCE_WRAPPER_HPP
-#define SAKE_CORE_UTILITY_REF_IS_REFERENCE_WRAPPER_HPP
+#ifndef SAKE_CORE_REF_IS_REFERENCE_WRAPPER_HPP
+#define SAKE_CORE_REF_IS_REFERENCE_WRAPPER_HPP
 
 #include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/core/utility/ref/fwd.hpp>
-#include <sake/core/utility/ref/unwrap_reference.hpp>
+#include <sake/core/ref/fwd.hpp>
+#include <sake/core/ref/unwrap_reference.hpp>
 
 namespace sake
 {
@@ -51,4 +51,4 @@ struct is_reference_wrapper
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_REF_IS_REFERENCE_WRAPPER_HPP
+#endif // #ifndef SAKE_CORE_REF_IS_REFERENCE_WRAPPER_HPP

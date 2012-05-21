@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/ref/reference_wrapper.hpp
+ * sake/core/ref/reference_wrapper.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -21,8 +21,8 @@
  * TODO: Finish range support
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_REF_REFERENCE_WRAPPER_HPP
-#define SAKE_CORE_UTILITY_REF_REFERENCE_WRAPPER_HPP
+#ifndef SAKE_CORE_REF_REFERENCE_WRAPPER_HPP
+#define SAKE_CORE_REF_REFERENCE_WRAPPER_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/has_key.hpp>
@@ -47,14 +47,14 @@
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/move/forward.hpp>
 //#include <sake/core/range/begin_end_fwd.hpp>
+#include <sake/core/ref/fwd.hpp>
+#include <sake/core/ref/is_wrapped_parameter.hpp>
+#include <sake/core/ref/tag.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/noncopy_assignable.hpp>
 #include <sake/core/utility/nullptr.hpp>
 #include <sake/core/utility/overload.hpp>
-#include <sake/core/utility/ref/fwd.hpp>
-#include <sake/core/utility/ref/is_wrapped_parameter.hpp>
-#include <sake/core/utility/ref/tag.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
@@ -390,4 +390,4 @@ apply_impl() const
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_REF_REFERENCE_WRAPPER_HPP
+#endif // #ifndef SAKE_CORE_REF_REFERENCE_WRAPPER_HPP

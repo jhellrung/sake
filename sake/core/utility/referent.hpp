@@ -14,7 +14,7 @@
 #ifndef SAKE_CORE_UTILITY_REFERENT_HPP
 #define SAKE_CORE_UTILITY_REFERENT_HPP
 
-#include <sake/core/utility/ref/unwrap_reference.hpp>
+#include <sake/core/ref/unwrap_reference.hpp>
 
 namespace sake
 {

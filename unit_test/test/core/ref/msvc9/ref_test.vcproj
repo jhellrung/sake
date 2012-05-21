@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="utility_test"
-	ProjectGUID="{5F523229-7A5C-42E9-A1D4-C699FF9C0EE4}"
-	RootNamespace="utility_test"
+	Name="ref_test"
+	ProjectGUID="{2675942E-D27A-4244-B749-D519578CA273}"
+	RootNamespace="ref_test"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -143,43 +143,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\address_of_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\as_reference_to_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\assert_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\compressed_pair_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\compressed_tuple_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\declare_once_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\direct_init_ctor_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\overload_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\swap_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\utility_test.cpp"
+			RelativePath="..\ref_test.cpp"
 			>
 		</File>
 	</Files>

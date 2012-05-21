@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/ref/is_wrapped_parameter.hpp
+ * sake/core/ref/is_wrapped_parameter.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -10,13 +10,13 @@
  * struct default_impl::is_wrapped_parameter<T>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_REF_IS_WRAPPED_PARAMETER_HPP
-#define SAKE_CORE_UTILITY_REF_IS_WRAPPED_PARAMETER_HPP
+#ifndef SAKE_CORE_REF_IS_WRAPPED_PARAMETER_HPP
+#define SAKE_CORE_REF_IS_WRAPPED_PARAMETER_HPP
 
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
-#include <sake/core/utility/ref/fwd.hpp>
+#include <sake/core/ref/fwd.hpp>
 
 namespace sake
 {
@@ -62,4 +62,4 @@ struct is_wrapped_parameter
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_REF_IS_WRAPPED_PARAMETER_HPP
+#endif // #ifndef SAKE_CORE_REF_IS_WRAPPED_PARAMETER_HPP
