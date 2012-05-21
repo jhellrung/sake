@@ -6,7 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * construct<T>(T0&& x0, ... ) -> T
- * struct functional::construct< T = void >
+ * struct functional::construct<T>
  ******************************************************************************/
 
 #ifndef SAKE_CORE_FUNCTIONAL_CONSTRUCT_HPP
@@ -51,7 +51,7 @@ namespace sake
 namespace functional
 {
 
-template< class T = void >
+template< class T >
 struct construct
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
