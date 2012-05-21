@@ -40,8 +40,8 @@
 #include <sake/core/data_structures/tuple/fwd.hpp>
 #include <sake/core/data_structures/tuple/private/operator_assign_enable.hpp>
 #include <sake/core/data_structures/tuple/private/sequence_constructor_enable.hpp>
+#include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/memberwise/mem_fun.hpp>
 
 #define SAKE_TUPLE_INCLUDE_HEADERS
 #include <sake/core/data_structures/tuple/private/at.ipp>

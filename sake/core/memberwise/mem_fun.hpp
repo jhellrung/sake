@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/mem_fun.hpp
+ * sake/core/memberwise/mem_fun.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -15,8 +15,8 @@
  * Boost.PP 2-sequence of the form ( type )( name ).
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_MEM_FUN_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_MEM_FUN_HPP
+#ifndef SAKE_CORE_MEMBERWISE_MEM_FUN_HPP
+#define SAKE_CORE_MEMBERWISE_MEM_FUN_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
@@ -26,14 +26,14 @@
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 #include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
-#include <sake/core/utility/memberwise/copy_assign.hpp>
-#include <sake/core/utility/memberwise/copy_constructor.hpp>
-#include <sake/core/utility/memberwise/default_constructor.hpp>
-#include <sake/core/utility/memberwise/destructor.hpp>
-#include <sake/core/utility/memberwise/hash_value.hpp>
-#include <sake/core/utility/memberwise/move_assign.hpp>
-#include <sake/core/utility/memberwise/move_constructor.hpp>
-#include <sake/core/utility/memberwise/swap.hpp>
+#include <sake/core/memberwise/copy_assign.hpp>
+#include <sake/core/memberwise/copy_constructor.hpp>
+#include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/destructor.hpp>
+#include <sake/core/memberwise/hash_value.hpp>
+#include <sake/core/memberwise/move_assign.hpp>
+#include <sake/core/memberwise/move_constructor.hpp>
+#include <sake/core/memberwise/swap.hpp>
 
 #define SAKE_MEMBERWISE_MEM_FUN( T, tag_seq, member_seq ) \
     SAKE_MEMBERWISE_MEM_FUN_R( BOOST_PP_DEDUCE_R(), T, tag_seq, member_seq )
@@ -86,4 +86,4 @@
 #define SAKE_MEMBERWISE_MEM_FUN_swap( r, T, member_seq ) \
     SAKE_MEMBERWISE_SWAP_R( r, T, member_seq )
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_MEM_FUN_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_MEM_FUN_HPP

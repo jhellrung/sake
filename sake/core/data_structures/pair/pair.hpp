@@ -26,8 +26,8 @@
 #include <sake/boost_ext/fusion/adapted/pair.hpp>
 
 #include <sake/core/data_structures/pair/fwd.hpp>
+#include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/memberwise/mem_fun.hpp>
 
 #define SAKE_PAIR_INCLUDE_HEADERS
 #include <sake/core/data_structures/pair/private/value_constructor.ipp>

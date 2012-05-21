@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/private/type_trait_tag.hpp
+ * sake/core/memberwise/private/type_trait_tag.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -10,8 +10,8 @@
  * #define SAKE_MEMBERWISE_TYPE_TRAIT_TAG_VALUE[_R]( [r,] member_seq, trait )
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
+#ifndef SAKE_CORE_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
+#define SAKE_CORE_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -64,4 +64,4 @@
     BOOST_PP_COMMA_IF( i ) \
     ::sake::data< BOOST_PP_SEQ_HEAD( elem ) >
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP

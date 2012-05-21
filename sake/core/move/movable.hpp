@@ -131,6 +131,11 @@
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
+#include <sake/core/memberwise/copy_assign.hpp>
+#include <sake/core/memberwise/copy_constructor.hpp>
+#include <sake/core/memberwise/move_assign.hpp>
+#include <sake/core/memberwise/move_constructor.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/type_traits/has_copy_constructor.hpp>
 #include <sake/core/type_traits/has_move_constructor.hpp>
@@ -138,11 +143,6 @@
 #include <sake/core/type_traits/has_nothrow_copy_constructor.hpp>
 #include <sake/core/type_traits/has_nothrow_move_assign.hpp>
 #include <sake/core/type_traits/has_nothrow_move_constructor.hpp>
-#include <sake/core/utility/memberwise/copy_assign.hpp>
-#include <sake/core/utility/memberwise/copy_constructor.hpp>
-#include <sake/core/utility/memberwise/move_assign.hpp>
-#include <sake/core/utility/memberwise/move_constructor.hpp>
-#include <sake/core/utility/memberwise/type_trait_tag.hpp>
 #include <sake/core/utility/noncopyable.hpp>
 
 #define SAKE_BASIC_MOVABLE_COPYABLE_IF_C( typenameT, cond ) \
@@ -279,10 +279,10 @@
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 #include <sake/boost_ext/preprocessor/seq/size_01x.hpp>
 
+#include <sake/core/memberwise/private/copy_assign_enable.hpp>
 #include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/using_typedef.hpp>
-#include <sake/core/utility/memberwise/private/copy_assign_enable.hpp>
 
 #define SAKE_BASIC_MOVABLE_COPYABLE( T ) \
     typedef ::boost::rv<T>& this_rvalue_param_type; \

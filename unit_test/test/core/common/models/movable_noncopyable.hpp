@@ -9,9 +9,9 @@
 #ifndef SAKE_UNIT_TEST_TEST_CORE_COMMON_MODELS_MOVABLE_NONCOPYABLE_HPP
 #define SAKE_UNIT_TEST_TEST_CORE_COMMON_MODELS_MOVABLE_NONCOPYABLE_HPP
 
+#include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/move.hpp>
-#include <sake/core/utility/memberwise/mem_fun.hpp>
 
 #include "basic_movable_copyable.hpp"
 #include "special_mem_fun_stats.hpp"

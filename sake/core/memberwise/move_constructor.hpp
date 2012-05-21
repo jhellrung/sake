@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/move_constructor.hpp
+ * sake/core/memberwise/move_constructor.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -16,8 +16,8 @@
  * Boost.PP 2-sequence of the form ( type )( name ).
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_MOVE_CONSTRUCTOR_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_MOVE_CONSTRUCTOR_HPP
+#ifndef SAKE_CORE_MEMBERWISE_MOVE_CONSTRUCTOR_HPP
+#define SAKE_CORE_MEMBERWISE_MOVE_CONSTRUCTOR_HPP
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
@@ -26,7 +26,7 @@
 
 #include <sake/core/type_traits/has_move_constructor.hpp>
 #include <sake/core/type_traits/has_nothrow_move_constructor.hpp>
-#include <sake/core/utility/memberwise/type_trait_tag.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 
 #define SAKE_MEMBERWISE_MOVE_CONSTRUCTOR( T, member_seq ) \
     SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( BOOST_PP_DEDUCE_R(), T, member_seq )
@@ -46,7 +46,7 @@
 
 #else // #if !defined(...) && !defined(...)
 
-#include <sake/core/utility/memberwise/private/initialization_list.hpp>
+#include <sake/core/memberwise/private/initialization_list.hpp>
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 #define SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_param_type( T ) T&&
@@ -62,4 +62,4 @@
 
 #endif // #if !defined(...) && !defined(...)
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_MOVE_CONSTRUCTOR_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_MOVE_CONSTRUCTOR_HPP

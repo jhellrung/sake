@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/copy_constructor.hpp
+ * sake/core/memberwise/copy_constructor.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -16,8 +16,8 @@
  * Boost.PP 2-sequence of the form ( type )( name ).
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_COPY_CONSTRUCTOR_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_COPY_CONSTRUCTOR_HPP
+#ifndef SAKE_CORE_MEMBERWISE_COPY_CONSTRUCTOR_HPP
+#define SAKE_CORE_MEMBERWISE_COPY_CONSTRUCTOR_HPP
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
@@ -26,7 +26,7 @@
 
 #include <sake/core/type_traits/has_copy_constructor.hpp>
 #include <sake/core/type_traits/has_nothrow_copy_constructor.hpp>
-#include <sake/core/utility/memberwise/type_trait_tag.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 
 #define SAKE_MEMBERWISE_COPY_CONSTRUCTOR( T, member_seq ) \
     SAKE_MEMBERWISE_COPY_CONSTRUCTOR_R( BOOST_PP_DEDUCE_R(), T, member_seq )
@@ -47,7 +47,7 @@
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
-#include <sake/core/utility/memberwise/private/initialization_list.hpp>
+#include <sake/core/memberwise/private/initialization_list.hpp>
 
 #define SAKE_MEMBERWISE_COPY_CONSTRUCTOR_impl( r, T, member_seq ) \
     T(T const & other) \
@@ -64,4 +64,4 @@
 
 #endif // #ifndef BOOST_NO_DEFAULTED_FUNCTIONS
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_COPY_CONSTRUCTOR_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_COPY_CONSTRUCTOR_HPP

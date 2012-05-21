@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/destructor.hpp
+ * sake/core/memberwise/destructor.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -17,8 +17,8 @@
  * 2-sequence of the form ( type )( name ).
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_DESTRUCTOR_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_DESTRUCTOR_HPP
+#ifndef SAKE_CORE_MEMBERWISE_DESTRUCTOR_HPP
+#define SAKE_CORE_MEMBERWISE_DESTRUCTOR_HPP
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
@@ -45,4 +45,4 @@
 #define SAKE_MEMBERWISE_DESTRUCTOR_BODY() { }
 #endif // #ifndef BOOST_NO_DEFAULTED_FUNCTIONS
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_DESTRUCTOR_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_DESTRUCTOR_HPP

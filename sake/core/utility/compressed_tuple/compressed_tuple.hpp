@@ -48,12 +48,12 @@
 
 #include <sake/core/data_structures/tuple/private/operator_assign_enable.hpp>
 #include <sake/core/data_structures/tuple/private/sequence_constructor_enable.hpp>
+#include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/base_member.hpp>
 #include <sake/core/utility/compressed_tuple/fwd.hpp>
 #include <sake/core/utility/compressed_tuple/private/storage.hpp>
-#include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
 
 namespace sake

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/move_assign.hpp
+ * sake/core/memberwise/move_assign.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -16,8 +16,8 @@
  * Boost.PP 2-sequence of the form ( type )( name ).
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_MOVE_ASSIGN_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_MOVE_ASSIGN_HPP
+#ifndef SAKE_CORE_MEMBERWISE_MOVE_ASSIGN_HPP
+#define SAKE_CORE_MEMBERWISE_MOVE_ASSIGN_HPP
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
@@ -26,7 +26,7 @@
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
 #include <sake/core/type_traits/has_nothrow_move_assign.hpp>
-#include <sake/core/utility/memberwise/type_trait_tag.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 
 #define SAKE_MEMBERWISE_MOVE_ASSIGN( typenameT, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( BOOST_PP_DEDUCE_R(), typenameT, member_seq )
@@ -51,8 +51,8 @@
 
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
-#include <sake/core/utility/memberwise/private/assign_body.hpp>
-#include <sake/core/utility/memberwise/private/move_assign_enable.hpp>
+#include <sake/core/memberwise/private/assign_body.hpp>
+#include <sake/core/memberwise/private/move_assign_enable.hpp>
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_param_type( T ) T&&
@@ -102,4 +102,4 @@ class disabler : public T
 
 #endif // #if !defined(...) && !defined(...)
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_MOVE_ASSIGN_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_MOVE_ASSIGN_HPP

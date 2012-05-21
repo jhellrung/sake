@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/private/assign_body.hpp
+ * sake/core/memberwise/private/assign_body.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,8 +8,8 @@
  * #define SAKE_MEMBERWISE_assign_body( r, T, member_seq )
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_ASSIGN_BODY_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_ASSIGN_BODY_HPP
+#ifndef SAKE_CORE_MEMBERWISE_PRIVATE_ASSIGN_BODY_HPP
+#define SAKE_CORE_MEMBERWISE_PRIVATE_ASSIGN_BODY_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
@@ -70,4 +70,4 @@
 #define SAKE_MEMBERWISE_assign_body_assign_member_2( type, name ) \
     name = ::sake::move(other.name);
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_ASSIGN_BODY_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_PRIVATE_ASSIGN_BODY_HPP

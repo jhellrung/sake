@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/private/initialization_list.hpp
+ * sake/core/memberwise/private/initialization_list.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,8 +8,8 @@
  * #define SAKE_MEMBERWISE_initialization_list( r, member_seq )
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_INITIALIZATION_LIST_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_INITIALIZATION_LIST_HPP
+#ifndef SAKE_CORE_MEMBERWISE_PRIVATE_INITIALIZATION_LIST_HPP
+#define SAKE_CORE_MEMBERWISE_PRIVATE_INITIALIZATION_LIST_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -51,4 +51,4 @@
 
 #define SAKE_MEMBERWISE_initialization_list_1( r, member_seq )
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_PRIVATE_INITIALIZATION_LIST_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_PRIVATE_INITIALIZATION_LIST_HPP

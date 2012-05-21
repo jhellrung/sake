@@ -50,7 +50,7 @@
 #include <sake/core/math/sign.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
-#include <sake/core/utility/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/default_constructor.hpp>
 #include <sake/core/utility/void.hpp>
 
 namespace sake

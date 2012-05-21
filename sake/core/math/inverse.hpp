@@ -30,11 +30,11 @@
 #include <sake/core/math/inverse_fwd.hpp>
 #include <sake/core/math/one.hpp>
 #include <sake/core/math/one_fwd.hpp>
+#include <sake/core/memberwise/swap.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
-#include <sake/core/utility/memberwise/swap.hpp>
 
 namespace sake
 {

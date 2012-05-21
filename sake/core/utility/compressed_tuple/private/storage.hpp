@@ -47,13 +47,13 @@
 
 #include <sake/core/data_structures/tuple/tuple.hpp>
 #include <sake/core/math/static_clamp.hpp>
+#include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/compressed_pair/compressed_pair.hpp>
 #include <sake/core/utility/compressed_tuple/fwd.hpp>
 #include <sake/core/utility/compressed_tuple/private/at_c_dispatch.hpp>
 #include <sake/core/utility/compressed_tuple/private/package.hpp>
-#include <sake/core/utility/memberwise/mem_fun.hpp>
 
 namespace sake
 {

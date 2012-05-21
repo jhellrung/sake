@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/swap.hpp
+ * sake/core/memberwise/swap.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -16,8 +16,8 @@
  * Boost.PP 2-sequence of the form ( type )( name ).
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_SWAP_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_SWAP_HPP
+#ifndef SAKE_CORE_MEMBERWISE_SWAP_HPP
+#define SAKE_CORE_MEMBERWISE_SWAP_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
@@ -72,4 +72,4 @@
     static void swap(T&) \
     { }
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_SWAP_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_SWAP_HPP

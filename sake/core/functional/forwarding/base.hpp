@@ -24,10 +24,10 @@
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/functional/forwarding/keyword.hpp>
 #include <sake/core/functional/forwarding/nullary_base.hpp>
+#include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/utility/memberwise/default_constructor.hpp>
-#include <sake/core/utility/memberwise/mem_fun.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 

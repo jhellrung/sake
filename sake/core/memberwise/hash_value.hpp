@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/hash_value.hpp
+ * sake/core/memberwise/hash_value.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -16,8 +16,8 @@
  * Boost.PP 2-sequence of the form ( type )( name ).
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_HASH_VALUE_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_HASH_VALUE_HPP
+#ifndef SAKE_CORE_MEMBERWISE_HASH_VALUE_HPP
+#define SAKE_CORE_MEMBERWISE_HASH_VALUE_HPP
 
 #include <cstddef>
 
@@ -98,4 +98,4 @@
 #define SAKE_MEMBERWISE_HASH_VALUE_hash_combine_member_2( type, name ) \
     ::boost::hash_combine(result, name);
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_HASH_VALUE_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_HASH_VALUE_HPP

@@ -20,7 +20,7 @@
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/core/utility/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/default_constructor.hpp>
 
 #ifndef BOOST_NO_DELETED_FUNCTIONS
 

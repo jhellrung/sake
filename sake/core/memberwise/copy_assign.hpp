@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/utility/memberwise/copy_assign.hpp
+ * sake/core/memberwise/copy_assign.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -18,8 +18,8 @@
  * Boost.PP 2-sequence of the form ( type )( name ).
  ******************************************************************************/
 
-#ifndef SAKE_CORE_UTILITY_MEMBERWISE_COPY_ASSIGN_HPP
-#define SAKE_CORE_UTILITY_MEMBERWISE_COPY_ASSIGN_HPP
+#ifndef SAKE_CORE_MEMBERWISE_COPY_ASSIGN_HPP
+#define SAKE_CORE_MEMBERWISE_COPY_ASSIGN_HPP
 
 #include <boost/config.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
@@ -28,7 +28,7 @@
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
 #include <sake/core/type_traits/has_nothrow_copy_assign.hpp>
-#include <sake/core/utility/memberwise/type_trait_tag.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 
 /*******************************************************************************
  * #define SAKE_MEMBERWISE_COPY_ASSIGN[_R]( [r,] typenameT, member_seq )
@@ -56,8 +56,8 @@
 
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
-#include <sake/core/utility/memberwise/private/assign_body.hpp>
-#include <sake/core/utility/memberwise/private/copy_assign_enable.hpp>
+#include <sake/core/memberwise/private/assign_body.hpp>
+#include <sake/core/memberwise/private/copy_assign_enable.hpp>
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 #define SAKE_MEMBERWISE_COPY_ASSIGN_param_type( T ) T const & 
@@ -130,8 +130,8 @@
 #include <sake/boost_ext/preprocessor/seq/size_01x.hpp>
 
 #include <sake/core/move/has_unfriendly_move_emulation.hpp>
-#include <sake/core/utility/memberwise/private/assign_body.hpp>
-#include <sake/core/utility/memberwise/private/copy_assign_enable.hpp>
+#include <sake/core/memberwise/private/assign_body.hpp>
+#include <sake/core/memberwise/private/copy_assign_enable.hpp>
 
 #define SAKE_MEMBERWISE_COPY_ASSIGN_IF_ANY_HAS_UME_impl( r, typename, T, member_seq ) \
     BOOST_PP_CAT( \
@@ -211,4 +211,4 @@ class disabler : public T
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_UTILITY_MEMBERWISE_COPY_ASSIGN_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_COPY_ASSIGN_HPP
