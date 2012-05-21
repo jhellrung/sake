@@ -223,8 +223,20 @@ public:
         (( m_storage_type )( m_storage ))
     )
 
-    // template< class U0, ... >
-    // compressed_tuple(U0&& x0, ... );
+#if !defined( BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS ) \
+ && !defined( BOOST_NO_RVALUE_REFERENCES ) \
+ && !defined( BOOST_NO_VARIADIC_TEMPLATES )
+
+    template<
+        class... U,
+        class Enable = typename boost::enable_if_c< sizeof...( U ) == N >::type
+    >
+    compressed_tuple(U&&... x)
+        : m_storage(sake::forward<U>(x)...)
+    { }
+
+#else // #if !defined( ... ) && ...
+
 #define SAKE_OVERLOAD_T U
 #define SAKE_OVERLOAD_CONSTRUCTOR_NAME \
     compressed_tuple
@@ -240,6 +252,8 @@ public:
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY    N
 #endif // #if N <= SAKE_COMPRESSED_TUPLE_PERFECT_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
+
+#endif // #if !defined( ... ) && ...
 
 #endif // #if N == 1
 

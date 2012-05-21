@@ -6,7 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * make_emplacer(U0&& y0, ...) -> emplacer< void ( U0, ... ) >
- * make_typed_emplacer<T>(U0&& y0, ...) -> emplacer< T ( U0, ... ) >
+ * make_emplacer<T>(U0&& y0, ...) -> emplacer< T ( U0, ... ) >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_EMPLACER_MAKE_HPP
@@ -34,10 +34,10 @@ make_emplacer(U&&... y)
 
 template< class T, class... U >
 inline sake::emplacer< T ( U... ) >
-make_typed_emplacer(U&&... y)
+make_emplacer(U&&... y)
 { return sake::emplacer< T ( U... ) >(sake::forward<U>(y)...); }
 
-#else // #if !defined( ... ) && !defined( ... )
+#else // #if !defined( ... ) && ...
 
 inline sake::emplacer< void ( ) >
 make_emplacer()
@@ -56,7 +56,7 @@ make_emplacer()
 
 template< class T >
 inline sake::emplacer< T ( ) >
-make_typed_emplacer()
+make_emplacer()
 { return sake::emplacer< T ( ) >(); }
 
 #define SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( r, n, classU_tuple ) \
@@ -64,7 +64,7 @@ make_typed_emplacer()
 #define SAKE_OVERLOAD_RESULT( r, n, U_tuple ) \
     boost::mpl::identity< sake::emplacer< T U_tuple > >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
-    make_typed_emplacer
+    make_emplacer
 #define SAKE_OVERLOAD_BODY( r, n, U_tuple, y_tuple, forward_y_tuple ) \
     return sake::emplacer< T U_tuple > forward_y_tuple ;
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_EMPLACER_PERFECT_MAX_ARITY
@@ -72,7 +72,7 @@ make_typed_emplacer()
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY    SAKE_EMPLACER_FWD2_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
 
-#endif // #if !defined( ... ) && !defined( ... )
+#endif // #if !defined( ... ) && ...
 
 } // namespace sake
 

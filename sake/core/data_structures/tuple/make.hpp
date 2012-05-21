@@ -70,7 +70,10 @@ make_tuple()
 template< class... T >
 inline typename sake::result_of::make_tuple< T... >::type
 make_tuple(T&&... x)
-{ return typename sake::result_of::make_tuple< T... >::type(sake::forward<T>(x)...); }
+{
+    typedef typename sake::result_of::make_tuple< T... >::type result_type;
+    return result_type(sake::forward<T>(x)...);
+}
 
 #else // #if !defined( ... ) && ...
 

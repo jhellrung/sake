@@ -160,7 +160,7 @@ private:
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     template< class... T >
-    typename result_impl< reference_wrapper ( T... ) >::type
+    typename result_impl< reference_wrapper ( SAKE_FWD2_PARAM( T )... ) >::type
     apply_impl(SAKE_FWD2_REF( T )... x) const
     { return (*m_p)(sake::forward<T>(x)...); }
 

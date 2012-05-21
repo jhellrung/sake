@@ -106,56 +106,65 @@ public:
                sake::default_construct< private_nullary_result_type >();
     }
 
-#if !defined( BOOST_NO_RVALUE_REFERENCES )
- && !defined( BOOST_NO_VARIADIC_TEMPLATES )
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     template< class... U >
-    typename result_impl< sake::optional<T> ( U... ) >::type
-    apply_impl(U&&... x)
+    typename result_impl< sake::optional<T> ( SAKE_FWD2_PARAM( U )... ) >::type
+    apply_impl(SAKE_FWD2_REF( U )... x)
     {
-        typedef typename result_impl< sake::optional<T> ( U... ) >::type result_type;
+        typedef typename result_impl<
+            sake::optional<T> ( SAKE_FWD2_PARAM( U )... )
+        >::type result_type;
         return derived().initialized() ?
                derived().get()(sake::forward<U>(x)...) :
                sake::default_construct< result_type >();
     }
 
-    template< class... U >
-    typename result_impl< sake::optional<T> const ( U... ) >::type
-    apply_impl(U&&... x) const
-    {
-        typedef typename result_impl< sake::optional<T> const ( U... ) >::type result_type;
-        return derived().initialized() ?
-               derived().get()(sake::forward<U>(x)...) :
-               sake::default_construct< result_type >();
-    }
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
-#else // #if !defined( ... ) && ...
-
-#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
-    result_impl< sake::optional<T> T_tuple >
+#define SAKE_OVERLOAD_RESULT( r, n, U_tuple ) \
+    result_impl< sake::optional<T> U_tuple >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     apply_impl
-#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_BODY( r, n, U_tuple, x_tuple, forward_x_tuple ) \
     return derived().initialized() ? \
            derived().get() forward_x_tuple : \
-           sake::default_construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple )::type >();
+           sake::default_construct< typename SAKE_OVERLOAD_RESULT( r, n, U_tuple )::type >();
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY SAKE_FORWARDING_BASE_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
 
-#define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
-    result_impl< sake::optional<T> const T_tuple >
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+    template< class... U >
+    typename result_impl< sake::optional<T> const ( SAKE_FWD2_PARAM( U )... ) >::type
+    apply_impl(SAKE_FWD2_REF( U )... x) const
+    {
+        typedef typename result_impl<
+            sake::optional<T> const ( SAKE_FWD2_PARAM( U )... )
+        >::type result_type;
+        return derived().initialized() ?
+               derived().get()(sake::forward<U>(x)...) :
+               sake::default_construct< result_type >();
+    }
+
+#else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+#define SAKE_OVERLOAD_RESULT( r, n, U_tuple ) \
+    result_impl< sake::optional<T> const U_tuple >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     apply_impl
 #define SAKE_OVERLOAD_DECLARATION_SUFFIX \
     const
-#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_BODY( r, n, U_tuple, x_tuple, forward_x_tuple ) \
     return derived().initialized() ? \
            derived().get() forward_x_tuple : \
-           sake::default_construct< typename SAKE_OVERLOAD_RESULT( r, n, T_tuple )::type >();
+           sake::default_construct< typename SAKE_OVERLOAD_RESULT( r, n, U_tuple )::type >();
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY SAKE_FORWARDING_BASE_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
 
-#endif // #if !defined( ... ) && ...
+#endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 };
 

@@ -46,7 +46,7 @@ class core_access
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     template< class Derived, class... T >
-    typename result< Derived ( T... ) >::type
+    typename result< Derived ( SAKE_FWD2_PARAM( T )... ) >::type
     static apply(Derived& this_, SAKE_FWD2_REF( T )... x)
     { return this_.apply_impl(sake::forward<T>(x)...); }
 
