@@ -31,7 +31,7 @@ struct destruct_dispatch< T, false >
 {
     template< class This >
     static void apply(This& this_)
-    { reinterpret_cast< T* >(this_.m_storage._)->~T(); }
+    { static_cast< T* >(static_cast< void* >(this_.m_storage._))->~T(); }
     template< class This >
     static void apply_reset(This& this_)
     { apply(this_); this_.m_initialized = false; }

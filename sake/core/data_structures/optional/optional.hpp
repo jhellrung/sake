@@ -12,7 +12,7 @@
  *
  * struct result_of::extension::get< optional<T>       &, void >
  * struct result_of::extension::get< optional<T> const &, void >
- * struct result_of::extension::get< optional<T>      &&, void >
+ * struct result_of::extension::get< optional<T>        , void >
  * optional_adl::get(optional<T>       & x) -> ...
  * optional_adl::get(optional<T> const & x) -> ...
  * optional_adl::get(optional<T>      && x) -> ...
@@ -479,7 +479,7 @@ optional<T>::
 get()
 {
     SAKE_ASSERT((m_initialized));
-    return *reinterpret_cast< T* >(m_storage._);
+    return *static_cast< T* >(static_cast< void* >(m_storage._));
 }
 
 template< class T >
@@ -488,20 +488,20 @@ optional<T>::
 get() const
 {
     SAKE_ASSERT((m_initialized));
-    return *reinterpret_cast< T const * >(m_storage._);
+    return *static_cast< T const * >(static_cast< void const * >(m_storage._));
 }
 
 template< class T >
 inline T*
 optional<T>::
 get_ptr()
-{ return m_initialized ? reinterpret_cast< T* >(m_storage._) : 0; }
+{ return m_initialized ? static_cast< T* >(static_cast< void* >(m_storage._)) : 0; }
 
 template< class T >
 inline T const *
 optional<T>::
 get_ptr() const
-{ return m_initialized ? reinterpret_cast< T const * >(m_storage._) : 0; }
+{ return m_initialized ? static_cast< T const * >(static_cast< void const * >(m_storage._)) : 0; }
 
 template< class T >
 inline T&
