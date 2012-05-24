@@ -18,11 +18,9 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/mpl/curry_quote.hpp>
 #include <sake/boost_ext/mpl/vector.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
-#include <sake/core/data_structures/private/value_constructor_enable.hpp>
 #include <sake/core/data_structures/tuple/fwd.hpp>
 #include <sake/core/emplacer/constructible.hpp>
 #include <sake/core/emplacer/emplacer.hpp>
@@ -31,6 +29,7 @@
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/overload.hpp>
+#include <sake/core/utility/value_constructor_enable.hpp>
 
 #endif // #ifdef SAKE_TUPLE_INCLUDE_HEADERS
 
@@ -47,7 +46,7 @@ private:
     struct value_constructor_enable
         : boost_ext::mpl::and2<
               boost_ext::not_is_base_of_sans_qualifiers< tuple, U0 >,
-              sake::data_structures_private::value_constructor_enable< T0, U0 >
+              typename sake::value_constructor_enable< nocv0_type, U0 >
           >
     { };
     template< class U0 >
@@ -117,8 +116,7 @@ private:
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
               boost::mpl::BOOST_PP_CAT( vector, N )< U0N >,
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-              boost::mpl::quote2<
-                  sake::data_structures_private::value_constructor_enable >
+              boost::mpl::quote2< sake::value_constructor_enable >
           >
     { };
     template< class_U0N >
@@ -139,13 +137,15 @@ public:
 
     template< class U0, class V1 >
     tuple(U0&& x0, sake::emplacer< V1 ( ) >,
-        typename value_constructor_enabler< U0, sake::emplacer< V1 ( ) > >::type* = 0)
+        typename value_constructor_enabler<
+            U0, sake::emplacer< V1 ( ) > >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(sake::forward< U0 >(x0)))
     { }
 
     template< class V0, class U1 >
     tuple(sake::emplacer< V0 ( ) >, U1&& x1,
-        typename value_constructor_enabler< sake::emplacer< V0 ( ) >, U1 >::type* = 0)
+        typename value_constructor_enabler<
+            sake::emplacer< V0 ( ) >, U1 >::type* = 0)
         : _1(sake::emplacer_constructible< nocv1_type >(sake::forward< U1 >(x1)))
     { }
 
@@ -161,18 +161,14 @@ public:
 private:
     typedef sake::rv_sink_traits1<
         nocv0_type,
-        typename boost_ext::mpl::curry_quote2<
-            sake::data_structures_private::value_constructor_enable
-        >::apply< nocv0_type >::type
+        sake::value_constructor_enable< nocv0_type >
     > value0_constructor_rv_sink_traits;
     typedef typename value0_constructor_rv_sink_traits::template
         default_< sake::functional::construct< nocv0_type > >
         value0_constructor_rv_sink_default_type;
     typedef sake::rv_sink_traits1<
         nocv1_type,
-        typename boost_ext::mpl::curry_quote2<
-            sake::data_structures_private::value_constructor_enable
-        >::apply< nocv1_type >::type
+        sake::value_constructor_enable< nocv1_type >
     > value1_constructor_rv_sink_traits;
     typedef typename value1_constructor_rv_sink_traits::template
         default_< sake::functional::construct< nocv1_type > >
@@ -183,8 +179,9 @@ public:
     template< class U0, class V1 >
     tuple(U0& x0, sake::emplacer< V1 ( ) >,
         typename boost::enable_if_c< boost_ext::mpl::and2<
-            typename value0_constructor_rv_sink_traits::template ref_enable< U0 >,
-            sake::data_structures_private::value_constructor_enable<
+            typename value0_constructor_rv_sink_traits::template
+                ref_enable< U0 >,
+            sake::value_constructor_enable<
                 nocv1_type, sake::emplacer< V1 ( ) > >
         >::value >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0))
@@ -192,9 +189,10 @@ public:
     template< class V0, class U1 >
     tuple(sake::emplacer< V0 ( ) >, U1& x1,
         typename boost::enable_if_c< boost_ext::mpl::and2<
-            sake::data_structures_private::value_constructor_enable<
+            sake::value_constructor_enable<
                 nocv0_type, sake::emplacer< V0 ( ) > >,
-            typename value1_constructor_rv_sink_traits::template ref_enable< U1 >
+            typename value1_constructor_rv_sink_traits::template
+                ref_enable< U1 >
         >::value >::type* = 0)
         : _1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
@@ -204,7 +202,7 @@ public:
     tuple(
         typename value0_constructor_rv_sink_traits::primary_type x0,
         sake::emplacer< V1 ( ) >,
-        typename sake::data_structures_private::value_constructor_enabler<
+        typename sake::value_constructor_enabler<
             nocv1_type, sake::emplacer< V1 ( ) > >::type* = 0)
         : _0(sake::move(x0.value))
     { }
@@ -212,7 +210,7 @@ public:
     tuple(
         sake::emplacer< V0 ( ) >,
         typename value1_constructor_rv_sink_traits::primary_type x1,
-        typename sake::data_structures_private::value_constructor_enabler<
+        typename sake::value_constructor_enabler<
             nocv0_type, sake::emplacer< V0 ( ) > >::type* = 0)
         : _1(sake::move(x1.value))
     { }
@@ -222,7 +220,7 @@ public:
     tuple(
         value0_constructor_rv_sink_default_type x0,
         sake::emplacer< V1 ( ) >,
-        typename sake::data_structures_private::value_constructor_enabler<
+        typename sake::value_constructor_enabler<
             nocv1_type, sake::emplacer< V1 ( ) > >::type* = 0)
         : _0(x0())
     { }
@@ -230,7 +228,7 @@ public:
     tuple(
         sake::emplacer< V0 ( ) >,
         value1_constructor_rv_sink_default_type x1,
-        typename sake::data_structures_private::value_constructor_enabler<
+        typename sake::value_constructor_enabler<
             nocv0_type, sake::emplacer< V0 ( ) > >::type* = 0)
         : _1(x1())
     { }
@@ -239,8 +237,9 @@ public:
     template< class U0, class V1 >
     tuple(U0 const & x0, sake::emplacer< V1 ( ) >,
         typename boost::enable_if_c< boost_ext::mpl::and2<
-            typename value0_constructor_rv_sink_traits::template cref_enable< U0 >,
-            sake::data_structures_private::value_constructor_enable<
+            typename value0_constructor_rv_sink_traits::template
+                cref_enable< U0 >,
+            sake::value_constructor_enable<
                 nocv1_type, sake::emplacer< V1 ( ) > >
         >::value >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0))
@@ -248,9 +247,10 @@ public:
     template< class V0, class U1 >
     tuple(sake::emplacer< V0 ( ) >, U1 const & x1,
         typename boost::enable_if_c< boost_ext::mpl::and2<
-            sake::data_structures_private::value_constructor_enable<
+            sake::value_constructor_enable<
                 nocv0_type, sake::emplacer< V0 ( ) > >,
-            typename value1_constructor_rv_sink_traits::template cref_enable< U1 >
+            typename value1_constructor_rv_sink_traits::template
+                cref_enable< U1 >
         >::value >::type* = 0)
         : _1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
@@ -261,8 +261,10 @@ public:
         U0& x0,
         U1& x1,
         typename boost::enable_if_c< boost_ext::mpl::and2<
-            typename value0_constructor_rv_sink_traits::template ref_enable< U0 >,
-            typename value1_constructor_rv_sink_traits::template ref_enable< U1 >
+            typename value0_constructor_rv_sink_traits::template
+                ref_enable< U0 >,
+            typename value1_constructor_rv_sink_traits::template
+                ref_enable< U1 >
         >::value >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0)),
           _1(sake::emplacer_constructible< nocv1_type >(x1))
@@ -271,7 +273,8 @@ public:
     tuple(
         U0& x0,
         typename value1_constructor_rv_sink_traits::primary_type x1,
-        typename value0_constructor_rv_sink_traits::template ref_enabler< U0 >::type* = 0)
+        typename value0_constructor_rv_sink_traits::template
+            ref_enabler< U0 >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0)),
           _1(sake::move(x1.value))
     { }
@@ -279,7 +282,8 @@ public:
     tuple(
         U0& x0,
         value1_constructor_rv_sink_default_type x1,
-        typename value0_constructor_rv_sink_traits::template ref_enabler< U0 >::type* = 0)
+        typename value0_constructor_rv_sink_traits::template
+            ref_enabler< U0 >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0)),
           _1(x1())
     { }
@@ -288,8 +292,10 @@ public:
         U0& x0,
         U1 const & x1,
         typename boost::enable_if_c< boost_ext::mpl::and2<
-            typename value0_constructor_rv_sink_traits::template ref_enable< U0 >,
-            typename value1_constructor_rv_sink_traits::template cref_enable< U1 >
+            typename value0_constructor_rv_sink_traits::template
+                ref_enable< U0 >,
+            typename value1_constructor_rv_sink_traits::template
+                cref_enable< U1 >
         >::value >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0)),
           _1(sake::emplacer_constructible< nocv1_type >(x1))
@@ -299,7 +305,8 @@ public:
     tuple(
         typename value0_constructor_rv_sink_traits::primary_type x0,
         U1& x1,
-        typename value1_constructor_rv_sink_traits::template ref_enabler< U1 >::type* = 0)
+        typename value1_constructor_rv_sink_traits::template
+            ref_enabler< U1 >::type* = 0)
         : _0(sake::move(x0.value)),
           _1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
@@ -319,7 +326,8 @@ public:
     tuple(
         typename value0_constructor_rv_sink_traits::primary_type x0,
         U1 const & x1,
-        typename value1_constructor_rv_sink_traits::template cref_enabler< U1 >::type* = 0)
+        typename value1_constructor_rv_sink_traits::template
+            cref_enabler< U1 >::type* = 0)
         : _0(sake::move(x0.value)),
           _1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
@@ -328,7 +336,8 @@ public:
     tuple(
         value0_constructor_rv_sink_default_type x0,
         U1& x1,
-        typename value1_constructor_rv_sink_traits::template ref_enabler< U1 >::type* = 0)
+        typename value1_constructor_rv_sink_traits::template
+            ref_enabler< U1 >::type* = 0)
         : _0(x0()),
           _1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
@@ -348,7 +357,8 @@ public:
     tuple(
         value0_constructor_rv_sink_default_type x0,
         U1 const & x1,
-        typename value1_constructor_rv_sink_traits::template cref_enabler< U1 >::type* = 0)
+        typename value1_constructor_rv_sink_traits::template
+            cref_enabler< U1 >::type* = 0)
         : _0(x0()),
           _1(sake::emplacer_constructible< nocv1_type >(x1))
     { }
@@ -358,8 +368,10 @@ public:
         U0 const & x0,
         U1& x1,
         typename boost::enable_if_c< boost_ext::mpl::and2<
-            typename value0_constructor_rv_sink_traits::template cref_enable< U0 >,
-            typename value1_constructor_rv_sink_traits::template ref_enable< U1 >
+            typename value0_constructor_rv_sink_traits::template
+                cref_enable< U0 >,
+            typename value1_constructor_rv_sink_traits::template
+                ref_enable< U1 >
         >::value >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0)),
           _1(sake::emplacer_constructible< nocv1_type >(x1))
@@ -368,7 +380,8 @@ public:
     tuple(
         U0 const & x0,
         typename value1_constructor_rv_sink_traits::primary_type x1,
-        typename value0_constructor_rv_sink_traits::template cref_enabler< U0 >::type* = 0)
+        typename value0_constructor_rv_sink_traits::template
+            cref_enabler< U0 >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0)),
           _1(sake::move(x1.value))
     { }
@@ -376,7 +389,8 @@ public:
     tuple(
         U0 const & x0,
         value1_constructor_rv_sink_default_type x1,
-        typename value0_constructor_rv_sink_traits::template cref_enabler< U0 >::type* = 0)
+        typename value0_constructor_rv_sink_traits::template
+            cref_enabler< U0 >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0)),
           _1(x1())
     { }
@@ -385,8 +399,10 @@ public:
         U0 const & x0,
         U1 const & x1,
         typename boost::enable_if_c< boost_ext::mpl::and2<
-            typename value0_constructor_rv_sink_traits::template cref_enable< U0 >,
-            typename value1_constructor_rv_sink_traits::template cref_enable< U1 >
+            typename value0_constructor_rv_sink_traits::template
+                cref_enable< U0 >,
+            typename value1_constructor_rv_sink_traits::template
+            cref_enable< U1 >
         >::value >::type* = 0)
         : _0(sake::emplacer_constructible< nocv0_type >(x0)),
           _1(sake::emplacer_constructible< nocv1_type >(x1))
@@ -403,8 +419,7 @@ public:
     value_constructor_enable< BOOST_PP_TUPLE_REM_CTOR( n, U_tuple ) >
 #define SAKE_OVERLOAD_CONSTRUCTOR_NAME \
     tuple
-#define SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST( r, \
-    n, U_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_INITIALIZATION_LIST( r, n, U_tuple, x_tuple, forward_x_tuple ) \
     BOOST_PP_SEQ_FOR_EACH_I_R( r, \
         comma_i_emplacer_constructible_nocvi_type_elem, \
         ~, \

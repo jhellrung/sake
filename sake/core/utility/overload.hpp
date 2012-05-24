@@ -69,8 +69,7 @@
  *     [ optional ]
  *     Expands to any suffix qualifiers (e.g., "const", "volatile") or
  *     attributes.
- * SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST(
- *     r, n, T_tuple, x_tuple, forward_x_tuple )
+ * SAKE_OVERLOAD_INITIALIZATION_LIST( r, n, T_tuple, x_tuple, forward_x_tuple )
  *     [ optional ]
  *     Expands to a comma-delimited initialization list (excluding the ":").
  *     Should only be defined with SAKE_OVERLOAD_CONSTRUCTOR_NAME.

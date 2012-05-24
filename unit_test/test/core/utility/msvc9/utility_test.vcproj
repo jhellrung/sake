@@ -171,6 +171,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\is_template_base_of_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\overload_test.cpp"
 			>
 		</File>

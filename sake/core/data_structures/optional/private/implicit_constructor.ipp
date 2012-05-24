@@ -38,7 +38,9 @@ private:
     { };
     template< class U >
     struct implicit_constructor_enabler
-        : boost::enable_if_c< implicit_constructor_enable<U>::value >
+        : boost::enable_if_c< implicit_constructor_enable<
+              typename boost_ext::remove_rvalue_reference<U>::type
+          >::value >
     { };
 public:
 
@@ -142,9 +144,7 @@ public:
 
     template< class U >
     optional(U& x,
-        typename implicit_constructor_enabler<
-            typename boost_ext::remove_rvalue_reference< U& >::type
-        >::type* = 0)
+        typename implicit_constructor_enabler< U& >::type* = 0)
         : m_p(get_ptr_dispatch(SAKE_AS_LVALUE(x)))
     { }
 

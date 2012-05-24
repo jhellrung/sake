@@ -33,7 +33,7 @@
  *     TaggedValues := [ TaggedValues, tagged_value< tag(P), A&& > ]
  *     i := i + 1
  * loop:
- *     if i == size( Args ): return TaggedValues
+ *     if i == size( Args ): return
  *     let A := Args[i]
  *     if A is a tagged value:
  *         TaggedValues := [ TaggedValues, A ]
@@ -53,8 +53,8 @@
  * point, the argument switches over to the second stage, and only tags untagged
  * values in Args with tags from *deduced* parameter specifications.
  *
- * Note that this is precisely the algorithm that Boost.Parameter in its
- * "parameters" interface.
+ * Note that this is precisely the algorithm that Boost.Parameter implements in
+ * its "parameters" interface.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_KEYWORD_TAG_ARGS_HPP

@@ -51,15 +51,29 @@ struct arg_packer
     struct enable
     {
         typedef typename sake::keyword::tag_args<
-            boost_ext::mpl::vector< A... >, ParamSpecs
-        >::type tagged_args;
-        static bool const value =
-            sake::keyword::satisfies< tagged_args, ParamSpecs >::value;
+            boost_ext::mpl::vector< A... >, ParamSpecs >::type tagged_args;
+        static bool const value = sake::keyword::satisfies<
+            tagged_args, ParamSpecs >::value;
         typedef enable type;
     };
+    template< class Result, class... A >
+    struct enable< Result ( A... ) >
+        : enable< A... >
+    { };
+
     template< class... A >
     struct enabler
         : boost::enable_if_c< enable< A... >::value >
+    { };
+    template< class Result, class... A >
+    struct enabler< Result ( A... ) >
+        : boost::enable_if_c< enable< A... >::value, Result >
+    { };
+
+    template< class > struct lazy_enabler;
+    template< class Result, class... A >
+    struct lazy_enabler< Result ( A... ) >
+        : boost::lazy_enable_if_c< enable< A... >::value, Result >
     { };
 
     template< class > struct result;
@@ -68,11 +82,10 @@ struct arg_packer
     struct result< This ( A... ) >
     {
         typedef typename sake::keyword::tag_args<
-            boost_ext::mpl::vector< A... >, ParamSpecs
-        >::type tagged_args;
+            boost_ext::mpl::vector< A... >, ParamSpecs >::type tagged_args;
         BOOST_STATIC_ASSERT((!boost::is_void< tagged_args >::value));
-        BOOST_STATIC_ASSERT((
-            sake::keyword::satisfies< tagged_args, ParamSpecs >::value));
+        BOOST_STATIC_ASSERT((sake::keyword::satisfies<
+            tagged_args, ParamSpecs >::value));
         typedef typename sake::keyword::
             arg_pack_from_mpl_vector< tagged_args >::type type;
     };
@@ -82,8 +95,7 @@ struct arg_packer
     operator()(SAKE_FWD2_REF( A )... a) const
     {
         typedef typename result<
-            arg_packer const ( SAKE_FWD2_PARAM( A )... )
-        >::type result_type;
+            arg_packer const ( SAKE_FWD2_PARAM( A )... ) >::type result_type;
         return result_type(sake::forward<A>(a)...);
     }
 
@@ -99,12 +111,15 @@ struct arg_packer
     template< BOOST_PP_ENUM_BINARY_PARAMS(
         SAKE_KEYWORD_MAX_ARITY, class A, = void BOOST_PP_INTERCEPT ) >
     struct enable;
+
     template< BOOST_PP_ENUM_BINARY_PARAMS(
         SAKE_KEYWORD_MAX_ARITY, class A, = void BOOST_PP_INTERCEPT ) >
     struct enabler;
 #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 #pragma warning( pop )
 #endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
+
+    template< class > struct lazy_enabler;
 
     template< class > struct result;
 
@@ -150,12 +165,16 @@ struct arg_packer
 #endif // #if N == SAKE_KEYWORD_MAX_ARITY
     {
         typedef typename sake::keyword::tag_args<
-            vectorN< A0N >, ParamSpecs
-        >::type tagged_args;
-        static bool const value =
-            sake::keyword::satisfies< tagged_args, ParamSpecs >::value;
+            vectorN< A0N >, ParamSpecs >::type tagged_args;
+        static bool const value = sake::keyword::satisfies<
+            tagged_args, ParamSpecs >::value;
         typedef enable type;
     };
+    template< class Result, class_A0N >
+    struct enable< Result ( A0N ) >
+        : enable< A0N >
+    { };
+
     template< class_A0N >
 #if N == SAKE_KEYWORD_MAX_ARITY
     struct enabler
@@ -164,16 +183,24 @@ struct arg_packer
 #endif // #if N == SAKE_KEYWORD_MAX_ARITY
         : boost::enable_if_c< enable< A0N >::value >
     { };
+    template< class Result, class_A0N >
+    struct enabler< Result ( A0N ) >
+        : boost::enable_if_c< enable< A0N >::value, Result >
+    { };
+
+    template< class Result, class_A0N >
+    struct lazy_enabler< Result ( A0N ) >
+        : boost::lazy_enable_if_c< enable< A0N >::value, Result >
+    { };
 
     template< class This comma_class_A0N >
     struct result< This ( A0N ) >
     {
         typedef typename sake::keyword::tag_args<
-            vectorN< A0N >, ParamSpecs
-        >::type tagged_args;
+            vectorN< A0N >, ParamSpecs >::type tagged_args;
         BOOST_STATIC_ASSERT((!boost::is_void< tagged_args >::value));
-        BOOST_STATIC_ASSERT((
-            sake::keyword::satisfies< tagged_args, ParamSpecs >::value));
+        BOOST_STATIC_ASSERT((sake::keyword::satisfies<
+            tagged_args, ParamSpecs >::value));
         typedef typename sake::keyword::
             arg_pack_from_mpl_vector< tagged_args >::type type;
     };
@@ -183,8 +210,7 @@ struct arg_packer
     operator()(fwd2_ref_A0N_a0N) const
     {
         typedef typename result<
-            arg_packer const ( fwd2_param_A0N )
-        >::type result_type;
+            arg_packer const ( fwd2_param_A0N ) >::type result_type;
         return result_type(forward_A0N_a0N);
     }
 

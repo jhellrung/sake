@@ -43,7 +43,9 @@ private:
     { };
     template< class U >
     struct operator_assign_enabler
-        : boost::enable_if_c< operator_assign_enable<U>::value, optional& >
+        : boost::enable_if_c< operator_assign_enable<
+              typename boost_ext::remove_rvalue_reference<U>::type
+          >::value, optional& >
     { };
 public:
 
@@ -133,9 +135,7 @@ public:
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    typename operator_assign_enabler<
-        typename boost_ext::remove_rvalue_reference< U& >::type
-    >::type
+    typename operator_assign_enabler< U& >::type
     operator=(U& x)
     { m_p = get_ptr_dispatch(SAKE_AS_LVALUE(x)); return *this; }
 

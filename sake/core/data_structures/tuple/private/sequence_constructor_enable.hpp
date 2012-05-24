@@ -19,6 +19,7 @@
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
 
@@ -50,7 +51,9 @@ struct sequence_constructor_enable
 
 template< class T, class Sequence >
 struct sequence_constructor_enabler
-    : boost::enable_if_c< sequence_constructor_enable< T, Sequence >::value >
+    : boost::enable_if_c< sequence_constructor_enable<
+          T, typename boost_ext::remove_rvalue_reference< Sequence >::type
+      >::value >
 { };
 
 } // namespace tuple_private

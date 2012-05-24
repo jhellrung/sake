@@ -113,9 +113,7 @@ public:
 
     template< class Sequence >
     compressed_pair(Sequence& s,
-        typename sequence_constructor_enabler<
-            typename boost_ext::remove_rvalue_reference< Sequence& >::type
-        >::type* = 0)
+        typename sequence_constructor_enabler< Sequence& >::type* = 0)
         : m_storage(boost_ext::fusion::at_c<0>(s),
                     boost_ext::fusion::at_c<1>(s))
     { }

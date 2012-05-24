@@ -41,7 +41,9 @@ private:
     { };
     template< class U >
     struct reset_enabler
-        : boost::enable_if_c< reset_enable<U>::value >
+        : boost::enable_if_c< reset_enable<
+              typename boost_ext::remove_rvalue_reference<U>::type
+          >::value >
     { };
 public:
 
@@ -150,9 +152,7 @@ public:
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    typename reset_enabler<
-        typename boost_ext::remove_rvalue_reference< U& >::type
-    >::type
+    typename reset_enabler< U& >::type
     reset(U& x)
     { m_p = get_ptr_dispatch(SAKE_AS_LVALUE(x)); }
 

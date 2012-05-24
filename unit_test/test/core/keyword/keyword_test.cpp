@@ -59,9 +59,9 @@ typedef boost::mpl::vector4<
         sake::keyword::deduced< keyword::tag::d >,
         sake::boost_ext::is_convertible< boost::mpl::_1, D >
     >
-> param_specs;
+> param_spec_types;
 
-typedef sake::keyword::arg_packer< param_specs > arg_packer_type;
+typedef sake::keyword::arg_packer< param_spec_types > arg_packer_type;
 
 /*******************************************************************************
  * sake::keyword::satisfies test
@@ -72,7 +72,7 @@ BOOST_MPL_ASSERT((sake::keyword::satisfies<
         sake::keyword::tagged_value< keyword::tag::a, A const & >,
         sake::keyword::tagged_value< keyword::tag::c, C const & >
     >,
-    param_specs
+    param_spec_types
 >));
 BOOST_MPL_ASSERT((sake::keyword::satisfies<
     boost::mpl::vector3<
@@ -80,7 +80,7 @@ BOOST_MPL_ASSERT((sake::keyword::satisfies<
         sake::keyword::tagged_value< keyword::tag::b, B const & >,
         sake::keyword::tagged_value< keyword::tag::c, C const & >
     >,
-    param_specs
+    param_spec_types
 >));
 BOOST_MPL_ASSERT((sake::keyword::satisfies<
     boost::mpl::vector3<
@@ -88,7 +88,7 @@ BOOST_MPL_ASSERT((sake::keyword::satisfies<
         sake::keyword::tagged_value< keyword::tag::c, C const & >,
         sake::keyword::tagged_value< keyword::tag::d, D const & >
     >,
-    param_specs
+    param_spec_types
 >));
 BOOST_MPL_ASSERT((sake::keyword::satisfies<
     boost::mpl::vector4<
@@ -97,26 +97,26 @@ BOOST_MPL_ASSERT((sake::keyword::satisfies<
         sake::keyword::tagged_value< keyword::tag::c, C const & >,
         sake::keyword::tagged_value< keyword::tag::d, D const & >
     >,
-    param_specs
+    param_spec_types
 >));
 
 BOOST_MPL_ASSERT_NOT((sake::keyword::satisfies<
     boost::mpl::vector0<>,
-    param_specs
+    param_spec_types
 >));
 BOOST_MPL_ASSERT_NOT((sake::keyword::satisfies<
     boost::mpl::vector2<
         sake::keyword::tagged_value< keyword::tag::a, A const & >,
         sake::keyword::tagged_value< keyword::tag::b, B const & >
     >,
-    param_specs
+    param_spec_types
 >));
 BOOST_MPL_ASSERT_NOT((sake::keyword::satisfies<
     boost::mpl::vector2<
         sake::keyword::tagged_value< keyword::tag::a, A const & >,
         sake::keyword::tagged_value< keyword::tag::c, B const & >
     >,
-    param_specs
+    param_spec_types
 >));
 
 /*******************************************************************************

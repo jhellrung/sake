@@ -10,6 +10,7 @@
  *
  * #define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF
  * #define SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+ * #define SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER
  *
  * This provides macros to facilitate workarounds for MSVC and GCC compilers.
  *
@@ -50,6 +51,31 @@
  * #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
  * X const x = { };
  * #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+ *
+ * SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER
+ * --------
+ * MSVC9 requires a primary template definition when a class template with
+ * default template parameters (that depend on previous template parameters) is
+ * friended within another class. E.g., something like the sequence of
+ * constructs
+ *
+ * template< class T > struct W;
+ * template< class T, class = W<T> > struct X;
+ * struct Y { template< class, class > friend struct X; };
+ * template< class T > struct Z : X<T> { };
+ *
+ * will give the error (among others)
+ *
+ * error C2065: 'T' : undeclared identifier
+ * see reference to class template instantiation 'Z<T>' being compiled
+ *
+ * The workaround is to provide a primary template definition of (in this case)
+ * X:
+ *
+ * template< class T, class = W<T> > struct X { };
+ *
+ * This macro expands to nothing on conforming compilers and to "{ }" on
+ * deficient compilers (such as MSVC9).
  ******************************************************************************/
 
 #ifndef SAKE_CORE_CONFIG_HPP
@@ -68,14 +94,20 @@
     SAKE_GNUC_VERSION_OF( __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ )
 #endif // #ifdef __GNUC__
 
-#if SAKE_MSC_VERSION <= 1500
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 #define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF
-#else // #if SAKE_MSC_VERSION <= 1500
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 #define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF template
-#endif // #if SAKE_MSC_VERSION <= 1500
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
-#if SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,4,9)
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,4,9)
 #define SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-#endif // #if SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,4,9)
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,4,9)
+
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
+#define SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER { }
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
+#define SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
 #endif // #ifndef SAKE_CORE_CONFIG_HPP

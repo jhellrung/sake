@@ -240,8 +240,7 @@ public:
 #define SAKE_OVERLOAD_T U
 #define SAKE_OVERLOAD_CONSTRUCTOR_NAME \
     compressed_tuple
-#define SAKE_OVERLOAD_CONSTRUCTOR_INITIALIZATION_LIST( r, \
-    n, U_tuple, x_tuple, forward_x_tuple ) \
+#define SAKE_OVERLOAD_INITIALIZATION_LIST( r, n, U_tuple, x_tuple, forward_x_tuple ) \
     m_storage forward_x_tuple
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple )
 #define SAKE_OVERLOAD_MIN_ARITY         N
@@ -281,9 +280,7 @@ public:
 
     template< class Sequence >
     compressed_tuple(Sequence& s,
-        typename sequence_constructor_enabler<
-            typename boost_ext::remove_rvalue_reference< Sequence& >::type
-        >::type* = 0)
+        typename sequence_constructor_enabler< Sequence& >::type* = 0)
 #if N == 1
         : base_member_(boost_ext::fusion::front(s))
 #else // #if N == 1

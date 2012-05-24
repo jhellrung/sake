@@ -68,13 +68,15 @@ typedef ::boost::mpl::pair< tag::name, void > name;
 
 #define SAKE_TEMPLATE_KEYWORD_VALUE( name ) \
 namespace tag { struct name; } \
-template< class Value > struct name \
+template< class Value > \
+struct name \
     : ::boost::mpl::pair< tag::name, Value > \
 { };
 
 #define SAKE_TEMPLATE_KEYWORD_VALUE_DEFAULT( name, default ) \
 namespace tag { struct name; } \
-template< class Value = default > struct name \
+template< class Value = default > \
+struct name \
     : ::boost::mpl::pair< tag::name, Value >\
 { };
 

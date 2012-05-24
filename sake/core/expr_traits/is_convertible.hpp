@@ -19,7 +19,9 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_object.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
@@ -60,7 +62,11 @@ struct helper< SAKE_RV_REF( T ), true >
 {
     static sake::true_tag  apply(SAKE_RV_REF( T ));
     static sake::false_tag apply(...);
-    static sake::false_tag apply(T&);
+    template< class U >
+    static typename boost::enable_if_c<
+        boost::is_base_of<T,U>::value,
+        sake::false_tag
+    >::type apply(U&);
 };
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 

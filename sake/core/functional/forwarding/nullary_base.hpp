@@ -41,11 +41,12 @@ namespace forwarding
 namespace nullary_base_private
 {
 
+template< class Params >
+struct impl_index;
+
 template<
     class Derived, class Params,
-    int = 1 * boost::mpl::has_key< Params, keyword::tag::result >::value
-        + 2 * boost::mpl::has_key< Params, keyword::tag::nullary_callable >::value
-        + 4 * boost::mpl::has_key< Params, keyword::tag::nullary_const_callable >::value
+    int = impl_index< Params >::value
 >
 struct impl;
 
@@ -84,48 +85,61 @@ protected:
 namespace nullary_base_private
 {
 
-template< class > struct dummy;
+template< class Params >
+struct impl_index
+{
+    static int const value =
+        1 * boost::mpl::has_key< Params, keyword::tag::result >::value
+      + 2 * boost::mpl::has_key< Params, keyword::tag::nullary_callable >::value
+      + 4 * boost::mpl::has_key< Params, keyword::tag::nullary_const_callable >::value;
+};
+
+template< class > struct dummy_param;
 
 #define n 0
 #define specialized_declarations() \
-    template< class T > void operator()(dummy<T>);
+    template< class T > void operator()(dummy_param<T>);
 #define nullary_result_type void
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
 
 #define n 1
 #define specialized_declarations() \
-    typedef typename boost::mpl::at< Params, keyword::tag::result >::type result_type; \
-    template< class T > void operator()(dummy<T>);
+    typedef typename boost::mpl::at< \
+        Params, sake::forwarding::keyword::tag::result >::type result_type; \
+    template< class T > void operator()(dummy_param<T>);
 #define nullary_result_type result_type
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
 
 #define n 3
 #define specialized_declarations() \
-    typedef typename boost::mpl::at< Params, keyword::tag::result >::type result_type; \
+    typedef typename boost::mpl::at< \
+        Params, sake::forwarding::keyword::tag::result >::type result_type; \
     result_type operator()() \
-    { return core_access::apply(derived()); }
+    { return sake::forwarding::core_access::apply(derived()); }
 #define nullary_result_type result_type
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
 
 #define n 5
 #define specialized_declarations() \
-    typedef typename boost::mpl::at< Params, keyword::tag::result >::type result_type; \
+    typedef typename boost::mpl::at< \
+        Params, sake::forwarding::keyword::tag::result >::type result_type; \
     result_type operator()() const \
-    { return core_access::apply(derived()); }
+    { return sake::forwarding::core_access::apply(derived()); }
 #define nullary_result_type result_type
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
 
 #define n 7
 #define specialized_declarations() \
-    typedef typename boost::mpl::at< Params, keyword::tag::result >::type result_type; \
+    typedef typename boost::mpl::at< \
+        Params, sake::forwarding::keyword::tag::result >::type result_type; \
     result_type operator()() \
-    { return core_access::apply(derived()); } \
+    { return sake::forwarding::core_access::apply(derived()); } \
     result_type operator()() const \
-    { return core_access::apply(derived()); }
+    { return sake::forwarding::core_access::apply(derived()); }
 #define nullary_result_type result_type
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
@@ -142,12 +156,18 @@ template< class > struct dummy;
 
 template< class Derived, class Params >
 struct impl< Derived, Params, n >
-    : boost_ext::mpl::at< Params, keyword::tag::chained_base, sake::void_ >::type
+    : boost_ext::mpl::at<
+          Params,
+          sake::forwarding::keyword::tag::chained_base,
+          sake::void_
+      >::type
 {
     specialized_declarations()
 protected:
     typedef typename boost_ext::mpl::at<
-        Params, keyword::tag::chained_base, sake::void_
+        Params,
+        sake::forwarding::keyword::tag::chained_base,
+        sake::void_
     >::type chained_base_type;
 public:
     SAKE_MEMBERWISE_MEM_FUN(
@@ -156,12 +176,11 @@ public:
         (( chained_base_type ))
     )
 protected:
-    friend class core_access;
     typedef Derived derived_type;
-    derived_type& derived()
-    { return *static_cast< derived_type* >(this); }
-    derived_type const & derived() const
-    { return *static_cast< derived_type const * >(this); }
+    Derived& derived()
+    { return *static_cast< Derived* >(this); }
+    Derived const & derived() const
+    { return *static_cast< Derived const * >(this); }
 
     SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
         typename impl,
@@ -175,9 +194,13 @@ protected:
     template< class T >
     explicit impl(SAKE_FWD2_REF( T ) x,
         typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< impl, T >::value >::type* = 0)
-        : chained_base_type(sake::emplacer_constructible< chained_base_type >(sake::forward<T>(x)))
+            boost_ext::is_base_of_sans_qualifiers< impl, T >::value
+        >::type* = 0)
+        : chained_base_type(sake::emplacer_constructible<
+              chained_base_type >(sake::forward<T>(x)))
     { }
+
+    friend class sake::forwarding::core_access;
 
     typedef nullary_result_type protected_nullary_result_type;
     protected_nullary_result_type apply_impl() const;

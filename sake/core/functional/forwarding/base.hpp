@@ -61,7 +61,10 @@ public:
         result< Derived ( T... ) >
     >::type
     operator()(T&&... x)
-    { return core_access::apply(derived(), sake::forward<T>(x)...); }
+    {
+        return sake::forward::core_access::apply(
+            derived(), sake::forward<T>(x)...);
+    }
 
 #else // #if !defined( ... ) && !defined( ... )
 
@@ -72,7 +75,8 @@ public:
 #define SAKE_OVERLOAD_FUNCTION_NAME \
     operator()
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    return core_access::apply( derived(), BOOST_PP_TUPLE_REM_CTOR( n, forward_x_tuple ) );
+    return sake::forwarding::core_access::apply( \
+        derived(), BOOST_PP_TUPLE_REM_CTOR( n, forward_x_tuple ) );
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_FORWARDING_BASE_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_FORWARDING_BASE_FWD_MAX_ARITY
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY    SAKE_FORWARDING_BASE_FWD2_MAX_ARITY
@@ -89,7 +93,10 @@ public:
         result< Derived const ( T... ) >
     >::type
     operator()(T&&... x) const
-    { return core_access::apply(derived(), sake::forward<T>(x)...); }
+    {
+        return sake::forwarding::core_access::apply(
+            derived(), sake::forward<T>(x)...);
+    }
 
 #else // #if !defined( ... ) && !defined( ... )
 
@@ -102,7 +109,8 @@ public:
 #define SAKE_OVERLOAD_DECLARATION_SUFFIX \
     const
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    return core_access::apply( derived(), BOOST_PP_TUPLE_REM_CTOR( n, forward_x_tuple ) );
+    return sake::forwarding::core_access::apply( \
+        derived(), BOOST_PP_TUPLE_REM_CTOR( n, forward_x_tuple ) );
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_FORWARDING_BASE_PERFECT_MAX_ARITY
 #define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_FORWARDING_BASE_FWD_MAX_ARITY
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY    SAKE_FORWARDING_BASE_FWD2_MAX_ARITY
@@ -135,7 +143,7 @@ protected:
             boost_ext::is_base_of_sans_qualifiers< base, T >::value
         >::type* = 0);
 
-    friend class core_access;
+    friend class sake::forwarding::core_access;
 
     template< class Signature >
     struct enable_impl;
@@ -163,7 +171,8 @@ template< class Signature >
 struct base< Derived, Params >::
 enable
 {
-    typedef typename core_access::enable< Signature >::type type;
+    typedef typename sake::forwarding::core_access::
+        enable< Signature >::type type;
     static bool const value = type::value;
 };
 
@@ -181,7 +190,7 @@ result
     : boost_ext::mpl::lazy_at<
           Params,
           keyword::tag::result,
-          core_access::result< Signature >
+          sake::forwarding::core_access::result< Signature >
       >
 { };
 
@@ -189,7 +198,11 @@ template< class Derived, class Params >
 template< class Signature >
 struct base< Derived, Params >::
 result_impl
-    : boost_ext::mpl::at< Params, keyword::tag::result, void >
+    : boost_ext::mpl::at<
+          Params,
+          sake::forwarding::keyword::tag::result,
+          void
+      >
 { };
 
 } // namespace forwarding
