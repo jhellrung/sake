@@ -15,7 +15,7 @@
 #ifndef SAKE_CORE_CURSOR_TRAITS_HPP
 #define SAKE_CORE_CURSOR_TRAITS_HPP
 
-#include <boost/static/assert.hpp>
+#include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
@@ -107,7 +107,7 @@ struct dispatch_end;
 
 template< class C >
 struct dispatch_on_has_type< C, false >
-{ typedef sake::null_introversal_tag introversal; }
+{ typedef sake::null_introversal_tag introversal; };
 
 template< class C >
 struct dispatch_on_has_type< C, true >

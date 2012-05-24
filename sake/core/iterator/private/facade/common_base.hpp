@@ -16,7 +16,6 @@
 #include <sake/boost_ext/mpl/at.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
-#include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/emplacer/constructible.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/keyword.hpp>
@@ -52,10 +51,6 @@ protected:
         typename common_base,
         BOOST_PP_SEQ_NIL
     )
-
-    template< class V >
-    explicit common_base(sake::emplacer< V ( ) >)
-    { }
 };
 
 template< class Derived, class Params >

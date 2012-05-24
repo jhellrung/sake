@@ -7,10 +7,10 @@
  *
  * struct iterator_traits<I>
  *
- * struct iterator_value_type<I>
+ * struct iterator_value<I>
  * struct iterator_reference<I>
  * struct iterator_pointer<I>
- * struct iterator_difference_type<I>
+ * struct iterator_difference<I>
  * struct iterator_traversal<I>
  ******************************************************************************/
 
@@ -34,16 +34,21 @@
 namespace sake
 {
 
-#define define_metafunction( type_ ) \
-template< class I > \
-struct iterator_ ## type_ \
-{ typedef typename sake::iterator_traits<I>::type_ type; };
-define_metafunction( value_type )
-define_metafunction( reference )
-define_metafunction( pointer )
-define_metafunction( difference_type )
-define_metafunction( traversal )
-#undef define_metafunction
+template< class I >
+struct iterator_value
+{ typedef typename sake::iterator_traits<I>::value_type type; };
+template< class I >
+struct iterator_reference
+{ typedef typename sake::iterator_traits<I>::reference type; };
+template< class I >
+struct iterator_pointer
+{ typedef typename sake::iterator_traits<I>::pointer type; };
+template< class I >
+struct iterator_difference
+{ typedef typename sake::iterator_traits<I>::difference_type type; };
+template< class I >
+struct iterator_traversal
+{ typedef typename sake::iterator_traits<I>::traversal type; };
 
 template< class I >
 struct iterator_traits

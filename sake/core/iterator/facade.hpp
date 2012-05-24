@@ -21,15 +21,12 @@
 #ifndef SAKE_CORE_ITERATOR_FACADE_HPP
 #define SAKE_CORE_ITERATOR_FACADE_HPP
 
-#include <boost/utility/enable_if.hpp>
-
-#include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
-
+#include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/private/category.hpp>
-#include <sake/core/iterator/private/facade/function_prototype.hpp>
+#include <sake/core/iterator/private/facade/explicit_constructor_enable.hpp>
 #include <sake/core/iterator/private/facade/operator_arrow_dispatch.hpp>
 #include <sake/core/iterator/private/facade/operator_equality_enable.hpp>
 #include <sake/core/iterator/private/facade/operator_minus_enable.hpp>
@@ -53,6 +50,7 @@ template< class Derived, class Params >
 class iterator_facade
     : public private_::traversal_base< Derived, Params >
 {
+#if 0
     typedef private_::traversal_base< Derived, Params > traversal_base_;
 protected:
     typedef Derived derived_type;
@@ -134,12 +132,39 @@ protected:
         (( traversal_base_ ))
     )
 
+private:
     template< class T >
-    explicit iterator_facade(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< iterator_facade, T >::value
-        >::type* = 0)
+    struct explicit_constructor_enabler
+        : private_::explicit_constructor_enabler< Derived, Params, T >
+    { };
+protected:
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class T >
+    explicit iterator_facade(T&& x,
+        typename explicit_constructor_enabler<T>::type* = 0)
         : traversal_base_(sake::forward<T>(x))
+    { }
+
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class T >
+    explicit iterator_facade(T& x,
+        typename explicit_constructor_enabler< T& >::type* = 0)
+        : traversal_base_(x)
+    { }
+
+    template< class T >
+    explicit iterator_facade(T const & x,
+        typename explicit_constructor_enabler< T const & >::type* = 0)
+        : traversal_base_(x)
+    { }
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class V >
+    explicit iterator_facade(sake::emplacer< V ( ) >)
     { }
 
     friend class sake::iterator_core_access;
@@ -167,55 +192,66 @@ protected:
     difference_type
     operator_minus_end_impl() const
     { return derived() - derived().end(); }
+#endif
 };
 
 /*******************************************************************************
  * iterator_facade relational operators
  ******************************************************************************/
 
-SAKE_ITERATOR_FACADE_function_prototype( inline, operator_equality_enabler, operator== )
+#define function_prototype( x, y ) \
+template< class D0, class P0, class D1, class P1 > \
+inline typename private_::x ## _enabler< D0, P0, D1, P1 >::type \
+y(sake::iterator_facade_adl::iterator_facade< D0, P0 > const & i0, \
+  sake::iterator_facade_adl::iterator_facade< D1, P1 > const & i1)
+
+function_prototype( operator_equality, operator== )
 { return sake::iterator_core_access::operator_equal(i0.derived(), i1.derived()); }
-SAKE_ITERATOR_FACADE_function_prototype( inline, operator_equality_enabler, operator!= )
+function_prototype( operator_equality, operator!= )
 { return !(i0.derived() == i1.derived()); }
 
-SAKE_ITERATOR_FACADE_function_prototype( inline, operator_relational_enabler, operator< )
+function_prototype( operator_relational, operator< )
 { return sake::iterator_core_access::operator_less(i0.derived(), i1.derived()); }
-SAKE_ITERATOR_FACADE_function_prototype( inline, operator_relational_enabler, operator> )
+function_prototype( operator_relational, operator> )
 { return  (i1.derived() < i0.derived()); }
-SAKE_ITERATOR_FACADE_function_prototype( inline, operator_relational_enabler, operator<= )
+function_prototype( operator_relational, operator<= )
 { return !(i1.derived() < i0.derived()); }
-SAKE_ITERATOR_FACADE_function_prototype( inline, operator_relational_enabler, operator>= )
+function_prototype( operator_relational, operator>= )
 { return !(i0.derived() < i1.derived()); }
 
-SAKE_ITERATOR_FACADE_function_prototype( inline, cmp_enabler, cmp )
+function_prototype( cmp, cmp )
 { return sake::iterator_core_access::cmp(i0.derived(), i1.derived()); }
 
 /*******************************************************************************
  * iterator_facade arithmetic operators
  ******************************************************************************/
 
-SAKE_ITERATOR_FACADE_function_prototype( inline, operator_minus_enabler, operator- )
+function_prototype( operator_minus, operator- )
 { return sake::iterator_core_access::operator_minus(i0.derived(), i1.derived()); }
 
-template< class D, class P >
-inline typename private_::operator_minus_begin_enabler<D,P>::type
-operator-(sake::iterator_facade<D,P> const & i, sake::begin_tag)
+#undef function_prototype
+#define function_prototype( x ) \
+template< class D, class P > \
+inline typename private_::operator_minus_ ## x ## _enabler<D,P>::type \
+operator-(sake::iterator_facade<D,P> const & i, sake::x ## _tag)
+
+function_prototype( begin )
 { return sake::iterator_core_access::operator_minus_begin(i.derived()); }
-
-template< class D, class P >
-inline typename private_::operator_minus_begin_enabler<D,P>::type
-operator-(sake::begin_tag, sake::iterator_facade<D,P> const & i)
-{ return -(i.derived() - sake::begin_tag()); }
-
-template< class D, class P >
-inline typename private_::operator_minus_end_enabler<D,P>::type
-operator-(sake::iterator_facade<D,P> const & i, sake::end_tag)
+function_prototype( end )
 { return sake::iterator_core_access::operator_minus_end(i.derived()); }
 
-template< class D, class P >
-inline typename private_::operator_minus_end_enabler<D,P>::type
-operator-(sake::end_tag, sake::iterator_facade<D,P> const & i)
+#undef function_prototype
+#define function_prototype( x ) \
+template< class D, class P > \
+inline typename private_::operator_minus_ ## x ## _enabler<D,P>::type \
+operator-(sake::x ## _tag, sake::iterator_facade<D,P> const & i)
+
+function_prototype( begin )
+{ return -(i.derived() - sake::begin_tag()); }
+function_prototype( end )
 { return -(i.derived() - sake::end_tag()); }
+
+#undef function_prototype
 
 } // namespace iterator_facade_adl
 

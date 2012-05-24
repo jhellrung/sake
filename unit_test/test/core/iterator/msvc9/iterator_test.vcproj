@@ -143,6 +143,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\iterator_adaptor_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\iterator_facade_test.cpp"
 			>
 		</File>

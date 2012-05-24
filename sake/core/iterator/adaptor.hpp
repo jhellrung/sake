@@ -23,7 +23,6 @@
 #define SAKE_CORE_ITERATOR_ADAPTOR_HPP
 
 #include <boost/config.hpp>
-#include <boost/mpl/map/map0.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -34,9 +33,11 @@
 
 #include <sake/core/cursor/traits.hpp>
 #include <sake/core/keyword/arg_packer.hpp>
+#include <sake/core/iterator/adaptor_fwd.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
+#include <sake/core/iterator/private/adaptor/constructor_param_specs.hpp>
+#include <sake/core/iterator/private/adaptor/converting_constructor_enable.hpp>
 #include <sake/core/iterator/private/adaptor/member_base.hpp>
-#include <sake/core/iterator/private/adaptor/param_specs.hpp>
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
@@ -49,7 +50,7 @@ namespace sake
 
 template<
     class Derived, class Base,
-    class Params = boost::mpl::map0<>
+    class Params /*= boost::mpl::map0<>*/
 >
 class iterator_adaptor
     : public iterator_adaptor_private::member_base< Derived, Base, Params >
@@ -70,12 +71,12 @@ public:
 protected:
 
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
-        typename member_base,
+        typename iterator_adaptor,
         (( member_base_ ))
     )
 
 private:
-    typedef iterator_adaptor_private::constructor_param_specs<
+    typedef typename iterator_adaptor_private::constructor_param_specs<
         Base, Params
     >::type constructor_param_specs_;
     typedef sake::keyword::arg_packer<
@@ -83,7 +84,7 @@ private:
     > constructor_arg_packer;
 
     template< class T0 >
-    struct unary_constructor_enable
+    struct explicit_constructor_enable
         : boost_ext::mpl::and2<
               boost::mpl::not_< boost_ext::is_base_of_sans_qualifiers<
                   iterator_adaptor, T0 > >,
@@ -92,8 +93,8 @@ private:
     { };
 
     template< class T0 >
-    struct unary_constructor_enabler
-        : boost::enable_if_c< unary_constructor_enable<
+    struct explicit_constructor_enabler
+        : boost::enable_if_c< explicit_constructor_enable<
               typename boost_ext::remove_rvalue_reference< T0 >::type
           >::value >
     { };
@@ -103,7 +104,7 @@ protected:
 
     template< class T0 >
     explicit iterator_adaptor(T0&& x0,
-        typename unary_constructor_enabler< T0 >::type* = 0)
+        typename explicit_constructor_enabler< T0 >::type* = 0)
         : member_base_(constructor_arg_packer()(sake::forward< T0 >(x0)))
     { }
 
@@ -111,13 +112,13 @@ protected:
 
     template< class T0 >
     explicit iterator_adaptor(T0& x0,
-        typename unary_constructor_enabler< T0& >::type* = 0)
+        typename explicit_constructor_enabler< T0& >::type* = 0)
         : member_base_(constructor_arg_packer()(x0))
     { }
 
     template< class T0 >
     explicit iterator_adaptor(T0 const & x0,
-        typename unary_constructor_enabler< T0 const & >::type* = 0)
+        typename explicit_constructor_enabler< T0 const & >::type* = 0)
         : member_base_(constructor_arg_packer()(x0))
     { }
 
@@ -133,6 +134,24 @@ protected:
 #define SAKE_OVERLOAD_MIN_ARITY         2
 #define SAKE_OVERLOAD_PERFECT_MAX_ARITY 3
 #include SAKE_OVERLOAD_GENERATE()
+
+private:
+    template< class D, class B, class P >
+    struct converting_constructor_enabler
+        : iterator_adaptor_private::converting_constructor_enabler<
+              Base, Params, D, B, P >
+    { };
+public:
+    template< class D, class B, class P >
+    iterator_adaptor(iterator_adaptor<D,B,P>& other,
+        typename converting_constructor_enabler<D,B,P>::type* = 0)
+        : member_base_(other)
+    { }
+    template< class D, class B, class P >
+    iterator_adaptor(iterator_adaptor<D,B,P> const & other,
+        typename converting_constructor_enabler< D const, B, P >::type* = 0)
+        : member_base_(other)
+    { }
 
     using member_base_::protected_base;
 

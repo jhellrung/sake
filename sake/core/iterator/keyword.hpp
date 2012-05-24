@@ -20,8 +20,8 @@
  * struct iterator_keyword::member<T>
  *
  * ... iterator_keyword::_base
- * ... iterator_keyword::_chained_base
  * ... iterator_keyword::_member
+ * ... iterator_keyword::_chained_base
  *
  * This provides the keywords for iterator_facade and iterator_adaptor.
  ******************************************************************************/

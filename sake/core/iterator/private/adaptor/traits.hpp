@@ -59,7 +59,7 @@ struct traits
         Params, sake::iterator_keyword::tag::reference,
         boost::mpl::eval_if_c<
             boost::mpl::has_key<
-                Parmas, sake::iterator_keyword::tag::value >::value,
+                Params, sake::iterator_keyword::tag::value >::value,
             boost::mpl::identity< facade_value_type & >,
             sake::iterator_reference< Base >
         >
@@ -82,14 +82,14 @@ struct traits
 
     typedef typename boost_ext::mpl::at<
         Params, sake::iterator_keyword::tag::operator_relational_enable,
-        sake::is_template_base_of<
+        sake::is_template_base_of2<
             sake::iterator_facade, Base,
             sake::has_operator_less< boost::mpl::_1, boost::mpl::_1 >
         >
     >::type operator_relational_enable;
     typedef typename boost_ext::mpl::at<
         Params, sake::iterator_keyword::tag::operator_minus_enable,
-        sake::is_template_base_of<
+        sake::is_template_base_of2<
             sake::iterator_facade, Base,
             sake::has_operator_minus< boost::mpl::_1, boost::mpl::_1 >
         >
@@ -107,7 +107,7 @@ struct traits
             operator_minus_enable >
     > nominal_param_types;
     typedef typename sake::lazy_insert_keyword_value_if_c<
-        boost::has_key<
+        boost::mpl::has_key<
             Params, sake::iterator_keyword::tag::chained_base >::value,
         nominal_param_types,
         sake::iterator_keyword::chained_base,

@@ -18,7 +18,6 @@
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/private/common_difference_type.hpp>
-#include <sake/core/iterator/private/facade/function_prototype.hpp>
 #include <sake/core/iterator/private/facade/operator_equality_enable.hpp>
 #include <sake/core/iterator/private/facade/operator_minus_enable.hpp>
 #include <sake/core/iterator/private/facade/operator_relational_enable.hpp>
@@ -29,23 +28,41 @@ namespace sake
 
 class iterator_core_access
 {
-    SAKE_ITERATOR_FACADE_function_prototype( friend, operator_equality_enabler, operator== );
-    SAKE_ITERATOR_FACADE_function_prototype( friend, operator_relational_enabler, operator< );
-    SAKE_ITERATOR_FACADE_function_prototype( friend, cmp_enabler, cmp );
-    SAKE_ITERATOR_FACADE_function_prototype( friend, operator_minus_enabler, operator- );
 
-    template< class D, class P >
-    friend typename ::sake::iterator_facade_adl::private_::operator_minus_begin_enabler<D,P>::type
-    operator-(::sake::iterator_facade_adl::iterator_facade<D,P> const & i, sake::begin_tag);
-    template< class D, class P >
-    friend typename ::sake::iterator_facade_adl::private_::operator_minus_end_enabler<D,P>::type
-    operator-(::sake::iterator_facade_adl::iterator_facade<D,P> const & i, sake::end_tag);
+#define declare_friend( x, y ) \
+template< class D0, class P0, class D1, class P1 > \
+    friend typename sake::iterator_facade_adl::private_:: \
+        x ## _enabler< D0, P0, D1, P1 >::type \
+    sake::iterator_facade_adl::y( \
+        sake::iterator_facade_adl::iterator_facade< D0, P0 > const & i0, \
+        sake::iterator_facade_adl::iterator_facade< D1, P1 > const & i1);
+    declare_friend( operator_equality, operator== )
+    declare_friend( operator_relational, operator< )
+    declare_friend( cmp, cmp )
+    declare_friend( operator_minus, operator- )
+#undef declare_friend
 
-    template< class, class > friend class ::sake::iterator_facade_adl::iterator_facade;
-    template< class, class, int > friend class ::sake::iterator_facade_adl::private_::traversal_base;
-    template< class, class, int > friend class ::sake::iterator_facade_adl::private_::begin_introversal_base;
-    template< class, class, int > friend class ::sake::iterator_facade_adl::private_::end_introversal_base;
-    template< class, class, int > friend class ::sake::iterator_facade_adl::private_::common_base;
+#define declare_friend( x ) \
+    template< class D, class P > \
+    friend typename sake::iterator_facade_adl::private_:: \
+        operator_minus_ ## x ## _enabler<D,P>::type \
+    sake::iterator_facade_adl::operator-( \
+        sake::iterator_facade_adl::iterator_facade<D,P> const & i, \
+        sake::x ## _tag);
+    declare_friend( begin )
+    declare_friend( end )
+#undef declare_friend
+
+    template< class, class >
+    friend class sake::iterator_facade_adl::iterator_facade;
+#define declare_friend( x ) \
+    template< class, class, int > \
+    friend class sake::iterator_facade_adl::private_::x ## _base;
+    declare_friend( traversal )
+    declare_friend( begin_introversal )
+    declare_friend( end_introversal )
+    declare_friend( common )
+#undef declare_friend
 
     // Dereferenceable
     template< class Derived >
