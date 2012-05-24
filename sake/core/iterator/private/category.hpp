@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/iterator/private/category.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
@@ -39,8 +39,7 @@ template< class Traversal, class Value >
 struct category
 {
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        Traversal, boost::incrementable_traversal_tag
-    >::value));
+        Traversal, boost::incrementable_traversal_tag >::value));
     BOOST_STATIC_ASSERT((boost_ext::mpl::or2<
         boost_ext::is_convertible< Traversal, std::input_iterator_tag >,
         boost_ext::is_convertible< Traversal, std::output_iterator_tag >
@@ -61,7 +60,7 @@ template< class Value >
 struct category< boost::single_pass_traversal_tag, Value >
 {
     typedef category_with_traversal<
-        input_output_iterator_tag,
+        iterator_private::input_output_iterator_tag,
         boost::single_pass_traversal_tag
     > type;
 };
@@ -78,7 +77,7 @@ struct category< boost::single_pass_traversal_tag, Value const >
 template< class Value >
 struct category< boost::forward_traversal_tag, Value >
 {
-    typedef category_with_traversal<
+    typedef iterator_private::category_with_traversal<
         std::forward_iterator_tag,
         boost::forward_traversal_tag
     > type;
@@ -87,7 +86,7 @@ struct category< boost::forward_traversal_tag, Value >
 template< class Value >
 struct category< boost::bidirectional_traversal_tag, Value >
 {
-    typedef category_with_traversal<
+    typedef iterator_private::category_with_traversal<
         std::bidirectional_iterator_tag,
         boost::bidirectional_traversal_tag
     > type;
@@ -96,7 +95,7 @@ struct category< boost::bidirectional_traversal_tag, Value >
 template< class Value >
 struct category< boost::random_access_traversal_tag, Value >
 {
-    typedef category_with_traversal<
+    typedef iterator_private::category_with_traversal<
         std::random_access_iterator_tag,
         boost::random_access_traversal_tag
     > type;

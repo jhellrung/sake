@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/iterator/private/facade/operator_bracket_dispatch.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
@@ -24,35 +24,76 @@
 namespace sake
 {
 
-namespace iterator_facade_private
+namespace iterator_facade_adl
+{
+
+namespace private_
 {
 
 /*******************************************************************************
  * operator[] must return a proxy in case iterator destruction invalidates
  * referents.
  * To see why, consider the following implementation of operator[]:
- *     reference operator[](difference_param_type n) const
+ *     reference operator[](difference_type n) const
  *     { return *(*this + n); }
  * The problem here is that operator[] would return a reference created from
  * a temporary iterator.
  ******************************************************************************/
 
+template< class Value >
+struct operator_bracket_dispatch_index
+{ static int const value = 0; };
+
+template< class Value >
+struct operator_bracket_dispatch_index< Value const >
+{
+    static int const value = 1 + (boost::has_trivial_copy< Value >::value
+                               || sake::is_by_value_optimal< Value >::value);
+};
+
 template<
-    class Value, class Reference, class I,
-    bool = boost::has_trivial_copy< Value >::value
-        || sake::is_by_value_optimal< Value >::value
+    class This, class Value, class Reference,
+    int = operator_bracket_dispatch_index< Value >::value
 >
-struct operator_bracket_dispatch
+struct operator_bracket_dispatch;
+
+template< class This, class Value, class Reference >
+struct operator_bracket_dispatch< This, Value const, Reference, 2 >
+{
+    typedef Value type;
+    static type apply(This const & this_)
+    { return *this_; }
+};
+
+template< class This, class Value, class Reference >
+struct operator_bracket_dispatch< This, Value const, Reference, 1 >
 {
     class proxy
     {
-        I const m_i;
-        proxy(I const & i) : m_i(i) { }
+        This const m_this;
+        explicit proxy(This const & this_) : m_this(this_) { }
         friend struct operator_bracket_dispatch;
     public:
         SAKE_NONCOPY_ASSIGNABLE( proxy )
-        operator Reference() const
-        { return *m_i; }
+        operator Reference() const { return *m_this; }
+    };
+
+    typedef proxy type;
+    static type apply(This const & this_)
+    { return proxy(this_); }
+};
+
+template< class This, class Value, class Reference >
+struct operator_bracket_dispatch< This, Value, Reference, 0 >
+{
+    class proxy
+    {
+        This const m_this;
+        explicit proxy(This const & this_) : m_this(this_) { }
+        friend struct operator_bracket_dispatch;
+    public:
+        SAKE_NONCOPY_ASSIGNABLE( proxy )
+        operator Reference() const { return *m_this; }
 
     private:
         template< class T >
@@ -71,7 +112,7 @@ struct operator_bracket_dispatch
         template< class T >
         typename operator_assign_enabler<T>::type
         operator=(T&& x) const
-        { *m_i = sake::forward<T>(x); return *this; }
+        { *m_this = sake::forward<T>(x); return *this; }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -88,11 +129,11 @@ struct operator_bracket_dispatch
         typename operator_assign_rv_sink_traits::template
             ref_enabler< T, proxy const & >::type
         operator=(T& x) const
-        { *m_i = x; return *this; }
+        { *m_this = x; return *this; }
         // Value rvalues
         proxy const &
         operator=(typename operator_assign_rv_sink_traits::primary_type x) const
-        { *m_i = sake::move(x.value); return *this; }
+        { *m_this = sake::move(x.value); return *this; }
         // movable implicit rvalues
         proxy const &
         operator=(operator_assign_rv_sink_default_type x) const
@@ -102,45 +143,20 @@ struct operator_bracket_dispatch
         typename operator_assign_rv_sink_traits::template
             cref_enabler< T, proxy const & >::type
         operator=(T const & x) const
-        { *m_i = x; return *this; }
+        { *m_this = x; return *this; }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     };
 
-    typedef proxy result_type;
-    static result_type apply(I const & i)
-    { return proxy(i); }
+    typedef proxy type;
+    static type apply(This const & this_)
+    { return proxy(this_); }
 };
 
-template< class Value, class Reference, class I >
-struct operator_bracket_dispatch< Value const, Reference, I, false >
-{
-    class proxy
-    {
-        I const m_i;
-        proxy(I const & i) : m_i(i) { }
-        friend struct operator_bracket_dispatch;
-    public:
-        SAKE_NONCOPY_ASSIGNABLE( proxy )
-        operator Reference() const
-        { return *m_i; }
-    };
+} // namespace private_
 
-    typedef proxy result_type;
-    static result_type apply(I const & i)
-    { return proxy(i); }
-};
-
-template< class Value, class Reference, class I >
-struct operator_bracket_dispatch< Value const, Reference, I, true >
-{
-    typedef Value result_type;
-    static result_type apply(I const & i)
-    { return *i; }
-};
-
-} // namespace iterator_facade_private
+} // namespace iterator_facade_adl
 
 } // namespace sake
 

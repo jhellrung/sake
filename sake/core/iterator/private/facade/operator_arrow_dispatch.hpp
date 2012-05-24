@@ -14,7 +14,10 @@
 namespace sake
 {
 
-namespace iterator_facade_private
+namespace iterator_facade_adl
+{
+
+namespace private_
 {
 
 /*******************************************************************************
@@ -39,20 +42,22 @@ struct operator_arrow_dispatch
         Reference const * operator->() const
         { return sake::address_of(m_ref); }
     };
-    typedef proxy result_type;
-    result_type apply(Reference const & x)
-    { return result_type(x); }
+    typedef proxy type;
+    static type apply(Reference const & x)
+    { return type(x); }
 };
 
 template< class T >
 struct operator_arrow_dispatch< T& >
 {
-    typedef typename sake::result_of::address_of< T& >::type result_type;
-    result_type apply(T& x)
+    typedef typename sake::result_of::address_of< T& >::type type;
+    static type apply(T& x)
     { return sake::address_of(x); }
 };
 
-} // namespace iterator_facade_private
+} // namespace private_
+
+} // namespace iterator_facade_adl
 
 } // namespace sake
 
