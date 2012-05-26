@@ -13,11 +13,18 @@
 
 #include <boost/concept/usage.hpp>
 
+#include <sake/core/config.hpp>
+
 namespace sake
 {
 
 namespace concepts
 {
+
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 
 template< class T, class U = T >
 struct RelationalComparable
@@ -40,6 +47,10 @@ private:
 
     void assert_result(bool);
 };
+
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+#pragma GCC diagnostic pop
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 
 } // namespace concepts
 

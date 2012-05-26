@@ -96,7 +96,7 @@ dispatch(I0 const & i0, I1 const & i1, sake::int_tag<2>)
 template< class I0, class I1 >
 inline void
 dispatch(I0 const & i0, I1 const & i1, sake::int_tag<1>)
-{ ::sake_iter_swap_private::adl(x1, x0); }
+{ ::sake_iter_swap_private::adl(i1, i0); }
 
 template< class I0, class I1 >
 inline void

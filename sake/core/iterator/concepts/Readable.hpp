@@ -18,6 +18,7 @@
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/concepts/CopyAssignable.hpp>
 #include <sake/core/concepts/CopyConstructible.hpp>
 #include <sake/core/iterator/traits.hpp>
@@ -27,6 +28,11 @@ namespace sake
 
 namespace iterator_concepts
 {
+
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 
 template< class I >
 struct Readable
@@ -48,6 +54,10 @@ private:
 
     void assert_result(value_type const &);
 };
+
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+#pragma GCC diagnostic pop
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 
 } // namespace iterator_concepts
 

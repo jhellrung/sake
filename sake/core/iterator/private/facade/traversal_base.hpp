@@ -137,7 +137,7 @@ protected:
         typename boost::disable_if_c<
             boost_ext::is_base_of_sans_qualifiers< traversal_base, T >::value
         >::type* = 0)
-        : traversal_base_(boost_ext::forward<T>(x))
+        : traversal_base_(sake::forward<T>(x))
     { }
 };
 
@@ -201,7 +201,7 @@ protected:
         typename boost::disable_if_c<
             boost_ext::is_base_of_sans_qualifiers< traversal_base, T >::value
         >::type* = 0)
-        : traversal_base_(boost_ext::forward<T>(x))
+        : traversal_base_(sake::forward<T>(x))
     { }
 
     friend class sake::iterator_core_access;

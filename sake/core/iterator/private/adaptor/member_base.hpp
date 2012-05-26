@@ -174,7 +174,7 @@ protected:
     member()
     { return member_storage_::get(m_base_and_member.second()); }
     typename boost_ext::add_reference_add_const< member_type >::type
-    member()
+    member() const
     { return member_storage_::get(m_base_and_member.second()); }
 
 private:

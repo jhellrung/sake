@@ -20,6 +20,7 @@
 #include <sake/boost_ext/type_traits/is_same_sans_cv.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/iterator/concepts/Readable.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/utility/using_typedef.hpp>
@@ -29,6 +30,11 @@ namespace sake
 
 namespace iterator_concepts
 {
+
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 
 template< class I >
 struct Lvalue
@@ -59,6 +65,10 @@ private:
         boost::is_same< T&, reference >::value >::type
     assert_result(T&);
 };
+
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+#pragma GCC diagnostic pop
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 
 } // namespace iterator_concepts
 

@@ -15,6 +15,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/cursor/traits.hpp>
+#include <sake/core/cursor/traits_fwd.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/utility/int_tag.hpp>
@@ -67,7 +68,7 @@ inline bool
 dispatch(C const & c, sake::int_tag<0>)
 {
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        sake::cursor_traits<C>::introversal,
+        typename sake::cursor_traits<C>::introversal,
         sake::end_access_introversal_tag
     >::value));
     return c == sake::cursor_traits<C>::end(c);

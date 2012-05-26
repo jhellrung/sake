@@ -15,6 +15,7 @@
 
 #include <boost/concept/usage.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/concepts/CopyConstructible.hpp>
 #include <sake/core/iterator/traits.hpp>
 
@@ -23,6 +24,11 @@ namespace sake
 
 namespace iterator_concepts
 {
+
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 
 template<
     class I,
@@ -45,6 +51,10 @@ template< class I >
 struct Writable< I, void >
     : sake::concepts::CopyConstructible<I>
 { };
+
+#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+#pragma GCC diagnostic pop
+#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 
 } // namespace iterator_concepts
 

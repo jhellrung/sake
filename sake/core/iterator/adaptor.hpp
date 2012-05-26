@@ -69,6 +69,7 @@ public:
     { return protected_base(); }
 
 protected:
+    using member_base_::derived;
 
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename iterator_adaptor,
