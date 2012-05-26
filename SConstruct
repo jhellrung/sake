@@ -18,10 +18,14 @@ vars.AddVariables(
 env = Environment(variables=vars)
 Help(vars.GenerateHelpText(env))
 
-## Boost location.
+## BOOST_ROOT
 if not env.has_key('BOOST_ROOT'):
     if not os.environ.has_key('BOOST_ROOT'):
         print("*** ERROR: Undefined BOOST_ROOT")
+        print("           Consider setting the BOOST_ROOT environment variable in your")
+        print("           .bashrc or .cshrc, e.g.:")
+        print("               [.bashrc] export BOOST_ROOT=/home/user/boost_1_xy_z")
+        print("               [.cshrc]  setenv BOOST_ROOT /home/user/boost_1_xy_z")
         Exit(2)
     env['BOOST_ROOT'] = os.environ.get('BOOST_ROOT')
 print("BOOST_ROOT = " + env['BOOST_ROOT'])
@@ -42,7 +46,7 @@ link_flags = ''
 if build_config != 'debug':
     cpp_defines.extend(['NDEBUG'])
 if platform == 'win32':
-    print("*** ERROR: Unknown CXX:", env['CXX'])
+    print("*** ERROR: Unknown CXX: " + env['CXX'])
     Exit(2)
     cpp_defines.extend(['NOMINMAX'])
     cxx_flags += ' /nologo /errorReport:none'
@@ -100,6 +104,9 @@ elif platform == 'posix':
                     cxx_flags += ' -msse3 -msse4a -mabm'
                     if march in ['amdfam10']: break
                     assert False
+        else:
+            print("*** WARNING: MARCH not set.")
+            print("             Consider setting it in SConstruct.variables.")
         cxx_flags += ' -Wall' \
                      ' -Woverloaded-virtual' \
                      ' -Wsign-promo' \
@@ -125,7 +132,7 @@ elif platform == 'posix':
             cxx_flags += ' -pg'
             link_flags += ' -pg'
     else:
-        print("Unknown CXX:", env['CXX'])
+        print("*** ERROR: Unknown CXX: " + env['CXX'])
         Exit(2)
 else:
     print("Unknown PLATFORM:", platform)
