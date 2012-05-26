@@ -280,9 +280,16 @@ emplacer_construct(sake::emplacer< Signature > e)
  ******************************************************************************/
 
 template< class T, class Signature >
-inline T
+inline typename boost::enable_if_c< boost::is_void<
+    typename sake::emplacer< Signature >::value_type >::value, T >::type
 emplacer_constructible(sake::emplacer< Signature > e)
-{ return sake::emplacer_construct<T>(e); }
+{ return e.template construct<T>(); }
+
+template< class T, class Signature >
+inline typename boost::enable_if_c< boost::is_same<
+    T, typename sake::emplacer< Signature >::value_type >::value, T >::type
+emplacer_constructible(sake::emplacer< Signature > e)
+{ return e.construct(); }
 
 template< class T, class V, class U0 >
 inline typename boost::lazy_enable_if_c<
