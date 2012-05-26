@@ -72,9 +72,9 @@ class operator_bracket_base< T, Traversal, Access, false >
 template< class T, class Traversal, class Access >
 class operator_bracket_base< T, Traversal, Access, true >
 {
-    typedef typename operator_bracket_proxy< T, Access >::type type;
+    typedef operator_bracket_proxy< T, Access > type;
 public:
-    type operator[](std::ptrdiff_t)
+    type operator[](std::ptrdiff_t) const
     { return type(); }
 };
 

@@ -28,20 +28,21 @@ struct writable_tag { };
 struct swappable_tag { };
 
 struct readable_writable_tag
-    : iterator_archetypes::readable_tag,
-      iterator_archetypes::writable_tag,
-      iterator_archetypes::swappable_tag
+    : sake::iterator_archetypes::readable_tag,
+      sake::iterator_archetypes::writable_tag,
+      sake::iterator_archetypes::swappable_tag
 { };
 
 struct lvalue_tag
-    : iterator_archetypes::readable_tag
+    : sake::iterator_archetypes::readable_tag
 { };
 
 typedef iterator_archetypes::lvalue_tag readable_lvalue_tag;
 
 struct writable_lvalue_tag
-    : iterator_archetypes::lvalue_tag,
-      iterator_archetypes::swappable_tag
+    : sake::iterator_archetypes::lvalue_tag,
+      sake::iterator_archetypes::writable_tag,
+      sake::iterator_archetypes::swappable_tag
 { };
 
 } // namespace iterator_archetypes

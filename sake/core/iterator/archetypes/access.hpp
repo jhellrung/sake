@@ -30,9 +30,8 @@ namespace iterator_archetypes
 #define define_archetype( access ) \
 template< class T, class Traversal = boost::incrementable_traversal_tag > \
 struct access \
-    : sake::archetypes::iterator< \
-          T, sake::iterator_archetypes::access ## _tag, Traversal > \
-{ };
+{ typedef sake::archetypes::iterator< \
+    T, Traversal, sake::iterator_archetypes::access ## _tag > type; };
 define_archetype( readable )
 define_archetype( writable )
 define_archetype( swappable )

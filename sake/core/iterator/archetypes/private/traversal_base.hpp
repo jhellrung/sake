@@ -22,18 +22,18 @@ namespace archetypes
 namespace iterator_private
 {
 
-template< class Traversal >
+template< class Derived, class Traversal >
 struct traversal_base;
 
-template<>
-struct traversal_base< boost::incrementable_traversal_tag >
+template< class Derived >
+struct traversal_base< Derived, boost::incrementable_traversal_tag >
 {
     typedef void difference_type;
 
-    traversal_base& operator++()
-    { return *this; }
-    traversal_base operator++(int)
-    { return *this; }
+    Derived& operator++()
+    { return *static_cast< Derived* >(this); }
+    Derived operator++(int)
+    { return *static_cast< Derived* >(this); }
 
 protected:
     // Disable default constructibility
@@ -41,55 +41,61 @@ protected:
     { }
 };
 
-template<>
-struct traversal_base< boost::single_pass_traversal_tag >
-    : traversal_base< boost::incrementable_traversal_tag >
+template< class Derived >
+struct traversal_base< Derived, boost::single_pass_traversal_tag >
+    : traversal_base< Derived, boost::incrementable_traversal_tag >
 {
     inline friend bool operator==(traversal_base, traversal_base)
     { return true; }
     inline friend bool operator!=(traversal_base, traversal_base)
     { return false; }
+
+protected:
+    // Disable default constructibility
+    explicit traversal_base(int)
+        : traversal_base< Derived, boost::incrementable_traversal_tag >(0)
+    { }
 };
 
-template<>
-struct traversal_base< boost::forward_traversal_tag >
-    : traversal_base< boost::single_pass_traversal_tag >
+template< class Derived >
+struct traversal_base< Derived, boost::forward_traversal_tag >
+    : traversal_base< Derived, boost::single_pass_traversal_tag >
 {
     typedef std::ptrdiff_t difference_type;
 
     traversal_base()
-        : traversal_base< boost::single_pass_traversal_tag >(0)
+        : traversal_base< Derived, boost::single_pass_traversal_tag >(0)
     { }
 };
 
-template<>
-struct traversal_base< boost::bidirectional_traversal_tag >
-    : traversal_base< boost::forward_traversal_tag >
+template< class Derived >
+struct traversal_base< Derived, boost::bidirectional_traversal_tag >
+    : traversal_base< Derived, boost::forward_traversal_tag >
 {
-    traversal_base& operator--()
-    { return *this; }
-    traversal_base operator--(int)
-    { return *this; }
+    Derived& operator--()
+    { return *static_cast< Derived* >(this); }
+    Derived operator--(int)
+    { return *static_cast< Derived* >(this); }
 };
 
-template<>
-struct traversal_base< boost::random_access_traversal_tag >
-    : traversal_base< boost::bidirectional_traversal_tag >
+template< class Derived >
+struct traversal_base< Derived, boost::random_access_traversal_tag >
+    : traversal_base< Derived, boost::bidirectional_traversal_tag >
 {
     typedef std::ptrdiff_t difference_type;
 
-    traversal_base& operator+=(difference_type)
-    { return *this; }
-    traversal_base& operator-=(difference_type)
-    { return *this; }
+    Derived& operator+=(difference_type)
+    { return *static_cast< Derived* >(this); }
+    Derived& operator-=(difference_type)
+    { return *static_cast< Derived* >(this); }
 
-    traversal_base operator+(difference_type)
-    { return *this; }
-    traversal_base operator-(difference_type)
-    { return *this; }
+    Derived operator+(difference_type) const
+    { return *static_cast< Derived const * >(this); }
+    Derived operator-(difference_type) const
+    { return *static_cast< Derived const * >(this); }
 
-    inline friend traversal_base operator+(difference_type, traversal_base)
-    { return traversal_base(); }
+    inline friend Derived operator+(difference_type, traversal_base)
+    { return Derived(); }
 
     inline friend difference_type operator-(traversal_base, traversal_base)
     { return 0; }

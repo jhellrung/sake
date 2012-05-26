@@ -147,6 +147,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\iterator_archetypes_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\iterator_facade_test.cpp"
 			>
 		</File>

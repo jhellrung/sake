@@ -49,7 +49,7 @@ template< class Access >
 struct proxy_reference< void, Access, true >
 {
     template< class T >
-    proxy_reference const & operator=(T const &) const;
+    proxy_reference const & operator=(T const &) const
     { return *this; }
 };
 
@@ -69,7 +69,7 @@ struct reference_dispatch< T, Access, false >
 };
 
 template< class T, class Access >
-struct reference_dispatch< T, Access, false >
+struct reference_dispatch< T, Access, true >
 {
     typedef T& type;
     static type apply()

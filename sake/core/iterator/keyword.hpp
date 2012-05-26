@@ -23,12 +23,19 @@
  * ... iterator_keyword::_member
  * ... iterator_keyword::_chained_base
  *
+ * typedef ... iterator_keyword::incrementable_traversal
+ * typedef ... iterator_keyword::single_pass_traversal
+ * typedef ... iterator_keyword::forward_traversal
+ * typedef ... iterator_keyword::bidirectional_traversal
+ * typedef ... iterator_keyword::random_access_traversal
+ *
  * This provides the keywords for iterator_facade and iterator_adaptor.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_KEYWORD_HPP
 #define SAKE_CORE_ITERATOR_KEYWORD_HPP
 
+#include <boost/iterator/iterator_categories.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/core/keyword/keyword.hpp>
@@ -52,18 +59,30 @@ SAKE_TEMPLATE_KEYWORD_VALUE( member )
 SAKE_TEMPLATE_KEYWORD_VALUE( compare_enable )
 template< bool Cond >
 struct compare_enable_c
-    : compare_enable< boost::integral_constant< bool, Cond > >
+    : sake::iterator_keyword::compare_enable<
+          boost::integral_constant< bool, Cond > >
 { };
 
 SAKE_TEMPLATE_KEYWORD_VALUE( difference_enable )
 template< bool Cond >
 struct difference_enable_c
-    : difference_enable< boost::integral_constant< bool, Cond > >
+    : sake::iterator_keyword::difference_enable<
+          boost::integral_constant< bool, Cond > >
 { };
 
 SAKE_KEYWORD( base )
 SAKE_KEYWORD( chained_base )
 SAKE_KEYWORD( member )
+
+#define typedef_traversal( name ) \
+typedef sake::iterator_keyword::traversal< \
+    boost::name ## _traversal_tag > name ## _traversal;
+typedef_traversal( incrementable )
+typedef_traversal( single_pass )
+typedef_traversal( forward )
+typedef_traversal( bidirectional )
+typedef_traversal( random_access )
+#undef typedef_traversal
 
 } // namespace iterator_keyword
 

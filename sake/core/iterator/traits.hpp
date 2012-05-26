@@ -23,8 +23,11 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/is_void.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/if.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
@@ -80,8 +83,13 @@ struct iterator_traits
 
     BOOST_STATIC_ASSERT((!boost_ext::is_reference< value_type >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< value_type >::value));
-    BOOST_STATIC_ASSERT((boost::is_integral< difference_type >::value));
-    BOOST_STATIC_ASSERT((boost::is_signed< difference_type >::value));
+    BOOST_STATIC_ASSERT((boost_ext::mpl::or2<
+        boost::is_void< difference_type >,
+        boost_ext::mpl::and2<
+            boost::is_integral< difference_type >,
+            boost::is_signed< difference_type >
+        >
+    >::value));
 
 #define is_convertible_( tag ) boost_ext::is_convertible< category, tag >
     typedef typename boost_ext::mpl::

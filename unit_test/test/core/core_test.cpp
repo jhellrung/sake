@@ -15,6 +15,7 @@ void data_structures_test(sake::test::environment& env);
 void emplacer_test(sake::test::environment& env);
 void expr_traits_test(sake::test::environment& env);
 void introspection_test(sake::test::environment& env);
+void iterator_test(sake::test::environment& env);
 void keyword_test(sake::test::environment& env);
 void math_test(sake::test::environment& env);
 void memory_test(sake::test::environment& env);
@@ -28,6 +29,7 @@ void core_test(sake::test::environment& env)
     env("emplacer", &emplacer_test);
     env("expr_traits", &expr_traits_test);
     env("introspection", &introspection_test);
+    env("iterator", &iterator_test);
     env("keyword", &keyword_test);
     env("math", &math_test);
     env("memory", &memory_test);

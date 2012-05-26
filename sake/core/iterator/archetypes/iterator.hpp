@@ -25,6 +25,7 @@
 #include <sake/core/iterator/archetypes/private/pointer_dispatch.hpp>
 #include <sake/core/iterator/archetypes/private/reference_dispatch.hpp>
 #include <sake/core/iterator/archetypes/private/traversal_base.hpp>
+#include <sake/core/iterator/private/category.hpp>
 
 namespace sake
 {
@@ -34,8 +35,10 @@ namespace archetypes
 
 template< class T, class Traversal, class Access >
 struct iterator
-    : sake::archetypes::iterator_private::traversal_base< Traversal >,
-      sake::archetypes::iterator_private::operator_bracket_base< T, Traversal, Access >
+    : sake::archetypes::iterator_private::traversal_base<
+          iterator< T, Traversal, Access >, Traversal >,
+      sake::archetypes::iterator_private::operator_bracket_base<
+          T, Traversal, Access >
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));

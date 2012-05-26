@@ -170,7 +170,7 @@ public:
     // SinglePass
     template< class Other >
     bool
-    derived_equal(Other const & other)
+    derived_equal(Other const & other) const
     { return base() == other.base(); }
 
     // Bidirectional
@@ -185,21 +185,21 @@ public:
 
     template< class Other >
     bool
-    derived_less(Other const & other)
+    derived_less(Other const & other) const
     { return base() < other.base(); }
     template< class Other >
     bool
-    derived_less_equal(Other const & other)
+    derived_less_equal(Other const & other) const
     { return base() <= other.base(); }
 
     template< class Other >
     sake::sign_t
-    derived_cmp(Other const & other)
+    derived_cmp(Other const & other) const
     { return sake::cmp(base(), other.base()); }
 
     template< class Other >
     difference_type
-    derived_difference(Other const & other)
+    derived_difference(Other const & other) const
     { return base() - other.base(); }
 
     // BeginDetect
