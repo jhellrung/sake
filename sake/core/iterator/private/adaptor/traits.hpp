@@ -81,19 +81,19 @@ struct traits
     >::type cursor_introversal;
 
     typedef typename boost_ext::mpl::at<
-        Params, sake::iterator_keyword::tag::operator_relational_enable,
+        Params, sake::iterator_keyword::tag::compare_enable,
         sake::is_template_base_of2<
             sake::iterator_facade, Base,
             sake::has_operator_less< boost::mpl::_1, boost::mpl::_1 >
         >
-    >::type operator_relational_enable;
+    >::type compare_enable;
     typedef typename boost_ext::mpl::at<
-        Params, sake::iterator_keyword::tag::operator_minus_enable,
+        Params, sake::iterator_keyword::tag::difference_enable,
         sake::is_template_base_of2<
             sake::iterator_facade, Base,
             sake::has_operator_minus< boost::mpl::_1, boost::mpl::_1 >
         >
-    >::type operator_minus_enable;
+    >::type difference_enable;
 
     typedef boost::mpl::map7<
         sake::iterator_keyword::value< facade_value_type >,
@@ -101,10 +101,8 @@ struct traits
         sake::iterator_keyword::difference< difference_type >,
         sake::iterator_keyword::traversal< iterator_traversal >,
         sake::iterator_keyword::introversal< cursor_introversal >,
-        sake::iterator_keyword::operator_relational_enable<
-            operator_relational_enable >,
-        sake::iterator_keyword::operator_minus_enable<
-            operator_minus_enable >
+        sake::iterator_keyword::compare_enable< compare_enable >,
+        sake::iterator_keyword::difference_enable< difference_enable >
     > nominal_param_types;
     typedef typename sake::lazy_insert_keyword_value_if_c<
         boost::mpl::has_key<

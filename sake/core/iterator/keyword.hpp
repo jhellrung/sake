@@ -11,10 +11,10 @@
  * struct iterator_keyword::traversal<T>
  * struct iterator_keyword::introversal<T>
  *
- * struct iterator_keyword::operator_relational_enable<T>
- * struct iterator_keyword::operator_relational_enable_c< Cond >
- * struct iterator_keyword::operator_minus_enable<T>
- * struct iterator_keyword::operator_minus_enable_c< Cond >
+ * struct iterator_keyword::compare_enable<T>
+ * struct iterator_keyword::compare_enable_c< Cond >
+ * struct iterator_keyword::difference_enable<T>
+ * struct iterator_keyword::difference_enable_c< Cond >
  *
  * struct iterator_keyword::chained_base<T>
  * struct iterator_keyword::member<T>
@@ -49,16 +49,16 @@ SAKE_TEMPLATE_KEYWORD_VALUE( introversal )
 SAKE_TEMPLATE_KEYWORD_VALUE( chained_base )
 SAKE_TEMPLATE_KEYWORD_VALUE( member )
 
-SAKE_TEMPLATE_KEYWORD_VALUE( operator_relational_enable )
+SAKE_TEMPLATE_KEYWORD_VALUE( compare_enable )
 template< bool Cond >
-struct operator_relational_enable_c
-    : operator_relational_enable< boost::integral_constant< bool, Cond > >
+struct compare_enable_c
+    : compare_enable< boost::integral_constant< bool, Cond > >
 { };
 
-SAKE_TEMPLATE_KEYWORD_VALUE( operator_minus_enable )
+SAKE_TEMPLATE_KEYWORD_VALUE( difference_enable )
 template< bool Cond >
-struct operator_minus_enable_c
-    : operator_minus_enable< boost::integral_constant< bool, Cond > >
+struct difference_enable_c
+    : difference_enable< boost::integral_constant< bool, Cond > >
 { };
 
 SAKE_KEYWORD( base )

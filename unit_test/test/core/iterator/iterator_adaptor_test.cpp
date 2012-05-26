@@ -13,7 +13,12 @@
 namespace sake_unit_test
 {
 
-void iterator_adaptor_test(sake::test::environment& /*env*/)
-{ }
+namespace
+{
+} // namespace
+
+void iterator_adaptor_test(sake::test::environment& env)
+{
+}
 
 } // namespace sake_unit_test

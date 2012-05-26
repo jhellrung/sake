@@ -30,17 +30,17 @@ template< class D0, class P0, class D1, class P1 > \
 inline typename private_::x ## _enabler< D0, P0, D1, P1 >::type \
 y(sake::iterator_facade_adl::iterator_facade< D0, P0 > const & i0, \
   sake::iterator_facade_adl::iterator_facade< D1, P1 > const & i1);
-forward_declare( operator_equality, operator== )
-forward_declare( operator_relational, operator< )
+forward_declare( equal, operator== )
+forward_declare( compare, operator< )
 forward_declare( cmp, cmp )
-forward_declare( operator_minus, operator- )
+forward_declare( difference, operator- )
 #undef forward_declare
 
 #define forward_declare( x ) \
 namespace private_ \
-{ template< class D, class P > struct operator_minus_ ## x ## _enabler; } \
+{ template< class D, class P > struct difference_with_ ## x ## _enabler; } \
 template< class D, class P > \
-inline typename private_::operator_minus_ ## x ## _enabler<D,P>::type \
+inline typename private_::difference_with_ ## x ## _enabler<D,P>::type \
 operator-(sake::iterator_facade_adl::iterator_facade<D,P> const & i, \
           sake::x ## _tag);
 forward_declare( begin )

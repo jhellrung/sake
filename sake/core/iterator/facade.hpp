@@ -13,7 +13,7 @@
  * - iterator_keyword::difference
  * - iterator_keyword::traversal
  * - iterator_keyword::introversal
- * - iterator_keyword::operator_relational_enable
+ * - iterator_keyword::compare_enable
  * - iterator_keyword::operator_minus_enable
  * - iterator_keyword::chained_base
  *
@@ -44,11 +44,13 @@
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/private/category.hpp>
+#include <sake/core/iterator/private/facade/compare_enable.hpp>
+#include <sake/core/iterator/private/facade/difference_enable.hpp>
+#include <sake/core/iterator/private/facade/difference_with_begin_enable.hpp>
+#include <sake/core/iterator/private/facade/difference_with_end_enable.hpp>
+#include <sake/core/iterator/private/facade/equal_enable.hpp>
 #include <sake/core/iterator/private/facade/explicit_constructor_enable.hpp>
 #include <sake/core/iterator/private/facade/operator_arrow_dispatch.hpp>
-#include <sake/core/iterator/private/facade/operator_equality_enable.hpp>
-#include <sake/core/iterator/private/facade/operator_minus_enable.hpp>
-#include <sake/core/iterator/private/facade/operator_relational_enable.hpp>
 #include <sake/core/iterator/private/facade/traits.hpp>
 #include <sake/core/iterator/private/facade/traversal_base.hpp>
 #include <sake/core/math/sign.hpp>
@@ -227,18 +229,18 @@ inline typename private_::x ## _enabler< D0, P0, D1, P1 >::type \
 y(sake::iterator_facade_adl::iterator_facade< D0, P0 > const & i0, \
   sake::iterator_facade_adl::iterator_facade< D1, P1 > const & i1)
 
-function_prototype( operator_equality, operator== )
+function_prototype( equal, operator== )
 { return sake::iterator_core_access::equal(i0.derived(), i1.derived()); }
-function_prototype( operator_equality, operator!= )
+function_prototype( equal, operator!= )
 { return !(i0.derived() == i1.derived()); }
 
-function_prototype( operator_relational, operator< )
+function_prototype( compare, operator< )
 { return sake::iterator_core_access::less(i0.derived(), i1.derived()); }
-function_prototype( operator_relational, operator> )
+function_prototype( compare, operator> )
 { return  (i1.derived() < i0.derived()); }
-function_prototype( operator_relational, operator<= )
+function_prototype( compare, operator<= )
 { return !(i1.derived() < i0.derived()); }
-function_prototype( operator_relational, operator>= )
+function_prototype( compare, operator>= )
 { return !(i0.derived() < i1.derived()); }
 
 function_prototype( cmp, cmp )
@@ -248,13 +250,13 @@ function_prototype( cmp, cmp )
  * iterator_facade arithmetic operators
  ******************************************************************************/
 
-function_prototype( operator_minus, operator- )
+function_prototype( difference, operator- )
 { return sake::iterator_core_access::difference(i0.derived(), i1.derived()); }
 
 #undef function_prototype
 #define function_prototype( x ) \
 template< class D, class P > \
-inline typename private_::operator_minus_ ## x ## _enabler<D,P>::type \
+inline typename private_::difference_with_ ## x ## _enabler<D,P>::type \
 operator-(sake::iterator_facade<D,P> const & i, sake::x ## _tag)
 
 function_prototype( begin )
@@ -265,7 +267,7 @@ function_prototype( end )
 #undef function_prototype
 #define function_prototype( x ) \
 template< class D, class P > \
-inline typename private_::operator_minus_ ## x ## _enabler<D,P>::type \
+inline typename private_::difference_with_ ## x ## _enabler<D,P>::type \
 operator-(sake::x ## _tag, sake::iterator_facade<D,P> const & i)
 
 function_prototype( begin )

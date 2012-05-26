@@ -67,17 +67,17 @@ struct traits
             boost::random_access_traversal_tag
         >,
         boost_ext::mpl::at<
-            Params, sake::iterator_keyword::tag::operator_minus_enable,
+            Params, sake::iterator_keyword::tag::difference_enable,
             boost::false_type
         >
-    >::type operator_minus_enable;
+    >::type difference_enable;
     typedef typename boost_ext::mpl::or2<
-        operator_minus_enable,
+        difference_enable,
         boost_ext::mpl::at<
-            Params, sake::iterator_keyword::tag::operator_relational_enable,
+            Params, sake::iterator_keyword::tag::compare_enable,
             boost::false_type
         >
-    >::type operator_relational_enable;
+    >::type compare_enable;
 };
 
 } // namespace private_

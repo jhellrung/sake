@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/iterator/private/facade/operator_minus_begin_enable.hpp
+ * sake/core/iterator/private/facade/difference_with_end_enable.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_MINUS_BEGIN_ENABLE_HPP
-#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_MINUS_BEGIN_ENABLE_HPP
+#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_DIFFERENCE_WITH_END_ENABLE_HPP
+#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_DIFFERENCE_WITH_END_ENABLE_HPP
 
 #include <boost/utility/enable_if.hpp>
 
@@ -27,20 +27,20 @@ namespace private_
 {
 
 template< class D, class P >
-struct operator_minus_begin_enable
+struct difference_with_end_enable
     : boost_ext::mpl::and2<
           boost_ext::is_convertible<
               typename D::cursor_introversal,
-              sake::begin_access_introversal_tag
+              sake::end_access_introversal_tag
           >,
-          typename private_::traits<P>::operator_minus_enable
+          typename private_::traits<P>::difference_enable
       >
 { };
 
 template< class D, class P >
-struct operator_minus_begin_enabler
+struct difference_with_end_enabler
     : boost::enable_if_c<
-          private_::operator_minus_begin_enable<D,P>::value,
+          private_::difference_with_end_enable<D,P>::value,
           typename D::difference_type
       >
 { };
@@ -51,4 +51,4 @@ struct operator_minus_begin_enabler
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_MINUS_BEGIN_ENABLE_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_DIFFERENCE_WITH_END_ENABLE_HPP

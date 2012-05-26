@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/iterator/private/facade/operator_minus_end_enable.hpp
+ * sake/core/iterator/private/facade/difference_with_begin_enable.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_MINUS_END_ENABLE_HPP
-#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_MINUS_END_ENABLE_HPP
+#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_DIFFERENCE_WITH_BEGIN_ENABLE_HPP
+#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_DIFFERENCE_WITH_BEGIN_ENABLE_HPP
 
 #include <boost/utility/enable_if.hpp>
 
@@ -15,7 +15,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/cursor/categories.hpp>
-#include <sake/core/iterator/private/facade/keyword_traits.hpp>
+#include <sake/core/iterator/private/facade/traits.hpp>
 
 namespace sake
 {
@@ -27,20 +27,20 @@ namespace private_
 {
 
 template< class D, class P >
-struct operator_minus_end_enable
+struct difference_with_begin_enable
     : boost_ext::mpl::and2<
           boost_ext::is_convertible<
               typename D::cursor_introversal,
-              sake::end_access_introversal_tag
+              sake::begin_access_introversal_tag
           >,
-          typename private_::keyword_traits<P>::operator_minus_enable
+          typename private_::traits<P>::difference_enable
       >
 { };
 
 template< class D, class P >
-struct operator_minus_end_enabler
+struct difference_with_begin_enabler
     : boost::enable_if_c<
-          private_::operator_minus_end_enable<D,P>::value,
+          private_::difference_with_begin_enable<D,P>::value,
           typename D::difference_type
       >
 { };
@@ -51,4 +51,4 @@ struct operator_minus_end_enabler
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_MINUS_END_ENABLE_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_DIFFERENCE_WITH_BEGIN_ENABLE_HPP

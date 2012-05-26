@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/iterator/private/facade/operator_equality_enable.hpp
+ * sake/core/iterator/private/facade/equal_enable.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_EQUALITY_ENABLE_HPP
-#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_EQUALITY_ENABLE_HPP
+#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_EQUAL_ENABLE_HPP
+#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_EQUAL_ENABLE_HPP
 
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -28,7 +28,7 @@ namespace private_
 {
 
 template< class D0, class P0, class D1, class P1 >
-struct operator_equality_enable
+struct equal_enable
     : boost_ext::mpl::and2<
           boost_ext::is_convertible<
               typename sake::iterator_traversal< D0 >::type,
@@ -43,9 +43,9 @@ struct operator_equality_enable
 { };
 
 template< class D0, class P0, class D1, class P1 >
-struct operator_equality_enabler
+struct equal_enabler
     : boost::enable_if_c<
-          private_::operator_equality_enable< D0, P0, D1, P1 >::value,
+          private_::equal_enable< D0, P0, D1, P1 >::value,
           bool
       >
 { };
@@ -56,4 +56,4 @@ struct operator_equality_enabler
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_EQUALITY_ENABLE_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_EQUAL_ENABLE_HPP

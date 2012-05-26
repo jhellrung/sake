@@ -13,8 +13,8 @@
  * - iterator_keyword::difference
  * - iterator_keyword::traversal
  * - iterator_keyword::introversal
- * - iterator_keyword::operator_relational_enable
- * - iterator_keyword::operator_minus_enable
+ * - iterator_keyword::compare_enable
+ * - iterator_keyword::difference_enable
  * - iterator_keyword::chained_base
  * - iterator_keyword::member
  ******************************************************************************/

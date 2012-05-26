@@ -18,9 +18,11 @@
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/private/common_difference_type.hpp>
-#include <sake/core/iterator/private/facade/operator_equality_enable.hpp>
-#include <sake/core/iterator/private/facade/operator_minus_enable.hpp>
-#include <sake/core/iterator/private/facade/operator_relational_enable.hpp>
+#include <sake/core/iterator/private/facade/compare_enable.hpp>
+#include <sake/core/iterator/private/facade/difference_enable.hpp>
+#include <sake/core/iterator/private/facade/difference_with_begin_enable.hpp>
+#include <sake/core/iterator/private/facade/difference_with_end_enable.hpp>
+#include <sake/core/iterator/private/facade/equal_enable.hpp>
 #include <sake/core/math/sign_t_fwd.hpp>
 
 namespace sake
@@ -36,16 +38,16 @@ template< class D0, class P0, class D1, class P1 > \
     sake::iterator_facade_adl::y( \
         sake::iterator_facade_adl::iterator_facade< D0, P0 > const & i0, \
         sake::iterator_facade_adl::iterator_facade< D1, P1 > const & i1);
-    declare_friend( operator_equality, operator== )
-    declare_friend( operator_relational, operator< )
+    declare_friend( equal, operator== )
+    declare_friend( compare, operator< )
     declare_friend( cmp, cmp )
-    declare_friend( operator_minus, operator- )
+    declare_friend( difference, operator- )
 #undef declare_friend
 
 #define declare_friend( x ) \
     template< class D, class P > \
     friend typename sake::iterator_facade_adl::private_:: \
-        operator_minus_ ## x ## _enabler<D,P>::type \
+        difference_with_ ## x ## _enabler<D,P>::type \
     sake::iterator_facade_adl::operator-( \
         sake::iterator_facade_adl::iterator_facade<D,P> const & i, \
         sake::x ## _tag);
