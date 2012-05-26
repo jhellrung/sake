@@ -78,6 +78,11 @@ struct Constructible<T>
     }
 };
 
+template< class T >
+struct Constructible< T ( ) >
+    : sake::concepts::Constructible<T>
+{ };
+
 } // namespace concepts
 
 } // namespace sake
