@@ -6,6 +6,7 @@
 .scon*
 build
 lib
+log
 
 # MSVC files
 *.ncb
