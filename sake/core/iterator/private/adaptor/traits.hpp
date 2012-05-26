@@ -84,14 +84,14 @@ struct traits
         Params, sake::iterator_keyword::tag::compare_enable,
         sake::is_template_base_of2<
             sake::iterator_facade, Base,
-            sake::has_operator_less< boost::mpl::_1, boost::mpl::_1 >
+            sake::has_operator_less< boost::mpl::_1 >
         >
     >::type compare_enable;
     typedef typename boost_ext::mpl::at<
         Params, sake::iterator_keyword::tag::difference_enable,
         sake::is_template_base_of2<
             sake::iterator_facade, Base,
-            sake::has_operator_minus< boost::mpl::_1, boost::mpl::_1 >
+            sake::has_operator_minus< boost::mpl::_1 >
         >
     >::type difference_enable;
 
