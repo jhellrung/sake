@@ -15,6 +15,7 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/at.hpp>
 #include <sake/boost_ext/mpl/lazy_at.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
@@ -66,16 +67,28 @@ struct traits
             iterator_traversal,
             boost::random_access_traversal_tag
         >,
-        boost_ext::mpl::at<
-            Params, sake::iterator_keyword::tag::difference_enable,
-            boost::false_type
+        boost_ext::mpl::and2<
+            boost_ext::is_convertible<
+                iterator_traversal,
+                boost::forward_traversal_tag
+            >,
+            boost_ext::mpl::at<
+                Params, sake::iterator_keyword::tag::difference_enable,
+                boost::false_type
+            >
         >
     >::type difference_enable;
     typedef typename boost_ext::mpl::or2<
         difference_enable,
-        boost_ext::mpl::at<
-            Params, sake::iterator_keyword::tag::compare_enable,
-            boost::false_type
+        boost_ext::mpl::and2<
+            boost_ext::is_convertible<
+                iterator_traversal,
+                boost::forward_traversal_tag
+            >,
+            boost_ext::mpl::at<
+                Params, sake::iterator_keyword::tag::compare_enable,
+                boost::false_type
+            >
         >
     >::type compare_enable;
 };
