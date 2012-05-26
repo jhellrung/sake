@@ -4,6 +4,12 @@
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * struct has_operator_assign<
+ *     T, U = T,
+ *     Result = typename boost_ext::add_reference<T>::type,
+ *     ResultPred = boost::mpl::always< boost::true_type >
+ * >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_INTROSPECTION_HAS_OPERATOR_ASSIGN_HPP

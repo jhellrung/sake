@@ -6,7 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct has_operator_bit_xor<
- *     T, U,
+ *     T, U = T,
  *     Result = typename boost_ext::common_result_type<
  *         typename boost_ext::remove_qualifiers<T>::type,
  *         typename boost_ext::remove_qualifiers<U>::type

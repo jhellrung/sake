@@ -6,7 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct has_operator_plus_assign<
- *     T, U,
+ *     T, U = T,
  *     Result = typename boost_ext::add_reference<T>::type,
  *     ResultPred = boost::mpl::always< boost::true_type >
  * >

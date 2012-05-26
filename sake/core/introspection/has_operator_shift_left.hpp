@@ -6,7 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * struct has_operator_shift_left<
- *     T, U,
+ *     T, U = T,
  *     Result = void,
  *     ResultPred = boost::mpl::always< boost::true_type >
  * >
