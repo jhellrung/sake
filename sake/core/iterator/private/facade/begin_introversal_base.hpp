@@ -133,7 +133,7 @@ protected:
 
     friend class sake::iterator_core_access;
 
-    bool at_begin_impl() const
+    bool derived_at_begin() const
     { return derived() == derived().begin(); }
 };
 

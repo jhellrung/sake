@@ -29,15 +29,15 @@ namespace private_
 
 template< class D0, class P0, class D1, class P1 >
 struct operator_equality_enable
-    : boost_ext::mpl::and3<
+    : boost_ext::mpl::and2<
           boost_ext::is_convertible<
               typename sake::iterator_traversal< D0 >::type,
               boost::single_pass_traversal_tag
           >,
-          boost_ext::is_convertible<
+          /*boost_ext::is_convertible<
               typename sake::iterator_traversal< D1 >::type,
               boost::single_pass_traversal_tag
-          >,
+          >,*/
           sake::iterator_private::is_interconvertible< D0, D1 >
       >
 { };

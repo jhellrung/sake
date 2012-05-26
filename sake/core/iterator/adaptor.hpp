@@ -159,56 +159,56 @@ public:
 
     // Dereferenceable
     reference
-    operator_star_impl() const
+    derived_dereference() const
     { return *base(); }
 
     // Incrementable
     void
-    operator_pre_increment_impl()
+    derived_increment()
     { ++protected_base(); }
 
     // SinglePass
     template< class Other >
     bool
-    operator_equal_impl(Other const & other)
+    derived_equal(Other const & other)
     { return base() == other.base(); }
 
     // Bidirectional
     void
-    operator_pre_decrement_impl()
+    derived_decrement()
     { --protected_base(); }
 
     // RandomAccess
     void
-    operator_plus_equal_impl(difference_type const n)
+    derived_plus_assign(difference_type const n)
     { protected_base() += n; }
 
     template< class Other >
     bool
-    operator_less_impl(Other const & other)
+    derived_less(Other const & other)
     { return base() < other.base(); }
     template< class Other >
     bool
-    operator_less_equal_impl(Other const & other)
+    derived_less_equal(Other const & other)
     { return base() <= other.base(); }
 
     template< class Other >
     sake::sign_t
-    cmp_impl(Other const & other)
+    derived_cmp(Other const & other)
     { return sake::cmp(base(), other.base()); }
 
     template< class Other >
     difference_type
-    operator_minus_impl(Other const & other)
+    derived_difference(Other const & other)
     { return base() - other.base(); }
 
     // BeginDetect
     bool
-    at_begin_impl() const
+    derived_at_begin() const
     { return sake::cursor_traits< Base >::at_begin(base()); }
     // BeginAccess
     Derived
-    begin_impl() const
+    derived_begin() const
     {
         Derived result(derived());
         result.base() = sake::cursor_traits< Base >::begin(base());
@@ -216,11 +216,11 @@ public:
     }
     // EndDetect
     bool
-    at_end_impl() const
+    derived_at_end() const
     { return sake::cursor_traits< Base >::at_end(base()); }
     // EndAccess
     Derived
-    end_impl() const
+    derived_end() const
     {
         Derived result(derived());
         result.base() = sake::cursor_traits< Base >::end(base());
@@ -229,11 +229,11 @@ public:
 
     // RandomAccess + BeginAccess
     difference_type
-    operator_minus_begin_impl() const
+    derived_difference_with_begin() const
     { return derived() - sake::begin_tag(); }
     // RandomAccess + EndAccess
     difference_type
-    operator_minus_end_impl() const
+    derived_difference_with_end() const
     { return derived() - sake::end_tag(); }
 };
 

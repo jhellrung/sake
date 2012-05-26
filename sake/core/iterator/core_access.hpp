@@ -67,113 +67,113 @@ template< class D0, class P0, class D1, class P1 > \
     // Dereferenceable
     template< class Derived >
     static typename Derived::reference
-    operator_star(Derived const & this_)
-    { return this_.operator_star_impl(); }
+    dereference(Derived const & this_)
+    { return this_.derived_dereference(); }
 
     // Incrementable
     template< class Derived >
     static void
-    operator_pre_increment(Derived& this_)
-    { this_.operator_pre_increment_impl(); }
+    increment(Derived& this_)
+    { this_.derived_increment(); }
 
     // SinglePass
     template< class I, class J >
     static typename boost::enable_if_c<
         boost_ext::is_convertible<J,I>::value, bool >::type
-    operator_equal(I const & i, J const & j)
-    { return i.operator_equal_impl(j); }
+    equal(I const & i, J const & j)
+    { return i.derived_equal(j); }
     template< class I, class J >
     static typename boost::disable_if_c<
         boost_ext::is_convertible<J,I>::value, bool >::type
-    operator_equal(I const & i, J const & j)
-    { return j.operator_equal_impl(i); }
+    equal(I const & i, J const & j)
+    { return j.derived_equal(i); }
 
     // Bidirectional
     template< class Derived >
     static void
-    operator_pre_decrement(Derived& this_)
-    { this_.operator_pre_decrement_impl(); }
+    decrement(Derived& this_)
+    { this_.derived_decrement(); }
 
     // RandomAccess
     template< class Derived >
     static void
-    operator_plus_equal(Derived& this_, typename Derived::difference_type const n)
-    { this_.operator_plus_equal_impl(n); }
+    plus_assign(Derived& this_, typename Derived::difference_type const n)
+    { this_.derived_plus_assign(n); }
     template< class Derived >
     static Derived
-    operator_plus(Derived const & this_, typename Derived::difference_type const n)
-    { return this_.operator_plus_impl(n); }
+    plus(Derived const & this_, typename Derived::difference_type const n)
+    { return this_.derived_plus(n); }
 
     template< class I0, class I1 >
     static typename boost::enable_if_c<
         boost_ext::is_convertible< I1, I0 >::value, bool >::type
-    operator_less(I0 const & i0, I1 const & i1)
-    { return i0.operator_less_impl(i1); }
+    less(I0 const & i0, I1 const & i1)
+    { return i0.derived_less(i1); }
     template< class I0, class I1 >
     static typename boost::disable_if_c<
         boost_ext::is_convertible< I1, I0 >::value, bool >::type
-    operator_less(I0 const & i0, I1 const & i1)
-    { return !i1.operator_less_equal_impl(i0); }
+    less(I0 const & i0, I1 const & i1)
+    { return !i1.derived_less_equal(i0); }
 
     template< class I0, class I1 >
     static typename boost::enable_if_c<
         boost_ext::is_convertible< I1, I0 >::value, sake::sign_t >::type
     cmp(I0 const & i0, I1 const & i1)
-    { return i0.cmp_impl(i1); }
+    { return i0.derived_cmp(i1); }
     template< class I0, class I1 >
     static typename boost::disable_if_c<
         boost_ext::is_convertible< I1, I0 >::value, sake::sign_t >::type
     cmp(I0 const & i0, I1 const & i1)
-    { return -i1.cmp_impl(i0); }
+    { return -i1.derived_cmp(i0); }
 
     template< class I0, class I1 >
     static typename boost::lazy_enable_if_c<
         boost_ext::is_convertible< I1, I0 >::value,
         sake::iterator_private::common_difference_type< I0, I1 > >::type
-    operator_minus(I0 const & i0, I1 const & i1)
-    { return i0.operator_minus_impl(i1); }
+    difference(I0 const & i0, I1 const & i1)
+    { return i0.derived_difference(i1); }
     template< class I0, class I1 >
     static typename boost::lazy_disable_if_c<
         boost_ext::is_convertible< I1, I0 >::value,
         sake::iterator_private::common_difference_type< I1, I0 > >::type
-    operator_minus(I0 const & i0, I1 const & i1)
-    { return -i1.operator_minus_impl(i0); }
+    difference(I0 const & i0, I1 const & i1)
+    { return -i1.derived_difference(i0); }
 
     // BeginDetect
     template< class Derived >
     static bool
     at_begin(Derived const & this_)
-    { return this_.at_begin_impl(); }
+    { return this_.derived_at_begin(); }
 
     // BeginAccess
     template< class Derived >
     static Derived
     begin(Derived const & this_)
-    { return this_.begin_impl(); }
+    { return this_.derived_begin(); }
 
     // EndDetect
     template< class Derived >
     static bool
     at_end(Derived const & this_)
-    { return this_.at_end_impl(); }
+    { return this_.derived_at_end(); }
 
     // EndAccess
     template< class Derived >
     static Derived
     end(Derived const & this_)
-    { return this_.end_impl(); }
+    { return this_.derived_end(); }
 
     // RandomAccess + BeginAccess
     template< class Derived >
     static typename Derived::difference_type
-    operator_minus_begin(Derived const & this_)
-    { return this_.operator_minus_begin_impl(); }
+    difference_with_begin(Derived const & this_)
+    { return this_.derived_difference_with_begin(); }
 
     // RandomAccess + EndAccess
     template< class Derived >
     static typename Derived::difference_type
-    operator_minus_end(Derived const & this_)
-    { return this_.operator_minus_end_impl(); }
+    difference_with_end(Derived const & this_)
+    { return this_.derived_difference_with_end(); }
 };
 
 } // namespace sake

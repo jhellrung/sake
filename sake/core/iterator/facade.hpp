@@ -7,7 +7,7 @@
  *
  * class iterator_facade< Derived, Params >
  *
- * Accepted keywords:
+ * Keyword parameters accepted in Params:
  * - iterator_keyword::value
  * - iterator_keyword::reference
  * - iterator_keyword::difference
@@ -16,6 +16,24 @@
  * - iterator_keyword::operator_relational_enable
  * - iterator_keyword::operator_minus_enable
  * - iterator_keyword::chained_base
+ *
+ * Implementations to be defined in Derived:
+ * - derived_dereference() const -> reference
+ * - derived_increment() -> void
+ * - derived_equal(Other const & other) const -> bool
+ * - derived_decrement() -> void
+ * - derived_plus_assign(difference_type n) -> void
+ * - derived_plus(difference_type n) const -> Derived [defaulted]
+ * - derived_less(Other const & other) const -> bool [defaulted]
+ * - derived_less_equal(Other const & other) const -> bool [defaulted]
+ * - derived_cmp(Other const & other) const -> sign_t [defaulted]
+ * - derived_difference(Other const & other) const -> difference_type
+ * - derived_at_begin() const -> bool
+ * - derived_begin() const -> Derived
+ * - derived_at_end() const -> bool
+ * - derived_end() const -> Derived
+ * - derived_difference_with_begin() const -> difference_type
+ * - derived_difference_with_end() const -> difference_type
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_FACADE_HPP
@@ -50,7 +68,6 @@ template< class Derived, class Params >
 class iterator_facade
     : public private_::traversal_base< Derived, Params >
 {
-#if 0
     typedef private_::traversal_base< Derived, Params > traversal_base_;
 protected:
     typedef Derived derived_type;
@@ -86,7 +103,7 @@ public:
      **************************************************************************/
     reference
     operator*() const
-    { return sake::iterator_core_access::operator_star(derived()); }
+    { return sake::iterator_core_access::dereference(derived()); }
 private:
     typedef private_::operator_arrow_dispatch<
         reference > operator_arrow_dispatch_;
@@ -100,6 +117,8 @@ public:
      * Incrementable
      * operator++() -> Derived&
      * operator++(int) -> ...
+     *
+     * SinglePass
      *
      * Bidirectional
      * operator--() -> Derived&
@@ -124,6 +143,10 @@ public:
      *
      * EndAccess
      * end() -> Derived
+     *
+     * RandomAccess + BeginAccess
+     *
+     * RandomAccess + EndAccess
      **************************************************************************/
  
 protected:
@@ -171,28 +194,27 @@ protected:
 
     template< class Other >
     bool
-    operator_equal_impl(Other const & other) const
+    derived_equal(Other const & other) const
     { return sake::iterator_core_access::cmp(derived(), other) == sake::zero; }
     template< class Other >
     bool
-    operator_less_impl(Other const & other) const
+    derived_less(Other const & other) const
     { return sake::iterator_core_access::cmp(derived(), other) < sake::zero; }
     template< class Other >
     bool
-    operator_less_equal_impl(Other const & other) const
+    derived_less_equal(Other const & other) const
     { return sake::iterator_core_access::cmp(derived(), other) <= sake::zero; }
     template< class Other >
     sake::sign_t
-    cmp_impl(Other const & other) const
+    derived_cmp(Other const & other) const
     { return sake::sign(derived() - other); }
 
     difference_type
-    operator_minus_begin_impl() const
+    derived_difference_with_begin() const
     { return derived() - derived().begin(); }
     difference_type
-    operator_minus_end_impl() const
+    derived_difference_with_end() const
     { return derived() - derived().end(); }
-#endif
 };
 
 /*******************************************************************************
@@ -206,12 +228,12 @@ y(sake::iterator_facade_adl::iterator_facade< D0, P0 > const & i0, \
   sake::iterator_facade_adl::iterator_facade< D1, P1 > const & i1)
 
 function_prototype( operator_equality, operator== )
-{ return sake::iterator_core_access::operator_equal(i0.derived(), i1.derived()); }
+{ return sake::iterator_core_access::equal(i0.derived(), i1.derived()); }
 function_prototype( operator_equality, operator!= )
 { return !(i0.derived() == i1.derived()); }
 
 function_prototype( operator_relational, operator< )
-{ return sake::iterator_core_access::operator_less(i0.derived(), i1.derived()); }
+{ return sake::iterator_core_access::less(i0.derived(), i1.derived()); }
 function_prototype( operator_relational, operator> )
 { return  (i1.derived() < i0.derived()); }
 function_prototype( operator_relational, operator<= )
@@ -227,7 +249,7 @@ function_prototype( cmp, cmp )
  ******************************************************************************/
 
 function_prototype( operator_minus, operator- )
-{ return sake::iterator_core_access::operator_minus(i0.derived(), i1.derived()); }
+{ return sake::iterator_core_access::difference(i0.derived(), i1.derived()); }
 
 #undef function_prototype
 #define function_prototype( x ) \
@@ -236,9 +258,9 @@ inline typename private_::operator_minus_ ## x ## _enabler<D,P>::type \
 operator-(sake::iterator_facade<D,P> const & i, sake::x ## _tag)
 
 function_prototype( begin )
-{ return sake::iterator_core_access::operator_minus_begin(i.derived()); }
+{ return sake::iterator_core_access::difference_with_begin(i.derived()); }
 function_prototype( end )
-{ return sake::iterator_core_access::operator_minus_end(i.derived()); }
+{ return sake::iterator_core_access::difference_with_end(i.derived()); }
 
 #undef function_prototype
 #define function_prototype( x ) \

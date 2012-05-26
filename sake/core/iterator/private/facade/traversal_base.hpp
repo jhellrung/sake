@@ -61,7 +61,7 @@ public:
     Derived&
     operator++()
     {
-        sake::iterator_core_access::operator_pre_increment(derived());
+        sake::iterator_core_access::increment(derived());
         return derived();
     }
 
@@ -77,8 +77,9 @@ public:
     typename operator_post_increment_dispatch_::type
     operator++(int)
     {
-        typename operator_post_increment_dispatch_::type result(derived());
-        sake::iterator_core_access::operator_pre_decrement(derived());
+        typename operator_post_increment_dispatch_::type result =
+            operator_post_increment_dispatch_::apply(derived());
+        sake::iterator_core_access::increment(derived());
         return result;
     }
     
@@ -112,7 +113,7 @@ public:
     Derived&
     operator--()
     {
-        sake::iterator_core_access::operator_pre_decrement(derived());
+        sake::iterator_core_access::decrement(derived());
         return derived();
     }
 
@@ -120,7 +121,7 @@ public:
     operator--(int)
     {
         Derived result(derived());
-        sake::iterator_core_access::operator_pre_decrement(derived());
+        sake::iterator_core_access::decrement(derived());
         return result;
     }
 
@@ -168,7 +169,7 @@ public:
     Derived&
     operator+=(difference_type const n)
     {
-        sake::iterator_core_access::operator_plus_equal(derived(), n);
+        sake::iterator_core_access::plus_assign(derived(), n);
         return derived();
     }
 
@@ -178,14 +179,15 @@ public:
 
     Derived
     operator+(difference_type const n) const
-    { return sake::iterator_core_access::operator_plus(derived(), n); }
-    inline friend Derived
-    operator+(difference_type const n, Derived const & this_)
-    { return this_ + n; }
+    { return sake::iterator_core_access::plus(derived(), n); }
 
     Derived
     operator-(difference_type const n) const
     { return derived() + (-n); }
+
+    inline friend Derived
+    operator+(difference_type const n, Derived const & this_)
+    { return this_ + n; }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -205,7 +207,7 @@ protected:
     friend class sake::iterator_core_access;
 
     Derived
-    operator_plus_impl(difference_type const n) const
+    derived_plus(difference_type const n) const
     {
         Derived result(derived());
         return result += n;

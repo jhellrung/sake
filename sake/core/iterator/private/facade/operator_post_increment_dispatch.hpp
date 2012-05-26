@@ -19,6 +19,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -49,18 +50,18 @@ template< class Value, class Reference, class Traversal >
 struct operator_post_increment_dispatch_index
 {
     static int const value = boost_ext::mpl::
-    if_not<
-        boost_ext::mpl::and3<
-            boost::is_object< Value >,
+    if_<
+        boost_ext::mpl::or3<
+            boost::mpl::not_< boost::is_object< Value > >,
             // Multipass iterators don't have the issue described above.
-            boost::mpl::not_< boost_ext::is_convertible<
-                Traversal, boost::forward_traversal_tag > >,
-            // Only readable iterators need a proxy.
             boost_ext::is_convertible<
+                Traversal, boost::forward_traversal_tag >,
+            // Only readable iterators need a proxy.
+            boost::mpl::not_< boost_ext::is_convertible<
                 Reference,
                 typename boost_ext::add_reference_add_const< Value >::type
-            >
-        >::value,
+            > >
+        >,
         sake::int_tag<2>
     >::type::template
     else_if<
