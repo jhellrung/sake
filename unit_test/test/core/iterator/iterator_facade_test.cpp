@@ -92,6 +92,67 @@ private:
     bool derived_equal(iterator other) const { return p == other.p; }
 };
 
+template< class T >
+class iterator< T, boost::forward_traversal_tag >
+    : public iterator_facade< T, boost::forward_traversal_tag >::type
+{
+    typedef typename iterator_facade<
+        T, boost::forward_traversal_tag
+    >::type iterator_facade_;
+public:
+    SAKE_USING_TYPEDEF( typename iterator_facade_, reference );
+    T* p;
+    iterator() : p(0) { }
+    explicit iterator(T& x) : p(&x) { }
+private:
+    friend class sake::iterator_core_access;
+    reference derived_dereference() const { return *p; }
+    void derived_increment() { }
+    bool derived_equal(iterator other) const { return p == other.p; }
+};
+
+template< class T >
+class iterator< T, boost::bidirectional_traversal_tag >
+    : public iterator_facade< T, boost::bidirectional_traversal_tag >::type
+{
+    typedef typename iterator_facade<
+        T, boost::bidirectional_traversal_tag
+    >::type iterator_facade_;
+public:
+    SAKE_USING_TYPEDEF( typename iterator_facade_, reference );
+    T* p;
+    iterator() : p(0) { }
+    explicit iterator(T& x) : p(&x) { }
+private:
+    friend class sake::iterator_core_access;
+    reference derived_dereference() const { return *p; }
+    void derived_increment() { }
+    void derived_decrement() { }
+    bool derived_equal(iterator other) const { return p == other.p; }
+};
+
+template< class T >
+class iterator< T, boost::random_access_traversal_tag >
+    : public iterator_facade< T, boost::random_access_traversal_tag >::type
+{
+    typedef typename iterator_facade<
+        T, boost::random_access_traversal_tag
+    >::type iterator_facade_;
+public:
+    SAKE_USING_TYPEDEF( typename iterator_facade_, reference );
+    SAKE_USING_TYPEDEF( typename iterator_facade_, difference_type );
+    T* p;
+    iterator() : p(0) { }
+    explicit iterator(T& x) : p(&x) { }
+private:
+    friend class sake::iterator_core_access;
+    reference derived_dereference() const { return *p; }
+    void derived_increment() { }
+    void derived_decrement() { }
+    void derived_plus_assign(difference_type) { }
+    difference_type derived_difference(iterator) const { return 0; }
+};
+
 } // namespace
 
 void iterator_facade_test(sake::test::environment& env)
@@ -105,6 +166,8 @@ void iterator_facade_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
         ++i;
         SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
+        i++;
+        SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
     }
     {
         typedef iterator< int, boost::incrementable_traversal_tag > type;
@@ -114,6 +177,8 @@ void iterator_facade_test(sake::test::environment& env)
         type i(x);
         SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
         ++i;
+        SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
+        i++;
         SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
         *i = 1;
         SAKE_TEST_CHECK_RELATION( env, *i, ==, 1 );
@@ -156,8 +221,97 @@ void iterator_facade_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env,  x, ==, 1 );
     }
     {
+        typedef iterator< int const, boost::forward_traversal_tag > type;
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::Forward< type >));
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::Readable< type >));
+        int x = 0;
+        type i(x), j;
+        SAKE_TEST_CHECK_RELATION( env, i, !=, j );
+    }
+    {
         typedef iterator< int, boost::forward_traversal_tag > type;
-        
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::Forward< type >));
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::WritableLvalue< type >));
+        int x = 0;
+        type i(x), j;
+        SAKE_TEST_CHECK_RELATION( env, i, !=, j );
+    }
+    {
+        typedef iterator< int const, boost::bidirectional_traversal_tag > type;
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::Bidirectional< type >));
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::Readable< type >));
+        int x = 0;
+        type i(x);
+        SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
+        --i;
+        SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
+        i--;
+        SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
+    }
+    {
+        typedef iterator< int, boost::bidirectional_traversal_tag > type;
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::Bidirectional< type >));
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::WritableLvalue< type >));
+        int x = 0;
+        type i(x);
+        SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
+        --i;
+        SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
+        i--;
+        SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
+    }
+    {
+        typedef iterator< int const, boost::random_access_traversal_tag > type;
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::RandomAccess< type >));
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::Readable< type >));
+        int x = 0;
+        type i(x), j(x);
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        SAKE_TEST_CHECK_RELATION( env, i, <=, j );
+        SAKE_TEST_CHECK_RELATION( env, i, >=, j );
+        SAKE_TEST_CHECK( env, !(i != j) );
+        SAKE_TEST_CHECK( env, !(i < j) );
+        SAKE_TEST_CHECK( env, !(i > j) );
+        i += 42;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        i -= 42;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        j = i + 42;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        j = i - 42;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        j = 42 + i;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        SAKE_TEST_CHECK_RELATION( env, i - j, ==, 0 );
+        SAKE_TEST_CHECK_RELATION( env, i[42], ==, 0 );
+    }
+    {
+        typedef iterator< int, boost::random_access_traversal_tag > type;
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::RandomAccess< type >));
+        BOOST_CONCEPT_ASSERT((sake::iterator_concepts::WritableLvalue< type >));
+        int x = 0;
+        type i(x), j(x);
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        SAKE_TEST_CHECK_RELATION( env, i, <=, j );
+        SAKE_TEST_CHECK_RELATION( env, i, >=, j );
+        SAKE_TEST_CHECK( env, !(i != j) );
+        SAKE_TEST_CHECK( env, !(i < j) );
+        SAKE_TEST_CHECK( env, !(i > j) );
+        i += 42;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        i -= 42;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        j = i + 42;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        j = i - 42;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        j = 42 + i;
+        SAKE_TEST_CHECK_RELATION( env, i, ==, j );
+        SAKE_TEST_CHECK_RELATION( env, i - j, ==, 0 );
+        SAKE_TEST_CHECK_RELATION( env, i[42], ==, 0 );
+        i[42] = 1;
+        SAKE_TEST_CHECK_RELATION( env, *i, ==, 1 );
+        SAKE_TEST_CHECK_RELATION( env,  x, ==, 1 );
     }
 }
 
