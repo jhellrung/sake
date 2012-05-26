@@ -23,11 +23,6 @@ namespace sake
 namespace iterator_concepts
 {
 
-#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-
 template< class I >
 struct Swappable
     : sake::concepts::CopyConstructible<I>
@@ -40,11 +35,9 @@ struct Swappable
 private:
     I const i;
     I const j;
-};
 
-#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-#pragma GCC diagnostic pop
-#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+    SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( Swappable )
+};
 
 } // namespace iterator_concepts
 

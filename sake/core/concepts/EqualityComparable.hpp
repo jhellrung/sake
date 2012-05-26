@@ -21,11 +21,6 @@ namespace sake
 namespace concepts
 {
 
-#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-
 template< class T, class U = T >
 struct EqualityComparable
 {
@@ -42,11 +37,9 @@ private:
     U const y;
 
     void assert_result(bool);
-};
 
-#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-#pragma GCC diagnostic pop
-#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+    SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( EqualityComparable )
+};
 
 } // namespace concepts
 

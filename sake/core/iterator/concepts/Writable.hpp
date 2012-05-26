@@ -25,11 +25,6 @@ namespace sake
 namespace iterator_concepts
 {
 
-#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-
 template<
     class I,
     class T = typename sake::iterator_value<I>::type
@@ -45,16 +40,14 @@ struct Writable
 private:
     I const i;
     T x;
+
+    SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( Writable )
 };
 
 template< class I >
 struct Writable< I, void >
     : sake::concepts::CopyConstructible<I>
 { };
-
-#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-#pragma GCC diagnostic pop
-#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
 
 } // namespace iterator_concepts
 

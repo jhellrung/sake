@@ -31,11 +31,6 @@ namespace sake
 namespace iterator_concepts
 {
 
-#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-
 template< class I >
 struct Lvalue
     : sake::iterator_concepts::Readable<I>
@@ -64,11 +59,9 @@ private:
     typename boost::enable_if_c<
         boost::is_same< T&, reference >::value >::type
     assert_result(T&);
-};
 
-#if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
-#pragma GCC diagnostic pop
-#endif // #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION >= SAKE_GNUC_VERSION_OF(4,6,3)
+    SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( Lvalue )
+};
 
 } // namespace iterator_concepts
 
