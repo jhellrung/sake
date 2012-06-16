@@ -298,7 +298,7 @@ iter_at(R& r, T const & x, Introversal)
                   result_type ( R&, T, Introversal ) >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    return iter_at_private::dispatch(r, i, Introversal(), int_tag_());
+    return iter_at_private::dispatch(r, x, Introversal(), int_tag_());
 }
 
 } // namespace default_impl

@@ -219,7 +219,7 @@ at(R& r, T const x)
                   reference ( R&, T ), is_convertible_wnrbt_ >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    return at_private::dispatch(r, i, int_tag_());
+    return at_private::dispatch(r, x, int_tag_());
 }
 
 } // namespace default_impl

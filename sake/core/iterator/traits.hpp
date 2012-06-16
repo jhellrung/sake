@@ -206,9 +206,9 @@ struct iterator_traits
         return sake::iterator::default_impl::at_ip(i, x);
     }
 
-    template< class T, class Introversal >
-    static typename relax< Introversal >::type
-    at(I const & i, T const & x, Introversal)
+    template< class T, class Introversal_ >
+    static typename relax< Introversal_ >::type
+    at(I const & i, T const & x, Introversal_)
     {
         BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
             boost_ext::mpl::and2<
@@ -223,7 +223,7 @@ struct iterator_traits
             >,
             sake::iterator::private_::is_interoperable<I,T>
         >::value));
-        return sake::iterator::default_impl::at(i, x, Introversal());
+        return sake::iterator::default_impl::at(i, x, Introversal_());
     }
 };
 

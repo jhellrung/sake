@@ -213,6 +213,8 @@ protected:
 public:
     SAKE_USING_TYPEDEF( typename private_::traits< Params >, difference_type );
 
+    using end_introversal_base_::end;
+
     inline friend
     difference_type operator-(Derived const & this_, sake::end_tag)
     { return this_.private_operator_minus_end(); }

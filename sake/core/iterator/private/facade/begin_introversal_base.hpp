@@ -215,6 +215,8 @@ protected:
 public:
     SAKE_USING_TYPEDEF( typename private_::traits< Params >, difference_type );
 
+    using begin_introversal_base_::begin;
+
     inline friend
     difference_type operator-(Derived const & this_, sake::begin_tag)
     { return this_.private_operator_minus_begin(); }

@@ -53,6 +53,8 @@ class explicit_base< I, false, false, IntroversalMask >
         I, false, false, IntroversalMask > traits_;
     SAKE_USING_TYPEDEF( typename traits_, adaptor_ );
     SAKE_USING_TYPEDEF( typename traits_, base_introversal );
+public:
+    using adaptor_::base;
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename explicit_base,
@@ -136,6 +138,7 @@ class explicit_base< I, true, false, IntroversalMask >
     SAKE_USING_TYPEDEF( typename traits_, null_base_type );
 public:
     SAKE_USING_TYPEDEF( typename adaptor_, difference_type );
+    using adaptor_::base;
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename explicit_base,
@@ -271,6 +274,7 @@ class explicit_base< I, false, true, IntroversalMask >
     SAKE_USING_TYPEDEF( typename traits_, null_base_type );
 public:
     SAKE_USING_TYPEDEF( typename adaptor_, difference_type );
+    using adaptor_::base;
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename explicit_base,
@@ -406,6 +410,7 @@ class explicit_base< I, true, true, IntroversalMask >
     SAKE_USING_TYPEDEF( typename traits_, null_base_type );
 public:
     SAKE_USING_TYPEDEF( typename adaptor_, difference_type );
+    using adaptor_::base;
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename explicit_base,
@@ -560,7 +565,8 @@ protected:
     typename adaptor_::template relax< Introversal >::type
     derived_at(J const & j, Introversal, sake::int_tag<3>) const
     {
-        typedef typename relax< Introversal >::type result_type;
+        typedef typename adaptor_::template
+            relax< Introversal >::type result_type;
         return result_type(
             sake::iterator::at(
                 base(), sake::iterator::adaptor_private::at_helper<I>(j),
