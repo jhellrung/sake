@@ -18,6 +18,9 @@
 namespace sake
 {
 
+namespace iterator
+{
+
 namespace adaptor_private
 {
 
@@ -34,6 +37,8 @@ construct_helper(sake::iterator::adaptor<D,J,P> const & j)
 { return j.base(); }
 
 } // namespace adaptor_private
+
+} // namespace iterator
 
 } // namespace sake
 

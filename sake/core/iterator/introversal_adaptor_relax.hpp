@@ -37,9 +37,9 @@ class introversal_adaptor_relax
     static unsigned int const nominal_explicit_value =
         Introversal::value & ~implicit_value;
     static bool const explicit_begin =
-        nominal_explicit_value & begin_mask_value;
+        0 != (nominal_explicit_value & begin_mask_value);
     static bool const explicit_end =
-        nominal_explicit_value & end_mask_value;
+        0 != (nominal_explicit_value & end_mask_value);
     static unsigned int const explicit_value =
         (explicit_begin * begin_mask_value) | (explicit_end * end_mask_value);
     static unsigned int const nominal_relax_base_value =

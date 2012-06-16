@@ -75,13 +75,15 @@ struct at
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::iterator::result_of::at, (2,3) )
 
+    template< class I, class T >
+    typename sake::iterator::result_of::at< I const &, T const & >::type
+    operator()(I const & i, T const & x) const
+    { return sake::iterator_traits<I>::at(i, x, sake::null_introversal_tag()); }
+
     template< class I, class T, class Introversal >
     typename sake::iterator::result_of::at<
-        I const &, T const &,
-        Introversal >::type
-    operator()(
-        I const & i, T const & x,
-        Introversal = sake::null_introversal_tag()) const
+        I const &, T const &, Introversal >::type
+    operator()(I const & i, T const & x, Introversal) const
     { return sake::iterator_traits<I>::at(i, x, Introversal()); }
 };
 

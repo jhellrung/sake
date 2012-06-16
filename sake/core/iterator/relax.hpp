@@ -52,9 +52,14 @@ struct relax
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::iterator::result_of::relax, (1,2) )
 
+    template< class I >
+    typename sake::iterator::result_of::relax< I const & >::type
+    operator()(I const & i) const
+    { return i; }
+
     template< class I, class Introversal >
-    typename sake::iterator::result_of::relax< I, Introversal >::type
-    operator()(I const & i, Introversal = sake::null_introversal_tag()) const
+    typename sake::iterator::result_of::relax< I const &, Introversal >::type
+    operator()(I const & i, Introversal) const
     { return i; }
 };
 

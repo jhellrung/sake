@@ -71,6 +71,14 @@ public:
     at_ip(Derived& this_, Other const & other)
     { return this_.at_ip(other); }
 
+    template< class Other >
+    typename boost::lazy_enable_if_c<
+        sake::iterator::private_::is_interoperable< Derived, Other >::value,
+        relax<>
+    >::type
+    at(Other const & other) const
+    { return at(other, sake::null_introversal_tag()); }
+
     template< class Other, class Introversal >
     typename boost::lazy_enable_if_c<
         sake::iterator::private_::is_interoperable< Derived, Other >::value,
@@ -78,11 +86,6 @@ public:
     >::type
     at(Other const & other, Introversal) const
     { return sake::iterator::core_access::at(derived(), other, Introversal()); }
-
-    template< class Other, class Introversal >
-    inline friend typename relax< Introversal >::type
-    at(Derived const & this_, Other const & other, Introversal)
-    { return this_.at(other, Introversal()); }
 
 protected:
     Derived& derived()

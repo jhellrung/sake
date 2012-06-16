@@ -210,17 +210,17 @@ protected:
     typename adaptor_::template relax< Introversal >::type
     derived_at(J const & j, Introversal) const
     {
-        static bool const explicit_begin =
-            sake::begin_access_introversal_tag::value
+        static bool const explicit_begin = 0 !=
+           (sake::begin_access_introversal_tag::value
           & ~(base_introversal::value & IntroversalMask::value)
-          & Introversal::value;
+          & Introversal::value);
         typedef sake::int_tag< explicit_begin > int_tag_;
         return derived_at(j, Introversal(), int_tag_());
     }
 
     template< class J, class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<0>)
+    derived_at(J const & j, Introversal, sake::int_tag<0>) const
     {
         static unsigned int const result_base_value =
             Introversal::value & IntroversalMask::value;
@@ -232,7 +232,7 @@ protected:
 
     template< class J, class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<1>)
+    derived_at(J const & j, Introversal, sake::int_tag<1>) const
     {
         typedef typename adaptor_::template
             relax< Introversal >::type result_type;
@@ -345,17 +345,17 @@ protected:
     typename adaptor_::template relax< Introversal >::type
     derived_at(J const & j, Introversal) const
     {
-        static bool const explicit_end =
-            sake::end_access_introversal_tag::value
+        static bool const explicit_end = 0 !=
+           (sake::end_access_introversal_tag::value
           & ~(base_introversal::value & IntroversalMask::value)
-          & Introversal::value;
+          & Introversal::value);
         typedef sake::int_tag< explicit_end > int_tag_;
         return derived_at(j, Introversal(), int_tag_());
     }
 
     template< class J, class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<0>)
+    derived_at(J const & j, Introversal, sake::int_tag<0>) const
     {
         static unsigned int const result_base_value =
             Introversal::value & IntroversalMask::value;
@@ -367,7 +367,7 @@ protected:
 
     template< class J, class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<1>)
+    derived_at(J const & j, Introversal, sake::int_tag<1>) const
     {
         typedef typename adaptor_::template
             relax< Introversal >::type result_type;
@@ -496,21 +496,21 @@ protected:
     typename adaptor_::template relax< Introversal >::type
     derived_at(J const & j, Introversal) const
     {
-        static bool const explicit_begin =
-            sake::begin_access_introversal_tag::value
+        static bool const explicit_begin = 0 !=
+           (sake::begin_access_introversal_tag::value
           & ~(base_introversal::value & IntroversalMask::value)
-          & Introversal::value;
-        static bool const explicit_end =
-            sake::end_access_introversal_tag::value
+          & Introversal::value);
+        static bool const explicit_end = 0 !=
+           (sake::end_access_introversal_tag::value
           & ~(base_introversal::value & IntroversalMask::value)
-          & Introversal::value;
+          & Introversal::value);
         typedef sake::int_tag< explicit_begin + 2 * explicit_end > int_tag_;
         return derived_at(j, Introversal(), int_tag_());
     }
 
     template< class J, class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<0>)
+    derived_at(J const & j, Introversal, sake::int_tag<0>) const
     {
         static unsigned int const result_base_value =
             Introversal::value & IntroversalMask::value;
@@ -522,7 +522,7 @@ protected:
 
     template< class J, class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<1>)
+    derived_at(J const & j, Introversal, sake::int_tag<1>) const
     {
         typedef typename adaptor_::template
             relax< Introversal >::type result_type;
@@ -540,7 +540,7 @@ protected:
 
     template< class J, class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<2>)
+    derived_at(J const & j, Introversal, sake::int_tag<2>) const
     {
         typedef typename adaptor_::template
             relax< Introversal >::type result_type;
@@ -558,7 +558,7 @@ protected:
 
     template< class J, class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<3>)
+    derived_at(J const & j, Introversal, sake::int_tag<3>) const
     {
         typedef typename relax< Introversal >::type result_type;
         return result_type(

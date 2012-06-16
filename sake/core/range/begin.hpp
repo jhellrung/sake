@@ -72,9 +72,14 @@ struct begin
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
+    template< class R >
+    typename sake::range::result_of::begin<R>::type
+    operator()(R&& r) const
+    { return operator()(sake::forward<R>(r), sake::null_introversal_tag()); }
+
     template< class R, class Introversal >
     typename sake::range::result_of::begin< R, Introversal >::type
-    operator()(R&& r, Introversal = sake::null_introversal_tag()) const
+    operator()(R&& r, Introversal) const
     {
         return sake::range_forward_traits<R>::iter_at(
             sake::forward<R>(r), sake::_begin, Introversal());
@@ -82,17 +87,27 @@ struct begin
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
+    template< class R >
+    typename sake::range::result_of::begin< R& >::type
+    operator()(R& r) const
+    { return operator()(r, sake::null_introversal_tag()); }
+
     template< class R, class Introversal >
     typename sake::range::result_of::begin< R&, Introversal >::type
-    operator()(R& r, Introversal = sake::null_introversal_tag()) const
+    operator()(R& r, Introversal) const
     {
         return sake::range_forward_traits< R& >::iter_at(
             r, sake::_begin, Introversal());
     }
 
+    template< class R >
+    typename sake::range::result_of::begin< R const & >::type
+    operator()(R const & r) const
+    { return operator()(r, sake::null_introversal_tag()); }
+
     template< class R, class Introversal >
     typename sake::range::result_of::begin< R const &, Introversal >::type
-    operator()(R const & r, Introversal = sake::null_introversal_tag()) const
+    operator()(R const & r, Introversal) const
     {
         return sake::range_forward_traits< R const & >::iter_at(
             r, sake::_begin, Introversal());
@@ -106,9 +121,14 @@ struct cbegin
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::range::result_of::cbegin, (1,2) )
 
+    template< class R >
+    typename sake::range::result_of::cbegin< R const & >::type
+    operator()(R const & r) const
+    { return operator()(r, sake::null_introversal_tag()); }
+
     template< class R, class Introversal >
     typename sake::range::result_of::cbegin< R const &, Introversal >::type
-    operator()(R const & r, Introversal = sake::null_introversal_tag()) const
+    operator()(R const & r, Introversal) const
     {
         return sake::range_traits< R const >::iter_at(
             r, sake::_begin, Introversal());

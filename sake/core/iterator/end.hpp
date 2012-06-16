@@ -53,9 +53,14 @@ struct end
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::iterator::result_of::end, (1,2) )
 
+    template< class I >
+    typename sake::iterator::result_of::end< I const & >::type
+    operator()(I const & i) const
+    { return operator()(i, sake::null_introversal_tag()); }
+
     template< class I, class Introversal >
-    typename sake::iterator::result_of::end< I, Introversal >::type
-    operator()(I const & i, Introversal = sake::null_introversal_tag()) const
+    typename sake::iterator::result_of::end< I const &, Introversal >::type
+    operator()(I const & i, Introversal) const
     { return sake::iterator_traits<I>::iter_at(i, sake::_end, Introversal()); }
 };
 
