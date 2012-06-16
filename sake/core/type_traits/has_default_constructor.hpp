@@ -16,6 +16,7 @@
 #define SAKE_CORE_TYPE_TRAITS_HAS_DEFAULT_CONSTRUCTOR_HPP
 
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
@@ -95,11 +96,12 @@ namespace default_impl
 
 template< class T >
 struct has_default_constructor
-    : boost_ext::mpl::or2<
-          sake::has_type_has_default_constructor_tag<
-              T, boost::mpl::quote1< boost::mpl::identity > >,
+    : boost::mpl::if_<
+          sake::has_type_has_default_constructor_tag<T>,
+          sake::has_type_has_default_constructor_tag<T,
+              boost::mpl::quote1< boost::mpl::identity > >,
           sake::has_nothrow_default_constructor<T>
-      >
+      >::type
 { };
 
 } // namespace default_impl

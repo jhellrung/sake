@@ -16,6 +16,7 @@
 #define SAKE_CORE_TYPE_TRAITS_HAS_NOTHROW_MOVE_CONSTRUCTOR_HPP
 
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
@@ -70,11 +71,12 @@ namespace default_impl
 
 template< class T >
 struct has_nothrow_move_constructor
-    : boost_ext::mpl::or2<
-          sake::has_type_has_nothrow_move_constructor_tag<
-              T, boost::mpl::quote1< boost::mpl::identity > >,
+    : boost::mpl::if_<
+          sake::has_type_has_nothrow_move_constructor_tag<T>,
+          sake::has_type_has_nothrow_move_constructor_tag<T,
+              boost::mpl::quote1< boost::mpl::identity > >,
           sake::has_nothrow_copy_constructor<T>
-      >
+      >::type
 { };
 
 } // namespace default_impl

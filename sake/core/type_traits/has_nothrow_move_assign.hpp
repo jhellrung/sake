@@ -16,10 +16,11 @@
 #define SAKE_CORE_TYPE_TRAITS_HAS_NOTHROW_MOVE_ASSIGN_HPP
 
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
-#include <sake/boost_ext/mpl/or.hpp>
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/introspection/has_operator_assign.hpp>
@@ -81,11 +82,12 @@ namespace default_impl
 
 template< class T >
 struct has_nothrow_move_assign
-    : boost_ext::mpl::or2<
-          sake::has_type_has_nothrow_move_assign_tag<
-              T, boost::mpl::quote1< boost::mpl::identity > >,
+    : boost::mpl::if_<
+          sake::has_type_has_nothrow_move_assign_tag<T>,
+          sake::has_type_has_nothrow_move_assign_tag<T,
+              boost::mpl::quote1< boost::mpl::identity > >,
           sake::has_nothrow_copy_assign<T>
-      >
+      >::type
 { };
 
 } // namespace default_impl

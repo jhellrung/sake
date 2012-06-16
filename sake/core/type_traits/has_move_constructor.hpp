@@ -16,6 +16,7 @@
 #define SAKE_CORE_TYPE_TRAITS_HAS_MOVE_CONSTRUCTOR_HPP
 
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/type_traits/has_trivial_copy.hpp>
 #include <boost/type_traits/remove_cv.hpp>
@@ -83,12 +84,15 @@ namespace default_impl
 
 template< class T >
 struct has_move_constructor
-    : boost_ext::mpl::or3<
-          sake::has_type_has_move_constructor_tag<
-              T, boost::mpl::quote1< boost::mpl::identity > >,
-          sake::has_nothrow_move_constructor<T>,
-          sake::has_copy_constructor<T>
-      >
+    : boost::mpl::if_<
+          sake::has_type_has_move_constructor_tag<T>,
+          sake::has_type_has_move_constructor_tag<T,
+              boost::mpl::quote1< boost::mpl::identity > >,
+          boost_ext::mpl::or2<
+              sake::has_nothrow_move_constructor<T>,
+              sake::has_copy_constructor<T>
+          >
+      >::type
 { };
 
 } // namespace default_impl
