@@ -93,9 +93,8 @@ protected:
 
     template< class U >
     explicit base_member(SAKE_FWD2_REF( U ) x,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< base_member, U >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            base_member, U >::value >::type* = 0)
         : m_member(sake::emplacer_constructible< nocv_type >(sake::forward<U>(x)))
     { }
 
@@ -148,9 +147,8 @@ protected:
 
     template< class U >
     explicit base_member(SAKE_FWD2_REF( U ) x,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< base_member, U >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            base_member, U >::value >::type* = 0)
         : T(sake::emplacer_constructible< nocv_type >(sake::forward<U>(x)))
     { }
 
