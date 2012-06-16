@@ -171,31 +171,31 @@ inline T&
 impl(T& x)
 {
     typedef typename boost_ext::mpl::
-         if_<
+    if_<
         boost::is_signed<T>,
         sake::int_tag<6>
     >::type::template
-    else_if <
+    else_if<
         boost::is_unsigned<T>,
         sake::int_tag<5>
     >::type::template
-    else_if <
+    else_if<
         abs_ip_private::is_callable_mem_fun< T&, T& ( ) >,
         sake::int_tag<4>
     >::type::template
-    else_if <
+    else_if<
         abs_ip_private::is_callable_mem_fun< T& >,
         sake::int_tag<3>
     >::type::template
-    else_if <
+    else_if<
         ::sake_abs_ip_private::is_callable< T& ( T& ) >,
         sake::int_tag<2>
     >::type::template
-    else_if <
+    else_if<
         ::sake_abs_ip_private::is_callable< void ( T& ) >,
         sake::int_tag<1>
     >::type::template
-    else_   <
+    else_<
         sake::int_tag<0>
     >::type int_tag_;
     return abs_ip_private::dispatch(x, int_tag_());

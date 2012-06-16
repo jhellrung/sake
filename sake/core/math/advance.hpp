@@ -13,7 +13,6 @@
 #ifndef SAKE_CORE_MATH_ADVANCE_HPP
 #define SAKE_CORE_MATH_ADVANCE_HPP
 
-#include <boost/iterator/iterator_categories.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
@@ -23,6 +22,7 @@
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 
+#include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/is_iterator.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/assert.hpp>
@@ -81,11 +81,11 @@ template< class T, class D >
 struct dispatch_index
 {
     static int const value = boost_ext::mpl::
-         if_<
+    if_<
         boost::is_iterator<T>,
         sake::int_tag<2>
     >::type::template
-    else_if <
+    else_if<
         boost_ext::mpl::and3<
             boost::is_integral<T>,
             boost::is_integral<D>,
@@ -94,7 +94,7 @@ struct dispatch_index
         >,
         sake::int_tag<1>
     >::type::template
-    else_   <
+    else_<
         sake::int_tag<0>
     >::type::value;
 };
