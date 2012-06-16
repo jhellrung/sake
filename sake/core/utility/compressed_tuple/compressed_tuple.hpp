@@ -182,9 +182,8 @@ public:
 
     template< class U0 >
     explicit compressed_tuple(U0&& x0,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< compressed_tuple, U0 >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            compressed_tuple, U0 >::value >::type* = 0)
         : base_member_(sake::forward< U0 >(x0))
     { }
 
@@ -192,17 +191,15 @@ public:
 
     template< class U0 >
     explicit compressed_tuple(U0& x0,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< compressed_tuple, U0 >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            compressed_tuple, U0 >::value >::type* = 0)
         : base_member_(x0)
     { }
 
     template< class U0 >
     explicit compressed_tuple(U0 const & x0,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< compressed_tuple, U0 >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            compressed_tuple, U0 >::value >::type* = 0)
         : base_member_(x0)
     { }
 
