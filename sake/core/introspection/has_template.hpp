@@ -43,8 +43,7 @@
  *
  * SAKE_INTROSPECTION_DEFINE_HAS_TEMPLATE_PARAMS(
  *     has_template_xxx,
- *     xxx,
- *     ( class U0 ) ( int U1 )
+ *     xxx, ( class U0 ) ( int U1 )
  * )
  *
  * expands to a metafunction definition equivalent to
@@ -55,7 +54,7 @@
  *     static bool const value = [true iff T has a nested class template named
  *                                xxx taking 2 template parameters, the first
  *                                being a type parameter and the second being an
- *                                integral parameter];
+ *                                int parameter];
  *     typedef has_type_xxx type;
  * };
  *
@@ -123,7 +122,7 @@ public: \
 #define SAKE_INTROSPECTION_HAS_TEMPLATE_params( params ) \
     BOOST_PP_CAT( SAKE_INTROSPECTION_HAS_TEMPLATE_params_, BOOST_PP_IS_UNARY( params ) ) ( params )
 #define SAKE_INTROSPECTION_HAS_TEMPLATE_params_0( params ) \
-    BOOST_PP_ENUM_PARAMS( params, class U BOOST_PP_INTERCEPT )
+    BOOST_PP_ENUM_PARAMS( params, class U )
 #define SAKE_INTROSPECTION_HAS_TEMPLATE_params_1( params ) \
     BOOST_PP_SEQ_ENUM( params )
 

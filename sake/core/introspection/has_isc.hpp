@@ -12,17 +12,17 @@
  *
  * Example:
  *
- * SAKE_INTROSPECTION_DEFINE_HAS_ISC( has_type_xxx, xxx )
+ * SAKE_INTROSPECTION_DEFINE_HAS_ISC( has_isc_xxx, xxx )
  *
  * expands to a metafunction definition equivalent to
  *
  * template< class T, class Pred = boost::mpl::always< boost::true_type > >
- * struct has_type_xxx
+ * struct has_isc_xxx
  * {
  *     static bool const value = [true iff T has an ISC named xxx and
  *                                {T::xxx} satisfies the Boost.MPL metafunction
  *                                Pred];
- *     typedef has_type_xxx type;
+ *     typedef has_isc_xxx type;
  * };
  *
  * [Here, {T::xxx} denotes a Boost.MPL integral constant with type and value
