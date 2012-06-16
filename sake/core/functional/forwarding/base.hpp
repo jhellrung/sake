@@ -139,16 +139,15 @@ protected:
 
     template< class T >
     explicit base(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< base, T >::value
-        >::type* = 0);
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            base, T >::value >::type* = 0);
 
     friend class sake::forwarding::core_access;
 
     template< class Signature >
-    struct enable_impl;
+    struct derived_enable;
     template< class Signature >
-    struct result_impl;
+    struct derived_result;
 };
 
 /*******************************************************************************
@@ -160,9 +159,8 @@ template< class T >
 inline
 base< Derived, Params >::
 base(SAKE_FWD2_REF( T ) x,
-    typename boost::disable_if_c<
-        boost_ext::is_base_of_sans_qualifiers< base, T >::value
-    >::type*)
+    typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+        base, T >::value >::type*)
     : nullary_base_(sake::forward<T>(x))
 { }
 
@@ -179,7 +177,7 @@ enable
 template< class Derived, class Params >
 template< class Signature >
 struct base< Derived, Params >::
-enable_impl
+derived_enable
     : boost::true_type
 { };
 
@@ -197,7 +195,7 @@ result
 template< class Derived, class Params >
 template< class Signature >
 struct base< Derived, Params >::
-result_impl
+derived_result
     : boost_ext::mpl::at<
           Params,
           sake::forwarding::keyword::tag::result,

@@ -32,15 +32,17 @@ class core_access
     template< class Signature > // Signature = {const} Derived ( T0, ... )
     struct enable
     {
-        typedef typename boost::function_types::result_type< Signature >::type::template
-            enable_impl< Signature >::type type;
+        typedef typename boost::function_types::
+            result_type< Signature >::type::template
+            derived_enable< Signature >::type type;
     };
 
     template< class Signature > // Signature = {const} Derived ( T0, ... )
     struct result
     {
-        typedef typename boost::function_types::result_type< Signature >::type::template
-            result_impl< Signature >::type type;
+        typedef typename boost::function_types::
+            result_type< Signature >::type::template
+            derived_result< Signature >::type type;
     };
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
@@ -48,14 +50,14 @@ class core_access
     template< class Derived, class... T >
     typename result< Derived ( SAKE_FWD2_PARAM( T )... ) >::type
     static apply(Derived& this_, SAKE_FWD2_REF( T )... x)
-    { return this_.apply_impl(sake::forward<T>(x)...); }
+    { return this_.derived_apply(sake::forward<T>(x)...); }
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     template< class Derived >
     static typename result< Derived ( ) >::type
     apply(Derived& this_)
-    { return this_.apply_impl(); }
+    { return this_.derived_apply(); }
 
 #define SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( r, n, classT_tuple ) \
     class Derived, BOOST_PP_TUPLE_REM_CTOR( n, classT_tuple )
@@ -66,7 +68,7 @@ class core_access
 #define SAKE_OVERLOAD_DECLARE_PARAMS( r, n, T_tuple, Tx_tuple ) \
     Derived& this_, BOOST_PP_TUPLE_REM_CTOR( n, Tx_tuple )
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    return this_.apply_impl forward_x_tuple ;
+    return this_.derived_apply forward_x_tuple ;
 #define SAKE_OVERLOAD_FWD2_MAX_ARITY SAKE_FORWARDING_BASE_MAX_ARITY
 #include SAKE_OVERLOAD_GENERATE()
 

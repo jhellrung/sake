@@ -72,12 +72,12 @@ protected:
     friend class sake::forwarding::core_access;
 
     template< class Signature >
-    struct enable_impl
+    struct derived_enable
         : sake::forwarding::deduced_enable< Signature, T >
     { };
 
     template< class Signature >
-    class result_impl
+    class derived_result
     {
         typedef typename sake::forwarding::deduced_result< Signature, T >::type deduced_result_;
     public:
@@ -93,13 +93,13 @@ private:
         private_nullary_result_type;
 public:
 
-    private_nullary_result_type apply_impl()
+    private_nullary_result_type derived_apply()
     {
         return derived().initialized() ?
                derived().get()() :
                sake::default_construct< private_nullary_result_type >();
     }
-    private_nullary_result_type apply_impl() const
+    private_nullary_result_type derived_apply() const
     {
         return derived().initialized() ?
                derived().get()() :
@@ -109,10 +109,10 @@ public:
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     template< class... U >
-    typename result_impl< sake::optional<T> ( SAKE_FWD2_PARAM( U )... ) >::type
-    apply_impl(SAKE_FWD2_REF( U )... x)
+    typename derived_result< sake::optional<T> ( SAKE_FWD2_PARAM( U )... ) >::type
+    derived_apply(SAKE_FWD2_REF( U )... x)
     {
-        typedef typename result_impl<
+        typedef typename derived_result<
             sake::optional<T> ( SAKE_FWD2_PARAM( U )... )
         >::type result_type;
         return derived().initialized() ?
@@ -123,9 +123,9 @@ public:
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 #define SAKE_OVERLOAD_RESULT( r, n, U_tuple ) \
-    result_impl< sake::optional<T> U_tuple >
+    derived_result< sake::optional<T> U_tuple >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
-    apply_impl
+    derived_apply
 #define SAKE_OVERLOAD_BODY( r, n, U_tuple, x_tuple, forward_x_tuple ) \
     return derived().initialized() ? \
            derived().get() forward_x_tuple : \
@@ -138,10 +138,10 @@ public:
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     template< class... U >
-    typename result_impl< sake::optional<T> const ( SAKE_FWD2_PARAM( U )... ) >::type
-    apply_impl(SAKE_FWD2_REF( U )... x) const
+    typename derived_result< sake::optional<T> const ( SAKE_FWD2_PARAM( U )... ) >::type
+    derived_apply(SAKE_FWD2_REF( U )... x) const
     {
-        typedef typename result_impl<
+        typedef typename derived_result<
             sake::optional<T> const ( SAKE_FWD2_PARAM( U )... )
         >::type result_type;
         return derived().initialized() ?
@@ -152,9 +152,9 @@ public:
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 #define SAKE_OVERLOAD_RESULT( r, n, U_tuple ) \
-    result_impl< sake::optional<T> const U_tuple >
+    derived_result< sake::optional<T> const U_tuple >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
-    apply_impl
+    derived_apply
 #define SAKE_OVERLOAD_DECLARATION_SUFFIX \
     const
 #define SAKE_OVERLOAD_BODY( r, n, U_tuple, x_tuple, forward_x_tuple ) \

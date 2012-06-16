@@ -75,9 +75,8 @@ protected:
     )
     template< class T >
     explicit nullary_base(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< nullary_base, T >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            nullary_base, T >::value >::type* = 0)
         : impl_(sake::forward<T>(x))
     { }
 };
@@ -193,9 +192,8 @@ protected:
 
     template< class T >
     explicit impl(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< impl, T >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            impl, T >::value >::type* = 0)
         : chained_base_type(sake::emplacer_constructible<
               chained_base_type >(sake::forward<T>(x)))
     { }
@@ -203,7 +201,7 @@ protected:
     friend class sake::forwarding::core_access;
 
     typedef nullary_result_type protected_nullary_result_type;
-    protected_nullary_result_type apply_impl() const;
+    protected_nullary_result_type derived_apply() const;
 };
 
 #undef n
