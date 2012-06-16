@@ -149,27 +149,27 @@ private:
 
     friend class forwarding::core_access;
 
-    template< class Signature > struct enable_impl;
-    template< class Signature > struct result_impl;
+    template< class Signature > struct derived_enable;
+    template< class Signature > struct derived_result;
 
     typedef typename forwarding_base::protected_nullary_result_type
         private_nullary_result_type;
 
-    private_nullary_result_type apply_impl() const;
+    private_nullary_result_type derived_apply() const;
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
     template< class... T >
-    typename result_impl< reference_wrapper ( SAKE_FWD2_PARAM( T )... ) >::type
-    apply_impl(SAKE_FWD2_REF( T )... x) const
+    typename derived_result< reference_wrapper ( SAKE_FWD2_PARAM( T )... ) >::type
+    derived_apply(SAKE_FWD2_REF( T )... x) const
     { return (*m_p)(sake::forward<T>(x)...); }
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
 #define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
-    result_impl< reference_wrapper T_tuple >
+    derived_result< reference_wrapper T_tuple >
 #define SAKE_OVERLOAD_FUNCTION_NAME \
-    apply_impl
+    derived_apply
 #define SAKE_OVERLOAD_DECLARATION_SUFFIX \
     const
 #define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
@@ -369,21 +369,21 @@ operator->() const
 template< class T, class Tags >
 template< class Signature >
 struct reference_wrapper< T, Tags >::
-enable_impl
+derived_enable
     : forwarding::deduced_enable< Signature, T& >
 { };
 
 template< class T, class Tags >
 template< class Signature >
 struct reference_wrapper< T, Tags >::
-result_impl
+derived_result
     : forwarding::deduced_result< Signature, T& >
 { };
 
 template< class T, class Tags >
 inline typename reference_wrapper< T, Tags >::private_nullary_result_type
 reference_wrapper< T, Tags >::
-apply_impl() const
+derived_apply() const
 { return (*m_p)(); }
 
 } // namespace reference_wrapper_adl
