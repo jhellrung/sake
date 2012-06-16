@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct iterator_concepts::Lvalue<I>
+ * struct iterator::concepts::Lvalue<I>
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_CONCEPTS_LVALUE_HPP
@@ -28,12 +28,15 @@
 namespace sake
 {
 
-namespace iterator_concepts
+namespace iterator
+{
+
+namespace concepts
 {
 
 template< class I >
 struct Lvalue
-    : sake::iterator_concepts::Readable<I>
+    : sake::iterator::concepts::Readable<I>
 {
 private:
     typedef sake::iterator_traits<I> traits_;
@@ -63,7 +66,9 @@ private:
     SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( Lvalue )
 };
 
-} // namespace iterator_concepts
+} // namespace concepts
+
+} // namespace iterator
 
 } // namespace sake
 

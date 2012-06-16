@@ -23,7 +23,10 @@
 namespace sake
 {
 
-namespace iterator_facade_adl
+namespace iterator
+{
+
+namespace facade_adl
 {
 
 namespace private_
@@ -32,7 +35,7 @@ namespace private_
 template<
     class D, class P, class T,
     bool = boost::mpl::has_key<
-        P, sake::iterator_keyword::tag::chained_base >::value
+        P, sake::iterator::keyword::tag::chained_base >::value
 >
 struct explicit_constructor_enable_dispatch;
 
@@ -45,10 +48,10 @@ template< class D, class P, class T >
 struct explicit_constructor_enable_dispatch< D, P, T, true >
     : boost_ext::mpl::and2<
           boost::mpl::not_< boost_ext::is_base_of_sans_qualifiers<
-              sake::iterator_facade_adl::iterator_facade<D,P>, T > >,
+              sake::iterator::facade_adl::facade<D,P>, T > >,
           sake::value_constructor_enable<
               typename boost_ext::mpl::at<
-                  P, sake::iterator_keyword::tag::chained_base >::type,
+                  P, sake::iterator::keyword::tag::chained_base >::type,
               T
           >
       >
@@ -57,13 +60,14 @@ struct explicit_constructor_enable_dispatch< D, P, T, true >
 template< class D, class P, class T >
 struct explicit_constructor_enabler
     : boost::enable_if_c< private_::explicit_constructor_enable_dispatch<
-          D, P, typename boost_ext::remove_rvalue_reference<T>::type
-      >::value >
+          D, P, typename boost_ext::remove_rvalue_reference<T>::type >::value >
 { };
 
 } // namespace private_
 
-} // namespace iterator_facade_adl
+} // namespace facade_adl
+
+} // namespace iterator
 
 } // namespace sake
 

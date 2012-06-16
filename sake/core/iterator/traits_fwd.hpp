@@ -23,7 +23,7 @@ struct iterator_traits;
 
 namespace default_impl
 {
-template< class I >
+template< class I, class Introversal = void >
 struct iterator_traits;
 } // namespace default_impl
 

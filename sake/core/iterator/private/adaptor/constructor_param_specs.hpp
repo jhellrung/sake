@@ -20,31 +20,34 @@
 namespace sake
 {
 
-namespace iterator_adaptor_private
+namespace iterator
 {
 
-template< class Base, class Params >
+namespace adaptor_private
+{
+
+template< class I, class Params >
 struct constructor_param_specs
 {
     typedef boost::mpl::vector3<
         sake::keyword::optional<
-            sake::iterator_keyword::tag::base,
-            sake::value_constructor_enable< Base >
+            sake::iterator::keyword::tag::base,
+            sake::value_constructor_enable<I>
         >,
         sake::keyword::optional<
-            sake::keyword::deduced< sake::iterator_keyword::tag::member >,
+            sake::keyword::deduced< sake::iterator::keyword::tag::member >,
             sake::value_constructor_enable<
                 typename boost_ext::mpl::at<
-                    Params, sake::iterator_keyword::tag::member,
+                    Params, sake::iterator::keyword::tag::member,
                     void
                 >::type
             >
         >,
         sake::keyword::optional<
-            sake::keyword::deduced< sake::iterator_keyword::tag::chained_base >,
+            sake::keyword::deduced< sake::iterator::keyword::tag::chained_base >,
             sake::value_constructor_enable<
                 typename boost_ext::mpl::at<
-                    Params, sake::iterator_keyword::tag::chained_base,
+                    Params, sake::iterator::keyword::tag::chained_base,
                     void
                 >::type
             >
@@ -52,7 +55,9 @@ struct constructor_param_specs
     > type;
 };
 
-} // namespace iterator_adaptor_private
+} // namespace adaptor_private
+
+} // namespace iterator
 
 } // namespace sake
 

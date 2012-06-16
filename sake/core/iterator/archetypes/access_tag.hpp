@@ -5,13 +5,13 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct iterator_archetypes::readable_tag
- * struct iterator_archetypes::writable_tag
- * struct iterator_archetypes::swappable_tag
- * struct iterator_archetypes::readable_writable_tag
- * struct iterator_archetypes::lvalue_tag
- * struct iterator_archetypes::readable_lvalue_tag
- * struct iterator_archetypes::writable_lvalue_tag
+ * struct iterator::archetypes::readable_tag
+ * struct iterator::archetypes::writable_tag
+ * struct iterator::archetypes::swappable_tag
+ * struct iterator::archetypes::readable_writable_tag
+ * struct iterator::archetypes::lvalue_tag
+ * struct iterator::archetypes::readable_lvalue_tag
+ * struct iterator::archetypes::writable_lvalue_tag
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_ACCESS_TAG_HPP
@@ -20,7 +20,10 @@
 namespace sake
 {
 
-namespace iterator_archetypes
+namespace iterator
+{
+
+namespace archetypes
 {
 
 struct readable_tag { };
@@ -28,24 +31,26 @@ struct writable_tag { };
 struct swappable_tag { };
 
 struct readable_writable_tag
-    : sake::iterator_archetypes::readable_tag,
-      sake::iterator_archetypes::writable_tag,
-      sake::iterator_archetypes::swappable_tag
+    : sake::iterator::archetypes::readable_tag,
+      sake::iterator::archetypes::writable_tag,
+      sake::iterator::archetypes::swappable_tag
 { };
 
 struct lvalue_tag
-    : sake::iterator_archetypes::readable_tag
+    : sake::iterator::archetypes::readable_tag
 { };
 
-typedef iterator_archetypes::lvalue_tag readable_lvalue_tag;
+typedef iterator::archetypes::lvalue_tag readable_lvalue_tag;
 
 struct writable_lvalue_tag
-    : sake::iterator_archetypes::lvalue_tag,
-      sake::iterator_archetypes::writable_tag,
-      sake::iterator_archetypes::swappable_tag
+    : sake::iterator::archetypes::lvalue_tag,
+      sake::iterator::archetypes::writable_tag,
+      sake::iterator::archetypes::swappable_tag
 { };
 
-} // namespace iterator_archetypes
+} // namespace archetypes
+
+} // namespace iterator
 
 } // namespace sake
 

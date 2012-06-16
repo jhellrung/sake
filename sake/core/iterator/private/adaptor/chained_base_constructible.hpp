@@ -19,22 +19,21 @@
 namespace sake
 {
 
-namespace iterator_adaptor_private
+namespace iterator
+{
+
+namespace adaptor_private
 {
 
 template<
     class D, class P,
     class C = typename boost_ext::mpl::at<
-        P, sake::iterator_keyword::tag::chained_base,
-        void
-    >::type
+        P, sake::iterator::keyword::tag::chained_base, void >::type
 >
 struct chained_base_constructible_dispatch
 {
     typedef typename boost_ext::propagate_const<D,C>::type & type;
-    static type
-    apply(type x)
-    { return x; }
+    static type apply(type x) { return x; }
 };
 
 template< class D, class P >
@@ -42,22 +41,22 @@ struct chained_base_constructible_dispatch< D, P, void >
 {
     typedef sake::emplacer< void ( ) > type;
     template< class T >
-    static type
-    apply(T&)
-    { return type(); }
+    static type apply(T&) { return type(); }
 };
 
 template< class D, class P >
 inline typename chained_base_constructible_dispatch<D,P>::type
-chained_base_constructible(sake::iterator_facade<D,P>& i)
+chained_base_constructible(sake::iterator::facade<D,P>& i)
 { return chained_base_constructible_dispatch<D,P>::apply(i); }
 
 template< class D, class P >
 inline typename chained_base_constructible_dispatch< D const, P >::type
-chained_base_constructible(sake::iterator_facade< D, P > const & i)
+chained_base_constructible(sake::iterator::facade< D, P > const & i)
 { return chained_base_constructible_dispatch< D const, P >::apply(i); }
 
-} // namespace iterator_adaptor_private
+} // namespace adaptor_private
+
+} // namespace iterator
 
 } // namespace sake
 

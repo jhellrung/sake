@@ -5,13 +5,12 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct archetypes::iterator< T, Traversal, Access >
+ * struct archetypes::iterator< T, Traversal, Introversal, Access >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_ITERATOR_HPP
 #define SAKE_CORE_ITERATOR_ARCHETYPES_ITERATOR_HPP
 
-#include <boost/iterator/iterator_categories.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -21,10 +20,12 @@
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/iterator/archetypes/access_tag.hpp>
+#include <sake/core/iterator/archetypes/private/introversal_base.hpp>
 #include <sake/core/iterator/archetypes/private/operator_bracket_base.hpp>
 #include <sake/core/iterator/archetypes/private/pointer_dispatch.hpp>
 #include <sake/core/iterator/archetypes/private/reference_dispatch.hpp>
 #include <sake/core/iterator/archetypes/private/traversal_base.hpp>
+#include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/private/category.hpp>
 
 namespace sake
@@ -33,10 +34,16 @@ namespace sake
 namespace archetypes
 {
 
-template< class T, class Traversal, class Access >
+template< class T, class Traversal, class Introversal, class Access >
 struct iterator
     : sake::archetypes::iterator_private::traversal_base<
-          iterator< T, Traversal, Access >, Traversal >,
+          sake::archetypes::iterator< T, Traversal, Introversal, Access >,
+          Traversal
+      >,
+      sake::archetypes::iterator_private::introversal_base<
+          sake::archetypes::iterator< T, Traversal, Introversal, Access >,
+          Introversal, Traversal
+      >,
       sake::archetypes::iterator_private::operator_bracket_base<
           T, Traversal, Access >
 {
@@ -46,7 +53,9 @@ struct iterator
 private:
     typedef typename boost_ext::add_const_if_c<
         !boost_ext::is_convertible<
-            Access, sake::iterator_archetypes::writable_tag >::value,
+            Access,
+            sake::iterator::archetypes::writable_tag
+        >::value,
         T
     >::type const_value_type;
     typedef sake::archetypes::iterator_private::reference_dispatch<
@@ -61,8 +70,9 @@ public:
     typedef typename pointer_dispatch_::type pointer;
 
     typedef Traversal iterator_traversal;
+    typedef Introversal iterator_introversal;
 
-    typedef typename sake::iterator_private::category<
+    typedef typename sake::iterator::private_::category<
         Traversal, const_value_type
     >::type iterator_category;
 
@@ -72,12 +82,12 @@ public:
     { return pointer_dispatch_::apply(); }
 };
 
-template< class T, class Traversal, class Access >
+template< class T, class Traversal, class Introversal, class Access >
 inline typename boost::enable_if_c< boost_ext::is_convertible<
-    Access, sake::iterator_archetypes::swappable_tag >::value >::type
+    Access, sake::iterator::archetypes::swappable_tag >::value >::type
 iter_swap(
-    iterator< T, Traversal, Access >,
-    iterator< T, Traversal, Access >)
+    sake::archetypes::iterator< T, Traversal, Introversal, Access >,
+    sake::archetypes::iterator< T, Traversal, Introversal, Access >)
 { }
 
 } // namespace archetypes

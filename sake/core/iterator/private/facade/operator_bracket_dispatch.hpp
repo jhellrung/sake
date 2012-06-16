@@ -24,7 +24,10 @@
 namespace sake
 {
 
-namespace iterator_facade_adl
+namespace iterator
+{
+
+namespace facade_adl
 {
 
 namespace private_
@@ -156,7 +159,9 @@ struct operator_bracket_dispatch< This, Value, Reference, 0 >
 
 } // namespace private_
 
-} // namespace iterator_facade_adl
+} // namespace facade_adl
+
+} // namespace iterator
 
 } // namespace sake
 

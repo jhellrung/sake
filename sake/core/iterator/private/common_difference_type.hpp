@@ -14,7 +14,10 @@
 namespace sake
 {
 
-namespace iterator_private
+namespace iterator
+{
+
+namespace private_
 {
 
 template< class I0, class I1 >
@@ -25,7 +28,9 @@ struct common_difference_type
       >
 { };
 
-} // namespace iterator_private
+} // namespace private_
+
+} // namespace iterator
 
 } // namespace sake
 

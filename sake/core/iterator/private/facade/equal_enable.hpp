@@ -9,19 +9,21 @@
 #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_EQUAL_ENABLE_HPP
 #define SAKE_CORE_ITERATOR_PRIVATE_FACADE_EQUAL_ENABLE_HPP
 
-#include <boost/iterator/iterator_categories.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
-#include <sake/core/iterator/private/is_interconvertible.hpp>
-#include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/categories.hpp>
+#include <sake/core/iterator/private/is_interoperable.hpp>
 
 namespace sake
 {
 
-namespace iterator_facade_adl
+namespace iterator
+{
+
+namespace facade_adl
 {
 
 namespace private_
@@ -29,16 +31,16 @@ namespace private_
 
 template< class D0, class P0, class D1, class P1 >
 struct equal_enable
-    : boost_ext::mpl::and2<
+    : boost_ext::mpl::and3<
           boost_ext::is_convertible<
-              typename sake::iterator_traversal< D0 >::type,
+              typename D0::iterator_traversal,
               boost::single_pass_traversal_tag
           >,
-          /*boost_ext::is_convertible<
-              typename sake::iterator_traversal< D1 >::type,
+          boost_ext::is_convertible<
+              typename D1::iterator_traversal,
               boost::single_pass_traversal_tag
-          >,*/
-          sake::iterator_private::is_interconvertible< D0, D1 >
+          >,
+          sake::iterator::private_::is_interoperable< D0, D1 >
       >
 { };
 
@@ -52,7 +54,9 @@ struct equal_enabler
 
 } // namespace private_
 
-} // namespace iterator_facade_adl
+} // namespace facade_adl
+
+} // namespace iterator
 
 } // namespace sake
 

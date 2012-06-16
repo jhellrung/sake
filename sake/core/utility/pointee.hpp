@@ -17,8 +17,6 @@
 #ifndef SAKE_CORE_UTILITY_POINTEE_HPP
 #define SAKE_CORE_UTILITY_POINTEE_HPP
 
-#include <boost/iterator/iterator_traits.hpp>
-
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/add_const_if.hpp>
 
@@ -26,6 +24,7 @@
 #include <sake/core/introspection/has_type_element_type.hpp>
 #include <sake/core/introspection/has_type_value_type.hpp>
 #include <sake/core/introspection/is_incrementable.hpp>
+#include <sake/core/iterator/traits.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/int_tag.hpp>
 
@@ -92,7 +91,7 @@ template< class P >
 struct dispatch<P,3>
 {
 private:
-    typedef typename boost::iterator_value<P>::type value_type;
+    typedef typename sake::iterator_value<P>::type value_type;
     static bool const is_const = !SAKE_EXPR_IS_CONVERTIBLE( *sake::declref<P>(), value_type& );
 public:
     typedef typename boost_ext::add_const_if_c< is_const, value_type >::type type;

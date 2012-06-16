@@ -6,12 +6,12 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_ARCHETYPES_TRAVERSAL_BASE_HPP
-#define SAKE_CORE_ITERATOR_ARCHETYPES_TRAVERSAL_BASE_HPP
+#ifndef SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_TRAVERSAL_BASE_HPP
+#define SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_TRAVERSAL_BASE_HPP
 
 #include <cstddef>
 
-#include <boost/iterator/iterator_categories.hpp>
+#include <sake/core/iterator/categories.hpp>
 
 namespace sake
 {
@@ -43,7 +43,8 @@ protected:
 
 template< class Derived >
 struct traversal_base< Derived, boost::single_pass_traversal_tag >
-    : traversal_base< Derived, boost::incrementable_traversal_tag >
+    : sake::archetypes::iterator_private::traversal_base<
+          Derived, boost::incrementable_traversal_tag >
 {
     inline friend bool operator==(traversal_base, traversal_base)
     { return true; }
@@ -59,7 +60,8 @@ protected:
 
 template< class Derived >
 struct traversal_base< Derived, boost::forward_traversal_tag >
-    : traversal_base< Derived, boost::single_pass_traversal_tag >
+    : sake::archetypes::iterator_private::traversal_base<
+          Derived, boost::single_pass_traversal_tag >
 {
     typedef std::ptrdiff_t difference_type;
 
@@ -70,7 +72,8 @@ struct traversal_base< Derived, boost::forward_traversal_tag >
 
 template< class Derived >
 struct traversal_base< Derived, boost::bidirectional_traversal_tag >
-    : traversal_base< Derived, boost::forward_traversal_tag >
+    : sake::archetypes::iterator_private::traversal_base<
+          Derived, boost::forward_traversal_tag >
 {
     Derived& operator--()
     { return *static_cast< Derived* >(this); }
@@ -80,7 +83,8 @@ struct traversal_base< Derived, boost::bidirectional_traversal_tag >
 
 template< class Derived >
 struct traversal_base< Derived, boost::random_access_traversal_tag >
-    : traversal_base< Derived, boost::bidirectional_traversal_tag >
+    : sake::archetypes::iterator_private::traversal_base<
+          Derived, boost::bidirectional_traversal_tag >
 {
     typedef std::ptrdiff_t difference_type;
 
@@ -116,4 +120,4 @@ struct traversal_base< Derived, boost::random_access_traversal_tag >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_TRAVERSAL_BASE_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_TRAVERSAL_BASE_HPP

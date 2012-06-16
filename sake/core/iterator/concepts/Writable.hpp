@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct iterator_concepts::Writable<
+ * struct iterator::concepts::Writable<
  *     I, T = sake::iterator_value<I>::type
  * >
  ******************************************************************************/
@@ -16,13 +16,16 @@
 #include <boost/concept/usage.hpp>
 
 #include <sake/core/config.hpp>
-#include <sake/core/concepts/CopyConstructible.hpp>
+#include <sake/core/iterator/concepts/private/Base.hpp>
 #include <sake/core/iterator/traits.hpp>
 
 namespace sake
 {
 
-namespace iterator_concepts
+namespace iterator
+{
+
+namespace concepts
 {
 
 template<
@@ -30,7 +33,7 @@ template<
     class T = typename sake::iterator_value<I>::type
 >
 struct Writable
-    : sake::concepts::CopyConstructible<I>
+    : sake::iterator::concepts::private_::Base<I>
 {
     BOOST_CONCEPT_USAGE( Writable )
     {
@@ -46,10 +49,12 @@ private:
 
 template< class I >
 struct Writable< I, void >
-    : sake::concepts::CopyConstructible<I>
+    : sake::iterator::concepts::private_::Base<I>
 { };
 
-} // namespace iterator_concepts
+} // namespace concepts
+
+} // namespace iterator
 
 } // namespace sake
 

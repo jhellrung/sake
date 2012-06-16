@@ -15,6 +15,9 @@ namespace sake
 struct begin_tag { };
 struct end_tag { };
 
+static sake::begin_tag const _begin = { };
+static sake::end_tag const _end = { };
+
 } // namespace sake
 
 #endif // #ifndef SAKE_CORE_ITERATOR_BEGIN_END_TAG_HPP

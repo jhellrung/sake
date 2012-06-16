@@ -9,13 +9,13 @@
 #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_TRAVERSAL_BASE_HPP
 #define SAKE_CORE_ITERATOR_PRIVATE_FACADE_TRAVERSAL_BASE_HPP
 
-#include <boost/iterator/iterator_categories.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
+#include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/private/facade/begin_introversal_base.hpp>
@@ -32,7 +32,10 @@
 namespace sake
 {
 
-namespace iterator_facade_adl
+namespace iterator
+{
+
+namespace facade_adl
 {
 
 namespace private_
@@ -43,8 +46,10 @@ struct traversal_base_index
 {
     SAKE_USING_TYPEDEF( typename private_::traits< Params >, iterator_traversal );
     static int const value =
-        boost_ext::is_convertible< iterator_traversal, boost::random_access_traversal_tag >::value
-      + boost_ext::is_convertible< iterator_traversal, boost::bidirectional_traversal_tag >::value;
+        boost_ext::is_convertible<
+            iterator_traversal, boost::random_access_traversal_tag >::value
+      + boost_ext::is_convertible<
+            iterator_traversal, boost::bidirectional_traversal_tag >::value;
 };
 
 template< class Derived, class Params >
@@ -61,7 +66,7 @@ public:
     Derived&
     operator++()
     {
-        sake::iterator_core_access::increment(derived());
+        sake::iterator::core_access::increment(derived());
         return derived();
     }
 
@@ -79,7 +84,7 @@ public:
     {
         typename operator_post_increment_dispatch_::type result =
             operator_post_increment_dispatch_::apply(derived());
-        sake::iterator_core_access::increment(derived());
+        sake::iterator::core_access::increment(derived());
         return result;
     }
     
@@ -92,9 +97,8 @@ protected:
 
     template< class T >
     explicit traversal_base(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< traversal_base, T >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            traversal_base, T >::value >::type* = 0)
         : begin_introversal_base_(sake::forward<T>(x))
     { }
 };
@@ -113,7 +117,7 @@ public:
     Derived&
     operator--()
     {
-        sake::iterator_core_access::decrement(derived());
+        sake::iterator::core_access::decrement(derived());
         return derived();
     }
 
@@ -121,7 +125,7 @@ public:
     operator--(int)
     {
         Derived result(derived());
-        sake::iterator_core_access::decrement(derived());
+        sake::iterator::core_access::decrement(derived());
         return result;
     }
 
@@ -134,9 +138,8 @@ protected:
 
     template< class T >
     explicit traversal_base(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< traversal_base, T >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            traversal_base, T >::value >::type* = 0)
         : traversal_base_(sake::forward<T>(x))
     { }
 };
@@ -169,17 +172,17 @@ public:
     Derived&
     operator+=(difference_type const n)
     {
-        sake::iterator_core_access::plus_assign(derived(), n);
+        sake::iterator::core_access::advance_ip(derived(), n);
         return derived();
     }
 
     Derived&
     operator-=(difference_type const n)
-    { return derived() += -n; }
+    { return derived() += (-n); }
 
     Derived
     operator+(difference_type const n) const
-    { return sake::iterator_core_access::plus(derived(), n); }
+    { return sake::iterator::core_access::advance(derived(), n); }
 
     Derived
     operator-(difference_type const n) const
@@ -198,16 +201,14 @@ protected:
 
     template< class T >
     explicit traversal_base(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c<
-            boost_ext::is_base_of_sans_qualifiers< traversal_base, T >::value
-        >::type* = 0)
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            traversal_base, T >::value >::type* = 0)
         : traversal_base_(sake::forward<T>(x))
     { }
 
-    friend class sake::iterator_core_access;
+    friend class sake::iterator::core_access;
 
-    Derived
-    derived_plus(difference_type const n) const
+    Derived derived_advance(difference_type const n) const
     {
         Derived result(derived());
         return result += n;
@@ -216,7 +217,9 @@ protected:
 
 } // namespace private_
 
-} // namespace iterator_facade_adl
+} // namespace facade_adl
+
+} // namespace iterator
 
 } // namespace sake
 

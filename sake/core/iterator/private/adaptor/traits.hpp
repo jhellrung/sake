@@ -23,7 +23,6 @@
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
 
-#include <sake/core/cursor/traits.hpp>
 #include <sake/core/introspection/has_operator_less.hpp>
 #include <sake/core/introspection/has_operator_minus.hpp>
 #include <sake/core/iterator/facade.hpp>
@@ -36,87 +35,95 @@
 namespace sake
 {
 
-namespace iterator_adaptor_private
+namespace iterator
 {
 
-template< class Derived, class Base, class Params >
+namespace adaptor_private
+{
+
+template< class Derived, class I, class Params >
 struct traits
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< Base >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< Base >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_reference<I>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<I>::value));
 
-    typedef typename sake::iterator_value< Base >::type base_value_type;
+    typedef typename sake::iterator_value<I>::type base_value_type;
 
     typedef typename boost_ext::mpl::lazy_at<
-        Params, sake::iterator_keyword::tag::value,
+        Params, sake::iterator::keyword::tag::value,
         boost_ext::add_const_if_c<
-            sake::is_const_iterator< Base >::value,
+            sake::is_const_iterator<I>::value,
             base_value_type
         >
     >::type facade_value_type;
 
     typedef typename boost_ext::mpl::lazy_at<
-        Params, sake::iterator_keyword::tag::reference,
+        Params, sake::iterator::keyword::tag::reference,
         boost::mpl::eval_if_c<
             boost::mpl::has_key<
-                Params, sake::iterator_keyword::tag::value >::value,
+                Params, sake::iterator::keyword::tag::value >::value,
             boost::mpl::identity< facade_value_type & >,
-            sake::iterator_reference< Base >
+            sake::iterator_reference<I>
         >
     >::type reference;
 
     typedef typename boost_ext::mpl::lazy_at<
-        Params, sake::iterator_keyword::tag::difference,
-        sake::iterator_difference< Base >
+        Params, sake::iterator::keyword::tag::difference,
+        sake::iterator_difference<I>
     >::type difference_type;
 
     typedef typename boost_ext::mpl::lazy_at<
-        Params, sake::iterator_keyword::tag::traversal,
-        sake::iterator_traversal< Base >
+        Params, sake::iterator::keyword::tag::traversal,
+        sake::iterator_traversal<I>
     >::type iterator_traversal;
 
     typedef typename boost_ext::mpl::lazy_at<
-        Params, sake::iterator_keyword::tag::introversal,
-        sake::cursor_introversal< Base >
-    >::type cursor_introversal;
+        Params, sake::iterator::keyword::tag::introversal,
+        sake::iterator_introversal<I>
+    >::type iterator_introversal;
 
     typedef typename boost_ext::mpl::at<
-        Params, sake::iterator_keyword::tag::compare_enable,
+        Params, sake::iterator::keyword::tag::compare_enable,
         sake::is_template_base_of2<
-            sake::iterator_facade, Base,
+            sake::iterator::facade, I,
             sake::has_operator_less< boost::mpl::_1 >
         >
     >::type compare_enable;
     typedef typename boost_ext::mpl::at<
-        Params, sake::iterator_keyword::tag::difference_enable,
+        Params, sake::iterator::keyword::tag::difference_enable,
         sake::is_template_base_of2<
-            sake::iterator_facade, Base,
-            sake::has_operator_minus< boost::mpl::_1 >
+            sake::iterator::facade, I,
+            sake::has_operator_minus<
+                boost::mpl::_1, boost::mpl::_1,
+                difference_type
+            >
         >
     >::type difference_enable;
 
     typedef boost::mpl::map7<
-        sake::iterator_keyword::value< facade_value_type >,
-        sake::iterator_keyword::reference< reference >,
-        sake::iterator_keyword::difference< difference_type >,
-        sake::iterator_keyword::traversal< iterator_traversal >,
-        sake::iterator_keyword::introversal< cursor_introversal >,
-        sake::iterator_keyword::compare_enable< compare_enable >,
-        sake::iterator_keyword::difference_enable< difference_enable >
+        sake::iterator::keyword::value< facade_value_type >,
+        sake::iterator::keyword::reference< reference >,
+        sake::iterator::keyword::difference< difference_type >,
+        sake::iterator::keyword::traversal< iterator_traversal >,
+        sake::iterator::keyword::introversal< iterator_introversal >,
+        sake::iterator::keyword::compare_enable< compare_enable >,
+        sake::iterator::keyword::difference_enable< difference_enable >
     > nominal_param_types;
     typedef typename sake::lazy_insert_keyword_value_if_c<
         boost::mpl::has_key<
-            Params, sake::iterator_keyword::tag::chained_base >::value,
+            Params, sake::iterator::keyword::tag::chained_base >::value,
         nominal_param_types,
-        sake::iterator_keyword::chained_base,
+        sake::iterator::keyword::chained_base,
         boost_ext::mpl::at<
-            Params, sake::iterator_keyword::tag::chained_base >
+            Params, sake::iterator::keyword::tag::chained_base >
     >::type param_types;
 
-    typedef sake::iterator_facade< Derived, param_types > iterator_facade_;
+    typedef sake::iterator::facade< Derived, param_types > facade_;
 };
 
-} // namespace iterator_adaptor_private
+} // namespace adaptor_private
+
+} // namespace iterator
 
 } // namespace sake
 

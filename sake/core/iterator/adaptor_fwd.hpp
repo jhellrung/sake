@@ -14,11 +14,16 @@
 namespace sake
 {
 
+namespace iterator
+{
+
 template<
     class Derived, class Base,
     class Params = boost::mpl::map0<>
 >
-class iterator_adaptor;
+class adaptor;
+
+} // namespace iterator
 
 } // namespace sake
 

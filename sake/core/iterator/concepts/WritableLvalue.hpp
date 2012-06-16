@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct iterator_concepts::WritableLvalue<I>
+ * struct iterator::concepts::WritableLvalue<I>
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_CONCEPTS_WRITABLE_LVALUE_HPP
@@ -17,16 +17,21 @@
 namespace sake
 {
 
-namespace iterator_concepts
+namespace iterator
+{
+
+namespace concepts
 {
 
 template< class I >
 struct WritableLvalue
-    : sake::iterator_concepts::Writable<I>,
-      sake::iterator_concepts::Lvalue<I>
+    : sake::iterator::concepts::Writable<I>,
+      sake::iterator::concepts::Lvalue<I>
 { };
 
-} // namespace iterator_concepts
+} // namespace concepts
+
+} // namespace iterator
 
 } // namespace sake
 

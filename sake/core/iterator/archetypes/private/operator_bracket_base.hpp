@@ -6,17 +6,16 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_ARCHETYPES_OPERATOR_BRACKET_BASE_HPP
-#define SAKE_CORE_ITERATOR_ARCHETYPES_OPERATOR_BRACKET_BASE_HPP
+#ifndef SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_OPERATOR_BRACKET_BASE_HPP
+#define SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_OPERATOR_BRACKET_BASE_HPP
 
 #include <cstddef>
-
-#include <boost/iterator/iterator_categories.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/iterator/archetypes/access_tag.hpp>
 #include <sake/core/iterator/archetypes/private/reference_dispatch.hpp>
+#include <sake/core/iterator/categories.hpp>
 
 namespace sake
 {
@@ -30,7 +29,7 @@ namespace iterator_private
 template<
     class T, class Access,
     bool = boost_ext::is_convertible<
-        Access, sake::iterator_archetypes::writable_tag >::value
+        Access, sake::iterator::archetypes::writable_tag >::value
 >
 class operator_bracket_proxy;
 
@@ -84,4 +83,4 @@ public:
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_OPERATOR_BRACKET_BASE_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_OPERATOR_BRACKET_BASE_HPP

@@ -17,38 +17,32 @@
 namespace sake
 {
 
-namespace iterator_facade_adl
+namespace iterator
+{
+
+namespace facade_adl
 {
 
 template< class Derived, class Params >
-class iterator_facade;
+class facade;
 
 #define forward_declare( x, y ) \
 namespace private_ \
 { template< class D0, class P0, class D1, class P1 > struct x ## _enabler; } \
 template< class D0, class P0, class D1, class P1 > \
 inline typename private_::x ## _enabler< D0, P0, D1, P1 >::type \
-y(sake::iterator_facade_adl::iterator_facade< D0, P0 > const & i0, \
-  sake::iterator_facade_adl::iterator_facade< D1, P1 > const & i1);
+y(sake::iterator::facade_adl::facade< D0, P0 > const & i0, \
+  sake::iterator::facade_adl::facade< D1, P1 > const & i1);
 forward_declare( equal, operator== )
 forward_declare( compare, operator< )
 forward_declare( cmp, cmp )
 forward_declare( difference, operator- )
 #undef forward_declare
 
-#define forward_declare( x ) \
-namespace private_ \
-{ template< class D, class P > struct difference_with_ ## x ## _enabler; } \
-template< class D, class P > \
-inline typename private_::difference_with_ ## x ## _enabler<D,P>::type \
-operator-(sake::iterator_facade_adl::iterator_facade<D,P> const & i, \
-          sake::x ## _tag);
-forward_declare( begin )
-forward_declare( end )
-#undef forward_declare
-
 namespace private_
 {
+
+template< class Derived, class Params > class common_base;
 
 #define forward_declare( x ) \
 template< class Params > \
@@ -62,14 +56,16 @@ SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER;
 forward_declare( traversal )
 forward_declare( begin_introversal )
 forward_declare( end_introversal )
-forward_declare( common )
+forward_declare( chained )
 #undef forward_declare
 
 } // namespace private_
 
-} // namespace iterator_facade_adl
+} // namespace facade_adl
 
-using iterator_facade_adl::iterator_facade;
+using facade_adl::facade;
+
+} // namespace iterator
 
 } // namespace sake
 

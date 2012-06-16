@@ -14,13 +14,16 @@
 #include <sake/boost_ext/mpl/and.hpp>
 
 #include <sake/core/iterator/private/facade/traits.hpp>
-#include <sake/core/iterator/private/is_interconvertible.hpp>
+#include <sake/core/iterator/private/is_interoperable.hpp>
 #include <sake/core/math/sign_t.hpp>
 
 namespace sake
 {
 
-namespace iterator_facade_adl
+namespace iterator
+{
+
+namespace facade_adl
 {
 
 namespace private_
@@ -31,7 +34,7 @@ struct compare_enable
     : boost_ext::mpl::and3<
           typename private_::traits< P0 >::compare_enable,
           typename private_::traits< P1 >::compare_enable,
-          sake::iterator_private::is_interconvertible< D0, D1 >
+          sake::iterator::private_::is_interoperable< D0, D1 >
       >
 { };
 
@@ -53,7 +56,9 @@ struct cmp_enabler
 
 } // namespace private_
 
-} // namespace iterator_facade_adl
+} // namespace facade_adl
+
+} // namespace iterator
 
 } // namespace sake
 

@@ -13,73 +13,72 @@
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/at.hpp>
-#include <sake/boost_ext/type_traits/add_reference.hpp>
+#include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/propagate_const.hpp>
+#include <sake/boost_ext/type_traits/is_convertible_wndp2bp.hpp>
 
+#include <sake/core/iterator/adaptor_fwd.hpp>
 #include <sake/core/iterator/keyword.hpp>
 
 namespace sake
 {
 
-namespace iterator_adaptor_private
+namespace iterator
 {
 
-template< class Params, class D, class P >
+namespace adaptor_private
+{
+
+template< class Params, class P >
 struct converting_constructor_enable_member
     : boost_ext::is_convertible<
-          typename boost_ext::add_reference<
-              typename boost_ext::propagate_const< D,
-                  typename boost_ext::mpl::at<
-                      P, sake::iterator_keyword::tag::member,
-                      void
-                  >::type
+          typename boost_ext::add_reference_add_const<
+              typename boost_ext::mpl::at<
+                  P, sake::iterator::keyword::tag::member,
+                  void
               >::type
           >::type,
           typename boost_ext::mpl::at<
-              Params, sake::iterator_keyword::tag::member,
+              Params, sake::iterator::keyword::tag::member,
               void
           >::type
       >
 { };
 
-template< class Params, class D, class P >
+template< class Params, class P >
 struct converting_constructor_enable_chained_base
     : boost_ext::is_convertible<
-          typename boost_ext::propagate_const< D,
+          typename boost_ext::add_reference_add_const<
               typename boost_ext::mpl::at<
-                  P, sake::iterator_keyword::tag::chained_base,
+                  P, sake::iterator::keyword::tag::chained_base,
                   void
               >::type
-          >::type &,
+          >::type,
           typename boost_ext::mpl::at<
-              Params, sake::iterator_keyword::tag::chained_base,
+              Params, sake::iterator::keyword::tag::chained_base,
               void
           >::type
       >
 { };
 
-template< class Base, class Params, class D, class B, class P >
+template< class I, class Params, class J, class P >
 struct converting_constructor_enable
     : boost_ext::mpl::and3<
-          boost_ext::is_convertible< B const &, Base >,
-          iterator_adaptor_private::converting_constructor_enable_member<
-              Params, D, P >,
-          iterator_adaptor_private::converting_constructor_enable_chained_base<
-              Params, D, P >
+          boost_ext::is_convertible_wndp2bp< J const &, I >,
+          converting_constructor_enable_member< Params, P >,
+          converting_constructor_enable_chained_base< Params, P >
       >
 { };
 
-template< class Base, class Params, class D, class B, class P >
+template< class I, class Params, class J, class P >
 struct converting_constructor_enabler
-    : boost::enable_if_c<
-          iterator_adaptor_private::converting_constructor_enable<
-              Base, Params, D, B, P
-          >::value
-      >
+    : boost::enable_if_c< converting_constructor_enable<
+          I, Params, J, P >::value >
 { };
 
-} // namespace iterator_adaptor_private
+} // namespace adaptor_private
+
+} // namespace iterator
 
 } // namespace sake
 

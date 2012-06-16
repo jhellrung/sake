@@ -9,7 +9,6 @@
 #ifndef SAKE_CORE_ITERATOR_PRIVATE_ADAPTOR_MEMBER_STORAGE_HPP
 #define SAKE_CORE_ITERATOR_PRIVATE_ADAPTOR_MEMBER_STORAGE_HPP
 
-#include <boost/iterator/iterator_categories.hpp>
 #include <boost/mpl/not.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
@@ -20,12 +19,16 @@
 
 #include <sake/core/data_structures/optional/optional.hpp>
 #include <sake/core/introspection/has_operator_assign.hpp>
+#include <sake/core/iterator/categories.hpp>
 #include <sake/core/type_traits/has_default_constructor.hpp>
 
 namespace sake
 {
 
-namespace iterator_adaptor_private
+namespace iterator
+{
+
+namespace adaptor_private
 {
 
 template< class Traversal, class T >
@@ -75,7 +78,9 @@ struct member_storage< Traversal, T, true >
     { return x; }
 };
 
-} // namespace iterator_adaptor_private
+} // namespace adaptor_private
+
+} // namespace iterator
 
 } // namespace sake
 

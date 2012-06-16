@@ -11,16 +11,20 @@
 
 #include <iterator>
 
-#include <boost/iterator/iterator_categories.hpp>
 #include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
+#include <sake/core/iterator/categories.hpp>
+
 namespace sake
 {
 
-namespace iterator_private
+namespace iterator
+{
+
+namespace private_
 {
 
 struct input_output_iterator_tag
@@ -60,7 +64,7 @@ template< class Value >
 struct category< boost::single_pass_traversal_tag, Value >
 {
     typedef category_with_traversal<
-        iterator_private::input_output_iterator_tag,
+        private_::input_output_iterator_tag,
         boost::single_pass_traversal_tag
     > type;
 };
@@ -77,7 +81,7 @@ struct category< boost::single_pass_traversal_tag, Value const >
 template< class Value >
 struct category< boost::forward_traversal_tag, Value >
 {
-    typedef iterator_private::category_with_traversal<
+    typedef private_::category_with_traversal<
         std::forward_iterator_tag,
         boost::forward_traversal_tag
     > type;
@@ -86,7 +90,7 @@ struct category< boost::forward_traversal_tag, Value >
 template< class Value >
 struct category< boost::bidirectional_traversal_tag, Value >
 {
-    typedef iterator_private::category_with_traversal<
+    typedef private_::category_with_traversal<
         std::bidirectional_iterator_tag,
         boost::bidirectional_traversal_tag
     > type;
@@ -95,13 +99,15 @@ struct category< boost::bidirectional_traversal_tag, Value >
 template< class Value >
 struct category< boost::random_access_traversal_tag, Value >
 {
-    typedef iterator_private::category_with_traversal<
+    typedef private_::category_with_traversal<
         std::random_access_iterator_tag,
         boost::random_access_traversal_tag
     > type;
 };
 
-} // namespace iterator_private
+} // namespace private_
+
+} // namespace iterator
 
 } // namespace sake
 

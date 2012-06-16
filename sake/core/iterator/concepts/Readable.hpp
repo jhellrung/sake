@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct iterator_concepts::Readable<I>
+ * struct iterator::concepts::Readable<I>
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_CONCEPTS_READABLE_HPP
@@ -19,20 +19,21 @@
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/config.hpp>
-#include <sake/core/concepts/CopyAssignable.hpp>
-#include <sake/core/concepts/CopyConstructible.hpp>
+#include <sake/core/iterator/concepts/private/Base.hpp>
 #include <sake/core/iterator/traits.hpp>
 
 namespace sake
 {
 
-namespace iterator_concepts
+namespace iterator
+{
+
+namespace concepts
 {
 
 template< class I >
 struct Readable
-    : sake::concepts::CopyConstructible<I>,
-      sake::concepts::CopyAssignable<I>
+    : sake::iterator::concepts::private_::Base<I>
 {
     typedef typename sake::iterator_value<I>::type value_type;
     BOOST_STATIC_ASSERT((!boost_ext::is_reference< value_type >::value));
@@ -52,7 +53,9 @@ private:
     SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( Readable )
 };
 
-} // namespace iterator_concepts
+} // namespace concepts
+
+} // namespace iterator
 
 } // namespace sake
 
