@@ -12,7 +12,8 @@
 #define SAKE_BOOST_EXT_FUSION_SUPPORT_AS_TRAVERSAL_HPP
 
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/iterator/iterator_categories.hpp>
+
+#include <sake/core/iterator/categories.hpp>
 
 namespace sake
 {

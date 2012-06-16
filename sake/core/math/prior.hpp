@@ -15,14 +15,14 @@
 #ifndef SAKE_CORE_MATH_PRIOR_HPP
 #define SAKE_CORE_MATH_PRIOR_HPP
 
-#include <boost/iterator/iterator_categories.hpp>
-#include <boost/iterator/iterator_traits.hpp>
 #include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/is_iterator.hpp>
+#include <sake/core/iterator/traits.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
@@ -43,7 +43,7 @@ namespace result_of
 template< class T, class D = void >
 struct prior
     : boost_ext::remove_qualifiers<T>
-{ }
+{ };
 
 } // namespace result_of
 
@@ -102,11 +102,12 @@ struct dispatch< T, true >
     static T
     apply(T const & x, D const n)
     {
+        typedef typename sake::iterator_traversal<T>::type iterator_traversal_;
         BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-            typename boost::iterator_traversal<T>::type,
+            iterator_traversal_,
             boost::bidirectional_traversal_tag
         >::value));
-        return apply(x, n, typename boost::iterator_traversal<T>::type());
+        return apply(x, n, iterator_traversal_());
     }
 };
 

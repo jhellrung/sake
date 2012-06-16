@@ -1,11 +1,15 @@
 /*******************************************************************************
  * sake/core/iterator/is_iterator.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct is_iterator< T, Reference = void, ReferencePred = void >
+ * struct is_iterator<
+ *     I,
+ *     Reference = void,
+ *     ReferencePred = boost::mpl::always< boost::true_type >
+ * >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_IS_ITERATOR_HPP
@@ -23,14 +27,14 @@ namespace sake
 {
 
 template<
-    class T,
+    class I,
     class Reference = void,
     class ReferencePred = boost::mpl::always< boost::true_type >
 >
 struct is_iterator
     : boost_ext::mpl::and2<
-          sake::has_operator_star< T const &, Reference, ReferencePred >,
-          sake::is_incrementable<T>
+          sake::has_operator_star< I const &, Reference, ReferencePred >,
+          sake::is_incrementable<I>
       >
 { };
 

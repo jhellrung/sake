@@ -15,12 +15,11 @@
 #ifndef SAKE_CORE_MATH_NEXT_HPP
 #define SAKE_CORE_MATH_NEXT_HPP
 
-#include <boost/iterator/iterator_categories.hpp>
-#include <boost/iterator/iterator_traits.hpp>
-
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/is_iterator.hpp>
+#include <sake/core/iterator/traits.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -110,7 +109,7 @@ struct dispatch< T, true >
     template< class D >
     static T
     apply(T const & x, D const n)
-    { return apply(x, n, typename boost::iterator_traversal<T>::type()); }
+    { return apply(x, n, typename sake::iterator_traversal<T>::type()); }
 };
 
 } // namespace next_private
