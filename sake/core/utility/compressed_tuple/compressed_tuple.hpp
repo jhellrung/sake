@@ -55,6 +55,7 @@
 #include <sake/core/utility/compressed_tuple/fwd.hpp>
 #include <sake/core/utility/compressed_tuple/private/storage.hpp>
 #include <sake/core/utility/overload.hpp>
+#include <sake/core/utility/value_constructor.hpp>
 
 namespace sake
 {
@@ -178,32 +179,16 @@ public:
         (( base_member_ ))
     )
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-
-    template< class U0 >
-    explicit compressed_tuple(U0&& x0,
-        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            compressed_tuple, U0 >::value >::type* = 0)
-        : base_member_(sake::forward< U0 >(x0))
-    { }
-
-#else // #ifndef BOOST_NO_RVALUE_REFERENCES
-
-    template< class U0 >
-    explicit compressed_tuple(U0& x0,
-        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            compressed_tuple, U0 >::value >::type* = 0)
-        : base_member_(x0)
-    { }
-
-    template< class U0 >
-    explicit compressed_tuple(U0 const & x0,
-        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            compressed_tuple, U0 >::value >::type* = 0)
-        : base_member_(x0)
-    { }
-
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+    // template< class U0 >
+    // explicit compressed_tuple(U0&& x0)
+    //     : base_member_(sake::forward< U0 >(x0))
+    // { }
+#define SAKE_VALUE_CONSTRUCTOR_T U
+#define SAKE_VALUE_CONSTRUCTOR_CLASS_NAME compressed_tuple
+#define SAKE_VALUE_CONSTRUCTOR_FORWARD    base_member_
+#define SAKE_VALUE_CONSTRUCTOR_ARITY      1
+#define SAKE_VALUE_CONSTRUCTOR_TYPE0      T0
+#include SAKE_VALUE_CONSTRUCTOR_GENERATE()
 
 #else // #if N == 1
 
@@ -234,20 +219,15 @@ public:
 
 #else // #if !defined( ... ) && ...
 
-#define SAKE_OVERLOAD_T U
-#define SAKE_OVERLOAD_CONSTRUCTOR_NAME \
-    compressed_tuple
-#define SAKE_OVERLOAD_INITIALIZATION_LIST( r, n, U_tuple, x_tuple, forward_x_tuple ) \
-    m_storage forward_x_tuple
-#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple )
-#define SAKE_OVERLOAD_MIN_ARITY         N
-#if N <= SAKE_COMPRESSED_TUPLE_PERFECT_MAX_ARITY
-#define SAKE_OVERLOAD_PERFECT_MAX_ARITY N
-#else // #if N <= SAKE_COMPRESSED_TUPLE_PERFECT_MAX_ARITY
-#define SAKE_OVERLOAD_FWD_MAX_ARITY     N
-#define SAKE_OVERLOAD_FWD2_MAX_ARITY    N
-#endif // #if N <= SAKE_COMPRESSED_TUPLE_PERFECT_MAX_ARITY
-#include SAKE_OVERLOAD_GENERATE()
+#define SAKE_VALUE_CONSTRUCTOR_T U
+#define SAKE_VALUE_CONSTRUCTOR_CLASS_NAME compressed_tuple
+#define SAKE_VALUE_CONSTRUCTOR_FORWARD    m_storage
+#define SAKE_VALUE_CONSTRUCTOR_ARITY      N
+#define SAKE_VALUE_CONSTRUCTOR_TYPE0      T0
+#define SAKE_VALUE_CONSTRUCTOR_TYPE1      T1
+#define SAKE_VALUE_CONSTRUCTOR_PERFECT_MAX_ARITY \
+    SAKE_COMPRESSED_TUPLE_PERFECT_MAX_ARITY
+#include SAKE_VALUE_CONSTRUCTOR_GENERATE()
 
 #endif // #if !defined( ... ) && ...
 

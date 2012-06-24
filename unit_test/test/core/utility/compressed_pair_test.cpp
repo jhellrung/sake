@@ -112,15 +112,13 @@ void compressed_pair_test(sake::test::environment& env)
             x.assign(y, type(stats));
         }
         SAKE_TEST_CHECK_RELATION( env, stats.n_other_constructor, ==, 3 );
-        SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 5 );
-#ifndef BOOST_NO_RVALUE_REFERENCES
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 1 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_constructor, ==, 1 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 5 );
+#ifndef BOOST_NO_RVALUE_REFERENCES
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 1 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_assign, ==, 1 );
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
-        SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 2 );
-        SAKE_TEST_CHECK_RELATION( env, stats.n_move_constructor, ==, 0 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 2 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_assign, ==, 0 );
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -134,15 +132,13 @@ void compressed_pair_test(sake::test::environment& env)
             x = sake::move(y);
         }
         SAKE_TEST_CHECK_RELATION( env, stats.n_other_constructor, ==, 4 );
-        SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 12 );
-#ifndef BOOST_NO_RVALUE_REFERENCES
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 2 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_constructor, ==, 6 );
+        SAKE_TEST_CHECK_RELATION( env, stats.n_destructor, ==, 12 );
+#ifndef BOOST_NO_RVALUE_REFERENCES
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 2 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_assign, ==, 4 );
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
-        SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 6 );
-        SAKE_TEST_CHECK_RELATION( env, stats.n_move_constructor, ==, 2 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_assign, ==, 4 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_move_assign, ==, 2 );
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
