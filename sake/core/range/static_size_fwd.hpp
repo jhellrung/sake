@@ -12,25 +12,20 @@
 namespace sake
 {
 
-namespace range
-{
-
 template< class R >
-struct static_size;
+struct range_static_size;
 
 namespace extension
 {
 template< class R, class Enable = void >
-struct static_size;
+struct range_static_size;
 } // namespace extension
 
 namespace default_impl
 {
 template< class R >
-struct static_size;
+struct range_static_size;
 } // namespace default_impl
-
-} // namespace range
 
 } // namespace sake
 

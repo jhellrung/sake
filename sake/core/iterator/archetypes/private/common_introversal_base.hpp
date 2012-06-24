@@ -36,9 +36,9 @@ struct common_introversal_base<
 {
     define_conversion_operator( null )
 
-    Derived&
+    void
     at_ip(null_type)
-    { return static_cast< Derived& >(*this); }
+    { }
 
     template< class Introversal >
     typename sake::archetypes::iterator_private::

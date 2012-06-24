@@ -1,0 +1,65 @@
+range::adaptors::box
+    range::adapt::box(r0, r1, ...) -> range::adaptors::box< < R0, R1, ... > >
+range::adaptors::filter
+    range::adapt::filter(f) -> range::adapt::functional::filter<F>
+    r | range::adapt::filter(f) -> range::adaptors::filter<R,F>
+    range::adapt::filter(r,f) -> range::adaptors::filter<R,F>
+range::adaptors::flatten
+    range::adapt::flatten<D>() -> range::adapt::functional::flatten<D>
+    r | range::adapt::flatten<D>() -> range::adaptors::flatten<R,D>
+    range::adapt::flatten<D>(r) -> range::adaptors::flatten<R,D>
+range::adaptors::flatten_with_index
+    (same as flatten)
+range::adaptors::join
+    range::adapt::join(r0, r1, ...) -> range::adaptors::join< < R0, R1, ... > >
+range::adaptors::move
+    r | range::adapt::move -> range::adaptors::move<R>
+    range::adapt::move(r) -> range::adaptors::move<R>
+range::adaptors::reverse
+    r | range::adapt::reverse -> range::adaptors::reverse<R>
+    range::adapt::reverse(r) -> range::adaptors::reverse<R>
+range::adaptors::slice
+    range::adapt::slice(i) -> range::adapt::functional::slice<I>
+    r | range::adapt::slice(i) -> range::adaptors::slice<R,I>
+    range::adapt::slice(r,i) -> range::adaptors::slice<R,I>
+range::adaptors::stride
+    range::adapt::stride(k) -> range::adapt::functional::stride<K>
+    r | range::adapt::stride(k) -> range::adaptors::stride<R,K>
+    range::adapt::stride(r,k) -> range::adaptors::stride<R,K>
+range::adaptors::transform
+    range::adapt::transform(f) -> range::adapt::functional::transform<F>
+    r | range::adapt::transform(f) -> range::adaptors::transform<R,F>
+    range::adapt::transform(r,f) -> range::adaptors::transform<R,F>
+range::adaptors::variant
+    range::adaptors::variant< < R0, R1, ... > >
+range::adaptors::with_index
+    r | range::adapt::with_index -> range::adaptors::with_index<R>
+    range::adapt::with_index(r) -> range::adaptors::with_index<R>
+range::adaptors::zip
+    range::adapt::zip(r0, r1, ...) -> range::adaptors::zip< < R0, R1, ... > >
+
+range::basic::delimit [dynamic and static size]
+    range::delimit(i0, i1) -> range::basic::delimit< I0, I1 >
+    range::delimit(i, end_tag) -> range::basic::delimit< I, end_tag >
+    range::delimit(begin_tag, i) -> range::basic::delimit< I, begin_tag >
+    range::delimit<N>(i) -> range::basic::delimit<I,N>
+    range::delimited_c<N>(i) -> range::basic::delimit<I,N>
+range::basic::empty
+    range::empty() -> range::basic::empty
+range::basic::sequence [dynamic and static size]
+    range::sequence(x0, x1) -> range::basic::sequence<X>
+    range::sequence<N>(x) -> range::basic::sequence<X,N>
+    range::sequence_c<N>(x) -> range::basic::sequence<X,N>
+range::basic::single
+    range::single(x) -> range::basic::single<X>
+range::basic::uniform [dynamic and static size]
+    range::uniform(x,n) -> range::basic::uniform<X,N>
+    range::uniform<N>(x) -> range::basic::uniform<X,N>
+    range::uniform_c<N>(x) -> range::basic::uniform<X,N>
+
+???
+range::adaptors::combination
+range::adaptors::permutation
+range::adaptors::multipermutation
+range::adaptors::ksubset
+range::adaptors::subset

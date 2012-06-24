@@ -10,7 +10,6 @@
 #define SAKE_CORE_ITERATOR_PRIVATE_FACADE_BEGIN_INTROVERSAL_BASE_HPP
 
 #include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
@@ -100,17 +99,17 @@ public:
 
     inline friend
     bool operator==(Derived const & this_, sake::begin_tag)
-    { return this_.private_operator_equal_begin(); }
+    { return this_.private_equal_begin(); }
     inline friend
     bool operator==(sake::begin_tag, Derived const & this_)
-    { return this_.private_operator_equal_begin(); }
+    { return this_.private_equal_begin(); }
 
     inline friend
     bool operator!=(Derived const & this_, sake::begin_tag)
-    { return !this_.private_operator_equal_begin(); }
+    { return !this_.private_equal_begin(); }
     inline friend
     bool operator!=(sake::begin_tag, Derived const & this_)
-    { return !this_.private_operator_equal_begin(); }
+    { return !this_.private_equal_begin(); }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -126,8 +125,8 @@ protected:
     { }
 
 private:
-    bool private_operator_equal_begin() const
-    { return sake::iterator::core_access::equal_begin(derived()); }
+    bool private_equal_begin() const
+    { return sake::iterator::core_access::equal(derived(), sake::_begin); }
 };
 
 template< class Derived, class Params >
@@ -140,42 +139,16 @@ protected:
     using begin_introversal_base_::derived;
 public:
 
-    template< class Introversal = sake::null_introversal_tag >
-    struct relax
-        : begin_introversal_base_::template relax< Introversal >
-    { };
-
-    using begin_introversal_base_::at_ip;
-    using begin_introversal_base_::at;
-
-    Derived&
-    at_ip(sake::begin_tag)
-    {
-        sake::iterator::core_access::at_begin_ip(derived());
-        return derived();
-    }
-
-    template< class BeginTag >
-    typename boost::lazy_enable_if_c<
-        boost::is_same< BeginTag, sake::begin_tag >::value,
-        relax< sake::null_introversal_tag >
-    >::type
-    at(BeginTag) const
-    { return at(sake::_begin, sake::null_introversal_tag()); }
+    void begin_ip()
+    { sake::iterator::core_access::at_ip(derived(), sake::_begin); }
 
     template< class Introversal >
-    typename relax< Introversal >::type
-    at(sake::begin_tag, Introversal) const
-    { return sake::iterator::core_access::at_begin(derived(), Introversal()); }
-
-    Derived&
-    begin_ip()
-    { return at_ip(sake::_begin); }
-
-    template< class Introversal >
-    typename relax< Introversal >::type
+    typename sake::iterator::core_access::relax< Derived, Introversal >::type
     begin(Introversal) const
-    { return at(sake::_begin, Introversal()); }
+    {
+        return sake::iterator::core_access::at(
+            derived(), sake::_begin, Introversal());
+    }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -192,16 +165,9 @@ protected:
 
     friend class sake::iterator::core_access;
 
-    bool derived_equal_begin() const
-    { return derived() == begin(); }
-
-    template< class Introversal >
-    typename relax< Introversal >::type
-    derived_at_begin(Introversal) const
-    {
-        Derived result(derived());
-        return result.begin_ip();
-    }
+    using begin_introversal_base_::derived_equal;
+    bool derived_equal(sake::begin_tag) const
+    { return derived() == derived().at(sake::_begin); }
 };
 
 template< class Derived, class Params >
@@ -215,14 +181,12 @@ protected:
 public:
     SAKE_USING_TYPEDEF( typename private_::traits< Params >, difference_type );
 
-    using begin_introversal_base_::begin;
-
     inline friend
     difference_type operator-(Derived const & this_, sake::begin_tag)
-    { return this_.private_operator_minus_begin(); }
+    { return this_.private_difference_begin(); }
     inline friend
     difference_type operator-(sake::begin_tag, Derived const & this_)
-    { return -this_.private_operator_minus_begin(); }
+    { return -this_.private_difference_begin(); }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -239,12 +203,13 @@ protected:
 
     friend class sake::iterator::core_access;
 
-    difference_type derived_difference_begin() const
-    { return derived() - begin(); }
+    using begin_introversal_base_::derived_difference;
+    difference_type derived_difference(sake::begin_tag) const
+    { return derived() - derived().at(sake::_begin); }
 
 private:
-    difference_type private_operator_minus_begin() const
-    { return sake::iterator::core_access::difference_begin(derived()); }
+    difference_type private_difference_begin() const
+    { return sake::iterator::core_access::difference(derived(), sake::_begin); }
 };
 
 } // namespace private_

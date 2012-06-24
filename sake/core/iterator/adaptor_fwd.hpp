@@ -18,7 +18,7 @@ namespace iterator
 {
 
 template<
-    class Derived, class Base,
+    class Derived, class I,
     class Params = boost::mpl::map0<>
 >
 class adaptor;

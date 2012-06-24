@@ -56,7 +56,7 @@ struct begin
     template< class I >
     typename sake::iterator::result_of::begin< I const & >::type
     operator()(I const & i) const
-    { return operator()(i, sake::null_introversal_tag()); }
+    { return sake::iterator_traits<I>::iter_at(i, sake::_begin); }
 
     template< class I, class Introversal >
     typename sake::iterator::result_of::begin< I const &, Introversal >::type

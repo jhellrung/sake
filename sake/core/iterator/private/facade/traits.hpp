@@ -11,6 +11,8 @@
 
 #include <cstddef>
 
+#include <boost/mpl/is_sequence.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
@@ -40,6 +42,7 @@ namespace private_
 template< class Params >
 struct traits
 {
+    BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Params >::value));
     typedef typename boost_ext::mpl::at<
       Params, sake::iterator::keyword::tag::value,
       void
@@ -80,6 +83,7 @@ struct traits
             >
         >
     >::type difference_enable;
+
     typedef typename boost_ext::mpl::or2<
         difference_enable,
         boost_ext::mpl::and2<

@@ -17,6 +17,7 @@
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
 #include <sake/core/emplacer/constructible.hpp>
+#include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/keyword.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
@@ -41,8 +42,8 @@ struct chained_base_index
         Params, sake::iterator::keyword::tag::chained_base >::value;
 };
 
-template< class Derived, class Params >
-class chained_base< Derived, Params, 0 >
+template< class Params >
+class chained_base< Params, 0 >
 {
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -51,8 +52,8 @@ protected:
     )
 };
 
-template< class Derived, class Params >
-class chained_base< Derived, Params, 1 >
+template< class Params >
+class chained_base< Params, 1 >
     : public boost_ext::mpl::at<
           Params, sake::iterator::keyword::tag::chained_base >::type
 {

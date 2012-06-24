@@ -14,7 +14,7 @@
  * - iterator::keyword::traversal
  * - iterator::keyword::introversal
  * - iterator::keyword::compare_enable
- * - iterator::keyword::operator_minus_enable
+ * - iterator::keyword::difference_enable
  * - iterator::keyword::chained_base
  *
  * Implementations to be defined in Derived:
@@ -34,35 +34,39 @@
  *     derived_less_equal(Other other) const -> bool [defaulted]
  *     derived_cmp(Other other) const -> sign_t [defaulted]
  * - Introversal
- *     struct derived_relax< Introversal > { typedef ... type; };
+ *     template< class Introversal >
+ *       struct derived_relax
+ *       { typedef ... type; };
  *     derived_at_ip(Other other) -> void
  *     derived_at(Other other, Introversal) const
  *         -> relax< Introversal >::type [defaulted]
  * - BeginDetect
- *     derived_equal_begin() const -> bool
+ *     derived_equal(begin_tag) const -> bool
  * - BeginAccess
- *     derived_at_begin_ip() -> void
- *     derived_at_begin(Introversal) const
+ *     derived_at_ip(begin_tag) -> void
+ *     derived_at(begin_tag, Introversal) const
  *         -> relax< Introversal >::type [defaulted]
  * - EndDetect
- *     derived_equal_end() const -> bool
+ *     derived_equal(end_tag) const -> bool
  * - EndAccess
- *     derived_at_end_ip() -> void
- *     derived_at_end(Introversal) const
+ *     derived_at_ip(end_tag) -> void
+ *     derived_at(end_tag, Introversal) const
  *         -> relax< Introversal >::type [defaulted]
  * - RandomAccess + BeginAccess
- *     derived_difference_begin() const -> difference_type
+ *     derived_difference(begin_tag) const -> difference_type
  * - RandomAccess + EndAccess
- *     derived_difference_end() const -> difference_type
+ *     derived_difference(end_tag) const -> difference_type
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_FACADE_HPP
 #define SAKE_CORE_ITERATOR_FACADE_HPP
 
 #include <sake/core/emplacer/emplacer.hpp>
+#include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/private/category.hpp>
+#include <sake/core/iterator/private/facade/at_enable.hpp>
 #include <sake/core/iterator/private/facade/compare_enable.hpp>
 #include <sake/core/iterator/private/facade/difference_enable.hpp>
 #include <sake/core/iterator/private/facade/equal_enable.hpp>
@@ -70,6 +74,9 @@
 #include <sake/core/iterator/private/facade/operator_arrow_dispatch.hpp>
 #include <sake/core/iterator/private/facade/traits.hpp>
 #include <sake/core/iterator/private/facade/traversal_base.hpp>
+#include <sake/core/math/sign.hpp>
+#include <sake/core/math/sign_t.hpp>
+#include <sake/core/math/zero.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/using_typedef.hpp>
@@ -149,12 +156,33 @@ public:
      * friend operator+(difference_type n, Derived const & this_) -> Derived
      * operator-(difference_type n) -> Derived
      *
-     * BeginAccess
-     * begin() -> Derived
-     *
-     * EndAccess
-     * end() -> Derived
+     * Introversal
+     * template< class Introversal > struct relax { typedef ... type; };
+     * at_ip(T x) -> void
+     * at(T x, Introversal) -> relax< Introversal >::type
      **************************************************************************/
+ 
+    template< class Introversal = sake::null_introversal_tag >
+    struct relax
+    {
+        typedef typename sake::iterator::core_access::
+            relax< Derived, Introversal >::type type;
+    };
+
+    template< class T >
+    typename private_::at_enabler< Derived, T >::type
+    at_ip(T const & x)
+    { sake::iterator::core_access::at_ip(derived(), x); }
+
+    template< class T >
+    typename private_::at_lazy_enabler< Derived, T, relax<> >::type
+    at(T const & x) const
+    { return at(x, sake::null_introversal_tag()); }
+
+    template< class T, class Introversal >
+    typename private_::at_lazy_enabler< Derived, T, relax< Introversal > >::type
+    at(T const & x, Introversal) const
+    { return sake::iterator::core_access::at(derived(), x, Introversal()); }
  
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -196,6 +224,40 @@ protected:
     template< class V >
     explicit facade(sake::emplacer< V ( ) >)
     { }
+
+    friend class sake::iterator::core_access;
+
+    using traversal_base_::derived_equal;
+    template< class Other >
+    typename boost::enable_if_c<
+        sake::iterator::private_::is_interoperable< Derived, Other >::value,
+        bool
+    >::type
+    derived_equal(Other const & other) const
+    { return sake::iterator::core_access::cmp(derived(), other) == sake::zero; }
+
+    template< class Other >
+    bool derived_less(Other const & other) const
+    { return sake::iterator::core_access::cmp(derived(), other) < sake::zero; }
+    template< class Other >
+    bool derived_less_equal(Other const & other) const
+    { return sake::iterator::core_access::cmp(derived(), other) <= sake::zero; }
+    template< class Other >
+    sake::sign_t derived_cmp(Other const & other) const
+    { return sake::sign(derived() - other); }
+
+    template< class Introversal >
+    struct derived_relax
+    { typedef Derived type; };
+
+    template< class T, class Introversal >
+    typename relax< Introversal >::type
+    derived_at(T const & x, Introversal) const
+    {
+        Derived result(derived());
+        result.at_ip(x);
+        return result;
+    }
 };
 
 /*******************************************************************************

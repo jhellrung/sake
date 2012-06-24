@@ -49,7 +49,10 @@ struct end_ip
     template< class I >
     typename sake::iterator::result_of::end_ip< I& >::type
     operator()(I& i) const
-    { return sake::iterator_traits<I>::iter_at_ip(i, sake::_end); }
+    {
+        sake::iterator_traits<I>::iter_at_ip(i, sake::_end);
+        return i;
+    }
 };
 
 } // namespace functional

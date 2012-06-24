@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/math/advance.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -13,7 +13,6 @@
 #ifndef SAKE_CORE_MATH_ADVANCE_HPP
 #define SAKE_CORE_MATH_ADVANCE_HPP
 
-#include <boost/iterator/iterator_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_integral.hpp>
@@ -24,6 +23,7 @@
 
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/is_iterator.hpp>
+#include <sake/core/iterator/traits.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/int_tag.hpp>
@@ -82,7 +82,7 @@ struct dispatch_index
 {
     static int const value = boost_ext::mpl::
     if_<
-        boost::is_iterator<T>,
+        sake::is_iterator<T>,
         sake::int_tag<2>
     >::type::template
     else_if<
@@ -127,7 +127,7 @@ struct dispatch<T,D,2>
 
     static T&
     apply(T& i, D const n)
-    { return apply(i, n, typename boost::iterator_traversal<T>::type()); }
+    { return apply(i, n, typename sake::iterator_traversal<T>::type()); }
 };
 
 template< class T, class D >

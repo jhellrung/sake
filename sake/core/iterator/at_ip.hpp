@@ -26,7 +26,6 @@
 #include <sake/core/iterator/private/is_interoperable.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
-#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
 {
@@ -41,9 +40,9 @@ template< class I, class T >
 class at_ip
 {
     BOOST_STATIC_ASSERT((boost_ext::is_lvalue_reference_to_nonconst<I>::value));
-    typedef typename boost_ext::remove_qualifiers<I>::type iterator;
+    typedef typename boost_ext::remove_qualifiers<I>::type iterator_;
     typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
-    SAKE_USING_TYPEDEF( typename sake::iterator_traits< iterator >, introversal );
+    typedef typename sake::iterator_introversal< iterator_ >::type introversal;
     BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
         boost_ext::mpl::and2<
             boost::is_same< noqual_type, sake::begin_tag >,
@@ -55,7 +54,7 @@ class at_ip
             boost_ext::is_convertible<
                 introversal, sake::end_access_introversal_tag >
         >,
-        sake::iterator::private_::is_interoperable< iterator, noqual_type >
+        sake::iterator::private_::is_interoperable< iterator_, noqual_type >
     >::value));
 public:
     typedef I type;
@@ -73,7 +72,10 @@ struct at_ip
     template< class I, class T >
     typename sake::iterator::result_of::at_ip< I&, T const & >::type
     operator()(I& i, T const & x) const
-    { return sake::iterator_traits<I>::at_ip(i,x); }
+    {
+        sake::iterator_traits<I>::at_ip(i,x);
+        return i;
+    }
 };
 
 } // namespace functional

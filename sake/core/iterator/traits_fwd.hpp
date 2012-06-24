@@ -15,6 +15,32 @@ namespace sake
 template< class I >
 struct iterator_traits;
 
+template< class I >
+struct iterator_value
+{ typedef typename sake::iterator_traits<I>::value_type type; };
+template< class I >
+struct iterator_reference
+{ typedef typename sake::iterator_traits<I>::reference type; };
+template< class I >
+struct iterator_pointer
+{ typedef typename sake::iterator_traits<I>::pointer type; };
+template< class I >
+struct iterator_difference
+{ typedef typename sake::iterator_traits<I>::difference_type type; };
+template< class I >
+struct iterator_traversal
+{ typedef typename sake::iterator_traits<I>::traversal type; };
+
+template< class I >
+struct iterator_introversal
+{
+    typedef typename sake::iterator_traits<I>::introversal type;
+    static unsigned int const value = type::value;
+};
+
+template< class I, class Introversal = sake::null_introversal_tag >
+struct iterator_relax;
+
 namespace extension
 {
 template< class I, class Enable = void >

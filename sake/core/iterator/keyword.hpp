@@ -29,7 +29,7 @@
  * typedef ... iterator::keyword::bidirectional_traversal
  * typedef ... iterator::keyword::random_access_traversal
  *
- * This provides the keywords for iterator_facade and iterator_adaptor.
+ * This provides the keywords for iterator::facade and iterator::adaptor.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_KEYWORD_HPP

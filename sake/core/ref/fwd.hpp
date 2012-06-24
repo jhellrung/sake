@@ -12,9 +12,9 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
 
-//#include <sake/core/range/cursor_fwd.hpp>
-//#include <sake/core/range/is_view_fwd.hpp>
-//#include <sake/core/range/static_size_fwd.hpp>
+#include <sake/core/range/is_adapt_by_value_fwd.hpp>
+#include <sake/core/range/static_size_fwd.hpp>
+#include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/ref/tag.hpp>
 #include <sake/core/utility/is_convertible_wnrbt_fwd.hpp>
 
@@ -56,51 +56,34 @@ template< class T >
 struct is_wrapped_parameter;
 } // namespace default_impl
 
-#if 0
 /*******************************************************************************
- * struct extension::range_mutable_cursor< T, Introversal, ... >
- * struct extension::range_const_cursor< T, Introversal, ... >
- * struct extension::range_is_view< T, ... >
+ * struct extension::range_traits< T, ... >
+ * struct extension::range_is_adapt_by_value< T, ... >
  * struct extension::range_static_size< T, ... >
  ******************************************************************************/
 
 namespace extension
 {
 
-template< class T, class Introversal >
-struct range_mutable_cursor<
-    T, Introversal,
-    typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type
->
-    : sake::range_cursor< typename sake::unwrap_reference<T>::type, Introversal >
-{ };
-
-template< class T, class Introversal >
-struct range_const_cursor<
-    T, Introversal,
-    typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type
->
-    : sake::range_cursor< typename sake::unwrap_reference<T>::type, Introversal >
+template< class T >
+struct range_traits< T,
+    typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type >
+    : sake::range_traits< typename sake::unwrap_reference<T>::type >
 { };
 
 template< class T >
-struct range_is_view<
-    T,
-    typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type
->
+struct range_is_adapt_by_value< T,
+    typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type >
     : boost::true_type
 { };
 
 template< class T >
-struct range_static_size<
-    T,
-    typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type
->
+struct range_static_size< T,
+    typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type >
     : sake::range_static_size< typename sake::unwrap_reference<T>::type >
 { };
 
 } // namespace extension
-#endif // #if 0
 
 /*******************************************************************************
  * struct extension::is_convertible_wnrbt< T, U, ... >
@@ -110,14 +93,10 @@ namespace extension
 {
 
 template< class T, class U >
-struct is_convertible_wnrbt<
-    T, U,
-    typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type
->
+struct is_convertible_wnrbt< T, U,
+    typename boost::enable_if_c< sake::is_reference_wrapper<T>::value >::type >
     : sake::is_convertible_wnrbt<
-          typename sake::unwrap_reference<T>::type &,
-          U
-      >
+          typename sake::unwrap_reference<T>::type &, U >
 { };
 
 } // namespace extension

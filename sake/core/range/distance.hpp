@@ -16,6 +16,8 @@
 
 #include <sake/core/config.hpp>
 #include <sake/core/range/traits.hpp>
+#include <sake/core/range/traits_fwd.hpp>
+#include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
 {
@@ -23,20 +25,26 @@ namespace sake
 namespace range
 {
 
+namespace result_of
+{
+
+template< class R >
+struct distance
+    : sake::range_difference<
+          typename boost_ext::remove_qualifiers<R>::type const >
+{ };
+
+} // namespace result_of
+
 namespace functional
 {
 
 struct distance
 {
-    template< class > struct result;
-    template< class This, class R >
-    struct result< This ( R ) >
-        : sake::range_difference<
-              typename boost_ext::remove_qualifiers<R>::type >
-    { };
+    SAKE_RESULT_FROM_METAFUNCTION( sake::range::result_of::distance, 1 )
 
     template< class R >
-    typename sake::range_difference<R>::type
+    typename sake::range::result_of::distance< R const & >::type
     operator()(R const & r) const
     { return sake::range_traits< R const >::distance(r); }
 };

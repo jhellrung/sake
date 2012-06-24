@@ -10,19 +10,14 @@
 #define SAKE_CORE_ITERATOR_PRIVATE_ADAPTOR_MEMBER_BASE_HPP
 
 #include <boost/mpl/has_key.hpp>
-#include <boost/type_traits/is_base_of.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
-#include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
 #include <sake/core/config.hpp>
 #include <sake/core/emplacer/constructible.hpp>
 #include <sake/core/emplacer/make.hpp>
-#include <sake/core/iterator/adaptor_fwd.hpp>
 #include <sake/core/iterator/keyword.hpp>
-#include <sake/core/iterator/private/adaptor/chained_base_constructible.hpp>
 #include <sake/core/iterator/private/adaptor/member_storage.hpp>
 #include <sake/core/iterator/private/adaptor/traits.hpp>
 #include <sake/core/keyword/arg_pack_tag.hpp>
@@ -76,24 +71,6 @@ protected:
                      | sake::make_emplacer()]))
     { }
 
-    template< class D, class B, class P >
-    explicit member_base(sake::iterator::adaptor<D,B,P>& other,
-        typename boost::disable_if_c<
-            boost::is_base_of< member_base, sake::iterator::adaptor<D,B,P> >::value
-        >::type* = 0)
-        : facade_(adaptor_private::chained_base_constructible(other)),
-          m_base(other.base())
-    { }
-
-    template< class D, class B, class P >
-    explicit member_base(sake::iterator::adaptor<D,B,P> const & other,
-        typename boost::disable_if_c<
-            boost::is_base_of< member_base, sake::iterator::adaptor<D,B,P> >::value
-        >::type* = 0)
-        : facade_(adaptor_private::chained_base_constructible(other)),
-          m_base(other.base())
-    { }
-
     I &
     protected_base()
     { return m_base; }
@@ -143,33 +120,12 @@ protected:
                      | sake::make_emplacer()])
     { }
 
-    template< class D, class B, class P >
-    explicit member_base(sake::iterator::adaptor<D,B,P>& other,
-        typename boost::disable_if_c<
-            boost::is_base_of< member_base, sake::iterator::adaptor<D,B,P> >::value
-        >::type* = 0)
-        : facade_(adaptor_private::chained_base_constructible(other)),
-          m_pair(other.base(), other.member())
-    { }
-
-    template< class D, class B, class P >
-    explicit member_base(sake::iterator::adaptor<D,B,P> const & other,
-        typename boost::disable_if_c<
-            boost::is_base_of< member_base, sake::iterator::adaptor<D,B,P> >::value
-        >::type* = 0)
-        : facade_(adaptor_private::chained_base_constructible(other)),
-          m_pair(other.base(), other.member())
-    { }
-
     I &
     protected_base()
     { return m_pair.first(); }
     I const &
     protected_base() const
     { return m_pair.first(); }
-
-    template< class, class, class, bool >
-    friend class sake::iterator::adaptor_private::member_base;
 
     typename boost_ext::add_reference< member_type >::type
     member()

@@ -24,7 +24,6 @@
 #include <sake/core/iterator/private/is_interoperable.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
-#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake_iterator_at_private
 {
@@ -35,12 +34,12 @@ namespace sake_iterator_at_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class I, class T, class Introversal >
-inline typename ::sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename ::sake::iterator_relax< I, Introversal >::type
 adl3(I const & i, T const & x, Introversal)
 { return iterator_at(i, x, Introversal()); }
 
 template< class I, class T, class Introversal >
-inline typename ::sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename ::sake::iterator_relax< I, Introversal >::type
 adl2(I const & i, T const & x, Introversal)
 { return iterator_at(i,x); }
 
@@ -50,12 +49,12 @@ adl2(I const & i, T const & x, Introversal)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class I, class Introversal >
-inline typename ::sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename ::sake::iterator_relax< I, Introversal >::type
 adl_begin2(I const & i, Introversal)
 { return iterator_begin(i, Introversal()); }
 
 template< class I, class Introversal >
-inline typename ::sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename ::sake::iterator_relax< I, Introversal >::type
 adl_begin1(I const & i, Introversal)
 { return iterator_begin(i); }
 
@@ -65,12 +64,12 @@ adl_begin1(I const & i, Introversal)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class I, class Introversal >
-inline typename ::sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename ::sake::iterator_relax< I, Introversal >::type
 adl_end2(I const & i, Introversal)
 { return iterator_end(i, Introversal()); }
 
 template< class I, class Introversal >
-inline typename ::sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename ::sake::iterator_relax< I, Introversal >::type
 adl_end1(I const & i, Introversal)
 { return iterator_end(i); }
 
@@ -94,32 +93,32 @@ namespace at_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class I, class T, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch(I const & /*i*/, T const & x, Introversal, sake::int_tag<5>)
 { return x; }
 
 template< class I, class T, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch(I const & i, T const & x, Introversal, sake::int_tag<4>)
 { return i.at(x, Introversal()); }
 
 template< class I, class T, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch(I const & i, T const & x, Introversal, sake::int_tag<3>)
 { return ::sake_iterator_at_private::adl3(i, x, Introversal()); }
 
 template< class I, class T, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch(I const & i, T const & x, Introversal, sake::int_tag<2>)
 { return i.at(x); }
 
 template< class I, class T, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch(I const & i, T const & x, Introversal, sake::int_tag<1>)
 { return ::sake_iterator_at_private::adl2(i, x, Introversal()); }
 
 template< class I, class T, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch(I i, T const & x, Introversal, sake::int_tag<0>)
 { return sake::iterator_traits<I>::at_ip(i,x); }
 
@@ -129,36 +128,35 @@ dispatch(I i, T const & x, Introversal, sake::int_tag<0>)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_begin(I const & i, Introversal, sake::int_tag<4>)
 { return i.begin(Introversal()); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_begin(I const & i, Introversal, sake::int_tag<3>)
 { return ::sake_iterator_at_private::adl_begin2(i, Introversal()); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_begin(I const & i, Introversal, sake::int_tag<2>)
 { return i.begin(); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_begin(I const & i, Introversal, sake::int_tag<1>)
 { return ::sake_iterator_at_private::adl_begin1(i, Introversal()); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_begin(I i, Introversal, sake::int_tag<0>)
 { return sake::iterator_traits<I>::at_ip(i, sake::_begin); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch(I const & i, sake::begin_tag, Introversal, sake::int_tag<0>)
 {
-    typedef typename sake::iterator_traits<I>::template
-        relax< Introversal >::type result_type;
+    typedef typename sake::iterator_relax< I, Introversal >::type result_type;
     typedef typename boost_ext::mpl::
          if_< at_private::is_callable_mem_fun_begin<
                   I const &, result_type ( Introversal ) >,
@@ -182,36 +180,35 @@ dispatch(I const & i, sake::begin_tag, Introversal, sake::int_tag<0>)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_end(I const & i, Introversal, sake::int_tag<4>)
 { return i.end(Introversal()); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_end(I const & i, Introversal, sake::int_tag<3>)
 { return ::sake_iterator_at_private::adl_end2(i, Introversal()); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_end(I const & i, Introversal, sake::int_tag<2>)
 { return i.end(); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_end(I const & i, Introversal, sake::int_tag<1>)
 { return ::sake_iterator_at_private::adl_end1(i, Introversal()); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch_end(I i, Introversal, sake::int_tag<0>)
 { return sake::iterator_traits<I>::at_ip(i, sake::_end); }
 
 template< class I, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 dispatch(I const & i, sake::end_tag, Introversal, sake::int_tag<0>)
 {
-    typedef typename sake::iterator_traits<I>::template
-        relax< Introversal >::type result_type;
+    typedef typename sake::iterator_relax< I, Introversal >::type result_type;
     typedef typename boost_ext::mpl::
          if_< at_private::is_callable_mem_fun_end<
                   I const &, result_type ( Introversal ) >,
@@ -232,10 +229,10 @@ dispatch(I const & i, sake::end_tag, Introversal, sake::int_tag<0>)
 } // namespace at_private
 
 template< class I, class T, class Introversal >
-inline typename sake::iterator_traits<I>::template relax< Introversal >::type
+inline typename sake::iterator_relax< I, Introversal >::type
 at(I const & i, T const & x, Introversal)
 {
-    SAKE_USING_TYPEDEF( typename sake::iterator_traits<I>, introversal );
+    typedef typename sake::iterator_introversal<I>::type introversal;
     BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
         boost_ext::mpl::and2<
             boost::is_same< T, sake::begin_tag >,
@@ -251,8 +248,7 @@ at(I const & i, T const & x, Introversal)
     >::value));
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
         Introversal, sake::null_introversal_tag >::value));
-    typedef typename sake::iterator_traits<I>::template
-        relax< Introversal >::type result_type;
+    typedef typename sake::iterator_relax< I, Introversal >::type result_type;
     BOOST_STATIC_ASSERT((boost_ext::is_convertible< I, result_type >::value));
     typedef typename boost_ext::mpl::
          if_< boost_ext::is_convertible< T, result_type >,

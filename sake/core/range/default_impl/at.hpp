@@ -39,7 +39,7 @@ namespace sake_range_at_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class R, class T >
-inline typename ::sake::range_traits<R>::reference
+inline typename ::sake::range_reference<R>::type
 adl(R& r, T const x)
 { return range_at(r,x); }
 
@@ -49,7 +49,7 @@ adl(R& r, T const x)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class R >
-inline typename ::sake::range_traits<R>::reference
+inline typename ::sake::range_reference<R>::type
 adl_front(R& r)
 { return range_front(r); }
 
@@ -59,7 +59,7 @@ adl_front(R& r)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class R >
-inline typename ::sake::range_traits<R>::reference
+inline typename ::sake::range_reference<R>::type
 adl_back(R& r)
 { return range_back(r); }
 
@@ -83,26 +83,26 @@ namespace at_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class R, class T >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch(R& r, T const x, sake::int_tag<3>)
 { return r[x]; }
 
 template< class R, class T >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch(R& r, T const x, sake::int_tag<2>)
 { return r.at(x); }
 
 template< class R, class T >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch(R& r, T const x, sake::int_tag<1>)
 { return ::sake_range_at_private::adl(r,x); }
 
 template< class R, class T >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch(R& r, T const x, sake::int_tag<0>)
 {
     SAKE_ASSERT((!sake::range_traits< R const >::empty(r)));
-    return sake::range_traits<R>::iter_at(r, sake::_begin)[x];
+    return sake::range_traits<R>::begin(r)[x];
 }
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun_front
@@ -111,28 +111,28 @@ dispatch(R& r, T const x, sake::int_tag<0>)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class R >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch_front(R& r, sake::int_tag<2>)
 { return r.front(); }
 
 template< class R >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch_front(R& r, sake::int_tag<1>)
 { return ::sake_range_at_private::adl_front(r); }
 
 template< class R >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch_front(R& r, sake::int_tag<0>)
 {
     SAKE_ASSERT((!sake::range_traits< R const >::empty(r)));
-    return *sake::range_traits<R>::iter_at(r, sake::_begin);
+    return *sake::range_traits<R>::begin(r);
 }
 
 template< class R >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch(R& r, sake::begin_tag, sake::int_tag<0>)
 {
-    SAKE_USING_TYPEDEF( typename sake::range_traits<R>, reference );
+    typedef typename sake::range_reference<R>::type reference;
     typedef sake::is_convertible_wnrbt<
         boost::mpl::_1, reference > is_convertible_wnrbt_;
     typedef typename boost_ext::mpl::
@@ -152,28 +152,28 @@ dispatch(R& r, sake::begin_tag, sake::int_tag<0>)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class R >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch_back(R& r, sake::int_tag<2>)
 { return r.back(); }
 
 template< class R >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch_back(R& r, sake::int_tag<1>)
 { return ::sake_range_at_private::adl_back(r); }
 
 template< class R >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch_back(R& r, sake::int_tag<0>)
 {
     SAKE_ASSERT((!sake::range_traits< R const >::empty(r)));
-    return *sake::prior(sake::range_traits<R>::iter_at(r, sake::_end));
+    return *sake::prior(sake::range_traits<R>::end(r));
 }
 
 template< class R >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 dispatch(R& r, sake::end_tag, sake::int_tag<0>)
 {
-    SAKE_USING_TYPEDEF( typename sake::range_traits<R>, reference );
+    typedef typename sake::range_reference<R>::type reference;
     typedef sake::is_convertible_wnrbt<
         boost::mpl::_1, reference > is_convertible_wnrbt_;
     typedef typename boost_ext::mpl::
@@ -190,7 +190,7 @@ dispatch(R& r, sake::end_tag, sake::int_tag<0>)
 } // namespace at_private
 
 template< class R, class T >
-inline typename sake::range_traits<R>::reference
+inline typename sake::range_reference<R>::type
 at(R& r, T const x)
 {
     typedef sake::range_traits<R> traits_;
@@ -202,7 +202,7 @@ at(R& r, T const x)
                 typename traits_::traversal,
                 boost::random_access_traversal_tag
             >,
-            boost_ext::is_convertible< T, typename traits_::difference_type >
+            boost_ext::is_convertible< T, typename traits_::size_type >
         >
     >::value));
     SAKE_USING_TYPEDEF( typename traits_, reference );

@@ -56,7 +56,7 @@ struct end
     template< class I >
     typename sake::iterator::result_of::end< I const & >::type
     operator()(I const & i) const
-    { return operator()(i, sake::null_introversal_tag()); }
+    { return sake::iterator_traits<I>::iter_at(i, sake::_end); }
 
     template< class I, class Introversal >
     typename sake::iterator::result_of::end< I const &, Introversal >::type

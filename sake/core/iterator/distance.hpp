@@ -17,6 +17,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_void.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
@@ -27,9 +28,13 @@
 #include <sake/core/iterator/begin.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
+#include <sake/core/iterator/distance_fwd.hpp>
 #include <sake/core/iterator/end.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
+#include <sake/core/iterator/multidim_traits.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/range/distance.hpp>
+#include <sake/core/range/distance_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/is_template_base_of.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -114,8 +119,14 @@ struct dispatch_index
     typedef typename sake::iterator_difference< common_type_ >::type type;
     static int const value = boost_ext::mpl::
     if_<
-        has_operator_minus_helper< common_type_, sake::has_operator_minus<
-            boost::mpl::_1, boost::mpl::_1, type > >,
+        has_operator_minus_helper<
+            common_type_,
+            sake::has_operator_minus< boost::mpl::_1, boost::mpl::_1, type >
+        >,
+        sake::int_tag<2>
+    >::type::template
+    else_if<
+        sake::iterator_multidim_enable< common_type_ >,
         sake::int_tag<1>
     >::type::template
     else_<
@@ -133,18 +144,34 @@ struct dispatch_index< sake::begin_tag, I >
     typedef typename sake::iterator_difference<I>::type type;
     static int const value = boost_ext::mpl::
     if_<
-        has_operator_minus_helper< I, sake::has_operator_minus<
-            boost::mpl::_1, sake::begin_tag, type > >,
+        has_operator_minus_helper<
+            I,
+            sake::has_operator_minus< boost::mpl::_1, sake::begin_tag, type >
+        >,
         sake::int_tag<3>
     >::type::template
     else_if<
-        has_operator_minus_helper< I, sake::has_operator_minus<
-            sake::begin_tag, boost::mpl::_1, type > >,
+        has_operator_minus_helper<
+            I,
+            sake::has_operator_minus< sake::begin_tag, boost::mpl::_1, type >
+        >,
         sake::int_tag<2>
     >::type::template
     else_if<
-        has_operator_minus_helper< I, sake::has_operator_minus<
-            boost::mpl::_1, boost::mpl::_1, type > >,
+        boost_ext::mpl::and2<
+            boost_ext::is_convertible<
+                typename sake::iterator_introversal<I>::type,
+                sake::begin_access_introversal_tag
+            >,
+            boost_ext::mpl::or2<
+                has_operator_minus_helper<
+                    I,
+                    sake::has_operator_minus<
+                        boost::mpl::_1, boost::mpl::_1, type >
+                >,
+                sake::iterator_multidim_enable<I>
+            >
+        >,
         sake::int_tag<1>
     >::type::template
     else_<
@@ -162,8 +189,10 @@ struct dispatch_index< I, sake::begin_tag >
     typedef typename sake::iterator_difference<I>::type type;
     static int const value = boost_ext::mpl::
     if_<
-        has_operator_minus_helper< I, sake::has_operator_minus<
-            sake::begin_tag, boost::mpl::_1, type > >,
+        has_operator_minus_helper<
+            I,
+            sake::has_operator_minus< sake::begin_tag, boost::mpl::_1, type >
+        >,
         sake::int_tag<1>
     >::type::template
     else_<
@@ -181,18 +210,34 @@ struct dispatch_index< I, sake::end_tag >
     typedef typename sake::iterator_difference<I>::type type;
     static int const value = boost_ext::mpl::
     if_<
-        has_operator_minus_helper< I, sake::has_operator_minus<
-            sake::end_tag, boost::mpl::_1, type > >,
+        has_operator_minus_helper<
+            I,
+            sake::has_operator_minus< sake::end_tag, boost::mpl::_1, type >
+        >,
         sake::int_tag<3>
     >::type::template
     else_if<
-        has_operator_minus_helper< I, sake::has_operator_minus<
-            boost::mpl::_1, sake::end_tag, type > >,
+        has_operator_minus_helper<
+            I,
+            sake::has_operator_minus< boost::mpl::_1, sake::end_tag, type >
+        >,
         sake::int_tag<2>
     >::type::template
     else_if<
-        has_operator_minus_helper< I, sake::has_operator_minus<
-            boost::mpl::_1, boost::mpl::_1, type > >,
+        boost_ext::mpl::and2<
+            boost_ext::is_convertible<
+                typename sake::iterator_introversal<I>::type,
+                sake::end_access_introversal_tag
+            >,
+            boost_ext::mpl::or2<
+                has_operator_minus_helper<
+                    I,
+                    sake::has_operator_minus<
+                        boost::mpl::_1, boost::mpl::_1, type >
+                >,
+                sake::iterator_multidim_enable<I>
+            >
+        >,
         sake::int_tag<1>
     >::type::template
     else_<
@@ -220,12 +265,42 @@ struct dispatch_index< sake::end_tag, I >
 };
 
 template< class I0, class I1 >
-struct dispatch< I0, I1, 1 >
+struct dispatch< I0, I1, 2 >
 {
     typedef typename boost_ext::common_result_type< I0, I1 >::type common_type_;
     typedef typename sake::iterator_difference< common_type_ >::type type;
     static type apply(I0 const & i0, I1 const & i1)
     { return i1 - i0; }
+};
+
+template< class I0, class I1 >
+struct dispatch< I0, I1, 1 >
+{
+    typedef typename boost_ext::common_result_type< I0, I1 >::type common_type_;
+    typedef typename sake::iterator_difference< common_type_ >::type type;
+    static type apply(I0 const & i0, I1 const & i1)
+    {
+        typedef sake::iterator_multidim_traits< I0 > traits0;
+        typedef sake::iterator_multidim_traits< I1 > traits1;
+        typename traits0::outer_iterator j0 = traits0::outer(i0);
+        typename traits1::outer_iterator j1 = traits1::outer(i1);
+        if(j0 == j1)
+            return sake::iterator::distance(
+                traits0::inner(i0, sake::null_introversal_tag()),
+                traits1::inner(i1, sake::null_introversal_tag())
+            );
+        type result = sake::iterator::distance(
+            traits0::inner(i0, sake::end_access_introversal_tag()),
+            sake::_end
+        );
+        while(++j0 != j1)
+            result += sake::range::functional::distance()(*j0);
+        result += sake::iterator::distance(
+            sake::range::begin(*j0),
+            traits1::inner(i1, sake::null_introversal_tag())
+        );
+        return result;
+    }
 };
 
 template< class I0, class I1 >

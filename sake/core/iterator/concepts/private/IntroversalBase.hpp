@@ -62,7 +62,7 @@ public:
 
     BOOST_CONCEPT_USAGE( IntroversalAt )
     {
-        assert_result< I& >(traits_::at_ip(i, Tag()));
+        traits_::at_ip(i, Tag());
         assert_result<I>(traits_::at(ci, Tag(), introversal()));
         assert_result< relax_type >(traits_::at(ci, Tag(), Introversal()));
     }
@@ -96,8 +96,8 @@ public:
 
     BOOST_CONCEPT_USAGE( IntroversalAt )
     {
-        assert_result< I& >(traits_::at_ip(i, ci));
-        assert_result< I& >(traits_::at_ip(i, cj));
+        traits_::at_ip(i, ci);
+        traits_::at_ip(i, cj);
         assert_result<I>(traits_::at(ci, cj, introversal()));
         assert_result< relax_type >(traits_::at(ci, cj, Introversal()));
     }

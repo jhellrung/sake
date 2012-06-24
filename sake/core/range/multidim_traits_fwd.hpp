@@ -15,6 +15,18 @@ namespace sake
 template< class R >
 struct range_multidim_traits;
 
+template< class R >
+struct range_multidim_enable
+{
+    static bool const value =
+        sake::range_multidim_traits<R>::enable_tag::value;
+    typedef range_multidim_enable type;
+};
+
+template< class R >
+struct range_multidim_outer
+{ typedef typename sake::range_multidim_traits<R>::outer_range type; };
+
 namespace extension
 {
 template< class R, class Enable = void >

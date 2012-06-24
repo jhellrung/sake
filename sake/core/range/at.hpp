@@ -5,8 +5,8 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * range::at(R&& r, I i) -> sake::range_forward_reference<R>::type
- * range::cat(R const & r, I i) -> sake::range_reference< R const >::type
+ * range::at(R&& r, T x) -> sake::range_forward_reference<R>::type
+ * range::cat(R const & r, T x) -> sake::range_reference< R const >::type
  * struct range::functional::at
  * struct range::functional::cat
  ******************************************************************************/
@@ -21,6 +21,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/config.hpp>
+#include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/range/forward_traits.hpp>
 #include <sake/core/range/traits.hpp>
@@ -35,24 +36,32 @@ namespace range
 namespace result_of
 {
 
-template< class R, class I >
+template< class R, class T >
 class at
 {
     typedef typename boost_ext::remove_qualifiers<R>::type range_;
-    typedef typename boost_ext::remove_qualifiers<I>::type index;
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        index, typename sake::range_difference< range_ >::type >::value));
+    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
+    BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
+        boost::is_same< noqual_type, sake::begin_tag >,
+        boost::is_same< noqual_type, sake::end_tag >,
+        boost_ext::is_convertible<
+            noqual_type, typename sake::range_size< range_ >::type >
+    >::value));
 public:
     typedef typename sake::range_forward_reference<R>::type type;
 };
 
-template< class R >
+template< class R, class T >
 class cat
 {
     typedef typename boost_ext::remove_qualifiers<R>::type range_;
-    typedef typename boost_ext::remove_qualifiers<I>::type index;
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        index, typename sake::range_difference< range_ >::type >::value));
+    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
+    BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
+        boost::is_same< noqual_type, sake::begin_tag >,
+        boost::is_same< noqual_type, sake::end_tag >,
+        boost_ext::is_convertible<
+            noqual_type, typename sake::range_size< range_ >::type >
+    >::value));
 public:
     typedef typename sake::range_reference< range_ const >::type type;
 };
@@ -68,22 +77,22 @@ struct at
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
-    template< class R, class I >
-    typename sake::range::result_of::at<R,I>::type
-    operator()(R&& r, I const i) const
-    { return sake::range_forward_traits<R>::at(sake::forward<R>(r), i); }
+    template< class R, class T >
+    typename sake::range::result_of::at<R,T>::type
+    operator()(R&& r, T const x) const
+    { return sake::range_forward_traits<R>::at(sake::forward<R>(r), x); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-    template< class R, class I >
-    typename sake::range::result_of::at< R&, I >::type
-    operator()(R& r, I const i) const
-    { return sake::range_forward_traits< R& >::at(r); }
+    template< class R, class T >
+    typename sake::range::result_of::at< R&, T >::type
+    operator()(R& r, T const x) const
+    { return sake::range_forward_traits< R& >::at(r,x); }
 
-    template< class R, class I >
-    typename sake::range::result_of::at< R const &, I >::type
-    operator()(R const & r, I const i) const
-    { return sake::range_forward_traits< R const & >::at(r); }
+    template< class R, class T >
+    typename sake::range::result_of::at< R const &, T >::type
+    operator()(R const & r, T const x) const
+    { return sake::range_forward_traits< R const & >::at(r,x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -93,10 +102,10 @@ struct cat
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::range::result_of::cat, 2 )
 
-    template< class R, class I >
-    typename sake::range::result_of::cat< R const &, I >::type
-    operator()(R const & r, I const i) const
-    { return sake::range_traits< R const >::at(r,i); }
+    template< class R, class T >
+    typename sake::range::result_of::cat< R const &, T >::type
+    operator()(R const & r, T const x) const
+    { return sake::range_traits< R const >::at(r,x); }
 };
 
 } // namespace functional

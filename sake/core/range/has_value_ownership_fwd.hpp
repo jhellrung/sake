@@ -12,25 +12,20 @@
 namespace sake
 {
 
-namespace range
-{
-
 template< class R >
-struct has_value_ownership;
+struct range_has_value_ownership;
 
 namespace extension
 {
 template< class R, class Enable = void >
-struct has_value_ownership;
+struct range_has_value_ownership;
 } // namespace extension
 
 namespace default_impl
 {
 template< class R >
-struct has_value_ownership;
+struct range_has_value_ownership;
 } // namespace default_impl
-
-} // namespace range
 
 } // namespace sake
 

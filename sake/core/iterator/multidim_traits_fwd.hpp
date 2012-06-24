@@ -15,6 +15,21 @@ namespace sake
 template< class I >
 struct iterator_multidim_traits;
 
+template< class I >
+struct iterator_multidim_enable
+{
+    static bool const value =
+        sake::iterator_multidim_traits<I>::enable_tag::value;
+    typedef iterator_multidim_enable type;
+};
+
+template< class I >
+struct iterator_multidim_outer
+{ typedef typename sake::iterator_multidim_traits<I>::outer_iterator type; };
+
+template< class I, class Introversal, class Outer = void >
+struct iterator_multidim_inner;
+
 namespace extension
 {
 template< class I, class Enable = void >

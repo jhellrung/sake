@@ -9,7 +9,10 @@
 #ifndef SAKE_CORE_ITERATOR_PRIVATE_ADAPTOR_AT_HELPER_HPP
 #define SAKE_CORE_ITERATOR_PRIVATE_ADAPTOR_AT_HELPER_HPP
 
+#include <boost/mpl/not.hpp>
 #include <boost/utility/enable_if.hpp>
+
+#include <sake/boost_ext/mpl/and.hpp>
 
 #include <sake/core/iterator/adaptor_fwd.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
@@ -26,13 +29,21 @@ namespace adaptor_private
 
 template< class I, class J >
 inline typename boost::enable_if_c<
-    sake::iterator::private_::is_interoperable<I,J>::value, J const & >::type
+    sake::iterator::private_::is_interoperable<I,J>::value,
+    J const &
+>::type
 at_helper(J const & j)
 { return j; }
 
 template< class I, class D, class J, class P >
 inline typename boost::enable_if_c<
-    sake::iterator::private_::is_interoperable<I,J>::value, J const & >::type
+    boost_ext::mpl::and2<
+        sake::iterator::private_::is_interoperable<I,J>,
+        boost::mpl::not_< sake::iterator::private_::is_interoperable<
+            I, sake::iterator::adaptor<D,J,P> > >
+    >::value,
+    J const &
+>::type
 at_helper(sake::iterator::adaptor<D,J,P> const & j)
 { return j.base(); }
 

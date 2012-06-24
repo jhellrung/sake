@@ -17,8 +17,6 @@
  *   - implicit conversion from T&
  * - A forwarding operator().
  * - A nested result_type typedef iff T has a result_type member type.
- *
- * TODO: Finish range support
  ******************************************************************************/
 
 #ifndef SAKE_CORE_REF_REFERENCE_WRAPPER_HPP
@@ -29,7 +27,6 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/range/const_iterator.hpp>
-#include <boost/range/iterator.hpp>
 #include <boost/range/mutable_iterator.hpp>
 #include <boost/ref.hpp>
 #include <boost/static_assert.hpp>
@@ -46,7 +43,9 @@
 #include <sake/core/functional/forwarding/deduced_result.hpp>
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/move/forward.hpp>
-//#include <sake/core/range/begin_end_fwd.hpp>
+#include <sake/core/range/begin.hpp>
+#include <sake/core/range/end.hpp>
+#include <sake/core/range/traits.hpp>
 #include <sake/core/ref/fwd.hpp>
 #include <sake/core/ref/is_wrapped_parameter.hpp>
 #include <sake/core/ref/tag.hpp>
@@ -181,21 +180,29 @@ private:
 
 };
 
-#if 0
 /*******************************************************************************
  * Allow a reference_wrapper wrapping a range to be viewed as a range itself.
  ******************************************************************************/
 
 template< class T, class Tags >
-inline typename boost::range_iterator<T>::type
-range_begin(sake::reference_wrapper< T, Tags > w)
-{ return sake::range::functional::begin()(*w); }
+inline typename sake::range_iterator<T>::type
+range_begin(sake::reference_wrapper< T, Tags > x)
+{ return sake::range::begin(*x); }
 
 template< class T, class Tags >
-inline typename boost::range_iterator<T>::type
-range_end(sake::reference_wrapper< T, Tags > w)
-{ return sake::range::functional::end()(*w); }
-#endif // #if 0
+inline typename sake::range_iterator<T>::type
+range_end(sake::reference_wrapper< T, Tags > x)
+{ return sake::range::end(*x); }
+
+template< class T, class Tags >
+inline typename sake::range_iterator<T>::type
+begin(sake::reference_wrapper< T, Tags > x)
+{ return sake::range::begin(*x); }
+
+template< class T, class Tags >
+inline typename sake::range_iterator<T>::type
+end(sake::reference_wrapper< T, Tags > x)
+{ return sake::range::end(*x); }
 
 } // namespace reference_wrapper_adl
 
@@ -220,22 +227,25 @@ struct is_wrapped_parameter< sake::reference_wrapper< T, Tags >, void >
 
 } // namespace sake
 
-#if 0
+/*******************************************************************************
+ * struct boost::range_mutable_iterator< reference_wrapper< T, Tags > >
+ * struct boost::range_const_iterator< reference_wrapper< T, Tags > >
+ ******************************************************************************/
+
 namespace boost
 {
 
 template< class T, class Tags >
 struct range_mutable_iterator< sake::reference_wrapper< T, Tags > >
-    : boost::range_iterator<T>
+    : sake::range_iterator<T>
 { };
 
 template< class T, class Tags >
 struct range_const_iterator< sake::reference_wrapper< T, Tags > >
-    : boost::range_iterator<T>
+    : sake::range_iterator<T>
 { };
 
 } // namespace boost
-#endif // #if 0
 
 namespace sake
 {

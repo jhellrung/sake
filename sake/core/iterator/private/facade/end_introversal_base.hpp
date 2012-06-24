@@ -10,7 +10,6 @@
 #define SAKE_CORE_ITERATOR_PRIVATE_FACADE_END_INTROVERSAL_BASE_HPP
 
 #include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
@@ -98,17 +97,17 @@ public:
 
     inline friend
     bool operator==(Derived const & this_, sake::end_tag)
-    { return this_.private_operator_equal_end(); }
+    { return this_.private_equal_end(); }
     inline friend
     bool operator==(sake::end_tag, Derived const & this_)
-    { return this_.private_operator_equal_end(); }
+    { return this_.private_equal_end(); }
 
     inline friend
     bool operator!=(Derived const & this_, sake::end_tag)
-    { return !this_.private_operator_equal_end(); }
+    { return !this_.private_equal_end(); }
     inline friend
     bool operator!=(sake::end_tag, Derived const & this_)
-    { return !this_.private_operator_equal_end(); }
+    { return !this_.private_equal_end(); }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -124,8 +123,8 @@ protected:
     { }
 
 private:
-    bool private_operator_equal_end() const
-    { return sake::iterator::core_access::equal_end(derived()); }
+    bool private_equal_end() const
+    { return sake::iterator::core_access::equal(derived(), sake::_end); }
 };
 
 template< class Derived, class Params >
@@ -138,42 +137,16 @@ protected:
     using end_introversal_base_::derived;
 public:
 
-    template< class Introversal = sake::null_introversal_tag >
-    struct relax
-        : end_introversal_base_::template relax< Introversal >
-    { };
-
-    using end_introversal_base_::at_ip;
-    using end_introversal_base_::at;
-
-    Derived&
-    at_ip(sake::end_tag)
-    {
-        sake::iterator::core_access::at_end_ip(derived());
-        return derived();
-    }
-
-    template< class EndTag >
-    typename boost::lazy_enable_if_c<
-        boost::is_same< EndTag, sake::end_tag >::value,
-        relax< sake::null_introversal_tag >
-    >::type
-    at(EndTag)
-    { return at(sake::_end, sake::null_introversal_tag()); }
+    void end_ip()
+    { sake::iterator::core_access::at_ip(derived(), sake::_end); }
 
     template< class Introversal >
-    typename relax< Introversal >::type
-    at(sake::end_tag, Introversal) const
-    { return sake::iterator::core_access::at_end(derived(), Introversal()); }
-
-    Derived&
-    end_ip()
-    { return at_ip(sake::_end); }
-
-    template< class Introversal >
-    typename relax< Introversal >::type
+    typename sake::iterator::core_access::relax< Derived, Introversal >::type
     end(Introversal) const
-    { return at(sake::_end, Introversal()); }
+    {
+        return sake::iterator::core_access::at(
+            derived(), sake::_end, Introversal());
+    }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -190,16 +163,9 @@ protected:
 
     friend class sake::iterator::core_access;
 
-    bool derived_equal_end() const
-    { return derived() == end(); }
-
-    template< class Introversal >
-    typename relax< Introversal >::type
-    derived_at_end(Introversal) const
-    {
-        Derived result(derived());
-        return result.end_ip();
-    }
+    using end_introversal_base_::derived_equal;
+    bool derived_equal(sake::end_tag) const
+    { return derived() == derived().at(sake::_end); }
 };
 
 template< class Derived, class Params >
@@ -213,14 +179,12 @@ protected:
 public:
     SAKE_USING_TYPEDEF( typename private_::traits< Params >, difference_type );
 
-    using end_introversal_base_::end;
-
     inline friend
     difference_type operator-(Derived const & this_, sake::end_tag)
-    { return this_.private_operator_minus_end(); }
+    { return this_.private_difference_end(); }
     inline friend
     difference_type operator-(sake::end_tag, Derived const & this_)
-    { return -this_.private_operator_minus_end(); }
+    { return -this_.private_difference_end(); }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -237,12 +201,13 @@ protected:
 
     friend class sake::iterator::core_access;
 
-    difference_type derived_difference_end() const
-    { return derived() - end(); }
+    using end_introversal_base_::derived_difference;
+    difference_type derived_difference(sake::end_tag) const
+    { return derived() - derived().at(sake::_end); }
 
 private:
-    difference_type private_operator_minus_end() const
-    { return sake::iterator::core_access::difference_end(derived()); }
+    difference_type private_difference_end() const
+    { return sake::iterator::core_access::difference(derived(), sake::_end); }
 };
 
 } // namespace private_

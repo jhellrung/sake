@@ -14,47 +14,56 @@
 #ifndef SAKE_BOOST_EXT_REF_HPP
 #define SAKE_BOOST_EXT_REF_HPP
 
-//#include <boost/range/begin.hpp>
-//#include <boost/range/const_iterator.hpp>
-//#include <boost/range/end.hpp>
-//#include <boost/range/iterator.hpp>
-//#include <boost/range/mutable_iterator.hpp>
+#include <boost/range/const_iterator.hpp>
+#include <boost/range/mutable_iterator.hpp>
 #include <boost/ref.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/fusion/adapted/reference_wrapper.hpp>
+#include <sake/core/range/begin.hpp>
+#include <sake/core/range/end.hpp>
+#include <sake/core/range/traits.hpp>
 #include <sake/core/ref/fwd.hpp>
 
-#if 0
 namespace boost
 {
 
 /*******************************************************************************
- * Allow a boost::reference_wrapper wrapping a range to be viewed as a range itself.
+ * Allow a boost::reference_wrapper wrapping a range to be viewed as a range
+ * itself.
  ******************************************************************************/
 
 template< class T >
 struct range_mutable_iterator< reference_wrapper<T> >
-    : boost::range_iterator<T>
+    : sake::range_iterator<T>
 { };
 
 template< class T >
 struct range_const_iterator< reference_wrapper<T> >
-    : boost::range_iterator<T>
+    : sake::range_iterator<T>
 { };
 
 template< class T >
-inline typename range_iterator<T>::type
-range_begin(boost::reference_wrapper<T> wrapper)
-{ return boost::begin(wrapper.get()); }
+inline typename sake::range_iterator<T>::type
+range_begin(boost::reference_wrapper<T> x)
+{ return sake::range::begin(x.get()); }
 
 template< class T >
-inline typename range_iterator<T>::type
-range_end(boost::reference_wrapper<T> wrapper)
-{ return boost::end(wrapper.get()); }
+inline typename sake::range_iterator<T>::type
+range_end(boost::reference_wrapper<T> x)
+{ return sake::range::end(x.get()); }
+
+template< class T >
+inline typename sake::range_iterator<T>::type
+begin(boost::reference_wrapper<T> x)
+{ return sake::range::begin(x.get()); }
+
+template< class T >
+inline typename sake::range_iterator<T>::type
+end(boost::reference_wrapper<T> x)
+{ return sake::range::end(x.get()); }
 
 } // namespace boost
-#endif
 
 namespace sake {
 namespace extension {
@@ -62,6 +71,7 @@ namespace extension {
 template< class T >
 struct unwrap_reference< boost::reference_wrapper<T> >
 { typedef T type; };
+
 template< class T >
 struct is_reference_wrapped_parameter< boost::reference_wrapper<T> >
     : boost::true_type

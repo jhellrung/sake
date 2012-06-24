@@ -9,10 +9,12 @@
 #ifndef SAKE_CORE_ITERATOR_PRIVATE_ADAPTOR_TRAITS_HPP
 #define SAKE_CORE_ITERATOR_PRIVATE_ADAPTOR_TRAITS_HPP
 
+#include <boost/concept/assert.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/has_key.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/map/map10.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/static_assert.hpp>
@@ -25,6 +27,7 @@
 
 #include <sake/core/introspection/has_operator_less.hpp>
 #include <sake/core/introspection/has_operator_minus.hpp>
+#include <sake/core/iterator/concepts/Iterator.hpp>
 #include <sake/core/iterator/facade.hpp>
 #include <sake/core/iterator/is_const_iterator.hpp>
 #include <sake/core/iterator/keyword.hpp>
@@ -46,6 +49,8 @@ struct traits
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_reference<I>::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<I>::value));
+    BOOST_CONCEPT_ASSERT((sake::concepts::Iterator<I>));
+    BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Params >::value));
 
     typedef typename sake::iterator_value<I>::type base_value_type;
 
@@ -108,17 +113,17 @@ struct traits
         sake::iterator::keyword::introversal< iterator_introversal >,
         sake::iterator::keyword::compare_enable< compare_enable >,
         sake::iterator::keyword::difference_enable< difference_enable >
-    > nominal_param_types;
+    > nominal_facade_param_types;
     typedef typename sake::lazy_insert_keyword_value_if_c<
         boost::mpl::has_key<
             Params, sake::iterator::keyword::tag::chained_base >::value,
-        nominal_param_types,
+        nominal_facade_param_types,
         sake::iterator::keyword::chained_base,
         boost_ext::mpl::at<
             Params, sake::iterator::keyword::tag::chained_base >
-    >::type param_types;
+    >::type facade_param_types;
 
-    typedef sake::iterator::facade< Derived, param_types > facade_;
+    typedef sake::iterator::facade< Derived, facade_param_types > facade_;
 };
 
 } // namespace adaptor_private

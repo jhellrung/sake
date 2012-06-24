@@ -9,19 +9,18 @@
 #ifndef SAKE_CORE_RANGE_DEFAULT_IMPL_SIZE_HPP
 #define SAKE_CORE_RANGE_DEFAULT_IMPL_SIZE_HPP
 
-#include <boost/static_assert.hpp>
-
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
+#include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
+#include <sake/core/range/static_size.hpp>
 #include <sake/core/range/traits.hpp>
 #include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
-#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake_range_size_private
 {
@@ -32,7 +31,7 @@ namespace sake_range_size_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class R >
-inline typename ::sake::range_traits<R>::size_type
+inline typename ::sake::range_size<R>::type
 adl(R const & r)
 { return range_calculate_size(r); }
 
@@ -56,47 +55,44 @@ namespace size_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class R >
-inline typename sake::range_traits<R>::size_type
+inline typename sake::range_size<R>::type
+dispatch(R const & /*r*/, sake::int_tag<3>)
+{ return sake::range_static_size<R>::value; }
+
+template< class R >
+inline typename sake::range_size<R>::type
 dispatch(R const & r, sake::int_tag<2>)
 { return r.size(); }
 
 template< class R >
-inline typename sake::range_traits<R>::size_type
+inline typename sake::range_size<R>::type
 dispatch(R const & r, sake::int_tag<1>)
 { return ::sake_range_size_private::adl(r); }
 
 template< class R >
-inline typename sake::range_traits<R>::size_type
+inline typename sake::range_size<R>::type
 dispatch(R const & r, sake::int_tag<0>)
 {
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        typename sake::range_traits<R>::traversal,
-        boost::random_access_traversal_tag
-    >::value));
     typedef sake::range_traits<R> traits_;
-    SAKE_USING_TYPEDEF( typename traits_, size_type );
-    return static_cast< size_type >(traits_::end(r) - traits_::begin(r));
+    return static_cast< typename traits_::size_type >(
+        traits_::end(r) - traits_::begin(r));
 }
 
 } // namespace size_private
 
 template< class R >
-inline typename sake::range_traits<R>::size_type
+inline typename sake::range_size<R>::type
 size(R const & r)
 {
-    SAKE_USING_TYPEDEF( typename sake::range_traits<R>, size_type );
+    typedef typename sake::range_size<R>::type size_type;
     typedef typename boost_ext::mpl::
-    if_<
-        size_private::is_callable_mem_fun< R const &, size_type ( ) >,
-        sake::int_tag<2>
-    >::type::template
-    else_if<
-        ::sake_range_size_private::is_callable< size_type ( R const & ) >,
-        sake::int_tag<1>
-    >::type::template
-    else_<
-        sake::int_tag<0>
-    >::type int_tag_;
+         if_< sake::range_has_static_size<R>,
+              sake::int_tag<3> >::type::template
+    else_if < size_private::is_callable_mem_fun< R const &, size_type ( ) >,
+              sake::int_tag<2> >::type::template
+    else_if < ::sake_range_size_private::is_callable< size_type ( R const & ) >,
+              sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type int_tag_;
     return size_private::dispatch(r, int_tag_());
 }
 

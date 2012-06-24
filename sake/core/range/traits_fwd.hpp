@@ -9,11 +9,39 @@
 #ifndef SAKE_CORE_RANGE_TRAITS_FWD_HPP
 #define SAKE_CORE_RANGE_TRAITS_FWD_HPP
 
+#include <sake/core/iterator/categories.hpp>
+
 namespace sake
 {
 
 template< class R >
 struct range_traits;
+
+template< class R, class Introversal = sake::null_introversal_tag >
+struct range_iterator;
+
+template< class R >
+struct range_value
+{ typedef typename sake::range_traits<R>::value_type type; };
+template< class R >
+struct range_reference
+{ typedef typename sake::range_traits<R>::reference type; };
+template< class R >
+struct range_difference
+{ typedef typename sake::range_traits<R>::difference_type type; };
+template< class R >
+struct range_size
+{ typedef typename sake::range_traits<R>::size_type type; };
+template< class R >
+struct range_traversal
+{ typedef typename sake::range_traits<R>::traversal type; };
+
+template< class R >
+struct range_size_enable
+{
+    static const bool value = sake::range_traits<R>::size_enable_tag::value;
+    typedef range_size_enable type;
+};
 
 namespace extension
 {

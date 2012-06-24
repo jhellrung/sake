@@ -9,6 +9,7 @@
  * struct extension::iterator_multidim_traits< I, Enable = void >
  * struct default_impl::iterator_multidim_traits<I>
  *
+ * struct iterator_multidim_enable<I>
  * struct iterator_multidim_outer<I>
  * struct iterator_multidim_inner< I, Introversal >
  *
@@ -33,7 +34,11 @@
  *
  *     template< class Outer, class Inner >
  *     static void
- *     set_pos(I& i, Outer o, Inner i);
+ *     at_ip(I& i, Outer j, Inner k);
+ *
+ *     template< class Outer, class Inner, class Introversal >
+ *     static typename sake::iterator_relax< I, Introversal >::type
+ *     at(I i, Outer j, Inner k, Introversal);
  * };
  ******************************************************************************/
 
@@ -47,22 +52,19 @@
 #include <sake/core/introspection/has_type.hpp>
 #include <sake/core/iterator/multidim_traits_fwd.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/range/traits.hpp>
+#include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
 {
 
-template< class I >
-struct iterator_multidim_outer
-{ typedef sake::iterator_multidim_traits<I>::outer_iterator type; };
-
-template< class I, class Introversal, class Outer = void >
+template< class I, class Introversal, class Outer /*= void*/ >
 struct iterator_multidim_inner
     : sake::range_iterator<
           typename boost_ext::remove_reference<
-              sake::iterator_reference< Outer >::type >::type,
-          Introversal
+              typename sake::iterator_reference< Outer >::type >::type
       >
 { };
 
@@ -75,7 +77,7 @@ struct iterator_multidim_inner< I, Introversal, void >
 { };
 
 template< class I >
-struct iterator_multidim_traits;
+struct iterator_multidim_traits
     : sake::extension::iterator_multidim_traits<I>
 { };
 
@@ -129,8 +131,13 @@ struct dispatch< I, true >
 
     template< class Outer, class Inner >
     static void
-    set_pos(I& i, Outer const & outer, Inner const & inner)
-    { i.set_pos(outer, inner); }
+    at_ip(I& i, Outer const & j, Inner const & k)
+    { i.at_ip(j,k); }
+
+    template< class Outer, class Inner, class Introversal >
+    static typename sake::iterator_relax< I, Introversal >::type
+    at(I const & i, Outer const & j, Inner const & k, Introversal)
+    { return i.at(j, k, Introversal()); }
 };
 
 } // namespace iterator_multidim_traits_private

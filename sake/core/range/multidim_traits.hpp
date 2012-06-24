@@ -9,6 +9,9 @@
  * struct extension::range_multidim_traits< R, Enable = void >
  * struct default_impl::range_multidim_traits<R>
  *
+ * struct range_multidim_enable<R>
+ * struct range_multidim_outer<R>
+ *
  * range_multidim_traits has the following interface.
  *
  * template< class R >
@@ -24,9 +27,8 @@
  *     outer(R& r);
  *
  *     template< class Outer, class Inner, class Introversal >
- *     static typename range_traits<R>::template
- *         iterator_with< Introversal >::type
- *     iter_construct(R& r, Outer const & o, Inner const & i, Introversal);
+ *     static typename range_iterator< R, Introversal >::type
+ *     iter_at(R& r, Outer j, Inner k, Introversal);
  * };
  ******************************************************************************/
 
@@ -38,6 +40,8 @@
 #include <sake/core/introspection/has_type.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/range/multidim_traits_fwd.hpp>
+#include <sake/core/range/traits.hpp>
+#include <sake/core/range/traits_fwd.hpp>
 
 namespace sake
 {
@@ -73,6 +77,23 @@ SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
 namespace range_multidim_traits_private
 {
 
+template< class R, class Outer >
+struct impl
+{
+    typedef boost::true_type enable_tag;
+
+    typedef Outer outer_range;
+
+    static outer_range
+    outer(R& r)
+    { return r.outer(); }
+
+    template< class Outer, class Inner, class Introversal >
+    static typename sake::range_iterator< R, Introversal >::type
+    iter_at(R& r, Outer const & j, Inner const & k, Introversal)
+    { return r.iter_at(j, k, Introversal()); }
+};
+
 template< class R, bool = has_type_outer_range<R>::value >
 struct dispatch;
 
@@ -81,25 +102,14 @@ struct const_dispatch;
 
 template< class R >
 struct dispatch< R, false >
-    : const_dispatch<R>
+    : range_multidim_traits_private::const_dispatch<R>
 { };
 
 template< class R >
 struct dispatch< R, true >
-{
-    typedef boost::true_type enable_tag;
-
-    typedef typename R::outer_range outer_range;
-
-    static outer_range
-    outer(R& r)
-    { return r.outer(); }
-
-    template< class Outer, class Inner, class Introversal >
-    static typename sake::range_iterator< R, Introversal >::type
-    iter_construct(R& r, Outer const & o, Inner const & i, Introversal)
-    { return r.iter_construct(o, i, Introversal()); }
-};
+    : range_multidim_traits_private::impl<
+          R, typename R::outer_range >
+{ };
 
 template< class R >
 struct const_dispatch< R, false >
@@ -107,31 +117,20 @@ struct const_dispatch< R, false >
 
 template< class R >
 struct const_dispatch< R, true >
-{
-    typedef boost::true_type enable_tag;
-
-    typedef typename R::const_outer_range outer_range;
-
-    static outer_range
-    outer(R const & r)
-    { return r.outer(); }
-
-    template< class Outer, class Inner, class Introversal >
-    static typename sake::range_iterator< R, Introversal >::type
-    iter_construct(R const & r, Outer const & o, Inner const & i, Introversal)
-    { return r.iter_construct(o, i, Introversal()); }
-};
+    : range_multidim_traits_private::impl<
+          R const, typename R::const_outer_range >
+{ };
 
 } // namespace range_multidim_traits_private
 
 template< class R >
 struct range_multidim_traits
-    : range_multidim_traits_private:dispatch<R>
+    : sake::default_impl::range_multidim_traits_private::dispatch<R>
 { };
 
 template< class R >
 struct range_multidim_traits< R const >
-    : range_multidim_traits_private::const_dispatch<R>
+    : sake::default_impl::range_multidim_traits_private::const_dispatch<R>
 { };
 
 } // namespace default_impl

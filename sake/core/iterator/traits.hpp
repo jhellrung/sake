@@ -33,12 +33,14 @@
  *
  *     typedef ... introversal;
  *
- *     template< class Introversal >
+ *     template< class Introversal = null_introversal_tag >
  *     struct relax { typedef ... type; };
  *
  *     template< class T >
- *     static I&
+ *     static void
  *     at_ip(I& i, T x);
+ *     static typename relax<>::type
+ *     at(I i, T x);
  *     template< class T, class Introversal >
  *     static typename relax< Introversal >::type
  *     at(I i, T x, Introversal);
@@ -75,44 +77,7 @@
 namespace sake
 {
 
-template< class I >
-struct iterator_value
-{ typedef typename sake::iterator_traits<I>::value_type type; };
-template< class I >
-struct iterator_reference
-{ typedef typename sake::iterator_traits<I>::reference type; };
-template< class I >
-struct iterator_pointer
-{ typedef typename sake::iterator_traits<I>::pointer type; };
-template< class I >
-struct iterator_difference
-{ typedef typename sake::iterator_traits<I>::difference_type type; };
-template< class I >
-struct iterator_traversal
-{ typedef typename sake::iterator_traits<I>::traversal type; };
-
-template< class I >
-struct iterator_introversal
-{
-    typedef typename sake::iterator_traits<I>::introversal type;
-    static unsigned int const value = type::value;
-};
-template< class I >
-struct iterator_begin_introversal
-    : sake::introversal_meet<
-          typename sake::iterator_introversal<I>::type,
-          sake::begin_access_introversal_tag
-      >
-{ };
-template< class I >
-struct iterator_end_introversal
-    : sake::introversal_meet<
-          typename sake::iterator_introversal<I>::type,
-          sake::end_access_introversal_tag
-      >
-{ };
-
-template< class I, class Introversal = sake::null_introversal_tag >
+template< class I, class Introversal /*= sake::null_introversal_tag*/ >
 struct iterator_relax
 {
 private:
@@ -129,7 +94,21 @@ public:
 template< class I >
 struct iterator_traits
     : sake::extension::iterator_traits<I>
-{ };
+{
+    template< class Introversal = sake::null_introversal_tag >
+    struct relax
+        : sake::extension::iterator_traits<I>::template relax< Introversal >
+    { };
+
+    template< class T >
+    static typename relax<>::type
+    at(I const & i, T const & x)
+    { return at(i, x, sake::null_introversal_tag()); }
+    template< class T, class Introversal >
+    static typename relax< Introversal >::type
+    at(I const & i, T const & x, Introversal)
+    { return sake::extension::iterator_traits<I>::at(i, x, Introversal()); }
+};
 
 namespace extension
 {
@@ -195,7 +174,7 @@ struct iterator_traits
     };
 
     template< class T >
-    static I&
+    static void
     at_ip(I& i, T const & x)
     {
         BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
@@ -203,7 +182,7 @@ struct iterator_traits
             boost::is_same< T, sake::end_tag >,
             sake::iterator::private_::is_interoperable<I,T>
         >::value));
-        return sake::iterator::default_impl::at_ip(i, x);
+        sake::iterator::default_impl::at_ip(i, x);
     }
 
     template< class T, class Introversal_ >

@@ -23,7 +23,6 @@
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/private/is_interoperable.hpp>
 #include <sake/core/utility/int_tag.hpp>
-#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake_iterator_at_ip_private
 {
@@ -33,30 +32,30 @@ namespace sake_iterator_at_ip_private
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-template< class Result, class I, class T >
-inline Result
+template< class I, class T >
+inline void
 adl(I& i, T const & x)
-{ return static_cast< Result >(iterator_at_ip(i,x)); }
+{ iterator_at_ip(i,x); }
 
 #define SAKE_INTROSPECTION_TRAIT_NAME    is_callable_begin
 #define SAKE_INTROSPECTION_FUNCTION_NAME iterator_begin_ip
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 1 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-template< class Result, class I >
-inline Result
+template< class I >
+inline void
 adl_begin(I& i)
-{ return static_cast< Result >(iterator_begin_ip(i)); }
+{ iterator_begin_ip(i); }
 
 #define SAKE_INTROSPECTION_TRAIT_NAME    is_callable_end
 #define SAKE_INTROSPECTION_FUNCTION_NAME iterator_end_ip
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 1 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-template< class Result, class I >
-inline Result
+template< class I >
+inline void
 adl_end(I& i)
-{ return static_cast< Result >(iterator_end_ip(i)); }
+{ iterator_end_ip(i); }
 
 } // namespace sake_iterator_at_ip_private
 
@@ -78,29 +77,19 @@ namespace at_ip_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class I, class T >
-inline I&
-dispatch(I& i, T const & x, sake::int_tag<4>)
-{ return i.at_ip(x); }
-
-template< class I, class T >
-inline I&
-dispatch(I& i, T const & x, sake::int_tag<3>)
-{ i.at_ip(x); return i; }
-
-template< class I, class T >
-inline I&
+inline void
 dispatch(I& i, T const & x, sake::int_tag<2>)
-{ return ::sake_iterator_at_ip_private::adl< I& >(i,x); }
+{ i.at_ip(x); }
 
 template< class I, class T >
-inline I&
+inline void
 dispatch(I& i, T const & x, sake::int_tag<1>)
-{ ::sake_iterator_at_ip_private::adl< void >(i,x); return i; }
+{ ::sake_iterator_at_ip_private::adl(i,x); }
 
 template< class I, class T >
-inline I&
+inline void
 dispatch(I& i, T const & x, sake::int_tag<0>)
-{ return i = x; }
+{ i = x; }
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun_begin
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME begin_ip
@@ -108,40 +97,26 @@ dispatch(I& i, T const & x, sake::int_tag<0>)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class I >
-inline I&
-dispatch_begin(I& i, sake::int_tag<4>)
-{ return i.begin_ip(); }
-
-template< class I >
-inline I&
-dispatch_begin(I& i, sake::int_tag<3>)
-{ i.begin_ip(); return i; }
-
-template< class I >
-inline I&
+inline void
 dispatch_begin(I& i, sake::int_tag<2>)
-{ return ::sake_iterator_at_ip_private::adl_begin< I& >(i); }
+{ i.begin_ip(); }
 
 template< class I >
-inline I&
+inline void
 dispatch_begin(I& i, sake::int_tag<1>)
-{ ::sake_iterator_at_ip_private::adl_begin< void >(i); return i; }
+{ ::sake_iterator_at_ip_private::adl_begin(i); }
 
 template< class I >
-inline I&
+inline void
 dispatch_begin(I& i, sake::int_tag<0>)
-{ return i = sake::_begin; }
+{ i = sake::_begin; }
 
 template< class I >
-inline I&
+inline void
 dispatch(I& i, sake::begin_tag, sake::int_tag<0>)
 {
     typedef typename boost_ext::mpl::
-         if_< at_ip_private::is_callable_mem_fun_begin< I&, I& ( ) >,
-              sake::int_tag<4> >::type::template
-    else_if < at_ip_private::is_callable_mem_fun_begin< I& >,
-              sake::int_tag<3> >::type::template
-    else_if < ::sake_iterator_at_ip_private::is_callable_begin< I& ( I& ) >,
+         if_< at_ip_private::is_callable_mem_fun_begin< I& >,
               sake::int_tag<2> >::type::template
     else_if < ::sake_iterator_at_ip_private::is_callable_begin< void ( I& ) >,
               sake::int_tag<1> >::type::template
@@ -155,40 +130,26 @@ dispatch(I& i, sake::begin_tag, sake::int_tag<0>)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class I >
-inline I&
-dispatch_end(I& i, sake::int_tag<4>)
-{ return i.end_ip(); }
-
-template< class I >
-inline I&
-dispatch_end(I& i, sake::int_tag<3>)
-{ i.end_ip(); return i; }
-
-template< class I >
-inline I&
+inline void
 dispatch_end(I& i, sake::int_tag<2>)
-{ return ::sake_iterator_at_ip_private::adl_end< I& >(i); }
+{ i.end_ip(); }
 
 template< class I >
-inline I&
+inline void
 dispatch_end(I& i, sake::int_tag<1>)
-{ ::sake_iterator_at_ip_private::adl_end< void >(i); return i; }
+{ ::sake_iterator_at_ip_private::adl_end(i); }
 
 template< class I >
-inline I&
+inline void
 dispatch_end(I& i, sake::int_tag<0>)
-{ return i = sake::_end; }
+{ i = sake::_end; }
 
 template< class I >
-inline I&
+inline void
 dispatch(I& i, sake::end_tag, sake::int_tag<0>)
 {
     typedef typename boost_ext::mpl::
-         if_< at_ip_private::is_callable_mem_fun_end< I&, I& ( ) >,
-              sake::int_tag<4> >::type::template
-    else_if < at_ip_private::is_callable_mem_fun_end< I& >,
-              sake::int_tag<3> >::type::template
-    else_if < ::sake_iterator_at_ip_private::is_callable_end< I& ( I& ) >,
+         if_< at_ip_private::is_callable_mem_fun_end< I& >,
               sake::int_tag<2> >::type::template
     else_if < ::sake_iterator_at_ip_private::is_callable_end< void ( I& ) >,
               sake::int_tag<1> >::type::template
@@ -199,10 +160,10 @@ dispatch(I& i, sake::end_tag, sake::int_tag<0>)
 } // namespace at_ip_private
 
 template< class I, class T >
-inline I&
+inline void
 at_ip(I& i, T const & x)
 {
-    SAKE_USING_TYPEDEF( typename sake::iterator_traits<I>, introversal );
+    typedef typename sake::iterator_introversal<I>::type introversal;
     BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
         boost_ext::mpl::and2<
             boost::is_same< T, sake::begin_tag >,
@@ -217,16 +178,12 @@ at_ip(I& i, T const & x)
         sake::iterator::private_::is_interoperable<I,T>
     >::value));
     typedef typename boost_ext::mpl::
-         if_< at_ip_private::is_callable_mem_fun< I&, I& ( T ) >,
-              sake::int_tag<4> >::type::template
-    else_if < at_ip_private::is_callable_mem_fun< I&, void ( T ) >,
-              sake::int_tag<3> >::type::template
-    else_if < ::sake_iterator_at_ip_private::is_callable< I& ( I&, T ) >,
+         if_< at_ip_private::is_callable_mem_fun< I&, void ( T ) >,
               sake::int_tag<2> >::type::template
     else_if < ::sake_iterator_at_ip_private::is_callable< void ( I&, T ) >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    return at_ip_private::dispatch(i, x, int_tag_());
+    at_ip_private::dispatch(i, x, int_tag_());
 }
 
 } // namespace default_impl

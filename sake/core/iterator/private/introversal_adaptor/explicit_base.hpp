@@ -19,7 +19,7 @@
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/end.hpp>
 #include <sake/core/iterator/private/adaptor/assign_helper.hpp>
-#include <sake/core/iterator/private/adaptor/construct_helper.hpp>
+#include <sake/core/iterator/private/adaptor/convert_helper.hpp>
 #include <sake/core/iterator/private/adaptor/at_helper.hpp>
 #include <sake/core/iterator/private/introversal_adaptor/traits.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
@@ -63,13 +63,11 @@ protected:
 
     template< class R >
     explicit_base(R& r, sake::begin_tag)
-        : adaptor_(sake::range_traits<R>::iter_at(
-              r, sake::_begin, base_introversal()))
+        : adaptor_(sake::range_traits<R>::begin(r, base_introversal()))
     { }
     template< class R >
     explicit_base(R& r, sake::end_tag)
-        : adaptor_(sake::range_traits<R>::iter_at(
-              r, sake::_end, base_introversal()))
+        : adaptor_(sake::range_traits<R>::end(r, base_introversal()))
     { }
     template< class R, class J >
     explicit_base(R& r, J const & j)
@@ -80,7 +78,7 @@ protected:
     explicit explicit_base(J const & j,
         typename boost::disable_if_c< boost::is_base_of<
             explicit_base, J >::value >::type* = 0)
-        : adaptor_(sake::iterator::adaptor_private::construct_helper<I>(j))
+        : adaptor_(sake::iterator::adaptor_private::convert_helper<I>(j))
     { }
 
     template< class J >
@@ -117,12 +115,12 @@ protected:
 
     template< class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at_begin(Introversal) const
+    derived_at(sake::begin_tag, Introversal) const
     { return derived_iter_at(sake::_begin, Introversal()); }
 
     template< class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at_end(Introversal) const
+    derived_at(sake::end_tag, Introversal) const
     { return derived_iter_at(sake::_end, Introversal()); }
 };
 
@@ -148,29 +146,27 @@ protected:
 
     template< class R >
     explicit_base(R& r, sake::begin_tag)
-        : adaptor_(sake::range_traits<R>::iter_at(
-              r, sake::_begin, base_introversal())),
+        : adaptor_(sake::range_traits<R>::begin(r, base_introversal())),
           m_begin(adaptor_::base())
     { }
     template< class R >
     explicit_base(R& r, sake::end_tag)
-        : adaptor_(sake::range_traits<R>::iter_at(
-              r, sake::_begin, base_introversal())),
-          m_begin(sake::range_traits<R>::iter_at(r, sake::_begin))
+        : adaptor_(sake::range_traits<R>::begin(r, base_introversal())),
+          m_begin(sake::range_traits<R>::begin(r))
     { }
     template< class R, class J >
     explicit_base(R& r, J const & j)
         : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introversal())),
-          m_begin(sake::range_traits<R>::iter_at(r, sake::_begin))
+          m_begin(sake::range_traits<R>::begin(r))
     { }
 
     template< class J >
     explicit explicit_base(J const & j,
         typename boost::disable_if_c< boost::is_base_of<
             explicit_base, J >::value >::type* = 0)
-        : adaptor_(sake::iterator::adaptor_private::construct_helper<I>(j)),
+        : adaptor_(sake::iterator::adaptor_private::convert_helper<I>(j)),
           m_begin(sake::iterator::adaptor_private::
-              construct_helper< null_base_type >(sake::iterator::begin(j)))
+              convert_helper< null_base_type >(sake::iterator::begin(j)))
     { }
 
     template< class J, class Begin >
@@ -200,13 +196,16 @@ protected:
 
     friend class sake::iterator::core_access;
 
-    bool derived_equal_begin() const
+    using adaptor_::derived_equal;
+    bool derived_equal(sake::begin_tag) const
     { return base() == m_begin; }
 
-    difference_type derived_difference_begin() const
+    using adaptor_::derived_difference;
+    difference_type derived_difference(sake::begin_tag) const
     { return base() - m_begin; }
 
-    void derived_at_begin_ip()
+    using adaptor_::derived_at_ip;
+    void derived_at_ip(sake::begin_tag)
     { sake::iterator::at_ip(protected_base(), m_begin); }
 
     template< class J, class Introversal >
@@ -253,13 +252,8 @@ protected:
 
     template< class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at_begin(Introversal) const
+    derived_at(sake::begin_tag, Introversal) const
     { return derived_at(m_begin, Introversal()); }
-
-    template< class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at_end(Introversal) const
-    { return derived_at(sake::_end, Introversal()); }
 };
 
 template< class I, class IntroversalMask >
@@ -284,29 +278,27 @@ protected:
 
     template< class R >
     explicit_base(R& r, sake::begin_tag)
-        : adaptor_(sake::range_traits<R>::iter_at(
-              r, sake::_begin, base_introversal())),
-          m_end(sake::range_traits<R>::iter_at(r, sake::_end))
+        : adaptor_(sake::range_traits<R>::begin(r, base_introversal())),
+          m_end(sake::range_traits<R>::end(r))
     { }
     template< class R >
     explicit_base(R& r, sake::end_tag)
-        : adaptor_(sake::range_traits<R>::iter_at(
-              r, sake::_end, base_introversal())),
+        : adaptor_(sake::range_traits<R>::end(r, base_introversal())),
           m_end(adaptor_::base())
     { }
     template< class R, class J >
     explicit_base(R& r, J const & j)
         : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introversal())),
-          m_end(sake::range_traits<R>::iter_at(r, sake::_end))
+          m_end(sake::range_traits<R>::end(r))
     { }
 
     template< class J >
     explicit explicit_base(J const & j,
         typename boost::disable_if_c< boost::is_base_of<
             explicit_base, J >::value >::type* = 0)
-        : adaptor_(sake::iterator::adaptor_private::construct_helper<I>(j)),
+        : adaptor_(sake::iterator::adaptor_private::convert_helper<I>(j)),
           m_end(sake::iterator::adaptor_private::
-              construct_helper< null_base_type >(sake::iterator::end(j)))
+              convert_helper< null_base_type >(sake::iterator::end(j)))
     { }
 
     template< class J, class End >
@@ -336,13 +328,16 @@ protected:
 
     friend class sake::iterator::core_access;
 
-    bool derived_equal_end() const
+    using adaptor_::derived_equal;
+    bool derived_equal(sake::end_tag) const
     { return base() == m_end; }
 
-    difference_type derived_difference_end() const
+    using adaptor_::derived_difference;
+    difference_type derived_difference(sake::end_tag) const
     { return base() - m_end; }
 
-    void derived_at_end_ip()
+    using adaptor_::derived_at_ip;
+    void derived_at_ip(sake::end_tag)
     { sake::iterator::at_ip(protected_base(), m_end); }
 
     template< class J, class Introversal >
@@ -389,12 +384,7 @@ protected:
 
     template< class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at_begin(Introversal) const
-    { return derived_at(sake::_begin, Introversal()); }
-
-    template< class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at_end(Introversal) const
+    derived_at(sake::end_tag, Introversal) const
     { return derived_at(m_end, Introversal()); }
 };
 
@@ -421,34 +411,32 @@ protected:
 
     template< class R >
     explicit_base(R& r, sake::begin_tag)
-        : adaptor_(sake::range_traits<R>::iter_at(
-              r, sake::_begin, base_introversal())),
+        : adaptor_(sake::range_traits<R>::begin(r, base_introversal())),
           m_begin(adaptor_::base()),
-          m_end(sake::range_traits<R>::iter_at(r, sake::_end))
+          m_end(sake::range_traits<R>::end(r))
     { }
     template< class R >
     explicit_base(R& r, sake::end_tag)
-        : adaptor_(sake::range_traits<R>::iter_at(
-              r, sake::_end, base_introversal())),
-          m_begin(sake::range_traits<R>::iter_at(r, sake::_begin)),
+        : adaptor_(sake::range_traits<R>::end(r, base_introversal())),
+          m_begin(sake::range_traits<R>::begin(r)),
           m_end(adaptor_::base())
     { }
     template< class R, class J >
     explicit_base(R& r, J const & j)
         : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introversal())),
-          m_begin(sake::range_traits<R>::iter_at(r, sake::_begin)),
-          m_end(sake::range_traits<R>::iter_at(r, sake::_end))
+          m_begin(sake::range_traits<R>::begin(r)),
+          m_end(sake::range_traits<R>::end(r))
     { }
 
     template< class J >
     explicit explicit_base(J const & j,
         typename boost::disable_if_c< boost::is_base_of<
             explicit_base, J >::value >::type* = 0)
-        : adaptor_(sake::iterator::adaptor_private::construct_helper<I>(j)),
+        : adaptor_(sake::iterator::adaptor_private::convert_helper<I>(j)),
           m_begin(sake::iterator::adaptor_private::
-              construct_helper< null_base_type >(sake::iterator::begin(j))),
+              convert_helper< null_base_type >(sake::iterator::begin(j))),
           m_end(sake::iterator::adaptor_private::
-              construct_helper< null_base_type >(sake::iterator::end(j)))
+              convert_helper< null_base_type >(sake::iterator::end(j)))
     { }
 
     template< class J, class Begin, class End >
@@ -482,19 +470,22 @@ protected:
 
     friend class sake::iterator::core_access;
 
-    bool derived_equal_begin() const
+    using adaptor_::derived_equal;
+    bool derived_equal(sake::begin_tag) const
     { return base() == m_begin; }
-    bool derived_equal_end() const
+    bool derived_equal(sake::end_tag) const
     { return base() == m_end; }
 
-    difference_type derived_difference_begin() const
+    using adaptor_::derived_difference;
+    difference_type derived_difference(sake::begin_tag) const
     { return base() - m_begin; }
-    difference_type derived_difference_end() const
+    difference_type derived_difference(sake::end_tag) const
     { return base() - m_end; }
 
-    void derived_at_begin_ip()
+    using adaptor_::derived_at_ip;
+    void derived_at_ip(sake::begin_tag)
     { sake::iterator::at_ip(protected_base(), m_begin); }
-    void derived_at_end_ip()
+    void derived_at_ip(sake::end_tag)
     { sake::iterator::at_ip(protected_base(), m_end); }
 
     template< class J, class Introversal >
@@ -578,12 +569,12 @@ protected:
 
     template< class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at_begin(Introversal) const
+    derived_at(sake::begin_tag, Introversal) const
     { return derived_at(m_begin, Introversal()); }
 
     template< class Introversal >
     typename adaptor_::template relax< Introversal >::type
-    derived_at_end(Introversal) const
+    derived_at(sake::end_tag, Introversal) const
     { return derived_at(m_end, Introversal()); }
 };
 

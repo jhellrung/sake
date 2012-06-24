@@ -9,8 +9,6 @@
 #ifndef SAKE_CORE_ITERATOR_FACADE_FWD_HPP
 #define SAKE_CORE_ITERATOR_FACADE_FWD_HPP
 
-#include <boost/mpl/identity.hpp>
-
 #include <sake/core/config.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 
@@ -56,14 +54,19 @@ SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER;
 forward_declare( traversal )
 forward_declare( begin_introversal )
 forward_declare( end_introversal )
-forward_declare( chained )
 #undef forward_declare
+
+template< class Params >
+struct chained_base_index;
+template< class Params, int = chained_base_index< Params >::value >
+class chained_base
+SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER;
 
 } // namespace private_
 
 } // namespace facade_adl
 
-using facade_adl::facade;
+using sake::iterator::facade_adl::facade;
 
 } // namespace iterator
 

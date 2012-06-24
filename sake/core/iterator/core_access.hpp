@@ -12,7 +12,9 @@
 #define SAKE_CORE_ITERATOR_CORE_ACCESS_HPP
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
 
+#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/iterator/begin_end_tag.hpp>
@@ -47,15 +49,12 @@ template< class D0, class P0, class D1, class P1 > \
 
     template< class, class >
     friend class sake::iterator::facade_adl::facade;
-    template< class, class >
-    friend class sake::iterator::facade_adl::private_::common_base;
 #define declare_friend( x ) \
     template< class, class, int > \
     friend class sake::iterator::facade_adl::private_::x ## _base;
     declare_friend( traversal )
     declare_friend( begin_introversal )
     declare_friend( end_introversal )
-    declare_friend( chained )
 #undef declare_friend
 
     // Dereferenceable
@@ -106,7 +105,11 @@ template< class D0, class P0, class D1, class P1 > \
     { return i0.derived_difference(i1); }
     template< class I0, class I1 >
     static typename boost::lazy_disable_if_c<
-        boost_ext::is_convertible< I1, I0 >::value,
+        boost_ext::mpl::or3<
+            boost::is_same< I1, sake::begin_tag >,
+            boost::is_same< I1, sake::end_tag >,
+            boost_ext::is_convertible< I1, I0 >
+        >::value,
         sake::iterator::private_::common_difference_type< I1, I0 > >::type
     difference(I0 const & i0, I1 const & i1)
     { return -i1.derived_difference(i0); }
@@ -140,58 +143,38 @@ template< class D0, class P0, class D1, class P1 > \
         typedef typename Derived::template
             derived_relax< Introversal >::type type;
     };
-    template< class Derived, class Other >
+    template< class Derived, class T >
     static void
-    at_ip(Derived& this_, Other const & other)
-    { return this_.derived_at_ip(other); }
-    template< class Derived, class Other, class Introversal >
+    at_ip(Derived& this_, T const & x)
+    { return this_.derived_at_ip(x); }
+    template< class Derived, class T, class Introversal >
     static typename Derived::template relax< Introversal >::type
-    at(Derived const & this_, Other const & other, Introversal)
-    { return this_.derived_at(other, Introversal()); }
+    at(Derived const & this_, T const & x, Introversal)
+    { return this_.derived_at(x, Introversal()); }
 
     // BeginDetect
     template< class Derived >
     static bool
-    equal_begin(Derived const & this_)
-    { return this_.derived_equal_begin(); }
-
-    // BeginAccess
-    template< class Derived >
-    static void
-    at_begin_ip(Derived& this_)
-    { return this_.derived_at_begin_ip(); }
-    template< class Derived, class Introversal >
-    static typename Derived::template relax< Introversal >::type
-    at_begin(Derived const & this_, Introversal)
-    { return this_.derived_at_begin(Introversal()); }
+    equal(Derived const & this_, sake::begin_tag)
+    { return this_.derived_equal(sake::_begin); }
 
     // EndDetect
     template< class Derived >
     static bool
-    equal_end(Derived const & this_)
-    { return this_.derived_equal_end(); }
-
-    // EndAccess
-    template< class Derived >
-    static void
-    at_end_ip(Derived& this_)
-    { return this_.derived_at_end_ip(); }
-    template< class Derived, class Introversal >
-    static typename Derived::template relax< Introversal >::type
-    at_end(Derived const & this_, Introversal)
-    { return this_.derived_at_end(Introversal()); }
+    equal(Derived const & this_, sake::end_tag)
+    { return this_.derived_equal(sake::_end); }
 
     // RandomAccess + BeginAccess
     template< class Derived >
     static typename Derived::difference_type
-    difference_begin(Derived const & this_)
-    { return this_.derived_difference_begin(); }
+    difference(Derived const & this_, sake::begin_tag)
+    { return this_.derived_difference(sake::_begin); }
 
     // RandomAccess + EndAccess
     template< class Derived >
     static typename Derived::difference_type
-    difference_end(Derived const & this_)
-    { return this_.derived_difference_end(); }
+    difference(Derived const & this_, sake::end_tag)
+    { return this_.derived_difference(sake::_end); }
 };
 
 } // namespace iterator

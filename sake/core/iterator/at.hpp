@@ -29,7 +29,6 @@
 #include <sake/core/iterator/private/is_interoperable.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
-#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
 {
@@ -43,10 +42,10 @@ namespace result_of
 template< class I, class T, class Introversal = sake::null_introversal_tag >
 class at
 {
-    typedef typename boost_ext::remove_qualifiers<I>::type iterator;
+    typedef typename boost_ext::remove_qualifiers<I>::type iterator_;
     typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
     typedef typename boost_ext::remove_qualifiers< Introversal >::type introversal_;
-    SAKE_USING_TYPEDEF( typename sake::iterator_traits< iterator >, introversal );
+    typedef typename sake::iterator_introversal< iterator_ >::type introversal;
     BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
         boost_ext::mpl::and2<
             boost::is_same< noqual_type, sake::begin_tag >,
@@ -58,12 +57,12 @@ class at
             boost_ext::is_convertible<
                 introversal, sake::end_access_introversal_tag >
         >,
-        sake::iterator::private_::is_interoperable< iterator, noqual_type >
+        sake::iterator::private_::is_interoperable< iterator_, noqual_type >
     >::value));
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
         introversal_, sake::null_introversal_tag >::value));
 public:
-    typedef typename sake::iterator_relax< iterator, introversal_ >::type type;
+    typedef typename sake::iterator_relax< iterator_, introversal_ >::type type;
 };
 
 } // namespace result_of
@@ -78,7 +77,7 @@ struct at
     template< class I, class T >
     typename sake::iterator::result_of::at< I const &, T const & >::type
     operator()(I const & i, T const & x) const
-    { return sake::iterator_traits<I>::at(i, x, sake::null_introversal_tag()); }
+    { return sake::iterator_traits<I>::at(i,x); }
 
     template< class I, class T, class Introversal >
     typename sake::iterator::result_of::at<

@@ -24,7 +24,6 @@
 #include <sake/core/range/traits.hpp>
 #include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
-#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake_range_iter_at_private
 {
@@ -35,8 +34,7 @@ namespace sake_range_iter_at_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class R, class T, class Introversal >
-inline typename ::sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename ::sake::range_iterator< R, Introversal >::type
 adl(R& r, T const & x, Introversal)
 { return range_iter_at(r, x, Introversal()); }
 
@@ -46,18 +44,17 @@ adl(R& r, T const & x, Introversal)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class R, class Introversal >
-inline typename ::sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename ::sake::range_iterator< R, Introversal >::type
 adl_begin(R& r, Introversal)
 { return range_begin(r, Introversal()); }
 
 template< class R >
-inline typename ::sake::range_traits<R>::iterator
+inline typename ::sake::range_iterator<R>::type
 adl_begin(R& r)
 { return range_begin(r); }
 
 template< class R >
-inline typename ::sake::range_traits<R>::iterator
+inline typename ::sake::range_iterator<R>::type
 std_adl_begin(R& r)
 { return begin(r); }
 
@@ -67,18 +64,17 @@ std_adl_begin(R& r)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class R, class Introversal >
-inline typename ::sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename ::sake::range_iterator< R, Introversal >::type
 adl_end(R& r, Introversal)
 { return range_end(r, Introversal()); }
 
 template< class R >
-inline typename ::sake::range_traits<R>::iterator
+inline typename ::sake::range_iterator<R>::type
 adl_end(R& r)
 { return range_end(r); }
 
 template< class R >
-inline typename ::sake::range_traits<R>::iterator
+inline typename ::sake::range_iterator<R>::type
 std_adl_end(R& r)
 { return end(r); }
 
@@ -102,31 +98,24 @@ namespace iter_at_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class R, class T, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch(R& /*r*/, T const & x, Introversal, sake::int_tag<3>)
 { return x; }
 
 template< class R, class T, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch(R& r, T const & x, Introversal, sake::int_tag<2>)
 { return r.iter_at(x, Introversal()); }
 
 template< class R, class T, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch(R& r, T const & x, Introversal, sake::int_tag<1>)
 { return ::sake_range_iter_at_private::adl(r, x, Introversal()); }
 
 template< class R, class T, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch(R& r, T const & x, Introversal, sake::int_tag<0>)
-{
-    return typename sake::range_traits<R>::template
-        iterator_with< Introversal >::type(r,x);
-}
+{ return typename sake::range_iterator< R, Introversal >::type(r,x); }
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun_begin
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME begin
@@ -134,50 +123,44 @@ dispatch(R& r, T const & x, Introversal, sake::int_tag<0>)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_begin(R& r, Introversal, sake::int_tag<5>)
 { return r.begin(Introversal()); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_begin(R& r, Introversal, sake::int_tag<4>)
 { return ::sake_range_iter_at_private::adl_begin(r, Introversal()); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_begin(R& r, Introversal, sake::int_tag<3>)
 { return r.begin(); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_begin(R& r, Introversal, sake::int_tag<2>)
 { return ::sake_range_iter_at_private::adl_begin(r); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_begin(R& r, Introversal, sake::int_tag<1>)
 { return ::sake_range_iter_at_private::std_adl_begin(r); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_begin(R& r, Introversal, sake::int_tag<0>)
 {
-    return typename sake::range_traits<R>::template
-        iterator_with< Introversal >::type(r, sake::_begin);
+    return typename sake::range_iterator< R, Introversal >::type(
+        r, sake::_begin);
 }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch(R& r, sake::begin_tag, Introversal, sake::int_tag<0>)
 {
-    typedef typename sake::range_traits<R>::template
+    typedef sake::range_traits<R> traits_;
+    typedef typename traits_::template
         iterator_with< Introversal >::type result_type;
     typedef typename boost_ext::mpl::
          if_< iter_at_private::is_callable_mem_fun_begin<
@@ -193,7 +176,7 @@ dispatch(R& r, sake::begin_tag, Introversal, sake::int_tag<0>)
                   result_type ( R& ) >,
               sake::int_tag<2> >::type::template
     else_if < boost_ext::is_convertible<
-                  typename sake::range_traits<R>::iterator, result_type >,
+                  typename traits_::iterator, result_type >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
     return dispatch_begin(r, Introversal(), int_tag_());
@@ -205,50 +188,44 @@ dispatch(R& r, sake::begin_tag, Introversal, sake::int_tag<0>)
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_end(R& r, Introversal, sake::int_tag<5>)
 { return r.end(Introversal()); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_end(R& r, Introversal, sake::int_tag<4>)
 { return ::sake_range_iter_at_private::adl_end(r, Introversal()); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_end(R& r, Introversal, sake::int_tag<3>)
 { return r.end(); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_end(R& r, Introversal, sake::int_tag<2>)
 { return ::sake_range_iter_at_private::adl_end(r); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_end(R& r, Introversal, sake::int_tag<1>)
 { return ::sake_range_iter_at_private::std_adl_end(r); }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch_end(R& r, Introversal, sake::int_tag<0>)
 {
-    return typename sake::range_traits<R>::template
-        iterator_with< Introversal >::type(r, sake::_end);
+    return typename sake::range_iterator< R, Introversal >::type(
+        r, sake::_end);
 }
 
 template< class R, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 dispatch(R& r, sake::end_tag, Introversal, sake::int_tag<0>)
 {
-    typedef typename sake::range_traits<R>::template
+    typedef sake::range_traits<R> traits_;
+    typedef typename traits_::template
         iterator_with< Introversal >::type result_type;
     typedef typename boost_ext::mpl::
          if_< iter_at_private::is_callable_mem_fun_end<
@@ -264,7 +241,7 @@ dispatch(R& r, sake::end_tag, Introversal, sake::int_tag<0>)
                   result_type ( R& ) >,
               sake::int_tag<2> >::type::template
     else_if < boost_ext::is_convertible<
-                  typename sake::range_traits<R>::iterator, result_type >,
+                  typename traits_::iterator, result_type >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
     return dispatch_end(r, Introversal(), int_tag_());
@@ -273,16 +250,14 @@ dispatch(R& r, sake::end_tag, Introversal, sake::int_tag<0>)
 } // namespace iter_at_private
 
 template< class R, class T, class Introversal >
-inline typename sake::range_traits<R>::template
-    iterator_with< Introversal >::type
+inline typename sake::range_iterator< R, Introversal >::type
 iter_at(R& r, T const & x, Introversal)
 {
     typedef sake::range_traits<R> traits_;
-    SAKE_USING_TYPEDEF( typename traits_, iterator );
     BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
         boost::is_same< T, sake::begin_tag >,
         boost::is_same< T, sake::end_tag >,
-        boost_ext::is_convertible< T, iterator >
+        boost_ext::is_convertible< T, typename traits_::iterator >
     >::value));
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
         Introversal, sake::null_introversal_tag >::value));
