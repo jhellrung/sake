@@ -21,6 +21,7 @@
 #ifndef SAKE_CORE_UTILITY_BASE_MEMBER_HPP
 #define SAKE_CORE_UTILITY_BASE_MEMBER_HPP
 
+#include <boost/config.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_empty.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -82,6 +83,33 @@ private:
     typedef typename boost::remove_cv<T>::type nocv_type;
 protected:
 
+#ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class U >
+    explicit base_member(U&& x,
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            base_member, U >::value >::type* = 0)
+        : m_member(sake::emplacer_constructible< nocv_type >(sake::forward<U>(x)))
+    { }
+
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class U >
+    explicit base_member(U& x,
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            base_member, U >::value >::type* = 0)
+        : m_member(sake::emplacer_constructible< nocv_type >(x))
+    { }
+
+    template< class U >
+    explicit base_member(U const & x,
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            base_member, U >::value >::type* = 0)
+        : m_member(sake::emplacer_constructible< nocv_type >(x))
+    { }
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+
     template< class V >
     explicit base_member(sake::emplacer< V ( ) >)
     {
@@ -90,13 +118,6 @@ protected:
          || boost::is_same< V, nocv_type >::value
         ));
     }
-
-    template< class U >
-    explicit base_member(SAKE_FWD2_REF( U ) x,
-        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            base_member, U >::value >::type* = 0)
-        : m_member(sake::emplacer_constructible< nocv_type >(sake::forward<U>(x)))
-    { }
 
     typename boost_ext::add_reference<T>::type
     member()
@@ -136,6 +157,33 @@ private:
     typedef typename boost::remove_cv<T>::type nocv_type;
 protected:
 
+#ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class U >
+    explicit base_member(U&& x,
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            base_member, U >::value >::type* = 0)
+        : T(sake::emplacer_constructible< nocv_type >(sake::forward<U>(x)))
+    { }
+
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class U >
+    explicit base_member(U& x,
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            base_member, U >::value >::type* = 0)
+        : T(sake::emplacer_constructible< nocv_type >(x))
+    { }
+
+    template< class U >
+    explicit base_member(U const & x,
+        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+            base_member, U >::value >::type* = 0)
+        : T(sake::emplacer_constructible< nocv_type >(x))
+    { }
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+
     template< class V >
     explicit base_member(sake::emplacer< V ( ) >)
     {
@@ -144,13 +192,6 @@ protected:
          || boost::is_same< V, nocv_type >::value
         ));
     }
-
-    template< class U >
-    explicit base_member(SAKE_FWD2_REF( U ) x,
-        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            base_member, U >::value >::type* = 0)
-        : T(sake::emplacer_constructible< nocv_type >(sake::forward<U>(x)))
-    { }
 
     typename boost_ext::add_reference<T>::type
     member()
@@ -162,7 +203,7 @@ protected:
 private:
     // Disable Boost.ResultOf's discovery of a (possible) result_type typedef.
     // This allows the derived class to define a result struct without worrying
-    // about T's result_type typedef overriding it.
+    // about T's result_type typedef implicitly overriding it.
     struct result_type_disabler;
     template< result_type_disabler* > struct result_type;
 };
