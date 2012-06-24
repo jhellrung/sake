@@ -57,8 +57,7 @@ template<
     class T,
     BOOST_PP_ENUM_BINARY_PARAMS(
         SAKE_CONCEPTS_CONSTRUCTIBLE_MAX_ARITY,
-        class U,
-        = void BOOST_PP_INTERCEPT )
+        class U, = void BOOST_PP_INTERCEPT )
 >
 struct Constructible;
 
