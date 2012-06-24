@@ -167,10 +167,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\direct_init_ctor_test.cpp"
-			>
-		</File>
-		<File
 			RelativePath="..\is_template_base_of_test.cpp"
 			>
 		</File>

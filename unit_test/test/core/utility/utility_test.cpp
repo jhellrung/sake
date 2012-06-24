@@ -18,7 +18,6 @@ void as_reference_to_test(sake::test::environment& env);
 void assert_test(sake::test::environment& env);
 void compressed_pair_test(sake::test::environment& env);
 void compressed_tuple_test(sake::test::environment& env);
-void direct_init_ctor_test(sake::test::environment& env);
 void declare_once_test(sake::test::environment& env);
 void is_template_base_of_test(sake::test::environment& env);
 void overload_test(sake::test::environment& env);
@@ -31,7 +30,6 @@ void utility_test(sake::test::environment& env)
     env("assert", &assert_test);
     env("compressed_pair", &compressed_pair_test);
     env("compressed_tuple", &compressed_tuple_test);
-    env("direct_init_ctor", &direct_init_ctor_test);
     env("declare_once", &declare_once_test);
     env("is_template_base_of", &is_template_base_of_test);
     env("overload", &overload_test);
