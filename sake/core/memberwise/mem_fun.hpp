@@ -9,6 +9,19 @@
  *
  * Expands to memberwise definitions of a specified set of member functions.
  *
+ * tag_seq should be a Boost.PP sequence consisting of some subset of the
+ * following tags:
+ *   copy_assign -> T& operator=(T const &)
+ *   copy_assign_if_any_has_ume -> T& operator=(T const &)
+ *   copy_assign_impl -> T& copy_assign_impl(T const &)
+ *   copy_constructor -> T(T const &)
+ *   default_constructor -> T()
+ *   destructor -> ~T()
+ *   hash_value -> std::size_t hash_value() const
+ *   move_assign -> T& operator=(T&&)
+ *   move_constructor -> T(T&&)
+ *   swap -> void swap(T&)
+ *
  * member_seq should be a Boost.PP sequence of base class specifiers followed by
  * member variable specifiers. A base class specifier is a Boost.PP 1-sequence
  * simply consisting of the base class; a member variable specifier is a
