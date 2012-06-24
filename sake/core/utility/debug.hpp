@@ -10,7 +10,9 @@
 #define SAKE_CORE_UTILITY_DEBUG_HPP
 
 #if defined( SAKE_DEBUG ) && defined( SAKE_NDEBUG )
+
 #error Must not define both SAKE_DEBUG and SAKE_NDEBUG
+
 #else // #if defined( SAKE_DEBUG ) && defined( SAKE_NDEBUG )
 
 #if !defined( SAKE_DEBUG ) && !defined( SAKE_NDEBUG )
