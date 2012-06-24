@@ -169,8 +169,9 @@
 
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/forward.hpp>
-#include <sake/core/utility/private/overload/define_macros.ipp>
+#include <sake/core/utility/private/overload/define_macros.hpp>
 
-#define SAKE_OVERLOAD_GENERATE() <sake/core/utility/private/overload/overload.ipp>
+#define SAKE_OVERLOAD_GENERATE() \
+    <sake/core/utility/private/overload/overload.ipp>
 
 #endif // #ifndef SAKE_CORE_UTILITY_OVERLOAD_HPP

@@ -6,6 +6,9 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
+#ifndef SAKE_CORE_UTILITY_PRIVATE_OVERLOAD_DEFINE_MACROS_HPP
+#define SAKE_CORE_UTILITY_PRIVATE_OVERLOAD_DEFINE_MACROS_HPP
+
 #define SAKE_OVERLOAD_Tn_( n ) BOOST_PP_CAT( SAKE_OVERLOAD_T, n )
 #define SAKE_OVERLOAD_xn_( n ) BOOST_PP_CAT( SAKE_OVERLOAD_X, n )
 
@@ -39,3 +42,5 @@
     ( SAKE_OVERLOAD_Tn_( n ) & )
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+#endif // #ifndef SAKE_CORE_UTILITY_PRIVATE_OVERLOAD_DEFINE_MACROS_HPP
