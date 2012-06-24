@@ -46,6 +46,16 @@ protected:
     template< class Signature >
     struct enable;
 public:
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+        typename base,
+        (( nullary_base_ ))
+    )
+
+    SAKE_MEMBERWISE_MEM_FUN(
+        typename base,
+        ( swap ) ( hash_value ),
+        (( nullary_base_ ))
+    )
 
     template< class Signature >
     struct result;
@@ -118,20 +128,10 @@ public:
 
 #endif // #if !defined( ... ) && !defined( ... )
 
-    SAKE_MEMBERWISE_MEM_FUN(
-        typename base,
-        ( swap ) ( hash_value ),
-        (( nullary_base_ ))
-    )
-
 protected:
     SAKE_USING_TYPEDEF( typename nullary_base_, chained_base_type );
     using nullary_base_::derived;
 
-    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
-        typename base,
-        (( nullary_base_ ))
-    )
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename base,
         (( nullary_base_ ))

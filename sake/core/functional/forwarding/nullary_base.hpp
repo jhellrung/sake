@@ -58,6 +58,10 @@ class nullary_base
 {
     typedef nullary_base_private::impl< Derived, Params > impl_;
 public:
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+        typename nullary_base,
+        (( impl_ ))
+    )
     SAKE_MEMBERWISE_MEM_FUN(
         typename nullary_base,
         ( swap ) ( hash_value ),
@@ -65,10 +69,6 @@ public:
     )
 protected:
     SAKE_USING_TYPEDEF( typename impl_, chained_base_type );
-    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
-        typename nullary_base,
-        (( impl_ ))
-    )
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename nullary_base,
         (( impl_ ))
@@ -169,6 +169,10 @@ protected:
         sake::void_
     >::type chained_base_type;
 public:
+    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+        typename impl,
+        (( chained_base_type ))
+    )
     SAKE_MEMBERWISE_MEM_FUN(
         typename impl,
         ( swap ) ( hash_value ),
@@ -181,10 +185,6 @@ protected:
     Derived const & derived() const
     { return *static_cast< Derived const * >(this); }
 
-    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
-        typename impl,
-        (( chained_base_type ))
-    )
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename impl,
         (( chained_base_type ))
