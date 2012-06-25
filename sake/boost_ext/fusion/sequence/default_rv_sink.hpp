@@ -105,14 +105,12 @@ class default_rv_sink
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Results >::value));
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Sequence >::value));
     BOOST_STATIC_ASSERT((!boost_ext::mpl::any<
-        Sequence,
-        boost::mpl::quote1< boost_ext::is_cv_or >
-    >::value));
+        Sequence, boost::mpl::quote1< boost_ext::is_cv_or > >::value));
     typedef default_rv_sink_private::at_dispatch_base< Results > at_dispatch_base_;
 public:
 #if SAKE_GNUC_VERSION && SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
-    // GCC 4.6.3 requires default_base to be copy constructible in order for
-    // function arguments to bind to default_<...>.
+    // GCC 4.6.3 requires default_rv_sink to be copy constructible in order for
+    // function arguments to bind to it.
     SAKE_NONCOPY_ASSIGNABLE( default_rv_sink )
 #else // #if SAKE_GNUC_VERSION <= SAKE_GNUC_VERSION_OF(4,6,3)
     SAKE_NONCOPYABLE( default_rv_sink )
@@ -215,8 +213,7 @@ template< class Result, std::size_t N, class U >
 Result at_impl(void* p)
 {
     return sake::implicit_cast< Result >(
-        boost_ext::fusion::at_c<N>(
-            sake::move(*static_cast< U* >(p))));
+        boost_ext::fusion::at_c<N>(sake::move(*static_cast< U* >(p))));
 }
 
 #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
