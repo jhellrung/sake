@@ -115,6 +115,8 @@ public:
  * struct compressed_tuple< T0, ... >
  ******************************************************************************/
 
+#define lp_Tn_rp( z, n, data ) \
+    ( T ## n )
 #define at_c_n_data( z, n, data ) \
     boost_ext::fusion::at_c<n>(data)
 #define at_c_n_assign_at_c_n_forward_Sequence_s( z, n, data ) \
@@ -128,6 +130,7 @@ public:
 #define BOOST_PP_FILENAME_1       <sake/core/utility/compressed_tuple/compressed_tuple.hpp>
 #include BOOST_PP_ITERATE()
 
+#undef lp_Tn_rp
 #undef at_c_n_data
 #undef at_c_n_assign_at_c_n_forward_Sequence_s
 #undef fwd_ref_Un_xn
@@ -179,17 +182,6 @@ public:
         (( base_member_ ))
     )
 
-    // template< class U0 >
-    // explicit compressed_tuple(U0&& x0)
-    //     : base_member_(sake::forward< U0 >(x0))
-    // { }
-#define SAKE_VALUE_CONSTRUCTOR_T U
-#define SAKE_VALUE_CONSTRUCTOR_CLASS_NAME compressed_tuple
-#define SAKE_VALUE_CONSTRUCTOR_FORWARD    base_member_
-#define SAKE_VALUE_CONSTRUCTOR_ARITY      1
-#define SAKE_VALUE_CONSTRUCTOR_TYPE0      T0
-#include SAKE_VALUE_CONSTRUCTOR_GENERATE()
-
 #else // #if N == 1
 
 private:
@@ -205,33 +197,23 @@ public:
         (( m_storage_type )( m_storage ))
     )
 
-#if !defined( BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS ) \
- && !defined( BOOST_NO_RVALUE_REFERENCES ) \
- && !defined( BOOST_NO_VARIADIC_TEMPLATES )
-
-    template<
-        class... U,
-        class Enable = typename boost::enable_if_c< sizeof...( U ) == N >::type
-    >
-    compressed_tuple(U&&... x)
-        : m_storage(sake::forward<U>(x)...)
-    { }
-
-#else // #if !defined( ... ) && ...
-
-#define SAKE_VALUE_CONSTRUCTOR_T U
-#define SAKE_VALUE_CONSTRUCTOR_CLASS_NAME compressed_tuple
-#define SAKE_VALUE_CONSTRUCTOR_FORWARD    m_storage
-#define SAKE_VALUE_CONSTRUCTOR_ARITY      N
-#define SAKE_VALUE_CONSTRUCTOR_TYPE0      T0
-#define SAKE_VALUE_CONSTRUCTOR_TYPE1      T1
-#define SAKE_VALUE_CONSTRUCTOR_PERFECT_MAX_ARITY \
-    SAKE_COMPRESSED_TUPLE_PERFECT_MAX_ARITY
-#include SAKE_VALUE_CONSTRUCTOR_GENERATE()
-
-#endif // #if !defined( ... ) && ...
-
 #endif // #if N == 1
+
+    // template< class U0, ... >
+    // explicit compressed_tuple(U0&& x0, ...)
+    //     : m_storage(sake::forward< U0 >(x0), ...)
+    // { }
+#define SAKE_VALUE_CONSTRUCTOR_CLASS_NAME compressed_tuple
+#define SAKE_VALUE_CONSTRUCTOR_TYPES      BOOST_PP_REPEAT( N, lp_Tn_rp, ~ )
+#if N == 1
+#define SAKE_VALUE_CONSTRUCTOR_FORWARD    base_member_
+#else // #if N == 1
+#define SAKE_VALUE_CONSTRUCTOR_FORWARD    m_storage
+#if N <= SAKE_COMPRESSED_TUPLE_PERFECT_MAX_ARITY
+#define SAKE_VALUE_CONSTRUCTOR_PERFECT_FORWARDING
+#endif // #if N <= SAKE_COMPRESSED_TUPLE_PERFECT_MAX_ARITY
+#endif // #if N == 1
+#include SAKE_VALUE_CONSTRUCTOR_GENERATE()
 
 private:
     template< class Sequence >

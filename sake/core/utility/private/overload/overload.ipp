@@ -16,15 +16,6 @@
 
 
 
-#ifndef SAKE_OVERLOAD_T
-#define SAKE_OVERLOAD_T T
-#endif // #ifndef SAKE_OVERLOAD_T
-#ifndef SAKE_OVERLOAD_X
-#define SAKE_OVERLOAD_X x
-#endif // #ifndef SAKE_OVERLOAD_X
-
-
-
 #if defined( SAKE_OVERLOAD_FUNCTION_NAME ) \
   + defined( SAKE_OVERLOAD_CONSTRUCTOR_NAME ) \
  != 1
@@ -229,7 +220,7 @@
 
 #define SAKE_OVERLOAD_definition_impl( r, n, T_tuple, Tx_tuple, x_tuple, forward_x_tuple ) \
     template< SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( r, \
-        n, ( BOOST_PP_ENUM_PARAMS( n, class SAKE_OVERLOAD_T ) ) ) > \
+        n, ( BOOST_PP_ENUM_PARAMS( n, class _SakeOverloadT ) ) ) > \
     SAKE_OVERLOAD_definition_helper( r, n, T_tuple, Tx_tuple, x_tuple, forward_x_tuple )
 
 #define BOOST_PP_ITERATION_LIMITS ( SAKE_OVERLOAD_MIN_ARITY, SAKE_OVERLOAD_max_arity )
@@ -266,9 +257,6 @@
 #undef SAKE_OVERLOAD_PERFECT_MAX_ARITY
 #undef SAKE_OVERLOAD_FWD2_MAX_ARITY
 #undef SAKE_OVERLOAD_FWD_MAX_ARITY
-
-#undef SAKE_OVERLOAD_T
-#undef SAKE_OVERLOAD_X
 
 
 

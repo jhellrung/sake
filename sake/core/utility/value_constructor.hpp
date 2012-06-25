@@ -15,29 +15,18 @@
  * The macros to define to specify the desired constructor overload set are as
  * follows:
  *
- * SAKE_VALUE_CONSTRUCTOR_T
- *     [ defaults to "T" ]
- *     Expands to the template parameter prefix.
- * SAKE_VALUE_CONSTRUCTOR_X
- *     [ defaults to "x" ]
- *     Expands to the function argument prefix.
- *
  * SAKE_VALUE_CONSTRUCTOR_CLASS_NAME
  *     Expands to the name of the enclosing class.
+ * SAKE_VALUE_CONSTRUCTOR_TYPES
+ *     Expands to a Boost.PP sequence of the types intended to be constructed
+ *     from the (respective) constructor arguments.
  * SAKE_VALUE_CONSTRUCTOR_FORWARD
- *     Expands to the name of the forwarding constructor (typically a base
- *     class)
- *
- * SAKE_VALUE_CONSTRUCTOR_ARITY
- *     Expands to an integer giving the arity of the constructor.
- * SAKE_VALUE_CONSTRUCTOR_PERFECT_MAX_ARITY
+ *     Expands to the name of the forwarding object constructor (typically a
+ *     base class or tuple-like member object).
+ * SAKE_VALUE_CONSTRUCTOR_PERFECT_FORWARDING
  *     [ optional ]
- *     Expands to an integer giving the maximum arity of the constructor with
- *     "perfect" forwarding. See the documentation for overload.hpp.
- * SAKE_VALUE_CONSTRUCTOR_TYPE0
- *     Expands to the value type of the first parameter.
- * SAKE_VALUE_CONSTRUCTOR_TYPE1
- *     Expands to the value type of the second parameter.
+ *     If defined in C++03, enables the ability to capture rvalues and
+ *     accurately capture lvalues (preserving constness).
  ******************************************************************************/
 
 #ifndef SAKE_CORE_UTILITY_VALUE_CONSTRUCTOR_HPP
@@ -46,6 +35,9 @@
 #include <boost/config.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/repetition/enum.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
@@ -59,9 +51,10 @@
 #include <sake/core/move/rv_cast.hpp>
 #include <sake/core/move/rv_sink.hpp>
 #include <sake/core/utility/overload.hpp>
+#include <sake/core/utility/private/value_constructor/define_macros.hpp>
 #include <sake/core/utility/value_constructor_enable.hpp>
 
 #define SAKE_VALUE_CONSTRUCTOR_GENERATE() \
-    <sake/core/utility/private/value_constructor.ipp>
+    <sake/core/utility/private/value_constructor/value_constructor.ipp>
 
 #endif // #ifndef SAKE_CORE_UTILITY_VALUE_CONSTRUCTOR_HPP

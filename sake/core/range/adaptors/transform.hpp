@@ -83,25 +83,22 @@ public:
         (( adaptor_ ))
     )
 
-    // template< class T0 >
-    // explicit transform(T0&& x0)
-    //     : adaptor_(sake::forward< T0 >(x0))
+    // template< class S >
+    // explicit transform(S&& r)
+    //     : adaptor_(sake::forward<S>(r))
     // { }
 #define SAKE_VALUE_CONSTRUCTOR_CLASS_NAME transform
+#define SAKE_VALUE_CONSTRUCTOR_TYPES      ( R )
 #define SAKE_VALUE_CONSTRUCTOR_FORWARD    adaptor_
-#define SAKE_VALUE_CONSTRUCTOR_ARITY      1
-#define SAKE_VALUE_CONSTRUCTOR_TYPE0      R
 #include SAKE_VALUE_CONSTRUCTOR_GENERATE()
 
-    // template< class T0, class T1 >
-    // transform(T0&& x0, T1&& x1)
-    //     : adaptor_(sake::forward< T0 >(x0), sake::forward< T1 >(x1))
+    // template< class S, class G >
+    // transform(S&& r, G&& f)
+    //     : adaptor_(sake::forward<S>(r), sake::forward<G>(f))
     // { }
 #define SAKE_VALUE_CONSTRUCTOR_CLASS_NAME transform
+#define SAKE_VALUE_CONSTRUCTOR_TYPES      ( R ) ( F )
 #define SAKE_VALUE_CONSTRUCTOR_FORWARD    adaptor_
-#define SAKE_VALUE_CONSTRUCTOR_ARITY      2
-#define SAKE_VALUE_CONSTRUCTOR_TYPE0      R
-#define SAKE_VALUE_CONSTRUCTOR_TYPE1      F
 #include SAKE_VALUE_CONSTRUCTOR_GENERATE()
 
     typedef F function_type;

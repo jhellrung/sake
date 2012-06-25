@@ -14,13 +14,6 @@
  * 
  * The macros to define to specify the desired overload set are as follows:
  *
- * SAKE_OVERLOAD_T
- *     [ defaults to "T" ]
- *     Expands to the template parameter prefix.
- * SAKE_OVERLOAD_X
- *     [ defaults to "x" ]
- *     Expands to the function argument prefix.
- *
  * SAKE_OVERLOAD_DEFINE_RESULT
  *     [ optional ]
  *     If defined, will declare and define the result struct used by
@@ -114,8 +107,8 @@
  * Note: After #include'ing SAKE_OVERLOAD_GENERATE(), all the above macros are
  *       #undef'ed.
  *
- * The macro arguments for the above are as follows (T and x would be replaced
- * with SAKE_OVERLOAD_T and SAKE_OVERLOAD_X, respectively, if defined):
+ * The macro arguments for the above are as follows (T and x are implementation-
+ * defined prefixes):
  *
  * r
  *     The next available state of the BOOST_PP_FOR construct. (Normally ignored
@@ -151,11 +144,8 @@
 #define SAKE_CORE_UTILITY_OVERLOAD_HPP
 
 #include <boost/config.hpp>
-#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
@@ -165,10 +155,6 @@
 #include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
-
-#include <sake/core/move/as_lvalue.hpp>
-#include <sake/core/move/forward.hpp>
 #include <sake/core/utility/private/overload/define_macros.hpp>
 
 #define SAKE_OVERLOAD_GENERATE() \

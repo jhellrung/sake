@@ -83,12 +83,9 @@ public:
     // compressed_pair(U0&& x0, U1&& x1)
     //     : m_storage(sake::forward< U0 >(x0), sake::forward< U1 >(x1))
     // { }
-#define SAKE_VALUE_CONSTRUCTOR_T U
 #define SAKE_VALUE_CONSTRUCTOR_CLASS_NAME compressed_pair
+#define SAKE_VALUE_CONSTRUCTOR_TYPES      ( T0 ) ( T1 )
 #define SAKE_VALUE_CONSTRUCTOR_FORWARD    m_storage
-#define SAKE_VALUE_CONSTRUCTOR_ARITY      2
-#define SAKE_VALUE_CONSTRUCTOR_TYPE0      T0
-#define SAKE_VALUE_CONSTRUCTOR_TYPE1      T1
 #include SAKE_VALUE_CONSTRUCTOR_GENERATE()
 
 #ifndef BOOST_NO_RVALUE_REFERENCES

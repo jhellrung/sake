@@ -42,14 +42,13 @@ public:
 
     SAKE_MEMBERWISE_SWAP( by_value, (( adaptor_ )) )
 
-    // template< class T0 >
-    // explicit by_value(T0&& x0)
-    //     : adaptor_(sake::forward< T0 >(x0))
+    // template< class S >
+    // explicit by_value(S&& r)
+    //     : adaptor_(sake::forward<S>(r))
     // { }
 #define SAKE_VALUE_CONSTRUCTOR_CLASS_NAME by_value
+#define SAKE_VALUE_CONSTRUCTOR_TYPES      ( R )
 #define SAKE_VALUE_CONSTRUCTOR_FORWARD    adaptor_
-#define SAKE_VALUE_CONSTRUCTOR_ARITY      1
-#define SAKE_VALUE_CONSTRUCTOR_TYPE0      R
 #include SAKE_VALUE_CONSTRUCTOR_GENERATE()
 
 private:
