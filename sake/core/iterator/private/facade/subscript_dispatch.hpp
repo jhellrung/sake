@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/iterator/private/facade/operator_bracket_dispatch.hpp
+ * sake/core/iterator/private/facade/subscript_dispatch.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_BRACKET_DISPATCH_HPP
-#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_BRACKET_DISPATCH_HPP
+#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_SUBSCRIPT_DISPATCH_HPP
+#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_SUBSCRIPT_DISPATCH_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/quote.hpp>
@@ -44,11 +44,11 @@ namespace private_
  ******************************************************************************/
 
 template< class Value >
-struct operator_bracket_dispatch_index
+struct subscript_dispatch_index
 { static int const value = 0; };
 
 template< class Value >
-struct operator_bracket_dispatch_index< Value const >
+struct subscript_dispatch_index< Value const >
 {
     static int const value = 1 + (boost::has_trivial_copy< Value >::value
                                || sake::is_by_value_optimal< Value >::value);
@@ -56,12 +56,12 @@ struct operator_bracket_dispatch_index< Value const >
 
 template<
     class This, class Value, class Reference,
-    int = operator_bracket_dispatch_index< Value >::value
+    int = subscript_dispatch_index< Value >::value
 >
-struct operator_bracket_dispatch;
+struct subscript_dispatch;
 
 template< class This, class Value, class Reference >
-struct operator_bracket_dispatch< This, Value const, Reference, 2 >
+struct subscript_dispatch< This, Value const, Reference, 2 >
 {
     typedef Value type;
     static type apply(This const & this_)
@@ -69,13 +69,13 @@ struct operator_bracket_dispatch< This, Value const, Reference, 2 >
 };
 
 template< class This, class Value, class Reference >
-struct operator_bracket_dispatch< This, Value const, Reference, 1 >
+struct subscript_dispatch< This, Value const, Reference, 1 >
 {
     class proxy
     {
         This const m_this;
         explicit proxy(This const & this_) : m_this(this_) { }
-        friend struct operator_bracket_dispatch;
+        friend struct subscript_dispatch;
     public:
         SAKE_NONCOPY_ASSIGNABLE( proxy )
         operator Reference() const { return *m_this; }
@@ -87,13 +87,13 @@ struct operator_bracket_dispatch< This, Value const, Reference, 1 >
 };
 
 template< class This, class Value, class Reference >
-struct operator_bracket_dispatch< This, Value, Reference, 0 >
+struct subscript_dispatch< This, Value, Reference, 0 >
 {
     class proxy
     {
         This const m_this;
         explicit proxy(This const & this_) : m_this(this_) { }
-        friend struct operator_bracket_dispatch;
+        friend struct subscript_dispatch;
     public:
         SAKE_NONCOPY_ASSIGNABLE( proxy )
         operator Reference() const { return *m_this; }
@@ -165,4 +165,4 @@ struct operator_bracket_dispatch< This, Value, Reference, 0 >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_BRACKET_DISPATCH_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_SUBSCRIPT_DISPATCH_HPP

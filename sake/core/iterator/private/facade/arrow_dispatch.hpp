@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/iterator/private/facade/operator_arrow_dispatch.hpp
+ * sake/core/iterator/private/facade/arrow_dispatch.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_ARROW_DISPATCH_HPP
-#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_ARROW_DISPATCH_HPP
+#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_ARROW_DISPATCH_HPP
+#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_ARROW_DISPATCH_HPP
 
 #include <sake/core/utility/address_of.hpp>
 
@@ -34,13 +34,13 @@ namespace private_
  ******************************************************************************/
 
 template< class Reference >
-struct operator_arrow_dispatch
+struct arrow_dispatch
 {
     class proxy
     {
         Reference const m_ref;
         explicit proxy(Reference const & ref) : m_ref(ref) { }
-        friend struct operator_arrow_dispatch;
+        friend struct arrow_dispatch;
     public:
         Reference const * operator->() const
         { return sake::address_of(m_ref); }
@@ -51,7 +51,7 @@ struct operator_arrow_dispatch
 };
 
 template< class T >
-struct operator_arrow_dispatch< T& >
+struct arrow_dispatch< T& >
 {
     typedef typename sake::result_of::address_of< T& >::type type;
     static type apply(T& x)
@@ -66,4 +66,4 @@ struct operator_arrow_dispatch< T& >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_ARROW_DISPATCH_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_ARROW_DISPATCH_HPP

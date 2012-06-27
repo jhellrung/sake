@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/iterator/private/facade/operator_post_increment_dispatch.hpp
+ * sake/core/iterator/private/facade/post_increment_dispatch.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -8,8 +8,8 @@
  * The logic in here roughly coincides with that used in boost::iterator_facade.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_POST_INCREMENT_DISPATCH_HPP
-#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_POST_INCREMENT_DISPATCH_HPP
+#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_POST_INCREMENT_DISPATCH_HPP
+#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_POST_INCREMENT_DISPATCH_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/not.hpp>
@@ -50,7 +50,7 @@ namespace private_
  ******************************************************************************/
 
 template< class Value, class Reference, class Traversal >
-struct operator_post_increment_dispatch_index
+struct post_increment_dispatch_index
 {
     static int const value = boost_ext::mpl::
     if_<
@@ -82,13 +82,13 @@ struct operator_post_increment_dispatch_index
 
 template<
     class This, class Value, class Reference, class Traversal,
-    int = operator_post_increment_dispatch_index<
+    int = post_increment_dispatch_index<
         Value, Reference, Traversal >::value
 >
-struct operator_post_increment_dispatch;
+struct post_increment_dispatch;
 
 template< class This, class Value, class Reference, class Traversal >
-struct operator_post_increment_dispatch< This, Value, Reference, Traversal, 2 >
+struct post_increment_dispatch< This, Value, Reference, Traversal, 2 >
 {
     typedef This type;
     static type apply(This const & this_)
@@ -96,7 +96,7 @@ struct operator_post_increment_dispatch< This, Value, Reference, Traversal, 2 >
 };
 
 template< class This, class Value, class Reference, class Traversal >
-struct operator_post_increment_dispatch< This, Value, Reference, Traversal, 1 >
+struct post_increment_dispatch< This, Value, Reference, Traversal, 1 >
 {
     class proxy
     {
@@ -104,7 +104,7 @@ struct operator_post_increment_dispatch< This, Value, Reference, Traversal, 1 >
         This const m_this;
         mutable value_type m_x;
         explicit proxy(This const & this_) : m_this(this_), m_x(*this_) { }
-        friend struct operator_post_increment_dispatch;
+        friend struct post_increment_dispatch;
     public:
         SAKE_NONCOPY_ASSIGNABLE( proxy )
         operator This() const { return m_this; }
@@ -117,7 +117,7 @@ struct operator_post_increment_dispatch< This, Value, Reference, Traversal, 1 >
 };
 
 template< class This, class Value, class Reference, class Traversal >
-struct operator_post_increment_dispatch< This, Value, Reference, Traversal, 0 >
+struct post_increment_dispatch< This, Value, Reference, Traversal, 0 >
 {
     typedef typename boost::remove_const< Value >::type value_type;
 
@@ -126,7 +126,7 @@ struct operator_post_increment_dispatch< This, Value, Reference, Traversal, 0 >
         This const m_this;
         mutable value_type m_x;
         explicit proxy(This const & this_) : m_this(this_), m_x(*this_) { }
-        friend struct operator_post_increment_dispatch;
+        friend struct post_increment_dispatch;
     public:
         SAKE_NONCOPY_ASSIGNABLE( proxy )
 
@@ -206,4 +206,4 @@ struct operator_post_increment_dispatch< This, Value, Reference, Traversal, 0 >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_OPERATOR_POST_INCREMENT_DISPATCH_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_POST_INCREMENT_DISPATCH_HPP

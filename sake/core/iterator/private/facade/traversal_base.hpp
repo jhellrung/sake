@@ -19,8 +19,8 @@
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/private/facade/begin_introversal_base.hpp>
-#include <sake/core/iterator/private/facade/operator_bracket_dispatch.hpp>
-#include <sake/core/iterator/private/facade/operator_post_increment_dispatch.hpp>
+#include <sake/core/iterator/private/facade/post_increment_dispatch.hpp>
+#include <sake/core/iterator/private/facade/subscript_dispatch.hpp>
 #include <sake/core/iterator/private/facade/traits.hpp>
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/sign_t.hpp>
@@ -72,18 +72,18 @@ public:
 
 private:
     typedef private_::traits< Params > traits_;
-    typedef private_::operator_post_increment_dispatch<
+    typedef private_::post_increment_dispatch<
         Derived,
         typename traits_::facade_value_type,
         typename traits_::reference,
         typename traits_::iterator_traversal
-    > operator_post_increment_dispatch_;
+    > post_increment_dispatch_;
 public:
-    typename operator_post_increment_dispatch_::type
+    typename post_increment_dispatch_::type
     operator++(int)
     {
-        typename operator_post_increment_dispatch_::type result =
-            operator_post_increment_dispatch_::apply(derived());
+        typename post_increment_dispatch_::type result =
+            post_increment_dispatch_::apply(derived());
         sake::iterator::core_access::increment(derived());
         return result;
     }
@@ -158,16 +158,16 @@ private:
 public:
     SAKE_USING_TYPEDEF( typename traits_, difference_type );
 private:
-    typedef private_::operator_bracket_dispatch<
+    typedef private_::subscript_dispatch<
         Derived,
         typename traits_::facade_value_type,
         typename traits_::reference
-    > operator_bracket_dispatch_;
+    > subscript_dispatch_;
 public:
 
-    typename operator_bracket_dispatch_::type
+    typename subscript_dispatch_::type
     operator[](difference_type const n) const
-    { return operator_bracket_dispatch_::apply(derived() + n); }
+    { return subscript_dispatch_::apply(derived() + n); }
 
     Derived&
     operator+=(difference_type const n)

@@ -66,12 +66,12 @@
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/private/category.hpp>
+#include <sake/core/iterator/private/facade/arrow_dispatch.hpp>
 #include <sake/core/iterator/private/facade/at_enable.hpp>
 #include <sake/core/iterator/private/facade/compare_enable.hpp>
 #include <sake/core/iterator/private/facade/difference_enable.hpp>
 #include <sake/core/iterator/private/facade/equal_enable.hpp>
 #include <sake/core/iterator/private/facade/explicit_constructor_enable.hpp>
-#include <sake/core/iterator/private/facade/operator_arrow_dispatch.hpp>
 #include <sake/core/iterator/private/facade/traits.hpp>
 #include <sake/core/iterator/private/facade/traversal_base.hpp>
 #include <sake/core/math/sign.hpp>
@@ -131,13 +131,12 @@ public:
     operator*() const
     { return sake::iterator::core_access::dereference(derived()); }
 private:
-    typedef private_::operator_arrow_dispatch<
-        reference > operator_arrow_dispatch_;
+    typedef private_::arrow_dispatch< reference > arrow_dispatch_;
 public:
-    typedef typename operator_arrow_dispatch_::type pointer;
+    typedef typename arrow_dispatch_::type pointer;
     pointer
     operator->() const
-    { return operator_arrow_dispatch_::apply(operator*()); }
+    { return arrow_dispatch_::apply(operator*()); }
 
     /***************************************************************************
      * Incrementable
