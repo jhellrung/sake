@@ -11,7 +11,6 @@
 
 #include <boost/concept/usage.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_signed.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
@@ -100,7 +99,6 @@ public:
     SAKE_USING_TYPEDEF( typename traits_, traversal );
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
         traversal, boost::forward_traversal_tag >::value));
-    BOOST_STATIC_ASSERT((boost::is_integral< difference_type >::value));
     BOOST_STATIC_ASSERT((boost::is_signed< difference_type >::value));
 };
 
