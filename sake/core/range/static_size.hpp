@@ -109,6 +109,13 @@ struct range_static_size
     : range_static_size_private::dispatch<R>
 { };
 
+template< class T, std::size_t N >
+struct range_static_size< T[N] >
+{
+    static std::size_t const value = N;
+    typedef range_static_size type;
+};
+
 } // namespace default_impl
 
 } // namespace sake
