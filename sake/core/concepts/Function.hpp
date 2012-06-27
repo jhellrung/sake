@@ -87,7 +87,8 @@ template<
     class R = void,
     BOOST_PP_ENUM_BINARY_PARAMS(
         SAKE_CONCEPTS_FUNCTION_MAX_ARITY,
-        class T, = void BOOST_PP_INTERCEPT )
+        class T, = void BOOST_PP_INTERCEPT
+    )
 >
 struct Function;
 
@@ -113,11 +114,11 @@ struct Function;
 #define T0N             BOOST_PP_ENUM_PARAMS( N, T )
 
 template< class F, class R comma_class_T0N >
-#if N == SAKE_CONCEPTS_CONSTRUCTIBLE_MAX_ARITY
+#if N == SAKE_CONCEPTS_FUNCTION_MAX_ARITY
 struct Function
-#else // #if N == SAKE_CONCEPTS_CONSTRUCTIBLE_MAX_ARITY
+#else // #if N == SAKE_CONCEPTS_FUNCTION_MAX_ARITY
 struct Function< F, R comma_T0N >
-#endif // #if N == SAKE_CONCEPTS_CONSTRUCTIBLE_MAX_ARITY
+#endif // #if N == SAKE_CONCEPTS_FUNCTION_MAX_ARITY
 {
     BOOST_CONCEPT_USAGE( Function )
     {
