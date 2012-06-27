@@ -62,13 +62,19 @@ struct traits
     >::type const_iterator;
 
     typedef typename boost_ext::mpl::lazy_at<
+        Params, sake::range::keyword::tag::distance_enable,
+        sake::range_distance_enable< base_ >
+    >::type distance_enable;
+
+    typedef typename boost_ext::mpl::lazy_at<
         Params, sake::range::keyword::tag::size_enable,
         sake::range_size_enable< base_ >
     >::type size_enable;
 
-    typedef boost::mpl::map3<
+    typedef boost::mpl::map4<
         sake::range::keyword::iterator< iterator >,
         sake::range::keyword::const_iterator< const_iterator >,
+        sake::range::keyword::distance_enable< distance_enable >,
         sake::range::keyword::size_enable< size_enable >
     > nominal_facade_param_types;
     typedef typename sake::lazy_insert_keyword_value_if_c<

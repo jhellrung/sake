@@ -36,6 +36,7 @@ template< \
 class x ## _base \
 SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER;
 forward_declare( front_back )
+forward_declare( distance )
 forward_declare( size )
 forward_declare( subscript )
 #undef forward_declare

@@ -45,7 +45,6 @@ namespace empty_private
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME empty
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_DEFAULT_SIGNATURE( T ) bool ( )
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
@@ -68,7 +67,7 @@ template< class R >
 inline bool
 dispatch(R const & r, sake::int_tag<0>)
 {
-    typedef sake::range_traits<R> traits_;
+    typedef sake::range_traits< R const > traits_;
     return traits_::begin(r) == traits_::end(r);
 }
 
@@ -81,7 +80,7 @@ empty(R const & r)
     typedef typename boost_ext::mpl::
          if_< sake::range_has_static_size<R>,
               sake::int_tag<3> >::type::template
-    else_if < empty_private::is_callable_mem_fun< R const & >,
+    else_if < empty_private::is_callable_mem_fun< R const &, bool ( ) >,
               sake::int_tag<2> >::type::template
     else_if < ::sake_range_empty_private::is_callable< bool ( R const & ) >,
               sake::int_tag<1> >::type::template

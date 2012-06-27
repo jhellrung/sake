@@ -21,7 +21,7 @@
 #include <sake/core/range/core_access.hpp>
 #include <sake/core/range/debug.hpp>
 #include <sake/core/range/facade_fwd.hpp>
-#include <sake/core/range/private/facade/size_base.hpp>
+#include <sake/core/range/private/facade/distance_base.hpp>
 #include <sake/core/range/private/facade/traits.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/using_typedef.hpp>
@@ -44,20 +44,20 @@ struct front_back_base_index
 
 template< class Derived, class Params >
 class front_back_base< Derived, Params, 0 >
-    : public private_::size_base< Derived, Params >
+    : public private_::distance_base< Derived, Params >
 {
-    typedef private_::size_base< Derived, Params > size_base_;
+    typedef private_::distance_base< Derived, Params > distance_base_;
     typedef private_::traits< Params > traits_;
 protected:
-    using size_base_::derived;
+    using distance_base_::derived;
 public:
     SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
         typename front_back_base,
-        (( size_base_ ))
+        (( distance_base_ ))
     )
     SAKE_MEMBERWISE_SWAP(
         typename front_back_base,
-        (( size_base_ ))
+        (( distance_base_ ))
     )
 
     SAKE_USING_TYPEDEF( typename traits_, reference );
@@ -84,14 +84,14 @@ public:
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename front_back_base,
-        (( size_base_ ))
+        (( distance_base_ ))
     )
 
     template< class T >
     explicit front_back_base(SAKE_FWD2_REF( T ) x,
         typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
             front_back_base, T >::value >::type* = 0)
-        : size_base_(sake::forward<T>(x))
+        : distance_base_(sake::forward<T>(x))
     { }
 };
 

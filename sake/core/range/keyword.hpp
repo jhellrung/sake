@@ -10,6 +10,8 @@
  *
  * struct range::keyword::back_enable<T>
  * struct range::keyword::back_enable_c< Cond >
+ * struct range::keyword::distance_enable<T>
+ * struct range::keyword::distance_enable_c< Cond >
  * struct range::keyword::size_enable<T>
  * struct range::keyword::size_enable_c< Cond >
  *
@@ -50,6 +52,13 @@ SAKE_TEMPLATE_KEYWORD_VALUE( back_enable )
 template< bool Cond >
 struct back_enable_c
     : sake::range::keyword::back_enable<
+          boost::integral_constant< bool, Cond > >
+{ };
+
+SAKE_TEMPLATE_KEYWORD_VALUE( distance_enable )
+template< bool Cond >
+struct distance_enable_c
+    : sake::range::keyword::distance_enable<
           boost::integral_constant< bool, Cond > >
 { };
 

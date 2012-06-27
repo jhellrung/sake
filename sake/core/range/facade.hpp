@@ -11,6 +11,7 @@
  * - range::keyword::iterator
  * - range::keyword::const_iterator
  * - range::keyword::back_enable
+ * - range::keyword::distance_enable
  * - range::keyword::size_enable
  * - range::keyword::chained_base
  *
@@ -23,9 +24,10 @@
  * - static derived_at(This& this_, T x)
  *     -> reference_of< This >::type [defaulted]
  * - derived_empty() const -> bool [defaulted]
- * - derived_distance() const -> difference_type [defaulted]
- * - derived_size() const
- *     -> size_type [if size_enable::value == true; defaulted]
+ * - derived_distance() const -> difference_type
+ *     [if distance_enable::value == true; defaulted]
+ * - derived_size() const -> size_type
+ *     [if size_enable::value == true; defaulted]
  ******************************************************************************/
 
 #ifndef SAKE_CORE_RANGE_FACADE_HPP
@@ -170,9 +172,9 @@ public:
 
     bool empty() const
     { return sake::range::core_access::empty(derived()); }
-
-    difference_type distance() const
-    { return sake::range::core_access::distance(derived()); }
+    inline friend
+    bool range_empty(Derived const & this_)
+    { return this_.empty(); }
 
 protected:
     template< class CDerived >

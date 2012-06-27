@@ -162,6 +162,16 @@ distance(R const & r)
     return distance_private::dispatch(r, int_tag_());
 }
 
+template< class R, class Difference >
+struct has_intrinsic_distance
+    : boost_ext::mpl::or2<
+          distance_private::is_callable_mem_fun<
+              R const &, Difference ( ) >,
+          ::sake_range_distance_private::is_callable<
+              Difference ( R const & ) >
+      >
+{ };
+
 } // namespace default_impl
 
 } // namespace range

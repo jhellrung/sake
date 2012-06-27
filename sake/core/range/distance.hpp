@@ -5,12 +5,14 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * range::distance(R const & r) -> range_difference<R>::type
+ * range::distance(R const & r) -> range_difference< R const >::type
  * struct range::functional::distance
  ******************************************************************************/
 
 #ifndef SAKE_CORE_RANGE_DISTANCE_HPP
 #define SAKE_CORE_RANGE_DISTANCE_HPP
+
+#include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -30,9 +32,14 @@ namespace result_of
 
 template< class R >
 struct distance
-    : sake::range_difference<
-          typename boost_ext::remove_qualifiers<R>::type const >
-{ };
+{
+private:
+    typedef sake::range_traits<
+        typename boost_ext::remove_qualifiers<R>::type const > traits_;
+    BOOST_STATIC_ASSERT((traits_::distance_enable_tag::value));
+public:
+    typedef typename traits_::difference_type type;
+};
 
 } // namespace result_of
 

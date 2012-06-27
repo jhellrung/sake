@@ -24,6 +24,8 @@ class core_access
     template< class, class >
     friend class sake::range::facade_adl::facade;
     template< class, class, int >
+    friend class sake::range::facade_adl::private_::distance_base;
+    template< class, class, int >
     friend class sake::range::facade_adl::private_::size_base;
 
     template< class Derived, class Introversal >

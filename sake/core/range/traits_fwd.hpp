@@ -37,6 +37,13 @@ struct range_traversal
 { typedef typename sake::range_traits<R>::traversal type; };
 
 template< class R >
+struct range_distance_enable
+{
+    static const bool value = sake::range_traits<R>::distance_enable_tag::value;
+    typedef range_distance_enable type;
+};
+
+template< class R >
 struct range_size_enable
 {
     static const bool value = sake::range_traits<R>::size_enable_tag::value;

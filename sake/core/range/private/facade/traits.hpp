@@ -99,6 +99,17 @@ struct traits
     typedef typename boost_ext::mpl::or2<
         boost_ext::is_convertible<
             range_traversal,
+            boost::forward_traversal_tag
+        >,
+        boost_ext::mpl::at<
+            Params, sake::range::keyword::tag::distance_enable,
+            boost::false_type
+        >
+    >::type distance_enable;
+
+    typedef typename boost_ext::mpl::or2<
+        boost_ext::is_convertible<
+            range_traversal,
             boost::random_access_traversal_tag
         >,
         boost_ext::mpl::at<
