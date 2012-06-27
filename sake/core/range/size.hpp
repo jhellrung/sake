@@ -5,12 +5,14 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * range::size(R const & r) -> range_size<R>::type
+ * range::size(R const & r) -> range_size< R const >::type
  * struct range::functional::size
  ******************************************************************************/
 
 #ifndef SAKE_CORE_RANGE_SIZE_HPP
 #define SAKE_CORE_RANGE_SIZE_HPP
+
+#include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -29,8 +31,14 @@ namespace result_of
 
 template< class R >
 struct size
-    : sake::range_size< typename boost_ext::remove_qualifiers<R>::type >
-{ };
+{
+private:
+    typedef sake::range_traits<
+        typename boost_ext::remove_qualifiers<R>::type const > traits_;
+    BOOST_STATIC_ASSERT((traits_::size_enable_tag::value));
+public:
+    typedef typename traits_::size_type type;
+};
 
 } // namespace result_of
 
