@@ -21,9 +21,9 @@
 
 #include <sake/core/iterator/archetypes/access_tag.hpp>
 #include <sake/core/iterator/archetypes/private/introversal_base.hpp>
-#include <sake/core/iterator/archetypes/private/operator_bracket_base.hpp>
 #include <sake/core/iterator/archetypes/private/pointer_dispatch.hpp>
 #include <sake/core/iterator/archetypes/private/reference_dispatch.hpp>
+#include <sake/core/iterator/archetypes/private/subscript_base.hpp>
 #include <sake/core/iterator/archetypes/private/traversal_base.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/private/category.hpp>
@@ -44,7 +44,7 @@ struct iterator
           sake::archetypes::iterator< T, Traversal, Introversal, Access >,
           Introversal, Traversal
       >,
-      sake::archetypes::iterator_private::operator_bracket_base<
+      sake::archetypes::iterator_private::subscript_base<
           T, Traversal, Access >
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));

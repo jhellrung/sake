@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/iterator/archetypes/private/operator_bracket_base.hpp
+ * sake/core/iterator/archetypes/private/subscript_base.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_OPERATOR_BRACKET_BASE_HPP
-#define SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_OPERATOR_BRACKET_BASE_HPP
+#ifndef SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_SUBSCRIPT_BASE_HPP
+#define SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_SUBSCRIPT_BASE_HPP
 
 #include <cstddef>
 
@@ -31,10 +31,10 @@ template<
     bool = boost_ext::is_convertible<
         Access, sake::iterator::archetypes::writable_tag >::value
 >
-class operator_bracket_proxy;
+class subscript_proxy;
 
 template< class T, class Access >
-class operator_bracket_proxy< T, Access, false >
+class subscript_proxy< T, Access, false >
 {
     typedef sake::archetypes::iterator_private::reference_dispatch<
         T const, Access
@@ -45,7 +45,7 @@ public:
 };
 
 template< class T, class Access >
-class operator_bracket_proxy< T, Access, true >
+class subscript_proxy< T, Access, true >
 {
     typedef sake::archetypes::iterator_private::reference_dispatch<
         T, Access
@@ -53,7 +53,7 @@ class operator_bracket_proxy< T, Access, true >
 public:
     operator typename reference_dispatch_::type () const
     { return reference_dispatch_::apply(); }
-    operator_bracket_proxy const & operator=(T const &)
+    subscript_proxy const & operator=(T const &)
     { return *this; }
 };
 
@@ -62,19 +62,19 @@ template<
     bool = boost_ext::is_convertible<
         Traversal, boost::random_access_traversal_tag >::value
 >
-class operator_bracket_base;
+class subscript_base;
 
 template< class T, class Traversal, class Access >
-class operator_bracket_base< T, Traversal, Access, false >
+class subscript_base< T, Traversal, Access, false >
 { };
 
 template< class T, class Traversal, class Access >
-class operator_bracket_base< T, Traversal, Access, true >
+class subscript_base< T, Traversal, Access, true >
 {
-    typedef operator_bracket_proxy< T, Access > type;
+    typedef subscript_proxy< T, Access > subscript_result_type;
 public:
-    type operator[](std::ptrdiff_t) const
-    { return type(); }
+    subscript_result_type operator[](std::ptrdiff_t) const
+    { return subscript_result_type(); }
 };
 
 } // namespace iterator_private
@@ -83,4 +83,4 @@ public:
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_OPERATOR_BRACKET_BASE_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_PRIVATE_SUBSCRIPT_BASE_HPP
