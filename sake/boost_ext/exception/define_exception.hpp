@@ -16,11 +16,12 @@
 
 #include <exception>
 
+#include <boost/config.hpp>
 #include <boost/exception/exception.hpp>
 #include <boost/preprocessor/stringize.hpp>
 
 #define SAKE_BOOST_EXT_DEFINE_EXCEPTION( scope, name ) \
-    struct name \
+    struct BOOST_SYMBOL_VISIBLE name \
         : virtual ::std::exception, \
           virtual ::boost::exception \
     { \
