@@ -45,6 +45,30 @@
  *     static typename relax< Introversal >::type
  *     at(I i, T x, Introversal);
  * };
+ *
+ * extension::iterator_traits must have the following interface.
+ *
+ * template< class I, class Enable = void >
+ * struct extension::iterator_traits
+ * {
+ *     typedef ... value_type;
+ *     typedef ... reference;
+ *     typedef ... pointer;
+ *     typedef ... difference_type;
+ *     typedef ... traversal;
+ *
+ *     typedef ... introversal;
+ *
+ *     template< class Introversal = null_introversal_tag >
+ *     struct relax { typedef ... type; };
+ *
+ *     template< class T >
+ *     static void
+ *     at_ip(I& i, T x);
+ *     template< class T, class Introversal >
+ *     static typename relax< Introversal >::type
+ *     at(I i, T x, Introversal);
+ * };
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_TRAITS_HPP
