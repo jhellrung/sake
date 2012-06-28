@@ -18,10 +18,13 @@
 
 #include <boost/mpl/apply.hpp>
 
+#include <sake/core/expr_traits/type_tag_of.hpp>
 #include <sake/core/utility/sizeof_t.hpp>
+#include <sake/core/utility/type_tag.hpp>
 
 #define SAKE_EXPR_APPLY( metafunction, expression ) \
-    (SAKE_SIZEOF_TRUE_TAG == sizeof( ::sake::expr_apply_private::helper< metafunction >( expression, expression ) ))
+    (SAKE_SIZEOF_TRUE_TAG == sizeof( ::sake::expr_apply_private::helper< \
+        metafunction >::apply( SAKE_EXPR_TYPE_TAG_OF( expression )) ))
 
 namespace sake
 {
@@ -29,27 +32,21 @@ namespace sake
 namespace expr_apply_private
 {
 
-template< class F, class T >
-struct result
+template< class F >
+struct helper
 {
-    // MSVC9 chokes if you use boost::mpl::apply1<...>::type::value as a boolean
-    // template parameter.  Hence, we have to be very explicit about what we
-    // want to do :/
-    static bool const b = boost::mpl::apply1<F,T>::type::value;
-    typedef sake::sizeof_t< 1+b > type;
+    template< class T >
+    struct result
+    {
+        // MSVC9 workaround.
+        static bool const value = boost::mpl::apply1<F,T>::type::value;
+        typedef sake::sizeof_t< 1 + value > type;
+    };
+
+    template< class T >
+    static typename result<T>::type
+    apply(sake::type_tag<T>);
 };
-
-template< class F, class T, class U >
-typename result< F, T& >::type
-helper(T&, U&);
-
-template< class F, class T, class U >
-typename result< F, T const & >::type
-helper(T const &, U&);
-
-template< class F, class T >
-typename result< F, T >::type
-helper(T const &, ...);
 
 } // namespace expr_apply_private
 

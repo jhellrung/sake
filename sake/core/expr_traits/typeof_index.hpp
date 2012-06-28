@@ -22,10 +22,13 @@
 
 #include <sake/boost_ext/mpl/find_index.hpp>
 
+#include <sake/core/expr_traits/type_tag_of.hpp>
 #include <sake/core/utility/sizeof_t.hpp>
+#include <sake/core/utility/type_tag.hpp>
 
 #define SAKE_EXPR_TYPEOF_INDEX( expression, candidate_types ) \
-    ( sizeof( ::sake::expr_typeof_index_private::deduce< candidate_types >::apply( expression, expression ) ) - 1 )
+    (sizeof( ::sake::expr_typeof_index_private::helper< candidate_types \
+        >::apply( SAKE_EXPR_TYPE_TAG_OF( expression ) ) ) - 1)
 
 namespace sake
 {
@@ -34,26 +37,19 @@ namespace expr_typeof_index_private
 {
 
 template< class Sequence >
-struct deduce
+struct helper
 {
     template< class T >
     struct result
     {
-        static const std::size_t i = boost_ext::mpl::find_index< Sequence, T >::type::value;
-        typedef sake::sizeof_t< 1+i > type;
+        static std::size_t const value =
+            boost_ext::mpl::find_index< Sequence, T >::value;
+        typedef sake::sizeof_t< 1 + value > type;
     };
-
-    template< class T, class U >
-    static typename result< T& >::type
-    apply(T&, U&);
-
-    template< class T, class U >
-    static typename result< T const & >::type
-    apply(T const &, U&);
 
     template< class T >
     static typename result<T>::type
-    apply(T const &, ...);
+    apply(sake::type_tag<T>);
 };
 
 } // namespace expr_typeof_index_private
