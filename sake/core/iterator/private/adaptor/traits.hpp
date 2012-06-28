@@ -24,6 +24,7 @@
 #include <sake/boost_ext/type_traits/add_const_if.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
+#include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/introspection/has_operator_less.hpp>
 #include <sake/core/introspection/has_operator_minus.hpp>
@@ -56,17 +57,22 @@ struct traits
 
     typedef typename boost_ext::mpl::lazy_at<
         Params, sake::iterator::keyword::tag::value,
-        boost_ext::add_const_if_c<
-            sake::is_const_iterator<I>::value,
-            base_value_type
+        boost_ext::remove_reference<
+            typename boost_ext::mpl::lazy_at<
+                Params, sake::iterator::keyword::tag::reference,
+                boost_ext::add_const_if_c<
+                    sake::is_const_iterator<I>::value,
+                    base_value_type
+                >
+            >::type
         >
     >::type facade_value_type;
 
     typedef typename boost_ext::mpl::lazy_at<
         Params, sake::iterator::keyword::tag::reference,
-        boost::mpl::eval_if_c<
+        boost::mpl::eval_if<
             boost::mpl::has_key<
-                Params, sake::iterator::keyword::tag::value >::value,
+                Params, sake::iterator::keyword::tag::value >,
             boost::mpl::identity< facade_value_type & >,
             sake::iterator_reference<I>
         >
