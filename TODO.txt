@@ -1,3 +1,1 @@
-- add messages to SConstruct:
-  - if no BOOST_ROOT set, suggest setting it in your .cshrc or .bashrc file
-  - if no MARCH set, suggest setting it in SConstruct.variables
+
