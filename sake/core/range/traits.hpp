@@ -191,7 +191,7 @@ struct range_traits
     template< class Introversal >
     static typename iterator_with< Introversal >::type
     begin(R& r, Introversal)
-    { return iter_at(r, sake::_begin, Introversal); }
+    { return iter_at(r, sake::_begin, Introversal()); }
 
     static iterator
     end(R& r)
@@ -199,7 +199,7 @@ struct range_traits
     template< class Introversal >
     static typename iterator_with< Introversal >::type
     end(R& r, Introversal)
-    { return iter_at(r, sake::_end, Introversal); }
+    { return iter_at(r, sake::_end, Introversal()); }
 };
 
 namespace extension

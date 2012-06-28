@@ -45,8 +45,6 @@ namespace private_
 template< class Params >
 struct traits
 {
-    BOOST_CONCEPT_ASSERT((sake::concepts::Range<
-        typename boost_ext::remove_reference<R>::type >));
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Params >::value));
 
     typedef typename boost_ext::mpl::at<

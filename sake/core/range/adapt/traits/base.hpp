@@ -37,6 +37,7 @@ template< class R >
 class impl
 {
     typedef typename boost_ext::remove_qualifiers<R>::type noqual_type;
+public:
     typedef typename boost::mpl::eval_if_c<
         sake::range_is_adapt_by_value< noqual_type >::value,
         boost::mpl::identity< noqual_type >,

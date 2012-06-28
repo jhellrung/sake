@@ -256,12 +256,11 @@ public:
         assert_introversal( begin_access_end_access, begin_access_end_access );
 #undef assert_introversal
 
-        assert_result< bool >(traits_::empty(cr));
+        assert_result< bool >(traits_::empty(r));
     }
 
 private:
     R r;
-    R const cr;
 
     template< class T >
     void assert_result(T);

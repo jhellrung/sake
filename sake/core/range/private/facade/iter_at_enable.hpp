@@ -39,7 +39,7 @@ struct iter_at_enable
         boost_ext::is_convertible< T, typename traits_::iterator >,
         boost_ext::is_convertible< T, typename traits_::const_iterator >
     >::value;
-    typedef at_enable type;
+    typedef iter_at_enable type;
 };
 
 template< class P, class T, class R = void >

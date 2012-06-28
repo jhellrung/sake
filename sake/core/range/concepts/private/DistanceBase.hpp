@@ -51,7 +51,7 @@ public:
     }
 
 private:
-    R const r;
+    R r;
 
     void assert_result(difference_type);
 

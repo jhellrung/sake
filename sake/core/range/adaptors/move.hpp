@@ -112,7 +112,7 @@ private:
         iterator_with_of< This, Introversal >::type
     derived_iter_at(This& this_, T const & x, Introversal)
     {
-        typedef typename adaptor_::template
+        return typename adaptor_::template
             iterator_with_of< This, Introversal >::type(
                 adaptor_::base_iter_at(this_, x, Introversal()));
     }
@@ -121,9 +121,9 @@ private:
     static typename adaptor_::template reference_of< This >::type
     derived_at(This& this_, T const x)
     {
-        move_private::at_dispatch<
+        return move_private::at_dispatch<
             typename adaptor_::template reference_of< This >::type
-        >::apply(adaptor_::protected_base(), x);
+        >::apply(this_.protected_base(), x);
     }
 };
 
@@ -138,7 +138,7 @@ private:
 namespace extension
 {
 
-namespace range_adaptors_move_private
+namespace range_multidim_traits_adaptors_move_private
 {
 
 template< class This >
@@ -181,25 +181,25 @@ struct impl
     }
 };
 
-} // namespace range_adaptors_move_private
+} // namespace range_multidim_traits_adaptors_move_private
 
 template< class R >
 struct range_multidim_traits<
     sake::range::adaptors::move<R>,
-    typename range_adaptors_move_private::enabler<
+    typename range_multidim_traits_adaptors_move_private::enabler<
         sake::range::adaptors::move<R> >::type
 >
-    : range_adaptors_move_private::impl<
+    : range_multidim_traits_adaptors_move_private::impl<
           sake::range::adaptors::move<R> >
 { };
 
 template< class R >
 struct range_multidim_traits<
     sake::range::adaptors::move<R> const,
-    typename range_adaptors_move_private::enabler<
+    typename range_multidim_traits_adaptors_move_private::enabler<
         sake::range::adaptors::move<R> const >::type
 >
-    : range_adaptors_move_private::impl<
+    : range_multidim_traits_adaptors_move_private::impl<
           sake::range::adaptors::move<R> const >
 { };
 
