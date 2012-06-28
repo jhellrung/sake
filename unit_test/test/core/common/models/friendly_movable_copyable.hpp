@@ -34,7 +34,6 @@ struct friendly_movable_copyable
         : basic_movable_copyable<T>(stats)
     { }
 
-    template< class Signature >
     friendly_movable_copyable(special_mem_fun_stats& stats, T value_)
         : basic_movable_copyable<T>(stats, sake::move(value_))
     { }

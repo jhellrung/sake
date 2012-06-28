@@ -53,6 +53,7 @@ struct basic_movable_copyable< void >
 
     basic_movable_copyable& operator=(this_rvalue_param_type other)
     {
+        SAKE_ASSERT_RELATION( this, !=, &other );
         SAKE_ASSERT_RELATION( &m_stats, ==, &other.m_stats );
         ++m_stats.n_move_assign;
         return *this;
@@ -77,7 +78,6 @@ struct basic_movable_copyable
         : basic_movable_copyable<>(stats)
     { }
 
-    template< class Signature >
     basic_movable_copyable(special_mem_fun_stats& stats, T value_)
         : basic_movable_copyable<>(stats),
           value(sake::move(value_))

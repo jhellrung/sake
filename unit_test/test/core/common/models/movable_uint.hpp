@@ -10,6 +10,7 @@
 #define SAKE_UNIT_TEST_TEST_CORE_COMMON_MODELS_MOVABLE_UINT_HPP
 
 #include <sake/core/move/movable.hpp>
+#include <sake/core/utility/assert.hpp>
 
 namespace sake_unit_test
 {
@@ -43,6 +44,7 @@ struct movable_uint
 
     movable_uint& operator=(this_rvalue_param_type other)
     {
+        SAKE_ASSERT_RELATION( this, !=, &other );
         value = other.value;
         other.value = 0;
         return *this;

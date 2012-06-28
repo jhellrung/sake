@@ -37,7 +37,6 @@ struct movable_noncopyable
         : basic_movable_copyable<T>(stats)
     { }
 
-    template< class Signature >
     movable_noncopyable(special_mem_fun_stats& stats, T value_)
         : basic_movable_copyable<T>(stats, sake::move(value_))
     { }
