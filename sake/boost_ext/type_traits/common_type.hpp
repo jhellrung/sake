@@ -160,10 +160,14 @@ struct deduce_from_candidates
         type
     );
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
-    BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
-        typename boost_ext::mpl::curry_quote2< boost::is_same >::apply< type >::type,
+private:
+    // MSVC9 workaround.
+    static bool const is_same_ = SAKE_EXPR_APPLY(
+        typename boost_ext::mpl::curry_quote2<
+            boost::is_same >::apply< type >::type,
         sake::declval< bool >() ? sake::declval< T0 >() : sake::declval< T1 >()
-    ) );
+    );
+    BOOST_STATIC_ASSERT((is_same_));
 };
 
 } // namespace common_type_private

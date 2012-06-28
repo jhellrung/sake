@@ -99,13 +99,10 @@ private:
     typedef typename boost_ext::mpl::curry_quote2< boost_ext::is_same_sans_rv >::
         apply< type >::type assert_pred_type;
 #endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
-    // MSVC9, at least, sometimes doesn't like such expressions within a
-    // BOOST_STATIC_ASSERT.
-    static bool const assert_value = SAKE_EXPR_APPLY(
-        assert_pred_type,
-        sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >()
-    );
-    BOOST_STATIC_ASSERT((assert_value));
+    // MSVC9 workaround.
+    static bool const is_same_sans_rv_ = SAKE_EXPR_APPLY( assert_pred_type,
+        sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >() );
+    BOOST_STATIC_ASSERT((is_same_sans_rv_));
 };
 
 /*******************************************************************************

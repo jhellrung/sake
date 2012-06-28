@@ -76,11 +76,14 @@ struct dispatch
     typedef typename sake::operators::result_of::extension::
         SAKE_OPERATORS_NAME< T0, T1 >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
-    BOOST_STATIC_ASSERT( SAKE_EXPR_APPLY(
+private:
+    // MSVC9 workaround.
+    static bool const is_same_sans_rv_ = SAKE_EXPR_APPLY(
         typename boost_ext::mpl::curry_quote2<
             boost_ext::is_same_sans_rv >::apply< type >::type,
         sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >()
-    ) );
+    );
+    BOOST_STATIC_ASSERT((is_same_sans_rv_));
 };
 
 template< class T0, class T1, class U0, class U1 >
