@@ -155,8 +155,8 @@ inline void
 environment::impl::
 parse_command_line(int argc, char* argv[])
 {
-    static_cast<void>(argc);
-    static_cast<void>(argv);
+    static_cast< void >(argc);
+    static_cast< void >(argv);
 }
 
 void
@@ -195,7 +195,7 @@ operator()(
             this_.p_current_scope = p_outer_scope;
         }
     } _exit_scope = { *this, p_current_scope, local_scope_name };
-    static_cast<void>(_exit_scope);
+    static_cast< void >(_exit_scope);
 
     // Construct scope_name.
     std::string scope_name;
@@ -241,7 +241,7 @@ operator()(
                 ~update_elapsed_time()
                 { elapsed_time += timer.elapsed(); }
             } _update_elapsed_time = { timer, p_current_scope->second.elapsed_time };
-            static_cast<void>(_update_elapsed_time);
+            static_cast< void >(_update_elapsed_time);
             (*p_f)(this_, p);
         }
         catch(fail_require_exception) { }

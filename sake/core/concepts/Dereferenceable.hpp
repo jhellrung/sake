@@ -42,7 +42,7 @@ struct Dereferenceable< T, void >
 {
     BOOST_CONCEPT_USAGE( Dereferenceable )
     {
-        static_cast<void>(*x);
+        static_cast< void >(*x);
     }
 
 private:

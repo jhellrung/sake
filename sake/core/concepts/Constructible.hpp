@@ -42,7 +42,7 @@ struct Constructible
     BOOST_CONCEPT_USAGE( Constructible )
     {
         T x(sake::declval<U>()...);
-        static_cast<void>(x);
+        static_cast< void >(x);
     }
 };
 
@@ -73,7 +73,7 @@ struct Constructible<T>
     BOOST_CONCEPT_USAGE( Constructible )
     {
         T x;
-        static_cast<void>(x);
+        static_cast< void >(x);
     }
 };
 
@@ -107,7 +107,7 @@ struct Constructible< T comma_U0N >
     BOOST_CONCEPT_USAGE( Constructible )
     {
         T x(declval_U0N);
-        static_cast<void>(x);
+        static_cast< void >(x);
     }
 };
 

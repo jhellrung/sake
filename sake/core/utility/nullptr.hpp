@@ -34,7 +34,7 @@
 
 #ifndef BOOST_NO_NULLPTR
 
-#define SAKE_USING_NULLPTR static_cast<void>(0)
+#define SAKE_USING_NULLPTR static_cast< void >(0)
 
 namespace sake
 {
