@@ -30,7 +30,7 @@ inline typename boost::enable_if_c<
     sake::range_has_static_size< Derived >::value,
     typename Derived::size_type
 >::type
-derived_size(Derived const & /*this_*/)
+size(Derived const & /*this_*/)
 { return sake::range_static_size< Derived >::value; }
 
 template< class Derived >
@@ -38,7 +38,7 @@ inline typename boost::disable_if_c<
     sake::range_has_static_size< Derived >::value,
     typename Derived::size_type
 >::type
-derived_size(Derived const & this_)
+size(Derived const & this_)
 {
     return static_cast< typename Derived::size_type >(
         this_.end() - this_.begin());

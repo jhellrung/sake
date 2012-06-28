@@ -35,6 +35,8 @@
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/range/distance.hpp>
 #include <sake/core/range/distance_fwd.hpp>
+#include <sake/core/range/traits.hpp>
+#include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/is_template_base_of.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -296,7 +298,8 @@ struct dispatch< I0, I1, 1 >
         while(++j0 != j1)
             result += sake::range::functional::distance()(*j0);
         result += sake::iterator::distance(
-            sake::range::begin(*j0),
+            sake::range_traits< typename sake::iterator_value<
+                typename traits0::outer_iterator >::type const >::begin(*j0),
             traits1::inner(i1, sake::null_introversal_tag())
         );
         return result;

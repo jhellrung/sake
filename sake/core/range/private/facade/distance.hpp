@@ -20,9 +20,11 @@
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/distance.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
-#include <sake/core/range/adaptors/transform.hpp>
+#include <sake/core/range/adapt/fwd.hpp>
+#include <sake/core/range/adapt/transform.hpp>
 #include <sake/core/range/algorithm/accumulate.hpp>
 #include <sake/core/range/distance.hpp>
+#include <sake/core/range/distance_fwd.hpp>
 #include <sake/core/range/multidim_traits.hpp>
 #include <sake/core/range/static_size.hpp>
 #include <sake/core/utility/int_tag.hpp>
@@ -57,7 +59,8 @@ distance_dispatch(Derived const & this_, sake::int_tag<1>)
 {
     return sake::range::algorithm::accumulate(
         sake::range_multidim_traits< Derived const >::outer(this_)
-      | sake::range::transform(sake::range::distance),
+      | sake::range::adapt::functional::transform<
+            sake::range::functional::distance >(),
         static_cast< typename Derived::difference_type >(0)
     );
 }
@@ -77,7 +80,7 @@ distance(Derived const & this_)
     SAKE_USING_TYPEDEF( typename Derived, difference_type );
     typedef typename boost_ext::mpl::
     if_<
-        sake::range_has_static_size<R>,
+        sake::range_has_static_size< Derived >,
         sake::int_tag<3>
     >::type::template
     else_if<

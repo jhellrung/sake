@@ -37,7 +37,7 @@ namespace
 {
 
 template< class R >
-void helper(R r)
+void helper(sake::test::environment& env, R r)
 {
     BOOST_CONCEPT_ASSERT((sake::concepts::Range<R>));
     BOOST_CONCEPT_ASSERT((sake::range::concepts::Readable<R>));
@@ -47,8 +47,10 @@ void helper(R r)
     typedef typename sake::range_iterator<
         R, sake::end_detect_introversal_tag >::type iter_type;
     iter_type i = sake::range::begin(r, sake::end_detect_introversal_tag());
-    for(; i != sake::_end; ++i)
-        models::movable_uint dummy = *i;
+    for(; i != sake::_end; ++i) {
+        typename sake::range_value<R>::type x = *i;
+        SAKE_TEST_CHECK_RELATION( env, x.value, !=, 0 );
+    }
 }
 
 } // namespace
@@ -60,7 +62,7 @@ void move_test(sake::test::environment& env)
     SAKE_TEST_CHECK_RELATION( env, a[0].value, ==, 1 );
     SAKE_TEST_CHECK_RELATION( env, a[1].value, ==, 2 );
     SAKE_TEST_CHECK_RELATION( env, a[2].value, ==, 3 );
-    adaptors::helper(a | sake::range::adapt::move);
+    adaptors::helper(env, a | sake::range::adapt::move);
     SAKE_TEST_CHECK_RELATION( env, a[0].value, ==, 0 );
     SAKE_TEST_CHECK_RELATION( env, a[1].value, ==, 0 );
     SAKE_TEST_CHECK_RELATION( env, a[2].value, ==, 0 );

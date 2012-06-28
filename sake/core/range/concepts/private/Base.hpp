@@ -11,7 +11,7 @@
 
 #include <boost/concept/assert.hpp>
 #include <boost/concept/usage.hpp>
-#include <boost/statiC_assert.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
@@ -265,7 +265,7 @@ private:
     template< class T >
     void assert_result(T);
 
-    SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( SizeBase )
+    SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( Base )
 };
 
 } // namespace private_

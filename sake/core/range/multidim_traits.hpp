@@ -88,9 +88,9 @@ struct impl
     outer(R& r)
     { return r.outer(); }
 
-    template< class Outer, class Inner, class Introversal >
+    template< class OuterJ, class InnerK, class Introversal >
     static typename sake::range_iterator< R, Introversal >::type
-    iter_at(R& r, Outer const & j, Inner const & k, Introversal)
+    iter_at(R& r, OuterJ const & j, InnerK const & k, Introversal)
     { return r.iter_at(j, k, Introversal()); }
 };
 

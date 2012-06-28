@@ -179,10 +179,6 @@ struct transform< void, boost::mpl::map0<> >
 
 };
 
-} // namespace functional
-
-static sake::range::adapt::functional::transform<> const transform = { };
-
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class R, class F >
@@ -223,6 +219,10 @@ operator|(R const & r, sake::range::adapt::functional::transform<F> const & f)
 }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+} // namespace functional
+
+static sake::range::adapt::functional::transform<> const transform = { };
 
 } // namespace adapt
 

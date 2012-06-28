@@ -203,11 +203,11 @@ protected:
     friend class sake::range::core_access;
 
     bool derived_empty() const
-    { return typename base_traits_of< Derived const >::type::empty(base()); }
+    { return base_traits_of< Derived const >::type::empty(base()); }
     difference_type derived_distance() const
-    { return typename base_traits_of< Derived const >::type::distance(base()); }
+    { return base_traits_of< Derived const >::type::distance(base()); }
     size_type derived_size() const
-    { return typename base_traits_of< Derived const >::type::size(base()); }
+    { return base_traits_of< Derived const >::type::size(base()); }
 };
 
 } // namespace range

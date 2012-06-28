@@ -85,10 +85,6 @@ struct move
 
 };
 
-} // namespace functional
-
-static sake::range::adapt::functional::move const move = { };
-
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class R >
@@ -129,6 +125,10 @@ operator|(R const & r, sake::range::adapt::functional::move)
 }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+} // namespace functional
+
+static sake::range::adapt::functional::move const move = { };
 
 } // namespace adapt
 
