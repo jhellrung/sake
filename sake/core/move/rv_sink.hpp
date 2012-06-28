@@ -54,6 +54,7 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/mpl/result_type.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
+#include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/config.hpp>
