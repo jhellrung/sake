@@ -151,7 +151,7 @@ protected:
 
     template< class T, class Introversal >
     typename sake::iterator_relax< I, Introversal >::type
-    base_at(T const & x, Introversal)
+    base_at(T const & x, Introversal) const
     {
         return sake::iterator::at(
             base(), adaptor_private::at_helper<I>(x), Introversal());
