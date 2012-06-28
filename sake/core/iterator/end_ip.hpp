@@ -50,7 +50,7 @@ struct end_ip
     typename sake::iterator::result_of::end_ip< I& >::type
     operator()(I& i) const
     {
-        sake::iterator_traits<I>::iter_at_ip(i, sake::_end);
+        sake::iterator_traits<I>::at_ip(i, sake::_end);
         return i;
     }
 };

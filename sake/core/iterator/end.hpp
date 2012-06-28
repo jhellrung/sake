@@ -56,12 +56,12 @@ struct end
     template< class I >
     typename sake::iterator::result_of::end< I const & >::type
     operator()(I const & i) const
-    { return sake::iterator_traits<I>::iter_at(i, sake::_end); }
+    { return sake::iterator_traits<I>::at(i, sake::_end); }
 
     template< class I, class Introversal >
     typename sake::iterator::result_of::end< I const &, Introversal >::type
     operator()(I const & i, Introversal) const
-    { return sake::iterator_traits<I>::iter_at(i, sake::_end, Introversal()); }
+    { return sake::iterator_traits<I>::at(i, sake::_end, Introversal()); }
 };
 
 } // namespace functional
