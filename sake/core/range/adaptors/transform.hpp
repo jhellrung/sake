@@ -17,29 +17,23 @@
 #include <boost/mpl/map/map0.hpp>
 #include <boost/mpl/map/map10.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/integral_constant.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
-#include <sake/boost_ext/type_traits/propagate_const.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_reference_add_const.hpp>
 
 #include <sake/core/concepts/Function.hpp>
-#include <sake/core/emplacer/make.hpp>
 #include <sake/core/iterator/adaptors/fwd.hpp>
 #include <sake/core/iterator/adaptors/transform.hpp>
 #include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/move/movable.hpp>
-#include <sake/core/range/adapt/fwd.hpp>
-#include <sake/core/range/adapt/transform.hpp>
 #include <sake/core/range/adaptor.hpp>
 #include <sake/core/range/adaptors/fwd.hpp>
+#include <sake/core/range/adaptors/multidim/transform.hpp>
 #include <sake/core/range/concepts/Range.hpp>
 #include <sake/core/range/core_access.hpp>
 #include <sake/core/range/keyword.hpp>
-#include <sake/core/range/multidim_traits_fwd.hpp>
 #include <sake/core/range/traits.hpp>
 #include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/is_by_value_optimal.hpp>
@@ -61,10 +55,6 @@ template< class R, class F, class Params >
 struct traits;
 
 } // namespace transform_private
-
-/*******************************************************************************
- * class range::adaptors::transform< R, F, Params >
- ******************************************************************************/
 
 template< class R, class F, class Params /*= boost::mpl::map0<>*/ >
 class transform
@@ -131,111 +121,16 @@ private:
     {
         return typename adaptor_::template
             iterator_with_of< This, Introversal >::type(
-                adaptor_::base_iter_at(this_, x, Introversal()), function());
+                adaptor_::base_iter_at(this_, x, Introversal()),
+                this_.function()
+            );
     }
 
     template< class This, class T >
     static typename adaptor_::template reference_of< This >::type
     derived_at(This& this_, T const x)
-    { return function()(adaptor_::base_at(this_, x)); }
+    { return this_.function()(adaptor_::base_at(this_, x)); }
 };
-
-} // namespace adaptors
-
-} // namespace range
-
-/*******************************************************************************
- * struct extension::range_multidim_traits<
- *     range::adaptors::transform< R, F, Params > [const] >
- ******************************************************************************/
-
-namespace extension
-{
-
-namespace range_multidim_traits_adaptors_transform_private
-{
-
-template< class This >
-struct enabler
-    : boost::enable_if_c< sake::range_multidim_enable<
-          typename boost_ext::remove_reference<
-              typename boost_ext::propagate_const<
-                  This, typename This::base_type >::type >::type
-      >::value >
-{ };
-
-template< class This >
-struct impl
-{
-    typedef boost::true_type enable_tag;
-
-    typedef typename boost_ext::remove_reference<
-        typename boost_ext::propagate_const<
-            This, typename This::base_type >::type
-    >::type base_;
-    SAKE_USING_TYPEDEF( typename This, function_type );
-   
-    typedef sake::range_multidim_traits< base_ > base_traits;
-
-    typedef sake::range::adaptors::transform<
-        typename base_traits::outer_range,
-        sake::range::adapt::functional::transform<
-            sake::range::adapt::functional::transform< function_type > >
-    > outer_range;
-
-    static outer_range
-    outer(This& r)
-    {
-        return outer_range(
-            base_traits::outer(r.base()),
-            sake::make_emplacer(sake::make_emplacer(r.function()))
-        );
-    }
-
-    template< class Outer, class Inner, class Introversal >
-    static typename sake::range_iterator< This, Introversal >::type
-    iter_at(This& r, Outer const & j, Inner const & k, Introversal)
-    {
-        return typename range_iterator< This, Introversal >::type(
-            base_traits::iter_at(r.base(), j.base(), k.base(), Introversal()),
-            r.function()
-        );
-    }
-};
-
-} // namespace range_multidim_traits_adaptors_transform_private
-
-template< class R, class F, class Params >
-struct range_multidim_traits<
-    sake::range::adaptors::transform< R, F, Params >,
-    typename range_multidim_traits_adaptors_transform_private::enabler<
-        sake::range::adaptors::transform< R, F, Params > >::type
->
-    : range_multidim_traits_adaptors_transform_private::impl<
-          sake::range::adaptors::transform< R, F, Params > >
-{ };
-
-template< class R, class F, class Params >
-struct range_multidim_traits<
-    sake::range::adaptors::transform< R, F, Params > const,
-    typename range_multidim_traits_adaptors_transform_private::enabler<
-        sake::range::adaptors::transform< R, F, Params > const >::type
->
-    : range_multidim_traits_adaptors_transform_private::impl<
-          sake::range::adaptors::transform< R, F, Params > const >
-{ };
-
-} // namespace extension
-
-/*******************************************************************************
- * namespace range::adaptors::transform_private
- ******************************************************************************/
-
-namespace range
-{
-
-namespace adaptors
-{
 
 namespace transform_private
 {

@@ -13,11 +13,8 @@
 
 #include <boost/concept/assert.hpp>
 #include <boost/mpl/map/map10.hpp>
-#include <boost/type_traits/integral_constant.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
-#include <sake/boost_ext/type_traits/propagate_const.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_reference_add_const.hpp>
 
@@ -27,16 +24,12 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
-#include <sake/core/range/adapt/fwd.hpp>
-#include <sake/core/range/adapt/move.hpp>
-#include <sake/core/range/adapt/transform.hpp>
 #include <sake/core/range/adaptor.hpp>
 #include <sake/core/range/adaptors/fwd.hpp>
-#include <sake/core/range/adaptors/transform.hpp>
+#include <sake/core/range/adaptors/multidim/move.hpp>
 #include <sake/core/range/concepts/Range.hpp>
 #include <sake/core/range/core_access.hpp>
 #include <sake/core/range/keyword.hpp>
-#include <sake/core/range/multidim_traits_fwd.hpp>
 #include <sake/core/range/traits.hpp>
 #include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/using_typedef.hpp>
@@ -60,10 +53,6 @@ template< class Reference >
 struct at_dispatch;
 
 } // namespace move_private
-
-/*******************************************************************************
- * class range::adaptors::move<R>
- ******************************************************************************/
 
 template< class R >
 class move
@@ -126,94 +115,6 @@ private:
         >::apply(this_.protected_base(), x);
     }
 };
-
-} // namespace adaptors
-
-} // namespace range
-
-/*******************************************************************************
- * struct extension::range_multidim_traits< range::adaptors::move<R> [const] >
- ******************************************************************************/
-
-namespace extension
-{
-
-namespace range_multidim_traits_adaptors_move_private
-{
-
-template< class This >
-struct enabler
-    : boost::enable_if_c< sake::range_multidim_enable<
-          typename boost_ext::remove_reference<
-              typename boost_ext::propagate_const<
-                  This, typename This::base_type >::type >::type
-      >::value >
-{ };
-
-template< class This >
-struct impl
-{
-    typedef boost::true_type enable_tag;
-
-    typedef typename boost_ext::remove_reference<
-        typename boost_ext::propagate_const<
-            This, typename This::base_type >::type
-    >::type base_;
-   
-    typedef sake::range_multidim_traits< base_ > base_traits;
-
-    typedef sake::range::adaptors::transform<
-        typename base_traits::outer_range,
-        sake::range::adapt::functional::transform<
-           sake::range::adapt::functional::move >
-    > outer_range;
-
-    static outer_range
-    outer(This& r)
-    { return outer_range(base_traits::outer(r.base())); }
-
-    template< class Outer, class Inner, class Introversal >
-    static typename sake::range_iterator< This, Introversal >::type
-    iter_at(This& r, Outer const & j, Inner const & k, Introversal)
-    {
-        return typename sake::range_iterator< This, Introversal >::type(
-            base_traits::iter_at(r.base(), j.base(), k.base(), Introversal()));
-    }
-};
-
-} // namespace range_multidim_traits_adaptors_move_private
-
-template< class R >
-struct range_multidim_traits<
-    sake::range::adaptors::move<R>,
-    typename range_multidim_traits_adaptors_move_private::enabler<
-        sake::range::adaptors::move<R> >::type
->
-    : range_multidim_traits_adaptors_move_private::impl<
-          sake::range::adaptors::move<R> >
-{ };
-
-template< class R >
-struct range_multidim_traits<
-    sake::range::adaptors::move<R> const,
-    typename range_multidim_traits_adaptors_move_private::enabler<
-        sake::range::adaptors::move<R> const >::type
->
-    : range_multidim_traits_adaptors_move_private::impl<
-          sake::range::adaptors::move<R> const >
-{ };
-
-} // namespace extension
-
-/*******************************************************************************
- * namespace range::adaptors::move_private
- ******************************************************************************/
-
-namespace range
-{
-
-namespace adaptors
-{
 
 namespace move_private
 {

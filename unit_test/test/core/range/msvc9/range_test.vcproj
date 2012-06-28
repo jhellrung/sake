@@ -153,6 +153,10 @@
 				RelativePath="..\adaptors\move_test.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\adaptors\transform_test.cpp"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\archetypes_test.cpp"

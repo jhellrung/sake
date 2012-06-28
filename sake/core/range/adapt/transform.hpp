@@ -201,7 +201,7 @@ inline typename sake::range::adapt::traits::lazy_val_enabler<
 operator|(R r, sake::range::adapt::functional::transform<F> const & f)
 {
     return typename sake::range::adapt::
-        result_of::transform<R>::type(sake::move(r), f.function());
+        result_of::transform<R,F>::type(sake::move(r), f.function());
 }
 
 template< class R, class F >
@@ -210,7 +210,7 @@ inline typename sake::range::adapt::traits::lazy_ref_enabler<
 operator|(R& r, sake::range::adapt::functional::transform<F> const & f)
 {
     return typename sake::range::adapt::
-        result_of::transform< R& >::type(r, f.function());
+        result_of::transform< R&, F >::type(r, f.function());
 }
 
 template< class R, class F >
@@ -219,7 +219,7 @@ inline typename sake::range::adapt::traits::lazy_ref_enabler<
 operator|(R const & r, sake::range::adapt::functional::transform<F> const & f)
 {
     return typename sake::range::adapt::
-        result_of::transform< R const & >::type(r, f.function());
+        result_of::transform< R const &, F >::type(r, f.function());
 }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES

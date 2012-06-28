@@ -184,7 +184,7 @@ protected:
         typedef typename boost_ext::remove_reference<
             typename boost_ext::propagate_const< CDerived, R >::type
         >::type cbase_type;
-        return typename base_traits_of< CDerived >::type::iter_at(
+        return base_traits_of< CDerived >::type::iter_at(
             this_.protected_base(),
             adaptor_private::iter_at_helper< cbase_type >(x),
             Introversal()
@@ -198,19 +198,16 @@ protected:
     template< class CDerived, class T >
     static typename base_reference_of< CDerived >::type
     base_at(CDerived& this_, T const x)
-    {
-        return typename base_traits_of< CDerived >::type::
-            at(this_.protected_base(), x);
-    }
+    { return base_traits_of< CDerived >::type::at(this_.protected_base(), x); }
 
     friend class sake::range::core_access;
 
     bool derived_empty() const
-    { return typename base_traits_of< Derived const >::empty(base()); }
+    { return typename base_traits_of< Derived const >::type::empty(base()); }
     difference_type derived_distance() const
-    { return typename base_traits_of< Derived const >::distance(base()); }
+    { return typename base_traits_of< Derived const >::type::distance(base()); }
     size_type derived_size() const
-    { return typename base_traits_of< Derived const >::size(base()); }
+    { return typename base_traits_of< Derived const >::type::size(base()); }
 };
 
 } // namespace range

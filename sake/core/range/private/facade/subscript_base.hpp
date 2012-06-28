@@ -121,7 +121,7 @@ public:
     operator[](size_type const i)
     {
 #ifdef SAKE_RANGE_DEBUG
-        SAKE_REQUIRE_RELATION( i, <, derived.size() );
+        SAKE_REQUIRE_RELATION( i, <, derived().size() );
 #endif // #ifdef SAKE_RANGE_DEBUG
         return derived().at(i);
     }
@@ -129,7 +129,7 @@ public:
     operator[](size_type const i) const
     {
 #ifdef SAKE_RANGE_DEBUG
-        SAKE_REQUIRE_RELATION( i, <, derived.size() );
+        SAKE_REQUIRE_RELATION( i, <, derived().size() );
 #endif // #ifdef SAKE_RANGE_DEBUG
         return derived().at(i);
     }

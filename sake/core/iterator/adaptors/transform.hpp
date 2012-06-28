@@ -208,7 +208,7 @@ private:
     derived_at(T const & x, Introversal) const
     {
         return typename derived_relax< Introversal >::type(
-            adaptor_::base_at(x, Introversal), function());
+            adaptor_::base_at(x, Introversal()), function());
     }
 };
 

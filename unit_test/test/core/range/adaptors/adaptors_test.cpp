@@ -18,12 +18,14 @@ namespace adaptors
 {
 
 void move_test(sake::test::environment& env);
+void transform_test(sake::test::environment& env);
 
 } // namespace adaptors
 
 void adaptors_test(sake::test::environment& env)
 {
     env("move", &adaptors::move_test);
+    env("transform", &adaptors::transform_test);
 }
 
 } // namespace range
