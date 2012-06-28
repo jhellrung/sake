@@ -54,7 +54,10 @@ class trait \
     template< class T_ > \
     struct apply_pred< T_, SAKE_SIZEOF_TRUE_TAG > \
     { \
-        SAKE_EXPR_INTEGRAL_TYPEOF_TYPEDEF( typename false || T_::name, type ); \
+        SAKE_EXPR_INTEGRAL_TYPEOF_TYPEDEF( \
+            typename ::sake::introspection_private::has_isc_rv(T_::name), \
+            type \
+        ); \
         BOOST_STATIC_ASSERT((!boost::is_void< type >::value)); \
         typedef ::boost::integral_constant< type, T_::name > wrapped_type; \
         static bool const value = ::boost::mpl::apply1< Pred, wrapped_type >::type::value; \
@@ -66,5 +69,17 @@ public: \
     static bool const value = apply_pred< T, sizeof( test<T>(0) ) >::value; \
     typedef trait type; \
 };
+
+namespace sake
+{
+
+namespace introspection_private
+{
+
+template< class T > inline T has_isc_rv(T);
+
+} // namespace introspection_private
+
+} // namespace sake
 
 #endif // #ifndef SAKE_CORE_INTROSPECTION_HAS_ISC_HPP
