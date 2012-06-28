@@ -12,8 +12,10 @@
 #include <boost/mpl/if.hpp>
 
 #include <sake/core/iterator/categories.hpp>
+#include <sake/core/iterator/introversal_adaptor.hpp>
 #include <sake/core/iterator/introversal_adaptor_fwd.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/traits_fwd.hpp>
 
 namespace sake
 {
@@ -23,7 +25,7 @@ namespace iterator
 
 template<
     class I, class Introversal,
-    class IntroversalMask = sake::null_introversal_tag
+    class IntroversalMask /*= sake::null_introversal_tag*/
 >
 class introversal_adaptor_relax
 {

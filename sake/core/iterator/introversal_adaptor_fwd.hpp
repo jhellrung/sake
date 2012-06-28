@@ -24,6 +24,12 @@ template<
 >
 class introversal_adaptor;
 
+template<
+    class I, class Introversal,
+    class IntroversalMask = sake::null_introversal_tag
+>
+class introversal_adaptor_relax;
+
 } // namespace iterator
 
 } // namespace sake
