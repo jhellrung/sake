@@ -60,7 +60,7 @@ void move_test(sake::test::environment& env)
     SAKE_TEST_CHECK_RELATION( env, a[0].value, ==, 1 );
     SAKE_TEST_CHECK_RELATION( env, a[1].value, ==, 2 );
     SAKE_TEST_CHECK_RELATION( env, a[2].value, ==, 3 );
-    helper(a | sake::range::adapt::move);
+    adaptors::helper(a | sake::range::adapt::move);
     SAKE_TEST_CHECK_RELATION( env, a[0].value, ==, 0 );
     SAKE_TEST_CHECK_RELATION( env, a[1].value, ==, 0 );
     SAKE_TEST_CHECK_RELATION( env, a[2].value, ==, 0 );
