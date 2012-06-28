@@ -27,12 +27,10 @@
 #define SAKE_CORE_MOVE_MOVE_HPP
 
 #include <boost/config.hpp>
-#include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
-#include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/expr_traits/type_tag_of.hpp>
@@ -66,32 +64,40 @@ template< class T >
 struct move< T& >
 { typedef T&& type; };
 
+template< class T >
+struct move< T const & >
+{ typedef T const & type; };
+
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
+namespace move_private
+{
+
 template< class T >
-struct move
+struct impl
     : boost_ext::add_reference_add_const<
-          typename boost_ext::add_rvalue_reference<T>::type
-      >
+          typename boost_ext::add_rvalue_reference<T>::type >
 { };
 
 template< class T >
-struct move< T& >
-{
-    BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference< T& >::value));
-    typedef typename boost_ext::add_reference<
-        typename boost_ext::add_rvalue_reference<T>::type
-    >::type type;
-};
-
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+struct impl< T& >
+    : boost_ext::add_reference<
+          typename boost_ext::add_rvalue_reference<T>::type >
+{ };
 
 template< class T >
-struct move< T const & >
-{
-    BOOST_STATIC_ASSERT((!boost_ext::is_rvalue_reference< T& >::value));
-    typedef T const & type;
-};
+struct impl< T const & >
+{ typedef T const & type; };
+
+} // namespace move_private
+
+template< class T >
+struct move
+    : move_private::impl<
+          typename boost_ext::remove_rvalue_reference<T>::type >
+{ };
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 } // namespace result_of
 
@@ -112,8 +118,7 @@ struct move
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename sake::result_of::move<
-        typename boost_ext::remove_rvalue_reference< T& >::type >::type
+    typename sake::result_of::move< T& >::type
     operator()(T& x) const
     { return x; }
 
