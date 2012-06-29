@@ -9,7 +9,7 @@
  * struct extension::has_nothrow_move_assign< T, Enable = void >
  * struct default_impl::has_nothrow_move_assign<T>
  *
- * Evaluates to true only if T has a non-throwing copy constructor.
+ * Evaluates to true only if T has a non-throwing move assignment operator.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_TYPE_TRAITS_HAS_NOTHROW_MOVE_ASSIGN_HPP

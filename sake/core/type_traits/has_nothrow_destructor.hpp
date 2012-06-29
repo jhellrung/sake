@@ -9,7 +9,7 @@
  * struct extension::has_nothrow_destructor< T, Enable = void >
  * struct default_impl::has_nothrow_destructor<T>
  *
- * Evaluates to true only if T has a non-throwing default constructor.
+ * Evaluates to true only if T has a non-throwing destructor.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_TYPE_TRAITS_HAS_NOTHROW_DESTRUCTOR_HPP
