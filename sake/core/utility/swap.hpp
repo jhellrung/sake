@@ -142,10 +142,14 @@ inline void
 impl(T0& x0, T1& x1)
 {
     typedef typename boost_ext::mpl::
-         if_< swap_private::is_callable_mem_fun< T0&, void ( T1& ) >, sake::int_tag<4> >::type::template
-    else_if < swap_private::is_callable_mem_fun< T1&, void ( T0& ) >, sake::int_tag<3> >::type::template
-    else_if < ::sake_swap_private::is_callable< void ( T0&, T1& ) >, sake::int_tag<2> >::type::template
-    else_if < ::sake_swap_private::is_callable< void ( T1&, T0& ) >, sake::int_tag<1> >::type::template
+         if_< swap_private::is_callable_mem_fun< T0&, void ( T1& ) >,
+              sake::int_tag<4> >::type::template
+    else_if < swap_private::is_callable_mem_fun< T1&, void ( T0& ) >,
+              sake::int_tag<3> >::type::template
+    else_if < ::sake_swap_private::is_callable< void ( T0&, T1& ) >,
+              sake::int_tag<2> >::type::template
+    else_if < ::sake_swap_private::is_callable< void ( T1&, T0& ) >,
+              sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
     swap_private::dispatch(x0, x1, int_tag_());
 }
