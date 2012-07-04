@@ -23,6 +23,7 @@
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
 #include <sake/core/emplacer/constructible.hpp>
+#include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/functional/forwarding/keyword.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
@@ -30,7 +31,6 @@
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
 #include <sake/core/utility/using_typedef.hpp>
-#include <sake/core/utility/void.hpp>
 
 namespace sake
 {
@@ -79,6 +79,9 @@ protected:
             nullary_base, T >::value >::type* = 0)
         : impl_(sake::forward<T>(x))
     { }
+    template< class V >
+    explicit nullary_base(sake::emplacer< V ( ) >)
+    { }
 };
 
 namespace nullary_base_private
@@ -93,11 +96,13 @@ struct impl_index
       + 4 * boost::mpl::has_key< Params, keyword::tag::nullary_const_callable >::value;
 };
 
+struct dummy_base { };
+
 template< class > struct dummy_param;
 
 #define n 0
 #define specialized_declarations() \
-    template< class T > void operator()(dummy_param<T>);
+    template< class T > void operator()(nullary_base_private::dummy_param<T>);
 #define nullary_result_type void
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
@@ -106,7 +111,7 @@ template< class > struct dummy_param;
 #define specialized_declarations() \
     typedef typename boost::mpl::at< \
         Params, sake::forwarding::keyword::tag::result >::type result_type; \
-    template< class T > void operator()(dummy_param<T>);
+    template< class T > void operator()(nullary_base_private::dummy_param<T>);
 #define nullary_result_type result_type
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
@@ -156,17 +161,15 @@ template< class > struct dummy_param;
 template< class Derived, class Params >
 struct impl< Derived, Params, n >
     : boost_ext::mpl::at<
-          Params,
-          sake::forwarding::keyword::tag::chained_base,
-          sake::void_
+          Params, sake::forwarding::keyword::tag::chained_base,
+          nullary_base_private::dummy_base
       >::type
 {
     specialized_declarations()
 protected:
     typedef typename boost_ext::mpl::at<
-        Params,
-        sake::forwarding::keyword::tag::chained_base,
-        sake::void_
+        Params, sake::forwarding::keyword::tag::chained_base,
+        nullary_base_private::dummy_base
     >::type chained_base_type;
 public:
     SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
@@ -201,7 +204,7 @@ protected:
     friend class sake::forwarding::core_access;
 
     typedef nullary_result_type protected_nullary_result_type;
-    protected_nullary_result_type derived_apply() const;
+    //protected_nullary_result_type derived_apply() const;
 };
 
 #undef n

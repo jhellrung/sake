@@ -20,6 +20,7 @@
 #include <sake/boost_ext/mpl/lazy_at.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
+#include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/functional/forwarding/fwd.hpp>
 #include <sake/core/functional/forwarding/core_access.hpp>
 #include <sake/core/functional/forwarding/keyword.hpp>
@@ -142,6 +143,9 @@ protected:
         typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
             base, T >::value >::type* = 0);
 
+    template< class V >
+    explicit base(sake::emplacer< V ( ) >);
+
     friend class sake::forwarding::core_access;
 
     template< class Signature >
@@ -162,6 +166,13 @@ base(SAKE_FWD2_REF( T ) x,
     typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
         base, T >::value >::type*)
     : nullary_base_(sake::forward<T>(x))
+{ }
+
+template< class Derived, class Params >
+template< class V >
+inline
+base< Derived, Params >::
+base(sake::emplacer< V ( ) >)
 { }
 
 template< class Derived, class Params >
