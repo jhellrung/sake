@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG[_R]( [r,] member_seq, trait )
+ * #define SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG[_R]( [r,] member_seq, traits )
  * #define SAKE_MEMBERWISE_TYPE_TRAIT_TAG[_R]( [r,] member_seq, trait )
  * #define SAKE_MEMBERWISE_TYPE_TRAIT_TAG_VALUE[_R]( [r,] member_seq, trait )
  ******************************************************************************/
@@ -14,6 +14,7 @@
 #define SAKE_CORE_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
 
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/detail/is_unary.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition/deduce_r.hpp>
 #include <boost/preprocessor/seq/cat.hpp>
@@ -23,17 +24,29 @@
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/preprocessor/seq/for_each.hpp>
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 #include <sake/boost_ext/preprocessor/seq/size_01x.hpp>
 
-#define SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG( member_seq, trait ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( BOOST_PP_DEDUCE_R(), member_seq, trait )
+// Include the most common type traits.
+#include <sake/core/type_traits/has_copy_constructor.hpp>
+#include <sake/core/type_traits/has_nothrow_copy_assign.hpp>
+#include <sake/core/type_traits/has_nothrow_copy_constructor.hpp>
+
+#define SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG( member_seq, traits ) \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( BOOST_PP_DEDUCE_R(), member_seq, traits )
 #define SAKE_MEMBERWISE_TYPE_TRAIT_TAG( member_seq, trait ) \
     SAKE_MEMBERWISE_TYPE_TRAIT_TAG_R( BOOST_PP_DEDUCE_R(), member_seq, trait )
 #define SAKE_MEMBERWISE_TYPE_TRAIT_TAG_VALUE( member_seq, trait ) \
     SAKE_MEMBERWISE_TYPE_TRAIT_TAG_VALUE_R( BOOST_PP_DEDUCE_R(), member_seq, trait )
 
-#define SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, trait ) \
+#define SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, traits ) \
+    BOOST_PP_CAT( \
+        SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_, \
+        BOOST_PP_IS_UNARY( traits ) \
+    ) ( r, member_seq, traits )
+
+#define SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_0( r, member_seq, trait ) \
     typedef SAKE_MEMBERWISE_TYPE_TRAIT_TAG_R( r, member_seq, trait ) \
         BOOST_PP_CAT( trait, _tag ); \
     template< class, class > friend class \
@@ -63,5 +76,9 @@
 #define SAKE_MEMBERWISE_TYPE_TRAIT_TAG_VALUE_comma_trait( r, data, i, elem ) \
     BOOST_PP_COMMA_IF( i ) \
     ::sake::data< BOOST_PP_SEQ_HEAD( elem ) >
+
+#define SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_1( r, member_seq, trait_seq ) \
+    BOOST_PP_CAT( SAKE_BOOST_EXT_PP_SEQ_FOR_EACH_, r ) ( \
+        SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_0, member_seq, trait_seq )
 
 #endif // #ifndef SAKE_CORE_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
