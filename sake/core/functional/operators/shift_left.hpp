@@ -17,22 +17,8 @@
 #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_SHIFT_LEFT_HPP
 #define SAKE_CORE_FUNCTIONAL_OPERATORS_SHIFT_LEFT_HPP
 
-#include <iosfwd>
-
 #define SAKE_OPERATORS_NAME shift_left
 #define SAKE_OPERATORS_OP   <<
 #include <sake/core/functional/operators/private/binary.ipp>
-
-namespace sake {
-namespace operators {
-namespace result_of {
-namespace extension {
-template< class T >
-struct shift_left< std::ostream&, T >
-{ typedef std::ostream& type; };
-} // namespace extension
-} // namespace result_of
-} // namespace operators
-} // namespace sake
 
 #endif // #ifndef SAKE_CORE_FUNCTIONAL_OPERATORS_SHIFT_LEFT_HPP
