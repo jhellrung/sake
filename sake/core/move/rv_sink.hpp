@@ -122,11 +122,15 @@ public:
     struct ref_enable;
     template< class U, class Result = void >
     struct ref_enabler;
+    template< class U, class Result >
+    struct ref_lazy_enabler;
 
     template< class U >
     struct cref_enable;
     template< class U, class Result = void >
     struct cref_enabler;
+    template< class U, class Result >
+    struct cref_lazy_enabler;
 };
 
 /*******************************************************************************
@@ -180,6 +184,13 @@ ref_enabler
 { };
 
 template< class Sequence, class Pred >
+template< class U, class Result >
+struct rv_sink_traits< Sequence, Pred >::
+ref_lazy_enabler
+    : boost::lazy_enable_if_c< ref_enable<U>::value, Result >
+{ };
+
+template< class Sequence, class Pred >
 template< class U >
 struct rv_sink_traits< Sequence, Pred >::
 cref_enable
@@ -203,6 +214,13 @@ template< class U, class Result >
 struct rv_sink_traits< Sequence, Pred >::
 cref_enabler
     : boost::enable_if_c< cref_enable<U>::value, Result >
+{ };
+
+template< class Sequence, class Pred >
+template< class U, class Result >
+struct rv_sink_traits< Sequence, Pred >::
+cref_lazy_enabler
+    : boost::lazy_enable_if_c< cref_enable<U>::value, Result >
 { };
 
 /*******************************************************************************
