@@ -40,7 +40,7 @@ struct destruct_dispatch< T, false >
     { if(this_.m_initialized) apply(this_); }
     template< class This >
     static void apply_if_reset(This& this_)
-    { if(this_.m_initialized) { apply(this_); this_.m_initialized = false; } }
+    { if(this_.m_initialized) apply_reset(this_); }
 };
 
 template< class T >
@@ -57,7 +57,7 @@ struct destruct_dispatch< T, true >
     { }
     template< class This >
     static void apply_if_reset(This& this_)
-    { this_.m_initialized = false; }
+    { apply_reset(this_); }
 };
 
 } // namespace private_

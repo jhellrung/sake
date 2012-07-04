@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/data_structures/optional/private/reset.ipp
+ * sake/core/data_structures/optional/private/construct.ipp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -19,6 +19,7 @@
 #include <sake/core/move/move.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/move/rv_sink.hpp>
+#include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/get.hpp>
 
 #endif // #ifdef SAKE_OPTIONAL_INCLUDE_HEADERS
@@ -30,18 +31,18 @@
 private:
     template< class U >
     typename value_enabler< SAKE_FWD2_PARAM( U ) >::type
-    reset_dispatch(SAKE_FWD2_REF( U ) x)
+    construct_dispatch(SAKE_FWD2_REF( U ) x)
     {
-        reset();
+        SAKE_ASSERT((!m_initialized));
         new(m_storage._) nocv_type(sake::forward<U>(x));
         m_initialized = true;
     }
 
     template< class U >
     typename optional_enabler< SAKE_FWD2_PARAM( U ) >::type
-    reset_dispatch(SAKE_FWD2_REF( U ) x)
+    construct_dispatch(SAKE_FWD2_REF( U ) x)
     {
-        reset();
+        SAKE_ASSERT((!m_initialized));
         if(x.initialized()) {
             new(m_storage._) nocv_type(sake::get(sake::forward<U>(x)));
             m_initialized = true;
@@ -50,9 +51,9 @@ private:
 
     template< class Emplacer >
     typename emplacer_enabler< Emplacer >::type
-    reset_dispatch(Emplacer e)
+    construct_dispatch(Emplacer e)
     {
-        reset();
+        SAKE_ASSERT((!m_initialized));
         sake::emplacer_construct< nocv_type >(e, m_storage._);
         m_initialized = true;
     }
@@ -62,60 +63,60 @@ public:
 
     template< class U >
     typename common_enabler<U>::type
-    reset(U&& x)
-    { reset_dispatch(sake::forward<U>(x)); }
+    construct(U&& x)
+    { construct_dispatch(sake::forward<U>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    class reset_rv_sink_visitor
+    class construct_rv_sink_visitor
     {
         optional& m_this;
-        explicit reset_rv_sink_visitor(optional& this_) : m_this(this_) { }
+        explicit construct_rv_sink_visitor(optional& this_) : m_this(this_) { }
         friend struct optional;
     public:
         typedef void result_type;
         template< class U >
         void operator()(SAKE_RV_REF( U ) x) const
-        { m_this.reset(x); }
+        { m_this.construct(x); }
     };
     typedef sake::rv_sink_traits<
         boost::mpl::vector2< optional, nocv_type >,
         boost::mpl::quote1< common_enable >
-    > reset_rv_sink_traits;
+    > construct_rv_sink_traits;
     typedef typename boost::mpl::at_c<
-        typename reset_rv_sink_traits::primary_types, 0
-    >::type reset_rv_sink_primary0_type;
+        typename construct_rv_sink_traits::primary_types, 0
+    >::type construct_rv_sink_primary0_type;
     typedef typename boost::mpl::at_c<
-        typename reset_rv_sink_traits::primary_types, 1
-    >::type reset_rv_sink_primary1_type;
-    typedef typename reset_rv_sink_traits::template
-        default_< reset_rv_sink_visitor > reset_rv_sink_default_type;
+        typename construct_rv_sink_traits::primary_types, 1
+    >::type construct_rv_sink_primary1_type;
+    typedef typename construct_rv_sink_traits::template
+        default_< construct_rv_sink_visitor > construct_rv_sink_default_type;
 public:
 
     // lvalues + explicit movable rvalues
     template< class U >
-    typename reset_rv_sink_traits::template ref_enabler<U>::type
-    reset(U& x)
-    { reset_dispatch(x); }
+    typename construct_rv_sink_traits::template ref_enabler<U>::type
+    construct(U& x)
+    { construct_dispatch(x); }
 
     // this rvalues
-    void reset(reset_rv_sink_primary0_type x)
-    { reset_dispatch(sake::move(x.value)); }
+    void construct(construct_rv_sink_primary0_type x)
+    { construct_dispatch(sake::move(x.value)); }
 
     // T rvalues
-    void reset(reset_rv_sink_primary1_type x)
-    { reset_dispatch(sake::move(x.value)); }
+    void construct(construct_rv_sink_primary1_type x)
+    { construct_dispatch(sake::move(x.value)); }
 
     // movable implicit rvalues
-    void reset(reset_rv_sink_default_type x)
-    { x(reset_rv_sink_visitor(*this)); }
+    void construct(construct_rv_sink_default_type x)
+    { x(construct_rv_sink_visitor(*this)); }
 
     // const lvalues + non-movable rvalues
     template< class U >
-    typename reset_rv_sink_traits::template cref_enabler<U>::type
-    reset(U const & x)
-    { reset_dispatch(x); }
+    typename construct_rv_sink_traits::template cref_enabler<U>::type
+    construct(U const & x)
+    { construct_dispatch(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -125,20 +126,29 @@ public:
 
     template< class U >
     typename common_enabler<U>::type
-    reset(U&& x)
-    { m_p = get_ptr_dispatch(x); }
+    construct(U&& x)
+    {
+        SAKE_ASSERT((!m_p));
+        m_p = get_ptr_dispatch(x);
+    }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
     typename common_enabler< U& >::type
-    reset(U& x)
-    { m_p = get_ptr_dispatch(SAKE_AS_LVALUE(x)); }
+    construct(U& x)
+    {
+        SAKE_ASSERT((!m_p));
+        m_p = get_ptr_dispatch(SAKE_AS_LVALUE(x));
+    }
 
     template< class U >
     typename common_enabler< U const & >::type
-    reset(U const & x)
-    { m_p = get_ptr_dispatch(x); }
+    construct(U const & x)
+    {
+        SAKE_ASSERT((!m_p));
+        m_p = get_ptr_dispatch(x);
+    }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 

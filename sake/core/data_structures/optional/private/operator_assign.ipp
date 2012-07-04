@@ -13,7 +13,6 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
@@ -34,11 +33,7 @@ private:
     struct operator_assign_enable
         : boost_ext::mpl::and2<
               boost_ext::not_is_base_of_sans_qualifiers< optional, U >,
-              boost_ext::mpl::or3<
-                  value_enable<U>,
-                  optional_enable<U>,
-                  emplacer_enable<U>
-              >
+              common_enable<U>
           >
     { };
     template< class U >

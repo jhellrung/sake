@@ -72,6 +72,7 @@
 #include <sake/core/data_structures/optional/private/implicit_constructor.ipp>
 #include <sake/core/data_structures/optional/private/initialize_constructor.ipp>
 #include <sake/core/data_structures/optional/private/operator_assign.ipp>
+#include <sake/core/data_structures/optional/private/construct.ipp>
 #include <sake/core/data_structures/optional/private/reset.ipp>
 #undef SAKE_OPTIONAL_INCLUDE_HEADERS
 
@@ -160,6 +161,8 @@ public:
 
     optional& operator=(sake::optional<>);
 
+    void destruct();
+
     void reset();
     void reset(sake::optional<>);
 
@@ -177,6 +180,10 @@ public:
     operator=(U&& x);
 
     template< class U >
+    typename construct_enabler<U>::type // -> void
+    construct(U&& x);
+
+    template< class U >
     typename reset_enabler<U>::type // -> void
     reset(U&& x);
 #endif // #if 0
@@ -185,6 +192,7 @@ public:
 #include <sake/core/data_structures/optional/private/implicit_constructor.ipp>
 #include <sake/core/data_structures/optional/private/initialize_constructor.ipp>
 #include <sake/core/data_structures/optional/private/operator_assign.ipp>
+#include <sake/core/data_structures/optional/private/construct.ipp>
 #include <sake/core/data_structures/optional/private/reset.ipp>
 #undef SAKE_OPTIONAL_DEFINE_MEMBERS
 
@@ -248,6 +256,8 @@ struct optional< T& >
 
     optional& operator=(sake::optional<>);
 
+    void destruct();
+
     void reset();
     void reset(sake::optional<>);
 
@@ -265,6 +275,10 @@ struct optional< T& >
     operator=(U&& x);
 
     template< class U >
+    typename construct_enabler<U>::type // -> void
+    construct(U&& x);
+
+    template< class U >
     typename reset_enabler<U>::type // -> void
     reset(U&& x);
 #endif // #if 0
@@ -274,6 +288,7 @@ struct optional< T& >
 #include <sake/core/data_structures/optional/private/implicit_constructor.ipp>
 #include <sake/core/data_structures/optional/private/initialize_constructor.ipp>
 #include <sake/core/data_structures/optional/private/operator_assign.ipp>
+#include <sake/core/data_structures/optional/private/construct.ipp>
 #include <sake/core/data_structures/optional/private/reset.ipp>
 #undef SAKE_OPTIONAL_REFERENCE
 #undef SAKE_OPTIONAL_DEFINE_MEMBERS
@@ -416,6 +431,15 @@ operator=(sake::optional<>)
 {
     reset();
     return *this;
+}
+
+template< class T >
+inline void
+optional<T>::
+destruct()
+{
+    SAKE_ASSERT((m_initialized));
+    destruct_dispatch_::apply_reset(*this);
 }
 
 template< class T >
@@ -575,6 +599,15 @@ operator=(sake::optional<>)
 template< class T >
 inline void
 optional< T& >::
+destruct()
+{
+    SAKE_ASSERT((m_p));
+    reset();
+}
+
+template< class T >
+inline void
+optional< T& >::
 reset()
 { m_p = 0; }
 
@@ -610,7 +643,10 @@ template< class T >
 inline T&
 optional< T& >::
 get() const
-{ SAKE_ASSERT((m_p)); return *m_p; }
+{
+    SAKE_ASSERT((m_p));
+    return *m_p;
+}
 
 template< class T >
 inline T*

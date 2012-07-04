@@ -18,6 +18,7 @@
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/propagate_qualifiers.hpp>
+#include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/cast/implicit.hpp>
 #include <sake/core/data_structures/optional/traits.hpp>
@@ -72,6 +73,21 @@ private:
     template< class U, class Result = void >
     struct emplacer_enabler
         : boost::enable_if_c< emplacer_enable<U>::value, Result >
+    { };
+
+    template< class U >
+    struct common_enable
+        : boost_ext::mpl::or3<
+              value_enable<U>,
+              optional_enable<U>,
+              emplacer_enable<U>
+          >
+    { };
+
+    template< class U >
+    struct common_enabler
+        : boost::enable_if_c< common_enable<
+              typename boost_ext::remove_rvalue_reference<U>::type >::value >
     { };
 public:
 

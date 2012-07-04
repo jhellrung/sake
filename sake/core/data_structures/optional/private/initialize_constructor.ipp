@@ -57,22 +57,23 @@ public:
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    struct initialize_constructor_rv_sink_visitor
+    class initialize_constructor_rv_sink_visitor
     {
+        optional& m_this;
         explicit initialize_constructor_rv_sink_visitor(optional& this_)
             : m_this(this_)
         { }
+        friend struct optional;
+    public:
         typedef void result_type;
         template< class U >
         void operator()(SAKE_RV_REF( U ) x) const
         {
             BOOST_STATIC_ASSERT((value_enable<U>::value));
-            new(m_storage._) nocv_type(x);
+            new(m_this.m_storage._) nocv_type(x);
         }
-    private:
-        optional& m_this;
     };
-    friend struct initialize_constructor_rv_sink_visitor;
+    friend class initialize_constructor_rv_sink_visitor;
     typedef sake::rv_sink_traits1<
         nocv_type, boost::mpl::quote1< initialize_constructor_enable >
     > initialize_constructor_rv_sink_traits;

@@ -39,8 +39,7 @@ private:
     template< class U >
     struct implicit_constructor_enabler
         : boost::enable_if_c< implicit_constructor_enable<
-              typename boost_ext::remove_rvalue_reference<U>::type
-          >::value >
+              typename boost_ext::remove_rvalue_reference<U>::type >::value >
     { };
 public:
 
@@ -79,11 +78,14 @@ public:
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    struct implicit_constructor_rv_sink_visitor
+    class implicit_constructor_rv_sink_visitor
     {
+        optional& m_this;
         explicit implicit_constructor_rv_sink_visitor(optional& this_)
             : m_this(this_)
         { }
+        friend struct optional;
+    public:
         typedef void result_type;
         template< class U >
         void operator()(SAKE_RV_REF( U ) x) const
@@ -91,10 +93,8 @@ private:
             m_this.m_initialized = initialize_m_initialized_dispatch(x);
             m_this.implicit_constructor_dispatch(x);
         }
-    private:
-        optional& m_this;
     };
-    friend struct implicit_constructor_rv_sink;
+    friend class implicit_constructor_rv_sink;
     typedef sake::rv_sink_traits1<
         nocv_type, boost::mpl::quote1< implicit_constructor_enable >
     > implicit_constructor_rv_sink_traits;
