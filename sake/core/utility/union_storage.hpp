@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/utility/union_storage.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -16,12 +16,12 @@
 
 #include <cstddef>
 
-#include <boost/mpl/assert.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/min_max.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/sizeof.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
@@ -34,7 +34,7 @@ namespace sake
 template< class Sequence >
 struct union_storage
 {
-    BOOST_MPL_ASSERT((boost::mpl::is_sequence< Sequence >));
+    BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Sequence >::value));
 
     static std::size_t const size = boost::mpl::fold<
         Sequence,
