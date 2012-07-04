@@ -91,7 +91,10 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 namespace default_impl
 {
 
-namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
+#define binary_trait_name_private \
+    BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
+
+namespace binary_trait_name_private
 {
 
 template< class Signature, class ResultPred >
@@ -100,11 +103,9 @@ struct impl;
 template<
     class T, class U, class Result, class ResultPred,
     bool = ::sake::boost_ext::is_builtin_object<
-               typename ::sake::boost_ext::remove_reference<T>::type
-           >::value &&
-           ::sake::boost_ext::is_builtin_object<
-               typename ::sake::boost_ext::remove_reference<U>::type
-           >::value
+               typename ::sake::boost_ext::remove_reference<T>::type >::value
+        && ::sake::boost_ext::is_builtin_object<
+               typename ::sake::boost_ext::remove_reference<U>::type >::value
 >
 struct dispatch;
 
@@ -118,14 +119,14 @@ struct dispatch< T, U, Result, ResultPred, false >
     : impl< Result ( T, U ), ResultPred >
 { };
 
-} // namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
+} // namespace binary_trait_name_private
 
 template< class T, class U, class Result, class ResultPred >
 struct SAKE_INTROSPECTION_TRAIT_NAME
-    : BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )::dispatch< T, U, Result, ResultPred >
+    : binary_trait_name_private::dispatch< T, U, Result, ResultPred >
 { };
 
-namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
+namespace binary_trait_name_private
 {
 
 #undef SAKE_INTROSPECTION_TRAIT_NAME
@@ -141,7 +142,7 @@ namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
 #define SAKE_INTROSPECTION_FUNCTION_ARITY 2
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-} // namespace BOOST_PP_CAT( SAKE_INTROSPECTION_TRAIT_NAME, _private )
+} // namespace binary_trait_name_private
 
 } // namespace default_impl
 

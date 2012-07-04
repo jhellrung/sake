@@ -22,6 +22,7 @@
 
 #include <boost/config.hpp>
 #include <boost/mpl/apply.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -84,7 +85,7 @@ struct builtin_is_callable< R (*)( T... ), S ( U... ), ResultPred >
 
 template< class R, class... T, class ResultPred >
 struct builtin_is_callable< R (*)( T... ), void, ResultPred >
-    : boost::mpl::apply1< ResultPred, R >
+    : boost::mpl::apply1< ResultPred, R >::type
 { };
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
@@ -115,47 +116,80 @@ struct fallback_nullary : T
     operator fallback_type() const;
 };
 
-template< class T > struct fallback_nullary< T const > : fallback_nullary<T> { };
-template< class T > struct fallback_nullary< T& > : fallback_nullary<T> { };
+template< class T >
+struct fallback_nullary< T const >
+    : is_callable_private::fallback_nullary<T>
+{ };
+template< class T >
+struct fallback_nullary< T& >
+    : is_callable_private::fallback_nullary<T>
+{ };
 
 template< class T >
 class has_void_result< T, void ( ) >
 {
-    typedef typename boost_ext::propagate_qualifiers< T, fallback_nullary<T> >::type fallback_;
+    typedef typename boost_ext::propagate_qualifiers<
+        T, is_callable_private::fallback_nullary<T> >::type fallback_;
 public:
     static bool const value = SAKE_EXPR_IS_VOID( sake::declval< fallback_ >()() );
     typedef has_void_result type;
 };
 
-template< class T, class Result, class ResultPred >
-class non_void_result_helper< T, Result ( ), ResultPred >
+template< class T, class Result >
+class expr_is_convertible< T, Result ( ) >
 {
-    typedef typename boost_ext::propagate_qualifiers< T, fallback_nullary<T> >::type fallback_;
+    typedef typename boost_ext::propagate_qualifiers<
+        T, is_callable_private::fallback_nullary<T> >::type fallback_;
 public:
     static bool const value =
-       !SAKE_EXPR_IS_CONVERTIBLE( sake::declval< fallback_ >()(), introspection_private::dummy )
-     && SAKE_EXPR_IS_CONVERTIBLE( sake::declval< fallback_ >()(), Result )
-     && SAKE_EXPR_APPLY( ResultPred, sake::declval< fallback_ >()() );
-    typedef non_void_result_helper type;
+        SAKE_EXPR_IS_CONVERTIBLE( sake::declval< fallback_ >()(), Result );
+    typedef expr_is_convertible type;
 };
+
+template< class T, class ResultPred >
+class expr_apply< T, void ( ), ResultPred >
+{
+    typedef typename boost_ext::propagate_qualifiers<
+        T, is_callable_private::fallback_nullary<T> >::type fallback_;
+public:
+    static bool const value =
+        SAKE_EXPR_APPLY( ResultPred, sake::declval< fallback_ >()() );
+    typedef expr_apply type;
+};
+
+template< class T, class Result, class ResultPred >
+struct non_void_result_helper< T, Result ( ), ResultPred >
+    : boost_ext::mpl::and3<
+          boost::mpl::not_< is_callable_private::expr_is_convertible<
+              T, introspection_private::dummy ( ) > >,
+          is_callable_private::expr_is_convertible<
+              T, Result ( ) >,
+          is_callable_private::expr_apply<
+              T, void ( ), ResultPred >
+      >
+{ };
 
 template< class T, class Result, class ResultPred >
 struct dispatch< T, Result ( ), ResultPred, false >
     : boost_ext::mpl::and3<
-          dispatch<T>,
-          boost::mpl::not_< has_void_result< T, void ( ) > >,
-          non_void_result_helper< T, Result ( ), ResultPred >
+          is_callable_private::dispatch<T>,
+          boost::mpl::not_< has_void_result<
+              T, void ( ) > >,
+          is_callable_private::non_void_result_helper<
+              T, Result ( ), ResultPred >
       >
 { };
 
 template< class T, class ResultPred >
 struct dispatch< T, void ( ), ResultPred, false >
     : boost_ext::mpl::and2<
-          dispatch< T, void >,
+          is_callable_private::dispatch< T, void >,
           boost::mpl::eval_if<
-              has_void_result< T, void ( ) >,
+              is_callable_private::has_void_result<
+                  T, void ( ) >,
               boost::mpl::apply1< ResultPred, void >,
-              non_void_result_helper< T, void ( ), ResultPred >
+              is_callable_private::non_void_result_helper<
+                  T, void ( ), ResultPred >
           >
       >
 { };
@@ -187,7 +221,7 @@ struct builtin_is_callable< R (*)( T0N ), S ( U0N ), ResultPred >
 
 template< class R comma_class_T0N, class ResultPred >
 struct builtin_is_callable< R (*)( T0N ), void, ResultPred >
-    : boost::mpl::apply1< ResultPred, R >
+    : boost::mpl::apply1< ResultPred, R >::type
 { };
 
 #undef comma_class_T0N
