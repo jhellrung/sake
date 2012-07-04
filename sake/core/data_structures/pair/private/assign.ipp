@@ -45,15 +45,16 @@ public:
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
-    struct assign0_rv_sink_visitor
+    class assign0_rv_sink_visitor
     {
+        pair& m_this;
         assign0_rv_sink_visitor(pair& this_) : m_this(this_) { }
+        friend struct pair;
+    public:
         typedef void result_type;
         template< class U >
         void operator()(SAKE_RV_REF( U ) x0) const
         { m_this.first = x0; }
-    private:
-        pair& m_this;
     };
     typedef sake::rv_sink_traits1<
         T0,
@@ -64,15 +65,16 @@ private:
     typedef typename assign0_rv_sink_traits::template
         default_< assign0_rv_sink_visitor > assign0_rv_sink_default_type;
 
-    struct assign1_rv_sink_visitor
+    class assign1_rv_sink_visitor
     {
+        pair& m_this;
         assign1_rv_sink_visitor(pair& this_) : m_this(this_) { }
+        friend struct pair;
+    public:
         typedef void result_type;
         template< class U >
         void operator()(SAKE_RV_REF( U ) x1) const
         { m_this.second = x1; }
-    private:
-        pair& m_this;
     };
     typedef sake::rv_sink_traits1<
         T1,

@@ -68,15 +68,16 @@ public:
 #else // #if !defined( BOOST_NO_RVALUE_REFERENCES ) || N > 2
 
 private:
-    struct assign0_rv_sink_visitor
+    class assign0_rv_sink_visitor
     {
+        tuple& m_this;
         assign0_rv_sink_visitor(tuple& this_) : m_this(this_) { }
+        friend struct tuple;
+    public:
         typedef void result_type;
         template< class U >
         void operator()(SAKE_RV_REF( U ) x0) const
         { m_this._0 = x0; }
-    private:
-        tuple& m_this;
     };
     typedef sake::rv_sink_traits1<
         T0,
@@ -113,15 +114,16 @@ public:
 #else // #if N == 1
 
 private:
-    struct assign1_rv_sink_visitor
+    class assign1_rv_sink_visitor
     {
+        tuple& m_this;
         assign1_rv_sink_visitor(tuple& this_) : m_this(this_) { }
+        friend struct tuple;
+    public:
         typedef void result_type;
         template< class U >
         void operator()(SAKE_RV_REF( U ) x1) const
         { m_this._1 = x1; }
-    private:
-        tuple& m_this;
     };
     typedef sake::rv_sink_traits1<
         T1,
