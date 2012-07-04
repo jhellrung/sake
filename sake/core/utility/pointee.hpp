@@ -20,12 +20,12 @@
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/add_const_if.hpp>
 
-#include <sake/core/expr_traits/is_convertible.hpp>
 #include <sake/core/introspection/has_type_element_type.hpp>
+#include <sake/core/introspection/has_type_type.hpp>
 #include <sake/core/introspection/has_type_value_type.hpp>
 #include <sake/core/introspection/is_incrementable.hpp>
+#include <sake/core/iterator/is_const_iterator.hpp>
 #include <sake/core/iterator/traits.hpp>
-#include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/int_tag.hpp>
 
 namespace sake
@@ -73,11 +73,13 @@ struct dispatch_index
 {
     static int const value = boost_ext::mpl::
               // iterators
-         if_< sake::is_incrementable<P>, sake::int_tag<3> >::type::template
+         if_< sake::is_incrementable<P>, sake::int_tag<4> >::type::template
               // Boost-style smart pointers
-    else_if < sake::has_type_element_type<P>, sake::int_tag<2> >::type::template
+    else_if < sake::has_type_element_type<P>, sake::int_tag<3> >::type::template
               // best guess for everything else
-    else_if < sake::has_type_value_type<P>, sake::int_tag<1> >::type::template
+    else_if < sake::has_type_value_type<P>, sake::int_tag<2> >::type::template
+              // last ditch effort
+    else_if < sake::has_type_type<P>, sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type::value;
 };
 
@@ -87,28 +89,29 @@ template<
 >
 struct dispatch;
 
-template< class P >
-struct dispatch<P,3>
-{
-private:
-    typedef typename sake::iterator_value<P>::type value_type;
-    static bool const is_const = !SAKE_EXPR_IS_CONVERTIBLE( *sake::declref<P>(), value_type& );
-public:
-    typedef typename boost_ext::add_const_if_c< is_const, value_type >::type type;
-};
+template< class I >
+struct dispatch<I,4>
+    : boost_ext::add_const_if_c<
+          sake::is_const_iterator<I>::value,
+          typename sake::iterator_value<I>::type
+      >
+{ };
 
 template< class P >
-struct dispatch<P,2>
+struct dispatch<P,3>
 { typedef typename P::element_type type; };
 
 template< class P >
-struct dispatch<P,1>
+struct dispatch<P,2>
 { typedef typename P::value_type type; };
 
 template< class P >
-struct dispatch<P,0>
-// last ditch effort
+struct dispatch<P,1>
 { typedef typename P::type type; };
+
+template< class P >
+struct dispatch<P,0>
+{ typedef void type; };
 
 } // namespace pointee_private
 
