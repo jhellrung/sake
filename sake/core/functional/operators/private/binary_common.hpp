@@ -12,10 +12,13 @@
 #include <cstddef>
 
 #include <boost/logic/tribool.hpp>
-#include <boost/mpl/vector/vector10.hpp>
+#include <boost/mpl/vector/vector20.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_promotion.hpp>
 
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
+#include <sake/boost_ext/type_traits/is_cv_or.hpp>
+#include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/make_signed.hpp>
 #include <sake/boost_ext/type_traits/make_unsigned.hpp>
 
@@ -36,12 +39,17 @@ namespace default_impl
 template< class T0, class T1 >
 class binary_result_types
 {
+    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T0 >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T1 >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T0 >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T1 >::value));
     typedef typename boost_ext::common_result_type< T0, T1 >::type common_type_;
 public:
-    typedef boost::mpl::vector10<
+    typedef boost::mpl::vector11<
         common_type_,
-        T0, T1, // operator-, operator+ for pointers
-        std::ptrdiff_t, // operator- for pointers
+        T0&, // op=, op?=; op<<, op>> (for std::ios)
+        T0, T1, // op-, op+ (for pointers)
+        std::ptrdiff_t, // op- (for pointers)
         bool, // logical
         boost::logic::tribool, // logical
         sake::functional::indeterminate, // logical

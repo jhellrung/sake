@@ -37,9 +37,12 @@
 #error SAKE_OPERATORS_NAME must be defined.
 #endif // #ifndef SAKE_OPERATORS_NAME
 
+#ifndef SAKE_OPERATORS_APPLY
 #ifndef SAKE_OPERATORS_OP
 #error SAKE_OPERATORS_OP must be defined.
 #endif // SAKE_OPERATORS_OP
+#define SAKE_OPERATORS_APPLY( x, y ) x SAKE_OPERATORS_OP y
+#endif // #ifndef SAKE_OPERATORS_APPLY
 
 namespace sake
 {
@@ -81,13 +84,11 @@ private:
 #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     static bool const and_is_builtin_object =
         boost_ext::is_builtin_object<
-            typename boost_ext::remove_qualifiers< T0 >::type
-        >::value
+            typename boost_ext::remove_qualifiers< T0 >::type >::value
      && boost_ext::is_builtin_object<
-            typename boost_ext::remove_qualifiers< T1 >::type
-        >::value;
+            typename boost_ext::remove_qualifiers< T1 >::type >::value;
     // Sadly, MSVC tends to get lvalue/rvalue-ness wrong for binary operations
-    // on lvalues of bulitin types.
+    // on lvalues of builtin types.
     typedef typename boost::mpl::if_c<
         and_is_builtin_object,
         boost::mpl::quote2< boost_ext::is_same_sans_qualifiers >,
@@ -101,7 +102,7 @@ private:
 #endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     // MSVC9 workaround.
     static bool const is_same_sans_rv_ = SAKE_EXPR_APPLY( assert_pred_type,
-        sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >() );
+        SAKE_OPERATORS_APPLY( sake::declval< T0 >(), sake::declval< T1 >() ) );
     BOOST_STATIC_ASSERT((is_same_sans_rv_));
 };
 
@@ -129,9 +130,17 @@ namespace default_impl
 namespace BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )
 {
 
+#ifdef SAKE_OPERATORS_NO_DEFINE_RESULT_OF_DEFAULT_IMPL_IMPL
+
 template< class T0, class T1 >
-class impl
+struct impl;
+
+#else // #ifdef SAKE_OPERATORS_NO_DEFINE_RESULT_OF_DEFAULT_IMPL_IMPL
+
+template< class T0, class T1 >
+struct impl
 {
+private:
     typedef typename sake::operators::result_of::default_impl::
         binary_result_types<
             typename boost_ext::remove_qualifiers< T0 >::type,
@@ -139,11 +148,14 @@ class impl
         >::type candidate_result_types;
 public:
     SAKE_EXPR_TYPEOF_TYPEDEF(
-        typename sake::declval< T0 >() SAKE_OPERATORS_OP sake::declval< T1 >(),
+        typename SAKE_OPERATORS_APPLY(
+            sake::declval< T0 >(), sake::declval< T1 >() ),
         candidate_result_types,
         type
     );
 };
+
+#endif // #ifdef SAKE_OPERATORS_NO_DEFINE_RESULT_OF_DEFAULT_IMPL_IMPL
 
 template< class T0, class T1 >
 class helper
@@ -169,7 +181,8 @@ struct SAKE_OPERATORS_NAME
     BOOST_STATIC_ASSERT((!boost_ext::is_reference< T1 >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T0 >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T1 >::value));
-    typedef typename BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::impl< T0, T1 >::type type;
+    typedef typename BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::
+        impl< T0, T1 >::type type;
 };
 
 template< class T0, class T1 >
@@ -207,31 +220,34 @@ struct SAKE_OPERATORS_NAME
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0, T1 >::type
+    typename result< SAKE_OPERATORS_NAME ( T0, T1 ) >::type
     operator()(T0&& x0, T1&& x1) const
-    { return sake::forward< T0 >(x0) SAKE_OPERATORS_OP sake::forward< T1 >(x1); }
+    {
+        return SAKE_OPERATORS_APPLY(
+            sake::forward< T0 >(x0), sake::forward< T1 >(x1) );
+    }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0&, T1& >::type
+    typename result< SAKE_OPERATORS_NAME ( T0&, T1& ) >::type
     operator()(T0& x0, T1& x1) const
-    { return x0 SAKE_OPERATORS_OP x1; }
+    { return SAKE_OPERATORS_APPLY( x0, x1 ); }
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0&, T1 const & >::type
+    typename result< SAKE_OPERATORS_NAME ( T0&, T1 const & ) >::type
     operator()(T0& x0, T1 const & x1) const
-    { return x0 SAKE_OPERATORS_OP x1; }
+    { return SAKE_OPERATORS_APPLY( x0, x1 ); }
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0 const &, T1& >::type
+    typename result< SAKE_OPERATORS_NAME ( T0 const &, T1& ) >::type
     operator()(T0 const & x0, T1& x1) const
-    { return x0 SAKE_OPERATORS_OP x1; }
+    { return SAKE_OPERATORS_APPLY( x0, x1 ); }
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0 const &, T1 const & >::type
+    typename result< SAKE_OPERATORS_NAME ( T0 const &, T1 const & ) >::type
     operator()(T0 const & x0, T1 const & x1) const
-    { return x0 SAKE_OPERATORS_OP x1; }
+    { return SAKE_OPERATORS_APPLY( x0, x1 ); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -239,11 +255,14 @@ struct SAKE_OPERATORS_NAME
 
 } // namespace functional
 
-sake::operators::functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
+sake::operators::functional::
+    SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
 
 } // namespace operators
 
 } // namespace sake
 
 #undef SAKE_OPERATORS_NAME
+#undef SAKE_OPERATORS_APPLY
 #undef SAKE_OPERATORS_OP
+#undef SAKE_OPERATORS_NO_DEFINE_RESULT_OF_DEFAULT_IMPL_IMPL

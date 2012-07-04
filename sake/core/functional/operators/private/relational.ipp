@@ -158,7 +158,8 @@ struct SAKE_OPERATORS_NAME
     BOOST_STATIC_ASSERT((!boost_ext::is_reference< T1 >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T0 >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T1 >::value));
-    typedef typename BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::impl< T0, T1 >::type type;
+    typedef typename BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::
+        impl< T0, T1 >::type type;
 };
 
 template< class T0, class T1 >
@@ -191,34 +192,35 @@ namespace functional
 
 struct SAKE_OPERATORS_NAME
 {
-    SAKE_RESULT_FROM_METAFUNCTION( sake::operators::result_of::SAKE_OPERATORS_NAME, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION(
+        sake::operators::result_of::SAKE_OPERATORS_NAME, 2 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0, T1 >::type
+    typename result< SAKE_OPERATORS_NAME ( T0, T1 ) >::type
     operator()(T0&& x0, T1&& x1) const
     { return sake::forward< T0 >(x0) SAKE_OPERATORS_OP sake::forward< T1 >(x1); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0&, T1& >::type
+    typename result< SAKE_OPERATORS_NAME ( T0&, T1& ) >::type
     operator()(T0& x0, T1& x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0&, T1 const & >::type
+    typename result< SAKE_OPERATORS_NAME ( T0&, T1 const & ) >::type
     operator()(T0& x0, T1 const & x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0 const &, T1& >::type
+    typename result< SAKE_OPERATORS_NAME ( T0 const &, T1& ) >::type
     operator()(T0 const & x0, T1& x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
     template< class T0, class T1 >
-    typename sake::operators::result_of::SAKE_OPERATORS_NAME< T0 const &, T1 const & >::type
+    typename result< SAKE_OPERATORS_NAME ( T0 const &, T1 const & ) >::type
     operator()(T0 const & x0, T1 const & x1) const
     { return x0 SAKE_OPERATORS_OP x1; }
 
@@ -227,12 +229,17 @@ struct SAKE_OPERATORS_NAME
     template< class T0, class T1 >
     bool
     operator()(T0* const p0, T1* const p1) const
-    { return static_cast< void* >(p0) SAKE_OPERATORS_OP static_cast< void* >(p1); }
+    {
+        return static_cast< void* >(p0)
+               SAKE_OPERATORS_OP
+               static_cast< void* >(p1);
+    }
 };
 
 } // namespace functional
 
-sake::operators::functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
+sake::operators::functional::
+    SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
 
 } // namespace operators
 
