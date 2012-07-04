@@ -1,23 +1,23 @@
 /*******************************************************************************
- * sake/boost_ext/mpl/unique2.hpp
+ * sake/boost_ext/mpl/uniquex.hpp
  *
  * Copyright 2011, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct boost_ext::mpl::unique2<
+ * struct boost_ext::mpl::uniquex<
  *     Sequence,
- *     Pred     = boost::mpl::quote2< boost::is_same >,
+ *     Pred = boost::mpl::quote2< boost::is_same >,
  *     Inserter = boost::mpl::back_inserter< boost::mpl::vector0<> >
  * >
  *
- * boost_ext::mpl::unique2 is similar to boost::mpl::unique, except it removes
- * *all* duplicates, not just consecutive ones.  Unfortunately, this requires
- * a quadratic algorithm.
+ * boost_ext::mpl::uniquex is similar to boost::mpl::unique, except it removes
+ * *all* duplicates, not just consecutive ones.  Unfortunately, this requires a
+ * quadratic algorithm.
  ******************************************************************************/
 
-#ifndef SAKE_BOOST_EXT_MPL_UNIQUE2_HPP
-#define SAKE_BOOST_EXT_MPL_UNIQUE2_HPP
+#ifndef SAKE_BOOST_EXT_MPL_UNIQUEX_HPP
+#define SAKE_BOOST_EXT_MPL_UNIQUEX_HPP
 
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/back_inserter.hpp>
@@ -41,7 +41,7 @@ namespace boost_ext
 namespace mpl
 {
 
-namespace unique2_private
+namespace uniquex_private
 {
 
 template< class Pred, class Operation >
@@ -51,7 +51,9 @@ struct insert_operation
     struct apply
         : boost::mpl::eval_if_c<
               boost_ext::mpl::contains_if<
-                  S, typename boost_ext::mpl::curry2< Pred >::template apply<T>::type
+                  S,
+                  typename boost_ext::mpl::curry2< Pred >::template
+                      apply<T>::type
               >::value,
               boost::mpl::identity<S>,
               boost::mpl::apply2< Operation, S, T >
@@ -59,19 +61,19 @@ struct insert_operation
     { };
 };
 
-} // namespace unique2_private
+} // namespace uniquex_private
 
 template<
     class Sequence,
-    class Pred     = boost::mpl::quote2< boost::is_same >,
+    class Pred = boost::mpl::quote2< boost::is_same >,
     class Inserter = boost::mpl::back_inserter< boost::mpl::vector0<> >
 >
-struct unique2
+struct uniquex
     : boost::mpl::copy<
           Sequence,
           boost::mpl::inserter<
               typename Inserter::state,
-              unique2_private::insert_operation<
+              uniquex_private::insert_operation<
                   typename boost::mpl::lambda< Pred >::type,
                   typename Inserter::operation
               >
@@ -85,4 +87,4 @@ struct unique2
 
 } // namespace sake
 
-#endif // #ifndef SAKE_BOOST_EXT_MPL_UNIQUE2_HPP
+#endif // #ifndef SAKE_BOOST_EXT_MPL_UNORDERED_UNIQUE_HPP
