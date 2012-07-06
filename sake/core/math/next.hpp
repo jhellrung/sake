@@ -1,12 +1,13 @@
 /*******************************************************************************
  * sake/core/math/next.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * next(T x) -> T
  * next(T x, D n) -> T
+ * next_c<N>(T x) -> T
  * struct functional::next
  *
  * Essentially just extends boost::next to integral types.
@@ -14,6 +15,8 @@
 
 #ifndef SAKE_CORE_MATH_NEXT_HPP
 #define SAKE_CORE_MATH_NEXT_HPP
+
+#include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
@@ -43,6 +46,11 @@ struct next
     : boost_ext::remove_qualifiers<T>
 { };
 
+template< class T, int N >
+struct next_c
+    : boost_ext::remove_qualifiers<T>
+{ };
+
 } // namespace result_of
 
 namespace functional
@@ -64,6 +72,11 @@ struct next
 } // namespace functional
 
 sake::functional::next const next = { };
+
+template< int N, class T >
+inline T
+next_c(T const & x)
+{ return sake::next(x, boost::integral_constant< int, N >()); }
 
 namespace next_private
 {

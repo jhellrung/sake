@@ -11,6 +11,7 @@
 
 #include <sake/boost_ext/mpl/or.hpp>
 
+#include <sake/core/iterator/private/fwd.hpp>
 #include <sake/core/iterator/private/is_convertible_relax.hpp>
 
 namespace sake

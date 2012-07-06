@@ -147,6 +147,12 @@ struct sub
       >
 { };
 
+template< class I, std::size_t N >
+struct sub_c
+    : sake::range::result_of::sub<
+          I, boost::integral_constant< std::size_t, N > >
+{ };
+
 } // namespace result_of
 
 } // namespace range

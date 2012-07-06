@@ -95,7 +95,7 @@ dispatch(R const & r, sake::int_tag<4>)
 template< class R >
 inline typename sake::range_difference< R const >::type
 dispatch(R const & r, sake::int_tag<3>)
-{ return sake::range::default_impl::aux::distance(R); }
+{ return sake::range::default_impl::aux::distance(r); }
 
 template< class R >
 inline typename sake::range_difference< R const >::type

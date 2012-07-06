@@ -94,6 +94,7 @@
 #include <sake/core/iterator/default_impl/at_ip.hpp>
 #include <sake/core/iterator/default_impl/introversal.hpp>
 #include <sake/core/iterator/default_impl/relax.hpp>
+#include <sake/core/iterator/private/fwd.hpp>
 #include <sake/core/iterator/private/is_convertible_relax.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/utility/using_typedef.hpp>

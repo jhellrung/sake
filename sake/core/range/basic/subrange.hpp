@@ -273,7 +273,7 @@ public:
         : m_begin(j)
     { }
 
-    void advance_begin(difference_type const n)
+    void advance(difference_type const n)
     { sake::advance(m_begin, n); }
 
 private:
@@ -292,7 +292,7 @@ private:
     I derived_iter_at(sake::begin_tag, sake::null_introversal_tag) const
     { return m_begin; }
     I derived_iter_at(sake::end_tag, sake::null_introversal_tag) const
-    { return sake::next(m_begin, N); }
+    { return sake::next_c< N::value >(m_begin); }
     template< class T >
     I derived_iter_at(T const & x, sake::null_introversal_tag) const
     { return x; }
@@ -317,10 +317,10 @@ private:
     static reference derived_at(subrange const & this_, sake::begin_tag)
     { return *this_.m_begin; }
     static reference derived_at(subrange const & this_, sake::end_tag)
-    { return *sake::next(this_.m_begin, N-1); }
+    { return *sake::next_c< N::value - 1 >(this_.m_begin); }
     template< class T >
     static reference derived_at(subrange const & this_, T const i)
-    { return m_begin[static_cast< difference_type >(i)]; }
+    { return this_.m_begin[static_cast< difference_type >(i)]; }
 
     I m_begin;
 };

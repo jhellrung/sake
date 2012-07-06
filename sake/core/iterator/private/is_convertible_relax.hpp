@@ -14,6 +14,7 @@
 
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/is_iterator.hpp>
+#include <sake/core/iterator/private/fwd.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
 

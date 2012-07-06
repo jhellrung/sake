@@ -66,7 +66,7 @@ impl(SAKE_FWD2_REF( R ) r, T x, F const & f)
         T, F,
         typename sake::range_forward_reference< SAKE_FWD2_PARAM( R ) >::type
     > for_each_fun_;
-    sake::range::functional::for_each<>()(
+    sake::range::algorithm::functional::for_each<>()(
         sake::forward<R>(r), for_each_fun_(x,f));
     return sake::move(x);
 }

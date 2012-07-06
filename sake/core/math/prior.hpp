@@ -7,6 +7,7 @@
  *
  * prior(T x) -> T
  * prior(T x, D n) -> T
+ * prior_c<N>(T x) -> T
  * struct functional::prior
  *
  * Essentially just extends boost::prior to integral types.
@@ -16,6 +17,7 @@
 #define SAKE_CORE_MATH_PRIOR_HPP
 
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -45,6 +47,11 @@ struct prior
     : boost_ext::remove_qualifiers<T>
 { };
 
+template< class T, int N >
+struct prior_c
+    : boost_ext::remove_qualifiers<T>
+{ };
+
 } // namespace result_of
 
 namespace functional
@@ -66,6 +73,11 @@ struct prior
 } // namespace functional
 
 sake::functional::prior const prior = { };
+
+template< int N, class T >
+inline T
+prior_c(T const & x)
+{ return sake::prior(x, boost::integral_constant< int, N >()); }
 
 namespace prior_private
 {
