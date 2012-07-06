@@ -208,106 +208,6 @@ struct dispatch< T&, void, trait_name_private::always_true, false >
     : trait_name_private::dispatch<T>
 { };
 
-#if 0
-#if min_arity == 0
-
-template<
-    class T, class Result, class ResultPred, class LiteralResult,
-    bool = ::sake::boost_ext::mpl::and2<
-               ::sake::boost_ext::is_convertible< LiteralResult, Result >,
-               ::boost::mpl::apply1< ResultPred, LiteralResult >
-           >::value
->
-struct has_nullary;
-
-// We would like this to just determine if
-//     Result r = x.f();
-// is syntactically valid, but that's not possible (using the same machinery as
-// below, at least).  So we'll have to settle for pretty much an exact match of
-// the member function signature.  At the very least, we'll explore various
-// combinations of const qualifiers on the class type and const/reference
-// qualifiers on the result type.
-template< class T, class Result, class ResultPred >
-struct dispatch< T, Result ( ), ResultPred, false >
-{
-private:
-    typedef typename ::sake::boost_ext::
-        remove_qualifiers< Result >::type noqual_result_type;
-public:
-    static bool const value = ::sake::boost_ext::mpl::and2<
-        trait_name_private::dispatch<T>,
-        ::sake::boost_ext::mpl::or3<
-            trait_name_private::has_nullary<
-                T, Result, ResultPred,
-                noqual_result_type
-            >,
-            trait_name_private::has_nullary<
-                T, Result, ResultPred,
-                typename ::sake::boost_ext::add_reference<
-                    noqual_result_type >::type
-            >,
-            trait_name_private::has_nullary<
-                T, Result, ResultPred,
-                typename ::sake::boost_ext::add_reference_add_const<
-                    noqual_result_type >::type
-            >
-        >
-    >::value;
-    typedef dispatch type;
-};
-
-template< class T, class Result, class ResultPred >
-struct dispatch< T&, Result ( ), ResultPred, false >
-    : trait_name_private::dispatch< T, Result ( ), ResultPred, false >
-{ };
-
-template< class T, class Nullary >
-class has_nullary_helper
-{
-    template< Nullary > struct sfinae;
-    template< class U > static ::sake::true_tag
-    test(sfinae< &U::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
-    template< class U > static ::sake::false_tag
-    test(...);
-public:
-    // A compiler error here concerning an inaccessible private member indicates
-    // that a member function overload of the given name is private.  In this
-    // case, the only resolution is to explicitly extend the trait for this
-    // class.
-    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) );
-    typedef has_nullary_helper type;
-};
-
-template< class T, class Result, class ResultPred, class LiteralResult >
-struct has_nullary< T, Result, ResultPred, LiteralResult, false >
-    : ::boost::false_type
-{ };
-
-template< class T, class Result, class ResultPred, class LiteralResult >
-struct has_nullary< T, Result, ResultPred, LiteralResult, true >
-    : ::sake::boost_ext::mpl::or3<
-          trait_name_private::has_nullary_helper<
-              T, LiteralResult (T::*)( ) >,
-          trait_name_private::has_nullary_helper<
-              T const, LiteralResult (T::*)( ) const >,
-          trait_name_private::has_nullary_helper<
-              T, LiteralResult (*)( ) >
-      >
-{ };
-
-template< class T, class Result, class ResultPred, class LiteralResult >
-struct has_nullary< T const, Result, ResultPred, LiteralResult, true >
-    : ::sake::boost_ext::mpl::or2<
-          trait_name_private::has_nullary_helper<
-              T const, LiteralResult (T::*)( ) const >,
-          trait_name_private::has_nullary_helper<
-              T, LiteralResult (*)( ) >
-      >
-{ };
-
-#endif // #if min_arity == 0
-#endif // #if 0
-
 template< class T >
 struct fallback : T
 {
@@ -325,6 +225,8 @@ struct fallback : T
 #else // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
         ...
 #endif // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
+        // const qualifier ensures this overload is always considered regardless
+        // of the const qualification of target object.
         // volatile qualifier is key to avoid overload ambiguity.
         ) const volatile;
 };
@@ -340,62 +242,134 @@ struct fallback< T& >
 };
 
 template< class T, class Signature >
-class has_void_result;
+class has_non_void_result;
 template< class T, class Signature, class ResultPred >
 class check_non_void_result;
 
-#if 0
 #if min_arity == 0
 
+// The machinery for general arity member functions fails specifically for
+// nullary static member functions, so we go out of our way to support them as
+// best we can.
+
 template<
-    class T, class Result, class ResultPred, class LiteralResult,
+    class T, class Result, class ResultPred,
+    class LiteralResult = Result,
     bool = ::sake::boost_ext::mpl::and2<
                ::sake::boost_ext::is_convertible< LiteralResult, Result >,
                ::boost::mpl::apply1< ResultPred, LiteralResult >
            >::value
 >
-struct has_static_nullary;
+struct has_nullary_static_literal;
+
+template< class T, class Result, class ResultPred, class LiteralResult >
+struct has_nullary_static_literal< T, Result, ResultPred, LiteralResult, false >
+    : ::boost::false_type
+{ };
+
+template< class T, class Result, class ResultPred, class LiteralResult >
+struct has_nullary_static_literal< T, Result, ResultPred, LiteralResult, true >
+{
+    template< LiteralResult (*)( ) > struct sfinae;
+    template< class T_ >
+    static ::sake::true_tag
+    test(sfinae< &T_::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME >*);
+    template< class T_ >
+    static ::sake::false_tag
+    test(...);
+public:
+    // A compiler error here concerning an inaccessible private member indicates
+    // that a member function overload of the given name is private.  In this
+    // case, the only resolution is to explicitly extend the trait for this
+    // class.
+    static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test<T>(0) );
+    typedef has_nullary_static_literal type;
+};
+
+template< class T, class Result, class ResultPred, class LiteralResult >
+struct has_nullary_static_literal<
+    T const, Result, ResultPred, LiteralResult, true >
+    : trait_name_private::has_nullary_static_literal<
+          T, Result, ResultPred, LiteralResult >
+{ };
+
+template< class T, class Result, class ResultPred, class LiteralResult >
+struct has_nullary_static_literal<
+    T&, Result, ResultPred, LiteralResult, true >
+    : trait_name_private::has_nullary_static_literal<
+          T, Result, ResultPred, LiteralResult >
+{ };
+
+template< class T, class Result, class ResultPred >
+struct has_nullary_static
+{
+private:
+    typedef typename ::sake::boost_ext::remove_qualifiers<
+        Result >::type noqual_result_type;
+public:
+    static bool const value = ::sake::boost_ext::mpl::or3<
+        trait_name_private::has_nullary_static_literal<
+            T, Result, ResultPred, noqual_result_type >,
+        trait_name_private::has_nullary_static_literal<
+            T, Result, ResultPred, noqual_result_type& >,
+        trait_name_private::has_nullary_static_literal<
+            T, Result, ResultPred, noqual_result_type const & >
+    >::value;
+    typedef has_nullary_static type;
+};
+
+template< class T, class Result, class ResultPred >
+struct has_nullary_static< T const, Result, ResultPred >
+    : trait_name_private::has_nullary_static< T, Result, ResultPred >
+{ };
+
+template< class T, class Result, class ResultPred >
+struct has_nullary_static< T&, Result, ResultPred >
+    : trait_name_private::has_nullary_static< T, Result, ResultPred >
+{ };
 
 template< class T, class Result, class ResultPred >
 struct dispatch< T, Result ( ), ResultPred, false >
-{
-private:
-    typedef typename ::sake::boost_ext::
-        remove_qualifiers< Result >::type noqual_result_type;
-public:
-    static bool const value = ::sake::boost_ext::and2<
-        trait_name_private::dispatch<T>,
-        ::sake::boost_ext::mpl::or4<
-            trait_name_private::has_static_nullary<
-                T, Result, ResultPred,
-                noqual_type
-            >,
-            trait_name_private::has_static_nullary<
-                T, Result, ResultPred,
-                noqual_type&
-            >,
-            trait_name_private::has_static_nullary<
-                T, Result, ResultPred,
-                noqual_type const &
-            >,
-            ::sake::boost_ext::mpl::and2<
-                ::boost::mpl::not_< trait_name_private::has_void_result<
-                    T, void ( ) > >,
-                trait_name_private::check_non_void_result<
-                    T, Result ( ), ResultPred >
-            >
-    >::value;
-    typedef dispatch type;
-};
+    : ::sake::boost_ext::mpl::and2<
+          trait_name_private::dispatch<T>,
+          ::sake::boost_ext::mpl::or2<
+              trait_name_private::has_nullary_static<
+                  T, Result, ResultPred >,
+              ::sake::boost_ext::mpl::and2<
+                  trait_name_private::has_non_void_result<
+                      T, void ( ) >,
+                  trait_name_private::check_non_void_result<
+                      T, Result ( ), ResultPred >
+              >
+          >
+      >
+{ };
+
+template< class T, class ResultPred >
+struct dispatch< T, void ( ), ResultPred, false >
+    : ::sake::boost_ext::mpl::and2<
+          trait_name_private::dispatch<T>,
+          ::sake::boost_ext::mpl::or2<
+              trait_name_private::has_nullary_static_literal<
+                  T, void, ResultPred, void >,
+              ::boost::mpl::eval_if<
+                  trait_name_private::has_non_void_result<
+                      T, void ( ) >,
+                  trait_name_private::check_non_void_result<
+                      T, void ( ), ResultPred >,
+                  ::boost::mpl::apply1< ResultPred, void >
+              >
+          >
+      >
+{ };
 
 #endif // #if min_arity == 0
-#endif // #if 0
 
 #if !defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY ) \
  && !defined( BOOST_NO_VARIADIC_TEMPLATES )
 
-template< class T, class Result, class... U, class ResultPred >
-struct dispatch< T, Result ( U... ), ResultPred, false >
+template< class T, class Result, class U0, class... U, class ResultPred >
+struct dispatch< T, Result ( U0, U... ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
     : ::sake::boost_ext::mpl::and2<
@@ -403,15 +377,15 @@ struct dispatch< T, Result ( U... ), ResultPred, false >
     : ::sake::boost_ext::mpl::and3<
           trait_name_private::dispatch<T>,
 #endif // #if defined( __GNUC__ ) ## defined( ... )
-          ::boost::mpl::not_< trait_name_private::has_void_result<
-              T, void ( U... ) > >,
+          trait_name_private::has_non_void_result<
+              T, void ( U0, U... ) >,
           trait_name_private::check_non_void_result<
-              T, Result ( U... ), ResultPred >
+              T, Result ( U0, U... ), ResultPred >
       >
 { };
 
-template< class T, class... U, class ResultPred >
-struct dispatch< T, void ( U... ), ResultPred, false >
+template< class T, class U0, class... U, class ResultPred >
+struct dispatch< T, void ( U0, U... ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
     : ::sake::boost_ext::mpl::and1<
@@ -420,26 +394,26 @@ struct dispatch< T, void ( U... ), ResultPred, false >
           trait_name_private::dispatch<T>,
 #endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::eval_if<
-              trait_name_private::has_void_result<
-                  T, void ( U... ) >,
-              ::boost::mpl::apply1< ResultPred, void >,
+              trait_name_private::has_non_void_result<
+                  T, void ( U0, U... ) >,
               trait_name_private::check_non_void_result<
-                  T, void ( U... ), ResultPred >
+                  T, void ( U0, U... ), ResultPred >,
+              ::boost::mpl::apply1< ResultPred, void >
           >
       >
 { };
 
-#define fallback_member_U0U \
-    ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( \
-         ::sake::declval< U0 >(), ::sake::declval<U>()... )
+#define fallback_member_U \
+    ::sake::declval< fallback_ >(). \
+        SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME(::sake::declval<U>()...)
 
 template< class T, class... U >
-class has_void_result< T, void ( U... ) >
+class has_non_void_result< T, void ( U... ) >
 {
     typedef typename trait_name_private::fallback<T>::type fallback_;
 public:
-    static bool const value = SAKE_EXPR_IS_VOID( fallback_member_U0U );
-    typedef has_void_result type;
+    static bool const value = !SAKE_EXPR_IS_VOID( fallback_member_U );
+    typedef has_non_void_result type;
 };
 
 template< class T, class Result, class... U, class ResultPred >
@@ -452,11 +426,11 @@ class check_non_void_result< T, Result ( U... ), ResultPred >
     > check_result_;
 public:
     static bool const value =
-        SAKE_EXPR_APPLY( check_result_, fallback_member_U0U );
+        SAKE_EXPR_APPLY( check_result_, fallback_member_U );
     typedef check_non_void_result type;
 };
 
-#undef fallback_member_U0U
+#undef fallback_member_U
 
 #else // #if !defined( ... ) && !defined( ... )
 
@@ -503,6 +477,8 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
     ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( \
         BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< U, >() BOOST_PP_INTERCEPT ) )
 
+#if N != 0
+
 template< class T, class Result comma_class_U0N, class ResultPred >
 struct dispatch< T, Result ( U0N ), ResultPred, false >
 #if defined( __GNUC__ ) \
@@ -512,8 +488,8 @@ struct dispatch< T, Result ( U0N ), ResultPred, false >
     : ::sake::boost_ext::mpl::and3<
           trait_name_private::dispatch<T>,
 #endif // #if defined( __GNUC__ ) ## defined( ... )
-          ::boost::mpl::not_< has_void_result<
-              T, void ( U0N ) > >,
+          trait_name_private::has_non_void_result<
+              T, void ( U0N ) >,
           trait_name_private::check_non_void_result<
               T, Result ( U0N ), ResultPred >
       >
@@ -529,22 +505,24 @@ struct dispatch< T, void ( U0N ), ResultPred, false >
           trait_name_private::dispatch<T>,
 #endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::eval_if<
-              trait_name_private::has_void_result<
+              trait_name_private::has_non_void_result<
                   T, void ( U0N ) >,
-              ::boost::mpl::apply1< ResultPred, void >,
               trait_name_private::check_non_void_result<
-                  T, void ( U0N ), ResultPred >
+                  T, void ( U0N ), ResultPred >,
+              ::boost::mpl::apply1< ResultPred, void >
           >
       >
 { };
 
+#endif // #if N != 0
+
 template< class T comma_class_U0N >
-class has_void_result< T, void ( U0N ) >
+class has_non_void_result< T, void ( U0N ) >
 {
     typedef typename trait_name_private::fallback<T>::type fallback_;
 public:
-    static bool const value = SAKE_EXPR_IS_VOID( fallback_member_U0N );
-    typedef has_void_result type;
+    static bool const value = !SAKE_EXPR_IS_VOID( fallback_member_U0N );
+    typedef has_non_void_result type;
 };
 
 template< class T, class Result comma_class_U0N, class ResultPred >
