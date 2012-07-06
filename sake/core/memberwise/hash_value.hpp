@@ -32,6 +32,7 @@
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 #include <sake/boost_ext/preprocessor/seq/size_01x.hpp>
 
+#include <sake/core/utility/define_friend_function.hpp>
 #include <sake/core/utility/hash_value.hpp>
 
 #define SAKE_MEMBERWISE_HASH_VALUE( T, member_seq ) \
@@ -50,8 +51,7 @@
         SAKE_MEMBERWISE_HASH_VALUE_impl, \
         SAKE_BOOST_EXT_PP_SEQ_SIZE_01X( member_seq, x ) \
     ) ( r, member_seq ) \
-    inline friend ::std::size_t hash_value(T const & x) \
-    { return x.hash_value(); }
+    SAKE_DEFINE_FRIEND_HASH_VALUE( T )
 
 #define SAKE_MEMBERWISE_HASH_VALUE_impl0( r, member_seq ) \
     static std::size_t hash_value() \

@@ -62,6 +62,7 @@
 #include <sake/core/type_traits/has_nothrow_move_constructor.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/assert.hpp>
+#include <sake/core/utility/define_friend_function.hpp>
 #include <sake/core/utility/explicit_operator_bool.hpp>
 #include <sake/core/utility/get_fwd.hpp>
 #include <sake/core/utility/hash_value.hpp>
@@ -202,8 +203,7 @@ public:
         typename emplacer_enabler< sake::emplacer< Signature > >::type* = 0);
 
     void swap(optional& other);
-    inline friend
-    void swap(optional& x, optional& y) { return x.swap(y); }
+    SAKE_DEFINE_FRIEND_SWAP( optional )
 
     T       & get();
     T const & get() const;
@@ -219,8 +219,7 @@ public:
     SAKE_EXPLICIT_OPERATOR_BOOL() const { return initialized(); }
 
     std::size_t hash_value() const;
-    inline friend
-    std::size_t hash_value(optional const & x) { return x.hash_value(); }
+    SAKE_DEFINE_FRIEND_HASH_VALUE( optional )
 
 private:
     friend class sake::forwarding::core_access;
@@ -299,8 +298,7 @@ struct optional< T& >
         typename emplacer_enabler< sake::emplacer< Signature > >::type* = 0);
 
     void swap(optional& other);
-    inline friend
-    void swap(optional& x, optional& y) { x.swap(y); }
+    SAKE_DEFINE_FRIEND_SWAP( optional )
 
     T& get() const;
     T* get_ptr() const;
@@ -311,8 +309,7 @@ struct optional< T& >
     SAKE_EXPLICIT_OPERATOR_BOOL() const { return initialized(); }
 
     std::size_t hash_value() const;
-    inline friend
-    std::size_t hash_value(optional x) { return x.hash_value(); }
+    SAKE_DEFINE_FRIEND_HASH_VALUE( optional )
 
 private:
     T* m_p;

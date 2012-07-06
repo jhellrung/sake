@@ -28,6 +28,7 @@
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 
+#include <sake/core/utility/define_friend_function.hpp>
 #include <sake/core/utility/swap.hpp>
 
 #define SAKE_MEMBERWISE_SWAP( T, member_seq ) \
@@ -46,8 +47,7 @@
         SAKE_MEMBERWISE_SWAP_impl, \
         SAKE_BOOST_EXT_PP_SEQ_IS_NIL( member_seq ) \
     ) ( r, T, member_seq ) \
-    inline friend void swap(T& x, T& y) \
-    { x.swap(y); }
+    SAKE_DEFINE_FRIEND_SWAP( T )
 
 #define SAKE_MEMBERWISE_SWAP_impl0( r, T, member_seq ) \
     void swap(T& other) \
