@@ -15,18 +15,18 @@ namespace iterator
 {
 
 void adaptor_test(sake::test::environment& env);
+void adaptors_introversal_test(sake::test::environment& env);
 void archetypes_test(sake::test::environment& env);
 void facade_test(sake::test::environment& env);
-void introversal_adaptor_test(sake::test::environment& env);
 
 } // namespace iterator
 
 void iterator_test(sake::test::environment& env)
 {
     env("adaptor", &iterator::adaptor_test);
+    env("adaptors_introversal", &iterator::adaptors_introversal_test);
     env("archetypes", &iterator::archetypes_test);
     env("facade", &iterator::facade_test);
-    env("introversal_adapor", &iterator::introversal_adaptor_test);
 }
 
 } // namespace sake_unit_test

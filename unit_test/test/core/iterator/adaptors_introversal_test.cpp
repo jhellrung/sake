@@ -1,5 +1,5 @@
 /*******************************************************************************
- * unit_test/test/core/iterator/introversal_adaptor_test.cpp
+ * unit_test/test/core/iterator/adaptors_introversal_test.cpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -7,15 +7,17 @@
  ******************************************************************************/
 
 #include <boost/concept/assert.hpp>
+#include <boost/mpl/set/set0.hpp>
+#include <boost/mpl/set/set10.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
+#include <sake/core/iterator/adaptors/introversal.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/concepts/Iterator.hpp>
-#include <sake/core/iterator/introversal_adaptor.hpp>
 #include <sake/core/iterator/traits.hpp>
 
 #include <sake/test/environment.hpp>
@@ -27,15 +29,11 @@ namespace sake_unit_test
 namespace iterator
 {
 
-namespace
-{
-
-} // namespace
-
-void introversal_adaptor_test(sake::test::environment& env)
+void adaptors_introversal_test(sake::test::environment& env)
 {
     {
-        typedef sake::iterator::introversal_adaptor< int*, false, false > type;
+        typedef boost::mpl::set0<> tag_types;
+        typedef sake::iterator::adaptors::introversal< int*, tag_types > type;
         BOOST_STATIC_ASSERT((sake::boost_ext::is_convertible<
             sake::iterator_traversal< type >::type,
             boost::random_access_traversal_tag
@@ -47,7 +45,8 @@ void introversal_adaptor_test(sake::test::environment& env)
         BOOST_CONCEPT_ASSERT((sake::concepts::Iterator< type >));
     }
     {
-        typedef sake::iterator::introversal_adaptor< int*, true, false > type;
+        typedef boost::mpl::set1< sake::begin_tag > tag_types;
+        typedef sake::iterator::adaptors::introversal< int*, tag_types > type;
         BOOST_STATIC_ASSERT((sake::boost_ext::is_convertible<
             sake::iterator_traversal< type >::type,
             boost::random_access_traversal_tag
@@ -68,7 +67,8 @@ void introversal_adaptor_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, *i, ==, 0 );
     }
     {
-        typedef sake::iterator::introversal_adaptor< int*, false, true > type;
+        typedef boost::mpl::set1< sake::end_tag > tag_types;
+        typedef sake::iterator::adaptors::introversal< int*, tag_types > type;
         BOOST_STATIC_ASSERT((sake::boost_ext::is_convertible<
             sake::iterator_traversal< type >::type,
             boost::random_access_traversal_tag
@@ -89,7 +89,8 @@ void introversal_adaptor_test(sake::test::environment& env)
         SAKE_TEST_CHECK_RELATION( env, *i, ==, 2 );
     }
     {
-        typedef sake::iterator::introversal_adaptor< int*, true, true > type;
+        typedef boost::mpl::set2< sake::begin_tag, sake::end_tag > tag_types;
+        typedef sake::iterator::adaptors::introversal< int*, tag_types > type;
         BOOST_STATIC_ASSERT((sake::boost_ext::is_convertible<
             sake::iterator_traversal< type >::type,
             boost::random_access_traversal_tag

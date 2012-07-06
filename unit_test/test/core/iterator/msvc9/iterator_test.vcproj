@@ -147,6 +147,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\adaptors_introversal_test.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\archetypes_test.cpp"
 			>
 		</File>
@@ -156,10 +160,6 @@
 		</File>
 		<File
 			RelativePath="..\iterator_test.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\introversal_adaptor_test.cpp"
 			>
 		</File>
 	</Files>

@@ -158,10 +158,42 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\archetypes_test.cpp"
+		<Filter
+			Name="archetypes"
 			>
-		</File>
+			<File
+				RelativePath="..\archetypes\Bidirectional.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\archetypes\Forward.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\archetypes\RandomAccess.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\archetypes\Readable.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\archetypes\ReadableLvalue.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\archetypes\ReadableWritable.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\archetypes\SinglePass.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\archetypes\WritableLvalue.cpp"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\range_test.cpp"
 			>
