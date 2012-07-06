@@ -114,12 +114,8 @@ namespace trait_name_private
 
 template< class Signature >
 struct has_void_result;
-template< class Signature >
-struct expr_is_convertible;
 template< class Signature, class ResultPred >
-struct expr_apply;
-template< class Signature, class ResultPred >
-struct non_void_result_helper;
+class non_void_result_helper;
 
 #ifdef SAKE_INTROSPECTION_FUNCTION_ARITY
 SAKE_INTROSPECTION_FUNCTION_DECLARE(
@@ -179,35 +175,20 @@ struct has_void_result< void ( T... ) >
     typedef has_void_result type;
 };
 
-template< class Result, class... T >
-struct expr_is_convertible< Result ( T... ) >
+template< class Result, class... T, class ResultPred >
+class non_void_result_helper< Result ( T... ), ResultPred >
 {
+    typedef ::sake::introspection_private::check_result<
+        Result,
+        typename boost::mpl::lambda< ResultPred >::type
+    > check_result_;
+public:
     static bool const value =
-        SAKE_EXPR_IS_CONVERTIBLE( apply_declval_T, Result );
-    typedef expr_is_convertible type;
-};
-
-template< class... T, class ResultPred >
-struct expr_apply< void ( T... ), ResultPred >
-{
-    static bool const value =
-        SAKE_EXPR_APPLY( ResultPred, apply_declval_T );
-    typedef expr_apply type;
+        SAKE_EXPR_APPLY( check_result_, apply_declval_T );
+    typedef non_void_result_helper type;
 };
 
 #undef apply_declval_T
-
-template< class Result, class... T, class ResultPred >
-struct non_void_result_helper< Result ( T... ), ResultPred >
-    : ::sake::boost_ext::mpl::and3<
-          ::boost::mpl::not_< trait_name_private::expr_is_convertible<
-              ::sake::introspection_private::dummy ( T... ) > >,
-          trait_name_private::expr_is_convertible<
-              Result ( T... ) >,
-          trait_name_private::expr_apply<
-              void ( T... ), ResultPred >
-      >
-{ };
 
 } // namespace trait_name_private
 
@@ -282,33 +263,18 @@ struct has_void_result< void ( T0N ) >
     typedef has_void_result type;
 };
 
-template< class Result, class_T0N >
-struct expr_is_convertible< Result ( T0N ) >
-{
-    static bool const value =
-        SAKE_EXPR_IS_CONVERTIBLE( apply_declval_T0N, Result );
-    typedef expr_is_convertible type;
-};
-
-template< class_T0N, class ResultPred >
-struct expr_apply< void ( T0N ), ResultPred >
-{
-    static bool const value =
-        SAKE_EXPR_APPLY( ResultPred, apply_declval_T0N );
-    typedef expr_apply type;
-};
-
 template< class Result, class_T0N, class ResultPred >
-struct non_void_result_helper< Result ( T0N ), ResultPred >
-    : ::sake::boost_ext::mpl::and3<
-          ::boost::mpl::not_< trait_name_private::expr_is_convertible<
-              ::sake::introspection_private::dummy ( T0N ) > >,
-          trait_name_private::expr_is_convertible<
-              Result ( T0N ) >,
-          trait_name_private::expr_apply<
-              void ( T0N ), ResultPred >
-      >
-{ };
+class non_void_result_helper< Result ( T0N ), ResultPred >
+{
+    typedef ::sake::introspection_private::check_result<
+        Result,
+        typename boost::mpl::lambda< ResultPred >::type
+    > check_result_;
+public:
+    static bool const value =
+        SAKE_EXPR_APPLY( check_result_, apply_declval_T0N );
+    typedef non_void_result_helper type;
+};
 
 } // namespace trait_name_private
 

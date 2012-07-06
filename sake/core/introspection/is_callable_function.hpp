@@ -57,6 +57,7 @@
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
@@ -68,9 +69,9 @@
 #include <sake/boost_ext/mpl/and.hpp>
 
 #include <sake/core/expr_traits/apply.hpp>
-#include <sake/core/expr_traits/is_convertible.hpp>
 #include <sake/core/expr_traits/is_void.hpp>
 #include <sake/core/introspection/fwd.hpp>
+#include <sake/core/introspection/private/check_result.hpp>
 #include <sake/core/introspection/private/dummy.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/convertible_from_any.hpp>

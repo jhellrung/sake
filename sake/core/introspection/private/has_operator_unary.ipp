@@ -114,7 +114,7 @@ struct dispatch< T, Result, ResultPred, true >
 
 template< class T, class Result, class ResultPred >
 struct dispatch< T, Result, ResultPred, false >
-    : impl< Result ( T ), ResultPred >
+    : unary_trait_name_private::impl< Result ( T ), ResultPred >
 { };
 
 } // namespace unary_trait_name_private
