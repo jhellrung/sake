@@ -10,6 +10,7 @@
 #define SAKE_CORE_ITERATOR_PRIVATE_FACADE_BEGIN_INTROVERSAL_BASE_HPP
 
 #include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/if.hpp>
@@ -23,6 +24,8 @@
 #include <sake/core/iterator/private/facade/end_introversal_base.hpp>
 #include <sake/core/iterator/private/facade/traits.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/swap.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/int_tag.hpp>
 
@@ -73,10 +76,19 @@ class begin_introversal_base< Derived, Params, 0 >
 {
     typedef private_::end_introversal_base<
         Derived, Params > end_introversal_base_;
+public:
+    SAKE_MEMBERWISE_SWAP(
+        typename begin_introversal_base, (( end_introversal_base_ )) )
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename begin_introversal_base,
         (( end_introversal_base_ ))
+    )
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( end_introversal_base_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
     )
 
     template< class T >
@@ -97,24 +109,41 @@ protected:
     using end_introversal_base_::derived;
 public:
 
-    inline friend
-    bool operator==(Derived const & this_, sake::begin_tag)
+    SAKE_MEMBERWISE_SWAP(
+        typename begin_introversal_base, (( end_introversal_base_ )) )
+
+    template< class Derived_ >
+    inline friend typename boost::enable_if_c<
+        boost::is_same< Derived_, Derived >::value, bool >::type
+    operator==(Derived_ const & this_, sake::begin_tag)
     { return this_.private_equal_begin(); }
-    inline friend
-    bool operator==(sake::begin_tag, Derived const & this_)
+    template< class Derived_ >
+    inline friend typename boost::enable_if_c<
+        boost::is_same< Derived_, Derived >::value, bool >::type
+    operator==(sake::begin_tag, Derived_ const & this_)
     { return this_.private_equal_begin(); }
 
-    inline friend
-    bool operator!=(Derived const & this_, sake::begin_tag)
+    template< class Derived_ >
+    inline friend typename boost::enable_if_c<
+        boost::is_same< Derived_, Derived >::value, bool >::type
+    operator!=(Derived_ const & this_, sake::begin_tag)
     { return !this_.private_equal_begin(); }
-    inline friend
-    bool operator!=(sake::begin_tag, Derived const & this_)
+    template< class Derived_ >
+    inline friend typename boost::enable_if_c<
+        boost::is_same< Derived_, Derived >::value, bool >::type
+    operator!=(sake::begin_tag, Derived_ const & this_)
     { return !this_.private_equal_begin(); }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename begin_introversal_base,
         (( end_introversal_base_ ))
+    )
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( end_introversal_base_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
     )
 
     template< class T >
@@ -139,11 +168,14 @@ protected:
     using begin_introversal_base_::derived;
 public:
 
+    SAKE_MEMBERWISE_SWAP(
+        typename begin_introversal_base, (( begin_introversal_base_ )) )
+
     void begin_ip()
     { sake::iterator::core_access::at_ip(derived(), sake::_begin); }
 
     template< class Introversal >
-    typename sake::iterator::core_access::relax< Derived, Introversal >::type
+    typename begin_introversal_base_::template relax< Introversal >::type
     begin(Introversal) const
     {
         return sake::iterator::core_access::at(
@@ -154,6 +186,12 @@ protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename begin_introversal_base,
         (( begin_introversal_base_ ))
+    )
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( begin_introversal_base_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
     )
 
     template< class T >
@@ -181,17 +219,30 @@ protected:
 public:
     SAKE_USING_TYPEDEF( typename private_::traits< Params >, difference_type );
 
-    inline friend
-    difference_type operator-(Derived const & this_, sake::begin_tag)
+    SAKE_MEMBERWISE_SWAP(
+        typename begin_introversal_base, (( begin_introversal_base_ )) )
+
+    template< class Derived_ >
+    inline friend typename boost::enable_if_c<
+        boost::is_same< Derived_, Derived >::value, difference_type >::type
+    operator-(Derived_ const & this_, sake::begin_tag)
     { return this_.private_difference_begin(); }
-    inline friend
-    difference_type operator-(sake::begin_tag, Derived const & this_)
+    template< class Derived_ >
+    inline friend typename boost::enable_if_c<
+        boost::is_same< Derived_, Derived >::value, difference_type >::type
+    operator-(sake::begin_tag, Derived_ const & this_)
     { return -this_.private_difference_begin(); }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename begin_introversal_base,
         (( begin_introversal_base_ ))
+    )
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( begin_introversal_base_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
     )
 
     template< class T >

@@ -35,7 +35,6 @@
 #include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/is_template_base_of.hpp>
-#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake_range_distance_private
 {
@@ -61,28 +60,42 @@ namespace range
 namespace default_impl
 {
 
+namespace aux
+{
+
+template< class R >
+inline typename sake::range_difference< R const >::type
+distance(R const & r);
+
+} // namespace aux
+
 namespace distance_private
 {
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME size
+#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME distance
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class R >
 inline typename sake::range_difference< R const >::type
-dispatch(R const & /*r*/, sake::int_tag<5>)
+dispatch(R const & /*r*/, sake::int_tag<6>)
 { return sake::range_static_size<R>::value; }
 
 template< class R >
 inline typename sake::range_difference< R const >::type
-dispatch(R const & r, sake::int_tag<4>)
+dispatch(R const & r, sake::int_tag<5>)
 { return r.distance(); }
 
 template< class R >
 inline typename sake::range_difference< R const >::type
-dispatch(R const & r, sake::int_tag<3>)
+dispatch(R const & r, sake::int_tag<4>)
 { return ::sake_range_distance_private::adl(r); }
+
+template< class R >
+inline typename sake::range_difference< R const >::type
+dispatch(R const & r, sake::int_tag<3>)
+{ return sake::range::default_impl::aux::distance(R); }
 
 template< class R >
 inline typename sake::range_difference< R const >::type
@@ -121,22 +134,41 @@ template< class R >
 inline typename sake::range_difference< R const >::type
 distance(R const & r)
 {
-    typedef sake::range_traits< R const > traits_;
-    SAKE_USING_TYPEDEF( typename traits_, difference_type );
+    typedef typename sake::range_difference< R const >::type result_type;
     typedef typename boost_ext::mpl::
     if_<
         sake::range_has_static_size<R>,
-        sake::int_tag<5>
+        sake::int_tag<6>
     >::type::template
     else_if<
         distance_private::is_callable_mem_fun<
-            R const &, difference_type ( ) >,
-        sake::int_tag<4>
+            R const &, result_type ( ) >,
+        sake::int_tag<5>
     >::type::template
     else_if<
         ::sake_range_distance_private::is_callable<
-            difference_type ( R const & ) >,
+            result_type ( R const & ) >,
+        sake::int_tag<4>
+    >::type::template
+    else_<
         sake::int_tag<3>
+    >::type int_tag_;
+    return distance_private::dispatch(r, int_tag_());
+}
+
+namespace aux
+{
+
+template< class R >
+inline typename sake::range_difference< R const >::type
+distance(R const & r)
+{
+    typedef sake::range_traits< R const > traits_;
+    typedef typename traits_::difference_type result_type;
+    typedef typename boost_ext::mpl::
+    if_<
+        sake::range_has_static_size<R>,
+        sake::int_tag<6>
     >::type::template
     else_if<
         boost_ext::mpl::or2<
@@ -147,7 +179,7 @@ distance(R const & r)
             sake::is_template_base_of2<
                 sake::iterator::facade, typename traits_::iterator,
                 sake::has_operator_minus<
-                    boost::mpl::_1, boost::mpl::_1, difference_type >
+                    boost::mpl::_1, boost::mpl::_1, result_type >
             >
         >,
         sake::int_tag<2>
@@ -161,6 +193,8 @@ distance(R const & r)
     >::type int_tag_;
     return distance_private::dispatch(r, int_tag_());
 }
+
+} // namespace aux
 
 template< class R, class Difference >
 struct has_intrinsic_distance

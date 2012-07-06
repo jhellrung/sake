@@ -15,7 +15,7 @@
 
 #include <sake/core/iterator/private/common_difference_type.hpp>
 #include <sake/core/iterator/private/facade/traits.hpp>
-#include <sake/core/iterator/private/is_interoperable.hpp>
+#include <sake/core/iterator/private/is_semi_convertible_relax.hpp>
 
 namespace sake
 {
@@ -34,7 +34,7 @@ struct difference_enable
     : boost_ext::mpl::and3<
           typename private_::traits< P0 >::difference_enable,
           typename private_::traits< P1 >::difference_enable,
-          sake::iterator::private_::is_interoperable< D0, D1 >
+          sake::iterator::private_::is_semi_convertible_relax< D0, D1 >
       >
 { };
 

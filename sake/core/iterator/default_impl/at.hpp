@@ -9,19 +9,13 @@
 #ifndef SAKE_CORE_ITERATOR_DEFAULT_IMPL_AT_HPP
 #define SAKE_CORE_ITERATOR_DEFAULT_IMPL_AT_HPP
 
-#include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
-
-#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
-#include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/private/is_interoperable.hpp>
+#include <sake/core/iterator/traits.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
 
@@ -232,24 +226,7 @@ template< class I, class T, class Introversal >
 inline typename sake::iterator_relax< I, Introversal >::type
 at(I const & i, T const & x, Introversal)
 {
-    typedef typename sake::iterator_introversal<I>::type introversal;
-    BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-        boost_ext::mpl::and2<
-            boost::is_same< T, sake::begin_tag >,
-            boost_ext::is_convertible<
-                introversal, sake::begin_access_introversal_tag >
-        >,
-        boost_ext::mpl::and2<
-            boost::is_same< T, sake::end_tag >,
-            boost_ext::is_convertible<
-                introversal, sake::end_access_introversal_tag >
-        >,
-        sake::iterator::private_::is_interoperable<I,T>
-    >::value));
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        Introversal, sake::null_introversal_tag >::value));
     typedef typename sake::iterator_relax< I, Introversal >::type result_type;
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible< I, result_type >::value));
     typedef typename boost_ext::mpl::
          if_< boost_ext::is_convertible< T, result_type >,
               sake::int_tag<5> >::type::template

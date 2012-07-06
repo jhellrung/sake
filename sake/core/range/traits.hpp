@@ -31,6 +31,8 @@
  *
  *     template< class Introversal >
  *     struct iterator_with { typedef ... type; };
+ *     template< class Begin, class End >
+ *     struct subrange_with { typedef ... type; };
  *
  *     static iterator
  *     begin(R& r);
@@ -47,6 +49,10 @@
  *     template< class T, class Introversal >
  *     static typename iterator_with< Introversal >::type
  *     iter_at(R& r, T x, Introversal);
+ *
+ *     template< class Begin, class End >
+ *     static typename subrange_with< Begin, End >::type
+ *     sub(R& r, Begin b, End e);
  *
  *     template< class T >
  *     static reference
@@ -76,10 +82,16 @@
  *
  *     template< class Introversal >
  *     struct iterator_with { typedef ... type; };
+ *     template< class Begin, class End >
+ *     struct subrange_with { typedef ... type; };
  *
  *     template< class T, class Introversal >
  *     static typename iterator_with< Introversal >::type
  *     iter_at(R& r, T x, Introversal);
+ *
+ *     template< class Begin, class End >
+ *     static typename subrange_with< Begin, End >::type
+ *     sub(R& r, Begin b, End e);
  *
  *     template< class T >
  *     static reference
@@ -105,85 +117,83 @@
 
 #include <cstddef>
 
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_signed.hpp>
-#include <boost/type_traits/is_void.hpp>
-#include <boost/type_traits/make_unsigned.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
-#include <sake/core/introspection/has_operator_minus.hpp>
+#include <sake/core/iterator/adapt_introversal.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/facade_fwd.hpp>
-#include <sake/core/iterator/introversal_adaptor_relax.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/range/default_impl/at.hpp>
-#include <sake/core/range/default_impl/distance.hpp>
 #include <sake/core/range/default_impl/empty.hpp>
 #include <sake/core/range/default_impl/iterator.hpp>
 #include <sake/core/range/default_impl/iter_at.hpp>
 #include <sake/core/range/default_impl/iterator_with.hpp>
-#include <sake/core/range/default_impl/size.hpp>
-#include <sake/core/range/static_size.hpp>
+#include <sake/core/range/default_impl/sub.hpp>
+#include <sake/core/range/default_impl/subrange_with.hpp>
+#include <sake/core/range/private/traits/distance_base.hpp>
 #include <sake/core/range/traits_fwd.hpp>
-#include <sake/core/utility/is_template_base_of.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
 {
 
-template< class R, class Introversal /*= sake::null_introversal_tag*/ >
-struct range_iterator
-{
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        Introversal, sake::null_introversal_tag >::value));
-    typedef typename sake::range_traits<R>::template
-        iterator_with< Introversal >::type type;
-};
-
-template< class R >
-struct range_iterator< R, sake::null_introversal_tag >
-{
-private:
-    typedef sake::range_traits<R> traits_;
-public:
-    typedef typename traits_::iterator type;
-    BOOST_STATIC_ASSERT((boost::is_same<
-        type,
-        typename traits_::template
-            iterator_with< sake::null_introversal_tag >::type
-    >::value));
-};
-
 template< class R >
 struct range_traits
     : sake::extension::range_traits<R>
 {
-    SAKE_USING_TYPEDEF( typename sake::extension::range_traits<R>, iterator );
+private:
+    typedef sake::extension::range_traits<R> extension_traits_;
+public:
+    SAKE_USING_TYPEDEF( typename extension_traits_, iterator );
     typedef sake::iterator_traits< iterator > iterator_traits;
     SAKE_USING_TYPEDEF( typename iterator_traits, value_type );
     SAKE_USING_TYPEDEF( typename iterator_traits, reference );
     SAKE_USING_TYPEDEF( typename iterator_traits, difference_type );
     SAKE_USING_TYPEDEF( typename iterator_traits, traversal );
 
+    SAKE_USING_TYPEDEF( typename extension_traits_, size_type );
+
     template< class Introversal >
     struct iterator_with
-        : sake::extension::range_traits<R>::template
-              iterator_with< Introversal >
-    { };
+    {
+        BOOST_STATIC_ASSERT((boost_ext::is_convertible<
+            Introversal, sake::null_introversal_tag >::value));
+        typedef typename extension_traits_::template
+            iterator_with< Introversal >::type type;
+        BOOST_MPL_ASSERT((boost_ext::mpl::or2<
+            boost::mpl::not_< boost::is_same<
+                Introversal, sake::null_introversal_tag > >,
+            boost::is_same< type, iterator >
+        >));
+    };
+
+    template< class T >
+    static iterator
+    iter_at(R& r, T const & x)
+    { return iter_at(r, x, sake::null_introversal_tag()); }
 
     template< class T, class Introversal >
     static typename iterator_with< Introversal >::type
     iter_at(R& r, T const & x, Introversal)
-    { return sake::extension::range_traits<R>::iter_at(r, x, Introversal()); }
+    {
+        BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
+            boost::is_same< T, sake::begin_tag >,
+            boost::is_same< T, sake::end_tag >,
+            boost_ext::is_convertible< T, iterator >
+        >::value));
+        BOOST_STATIC_ASSERT((boost_ext::is_convertible<
+            Introversal, sake::null_introversal_tag >::value));
+        return extension_traits_::iter_at(r, x, Introversal());
+    }
 
     static iterator
     begin(R& r)
@@ -200,172 +210,39 @@ struct range_traits
     static typename iterator_with< Introversal >::type
     end(R& r, Introversal)
     { return iter_at(r, sake::_end, Introversal()); }
-};
 
-namespace extension
-{
-
-template< class R, class Enable /*= void*/ >
-struct range_traits
-    : sake::default_impl::range_traits<R>
-{ };
-
-} // namespace extension
-
-namespace default_impl
-{
-
-namespace range_traits_private
-{
-
-template< class R, class Iterator >
-struct distance_base_bool
-{
-    typedef sake::iterator_traits< Iterator > iterator_traits;
-    SAKE_USING_TYPEDEF( typename iterator_traits, difference_type );
-    SAKE_USING_TYPEDEF( typename iterator_traits, traversal );
-    static bool const value = boost_ext::mpl::or4<
-        boost_ext::is_convertible<
-            traversal, boost::forward_traversal_tag >,
-        sake::range_has_static_size<R>,
-        sake::range::default_impl::has_intrinsic_distance< R, difference_type >,
-        sake::is_template_base_of2<
-            sake::iterator::facade, Iterator,
-            sake::has_operator_minus<
-                boost::mpl::_1, boost::mpl::_1, difference_type >
-        >
-    >::value;
-};
-
-template<
-    class R, class Iterator,
-    bool = distance_base_bool< R, Iterator >::value
->
-struct distance_base;
-
-template< class R, class Iterator >
-struct size_base_bool
-{
-    typedef sake::iterator_traits< Iterator > iterator_traits;
-    SAKE_USING_TYPEDEF( typename iterator_traits, difference_type );
-    SAKE_USING_TYPEDEF( typename iterator_traits, traversal );
-    typedef typename boost::mpl::eval_if_c<
-        boost::is_void< difference_type >::value,
-        boost::mpl::identity< std::size_t >,
-        boost::make_unsigned< difference_type >
-    >::type size_type;
-    static bool const value = boost_ext::mpl::or4<
-        boost_ext::is_convertible<
-            traversal, boost::random_access_traversal_tag >,
-        sake::range_has_static_size<R>,
-        sake::range::default_impl::has_intrinsic_size< R, size_type >,
-        sake::is_template_base_of2<
-            sake::iterator::facade, Iterator,
-            sake::has_operator_minus<
-                boost::mpl::_1, boost::mpl::_1, difference_type >
-        >
-    >::value;
-};
-
-template<
-    class R, class Iterator,
-    bool = size_base_bool< R, Iterator >::value
->
-struct size_base;
-
-template< class R, class Iterator >
-struct distance_base< R, Iterator, false >
-    : range_traits_private::size_base< R, Iterator >
-{
-    SAKE_USING_TYPEDEF(
-        typename sake::iterator_traits< Iterator >, difference_type );
-    typedef boost::false_type distance_enable_tag;
-};
-
-template< class R, class Iterator >
-struct distance_base< R, Iterator, true >
-    : range_traits_private::size_base< R, Iterator >
-{
-    SAKE_USING_TYPEDEF(
-        typename sake::iterator_traits< Iterator >, difference_type );
-    BOOST_STATIC_ASSERT((boost::is_signed< difference_type >::value));
-    typedef boost::true_type distance_enable_tag;
-    static difference_type
-    distance(R const & r)
-    { return sake::range::default_impl::distance(r); }
-};
-
-template< class R, class Iterator >
-struct size_base< R, Iterator, false >
-{
-    SAKE_USING_TYPEDEF(
-        typename sake::iterator_traits< Iterator >, difference_type );
-    typedef typename boost::mpl::eval_if_c<
-        boost::is_void< difference_type >::value,
-        boost::mpl::identity< void >,
-        boost::make_unsigned< difference_type >
-    >::type size_type;
-    typedef boost::false_type size_enable_tag;
-};
-
-template< class R, class Iterator >
-struct size_base< R, Iterator, true >
-{
-    SAKE_USING_TYPEDEF(
-        typename sake::iterator_traits< Iterator >, difference_type );
-    typedef typename boost::mpl::eval_if_c<
-        boost::is_void< difference_type >::value,
-        boost::mpl::identity< std::size_t >,
-        boost::make_unsigned< difference_type >
-    >::type size_type;
-    typedef boost::true_type size_enable_tag;
-    static size_type
-    size(R const & r)
-    { return sake::range::default_impl::size(r); }
-};
-
-} // namespace range_traits_private
-
-template< class R, class Iterator /*= void*/ >
-struct range_traits
-    : range_traits_private::distance_base< R, Iterator >
-{
-private:
-    typedef range_traits_private::size_base< R, Iterator > size_base_;
-public:
-    typedef Iterator iterator;
-    typedef sake::iterator_traits< Iterator > iterator_traits;
-    //SAKE_USING_TYPEDEF( typename iterator_traits, value_type );
-    SAKE_USING_TYPEDEF( typename iterator_traits, reference );
-    SAKE_USING_TYPEDEF( typename iterator_traits, traversal );
-
-    SAKE_USING_TYPEDEF( typename size_base_, size_type );
-
-    template< class Introversal >
-    struct iterator_with
+    template< class Begin, class End >
+    struct subrange_with
     {
+        typedef typename extension_traits_::template subrange_with<
+            typename boost::mpl::if_c<
+                boost::is_same< Begin, sake::begin_tag >::value,
+                sake::begin_tag, void
+            >::type,
+            typename boost::mpl::if_c<
+                boost::is_same< End, sake::end_tag >::value,
+                sake::end_tag, void
+            >::type
+        >::type type;
         BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-            Introversal, sake::null_introversal_tag >::value));
-        typedef typename sake::range::default_impl::
-            iterator_with< R, Iterator, Introversal >::type type;
-        BOOST_STATIC_ASSERT((
-            Introversal::value != 0
-         || boost::is_same< type, iterator >::value
-        ));
+            typename sake::range_iterator< type >::type, iterator >::value));
+        BOOST_STATIC_ASSERT((boost_ext::is_convertible<
+            iterator, typename sake::range_iterator< type >::type >::value));
     };
 
-    template< class T, class Introversal >
-    static typename iterator_with< Introversal >::type
-    iter_at(R& r, T const & x, Introversal)
+    template< class Begin, class End >
+    static typename subrange_with< Begin, End >::type
+    sub(R& r, Begin const & b, End const & e)
     {
-        BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-            boost::is_same< T, sake::begin_tag >,
-            boost::is_same< T, sake::end_tag >,
-            boost_ext::is_convertible< T, iterator >
+        BOOST_STATIC_ASSERT((boost_ext::mpl::or2<
+            boost::is_same< Begin, sake::begin_tag >,
+            boost_ext::is_convertible< Begin, iterator >
         >::value));
-        BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-            Introversal, sake::null_introversal_tag >::value));
-        return sake::range::default_impl::iter_at(r, x, Introversal());
+        BOOST_STATIC_ASSERT((boost_ext::mpl::or2<
+            boost::is_same< End, sake::end_tag >,
+            boost_ext::is_convertible< End, iterator >
+        >::value));
+        return extension_traits_::sub(r,b,e);
     }
 
     template< class T >
@@ -381,8 +258,69 @@ public:
                 boost_ext::is_convertible< T, size_type >
             >
         >::value));
-        return sake::range::default_impl::at(r,x);
+        return extension_traits_::at(r,x);
     }
+};
+
+namespace extension
+{
+
+template< class R, class Enable /*= void*/ >
+struct range_traits
+    : sake::default_impl::range_traits<R>
+{ };
+
+} // namespace extension
+
+namespace default_impl
+{
+
+template< class R, class Iterator /*= void*/ >
+struct range_traits
+    : range_traits_private::distance_base< R, Iterator >
+{
+private:
+    typedef range_traits_private::size_base< R, Iterator > size_base_;
+public:
+    typedef Iterator iterator;
+    typedef sake::iterator_traits< Iterator > iterator_traits;
+    SAKE_USING_TYPEDEF( typename iterator_traits, reference );
+
+    template< class Introversal >
+    struct iterator_with
+    { typedef typename sake::range::default_impl::
+        iterator_with< R, Iterator, Introversal >::type type; };
+
+    template< class Begin, class End >
+    struct subrange_with
+    {
+        typedef typename sake::range::default_impl::subrange_with<
+            R, Iterator,
+            typename boost::mpl::if_c<
+                boost::is_same< Begin, sake::begin_tag >::value,
+                sake::begin_tag, void
+            >::type,
+            typename boost::mpl::if_c<
+                boost::is_same< End, sake::end_tag >::value,
+                sake::end_tag, void
+            >::type
+        >::type type;
+    };
+
+    template< class T, class Introversal >
+    static typename iterator_with< Introversal >::type
+    iter_at(R& r, T const & x, Introversal)
+    { return sake::range::default_impl::iter_at(r, x, Introversal()); }
+
+    template< class Begin, class End >
+    static typename subrange_with< Begin, End >::type
+    sub(R& r, Begin const & b, End const & e)
+    { return sake::range::default_impl::sub(r,b,e); }
+
+    template< class T >
+    static reference
+    at(R& r, T const x)
+    { return sake::range::default_impl::at(r,x); }
 
     static bool
     empty(R const & r)
@@ -405,8 +343,12 @@ struct range_traits< T[N], void >
 
     template< class Introversal >
     struct iterator_with
-        : sake::iterator::introversal_adaptor_relax< T*, Introversal >
+        : sake::iterator::adapt_introversal< T*, Introversal >
     { };
+    template< class Begin, class End >
+    struct subrange_with
+    { typedef typename sake::range::default_impl::
+        subrange_with< void, T*, Begin, End >::type type; };
 
     static T*
     iter_at(T* const p, sake::begin_tag, sake::null_introversal_tag)
@@ -419,6 +361,11 @@ struct range_traits< T[N], void >
     static typename iterator_with< Introversal >::type
     iter_at(this_type& r, U const & x, Introversal)
     { return sake::range::default_impl::iter_at(r, x, Introversal()); }
+
+    template< class Begin, class End >
+    static typename subrange_with< Begin, End >::type
+    sub(this_type& r, Begin const & b, End const & e)
+    { return typename subrange_with< Begin, End >::type(r,b,e); }
 
     static T&
     at(this_type& r, sake::begin_tag)

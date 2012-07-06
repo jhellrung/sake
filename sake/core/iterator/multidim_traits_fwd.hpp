@@ -9,6 +9,8 @@
 #ifndef SAKE_CORE_ITERATOR_MULTIDIM_TRAITS_FWD_HPP
 #define SAKE_CORE_ITERATOR_MULTIDIM_TRAITS_FWD_HPP
 
+#include <sake/core/iterator/categories.hpp>
+
 namespace sake
 {
 
@@ -27,7 +29,11 @@ template< class I >
 struct iterator_multidim_outer
 { typedef typename sake::iterator_multidim_traits<I>::outer_iterator type; };
 
-template< class I, class Introversal, class Outer = void >
+template<
+    class I,
+    class Introversal = sake::null_introversal_tag,
+    class Outer = void
+>
 struct iterator_multidim_inner;
 
 namespace extension

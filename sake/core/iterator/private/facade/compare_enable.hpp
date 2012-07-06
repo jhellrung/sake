@@ -14,7 +14,7 @@
 #include <sake/boost_ext/mpl/and.hpp>
 
 #include <sake/core/iterator/private/facade/traits.hpp>
-#include <sake/core/iterator/private/is_interoperable.hpp>
+#include <sake/core/iterator/private/is_semi_convertible_relax.hpp>
 #include <sake/core/math/sign_t.hpp>
 
 namespace sake
@@ -34,7 +34,7 @@ struct compare_enable
     : boost_ext::mpl::and3<
           typename private_::traits< P0 >::compare_enable,
           typename private_::traits< P1 >::compare_enable,
-          sake::iterator::private_::is_interoperable< D0, D1 >
+          sake::iterator::private_::is_semi_convertible_relax< D0, D1 >
       >
 { };
 

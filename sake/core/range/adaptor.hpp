@@ -30,6 +30,7 @@
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/keyword/arg_pack_tag.hpp>
 #include <sake/core/keyword/arg_packer.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
@@ -39,8 +40,8 @@
 #include <sake/core/range/adaptor_fwd.hpp>
 #include <sake/core/range/is_adapt_by_value.hpp>
 #include <sake/core/range/has_value_ownership.hpp>
+#include <sake/core/range/private/adaptor/base_iter_helper.hpp>
 #include <sake/core/range/private/adaptor/constructor_param_specs.hpp>
-#include <sake/core/range/private/adaptor/iter_at_helper.hpp>
 #include <sake/core/range/private/adaptor/member_base.hpp>
 #include <sake/core/range/static_size.hpp>
 #include <sake/core/range/traits.hpp>
@@ -186,8 +187,39 @@ protected:
         >::type cbase_type;
         return base_traits_of< CDerived >::type::iter_at(
             this_.protected_base(),
-            adaptor_private::iter_at_helper< cbase_type >(x),
+            adaptor_private::base_iter_helper< cbase_type >(x),
             Introversal()
+        );
+    }
+
+    template< class CDerived, class Begin, class End >
+    struct base_subrange_with_of
+    { typedef typename base_traits_of< CDerived >::type::template
+        subrange_with< void, void >::type type; };
+    template< class CDerived, class End >
+    struct base_subrange_with_of< CDerived, sake::begin_tag, End >
+    { typedef typename base_traits_of< CDerived >::type::template
+        subrange_with< sake::begin_tag, void >::type type; };
+    template< class CDerived, class Begin >
+    struct base_subrange_with_of< CDerived, Begin, sake::end_tag >
+    { typedef typename base_traits_of< CDerived >::type::template
+        subrange_with< void, sake::end_tag >::type type; };
+    template< class CDerived >
+    struct base_subrange_with_of< CDerived, sake::begin_tag, sake::end_tag >
+    { typedef typename base_traits_of< CDerived >::type::template
+        subrange_with< sake::begin_tag, sake::end_tag >::type type; };
+
+    template< class CDerived, class Begin, class End >
+    static typename base_subrange_with_of< CDerived, Begin, End >::type
+    base_sub(CDerived& this_, Begin const & b, End const & e)
+    {
+        typedef typename boost_ext::remove_reference<
+            typename boost_ext::propagate_const< CDerived, R >::type
+        >::type cbase_type;
+        return base_traits_of< CDerived >::type::sub(
+            this_.protected_base(),
+            adaptor_private::base_iter_helper< cbase_type >(b),
+            adaptor_private::base_iter_helper< cbase_type >(e)
         );
     }
 
@@ -200,14 +232,14 @@ protected:
     base_at(CDerived& this_, T const x)
     { return base_traits_of< CDerived >::type::at(this_.protected_base(), x); }
 
-    friend class sake::range::core_access;
-
-    bool derived_empty() const
+    bool base_empty() const
     { return base_traits_of< Derived const >::type::empty(base()); }
-    difference_type derived_distance() const
+    difference_type base_distance() const
     { return base_traits_of< Derived const >::type::distance(base()); }
-    size_type derived_size() const
+    size_type base_size() const
     { return base_traits_of< Derived const >::type::size(base()); }
+
+    friend class sake::range::core_access;
 };
 
 } // namespace range

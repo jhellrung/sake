@@ -23,6 +23,9 @@ namespace functional
 
 struct accumulate;
 
+template< class F = void >
+struct for_each;
+
 } // namespace functional
 
 } // namespace algorithm

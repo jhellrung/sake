@@ -38,12 +38,12 @@ range::adaptors::with_index
 range::adaptors::zip
     range::adapt::zip(r0, r1, ...) -> range::adaptors::zip< < R0, R1, ... > >
 
-range::basic::delimit [dynamic and static size]
-    range::delimit(i0, i1) -> range::basic::delimit< I0, I1 >
-    range::delimit(i, end_tag) -> range::basic::delimit< I, end_tag >
-    range::delimit(begin_tag, i) -> range::basic::delimit< I, begin_tag >
-    range::delimit<N>(i) -> range::basic::delimit<I,N>
-    range::delimited_c<N>(i) -> range::basic::delimit<I,N>
+range::basic::sub [dynamic and static size]
+    range::sub(i0, i1) -> range::basic::sub<I>
+    range::sub(i, end_tag) -> range::basic::sub< I, end_tag >
+    range::sub(begin_tag, i) -> range::basic::sub< begin_tag, I >
+    range::sub<N>(i) -> range::basic::sub<I,N>
+    range::sub_c<N>(i) -> range::basic::sub<I,N>
 range::basic::empty
     range::empty() -> range::basic::empty
 range::basic::sequence [dynamic and static size]

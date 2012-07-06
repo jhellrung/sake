@@ -93,21 +93,19 @@ struct traits
         sake::iterator_introversal<I>
     >::type iterator_introversal;
 
-    typedef typename boost_ext::mpl::at<
+    typedef typename boost_ext::mpl::lazy_at<
         Params, sake::iterator::keyword::tag::compare_enable,
         sake::is_template_base_of2<
             sake::iterator::facade, I,
             sake::has_operator_less< boost::mpl::_1 >
         >
     >::type compare_enable;
-    typedef typename boost_ext::mpl::at<
+    typedef typename boost_ext::mpl::lazy_at<
         Params, sake::iterator::keyword::tag::difference_enable,
         sake::is_template_base_of2<
             sake::iterator::facade, I,
             sake::has_operator_minus<
-                boost::mpl::_1, boost::mpl::_1,
-                difference_type
-            >
+                boost::mpl::_1, boost::mpl::_1, difference_type >
         >
     >::type difference_enable;
 

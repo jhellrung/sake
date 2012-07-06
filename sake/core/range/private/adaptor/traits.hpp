@@ -24,6 +24,7 @@
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/range/concepts/fwd.hpp>
 #include <sake/core/range/concepts/Range.hpp>
 #include <sake/core/range/facade.hpp>
 #include <sake/core/range/keyword.hpp>

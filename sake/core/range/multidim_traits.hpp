@@ -46,9 +46,44 @@
 namespace sake
 {
 
+namespace range_multidim_traits_private
+{
+
+template<
+    class R,
+    bool = sake::extension::range_multidim_traits<R>::enable_tag::value
+>
+struct dispatch;
+
+template< class R >
+struct dispatch< R, false >
+    : sake::extension::range_multidim_traits<R>
+{ };
+
+template< class R >
+struct dispatch< R, true >
+    : sake::extension::range_multidim_traits<R>
+{
+private:
+    typedef sake::extension::range_multidim_traits<R> extension_traits_;
+public:
+
+    template< class Outer, class Inner >
+    static typename sake::range_iterator<R>::type
+    iter_at(R& r, Outer const & j, Inner const & k)
+    { return iter_at(r, j, k, sake::null_introversal_tag()); }
+
+    template< class Outer, class Inner, class Introversal >
+    static typename sake::range_iterator< R, Introversal >::type
+    iter_at(R& r, Outer const & j, Inner const & k, Introversal)
+    { return extension_traits_::iter_at(r, j, k, Introversal()); }
+};
+
+} // namespace range_multidim_traits_private
+
 template< class R >
 struct range_multidim_traits
-    : sake::extension::range_multidim_traits<R>
+    : range_multidim_traits_private::dispatch<R>
 { };
 
 namespace extension

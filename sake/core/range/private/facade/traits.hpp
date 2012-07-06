@@ -13,18 +13,20 @@
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
-#include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/make_unsigned.hpp>
 
 #include <sake/boost_ext/mpl/at.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/is_convertible_wndp2bp.hpp>
+#include <sake/boost_ext/type_traits/make_unsigned.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/iterator/categories.hpp>
+#include <sake/core/iterator/is_convertible.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/traits_fwd.hpp>
+#include <sake/core/range/concepts/fwd.hpp>
 #include <sake/core/range/concepts/Range.hpp>
 #include <sake/core/range/keyword.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
@@ -54,7 +56,7 @@ struct traits
         iterator
     >::type const_iterator;
     BOOST_STATIC_ASSERT((
-        boost_ext::is_convertible_wndp2bp< iterator, const_iterator >::value));
+        sake::iterator::is_convertible< iterator, const_iterator >::value));
 
     typedef sake::iterator_traits< iterator > iterator_traits_;
     typedef sake::iterator_traits< const_iterator > const_iterator_traits_;
@@ -69,19 +71,23 @@ struct traits
         sake::is_convertible_wnrbt< reference, const_reference >::value));
 
     SAKE_USING_TYPEDEF( typename iterator_traits_, difference_type );
-    BOOST_STATIC_ASSERT((boost::is_integral< difference_type >::value));
     BOOST_STATIC_ASSERT((boost::is_same<
         difference_type,
         typename const_iterator_traits_::difference_type
     >::value));
-
-    typedef typename boost::make_unsigned< difference_type >::type size_type;
+    typedef typename boost_ext::make_unsigned< difference_type >::type size_type;
 
     typedef typename iterator_traits_::traversal range_traversal;
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
         range_traversal, boost::single_pass_traversal_tag >::value));
     BOOST_STATIC_ASSERT((boost::is_same<
         range_traversal, typename const_iterator_traits_::traversal >::value));
+
+    BOOST_STATIC_ASSERT((boost_ext::mpl::or2<
+        boost::mpl::not_< boost_ext::is_convertible<
+            range_traversal, boost::forward_traversal_tag > >,
+        boost::is_signed< difference_type >
+    >::value));
 
     typedef typename boost_ext::mpl::or2<
         boost_ext::is_convertible<

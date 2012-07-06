@@ -9,6 +9,8 @@
 #ifndef SAKE_CORE_RANGE_DEFAULT_IMPL_EMPTY_HPP
 #define SAKE_CORE_RANGE_DEFAULT_IMPL_EMPTY_HPP
 
+#include <sake/boost_ext/mpl/if.hpp>
+
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/range/static_size.hpp>
@@ -40,6 +42,15 @@ namespace range
 namespace default_impl
 {
 
+namespace aux
+{
+
+template< class R >
+inline bool
+empty(R const & r);
+
+} // namespace aux
+
 namespace empty_private
 {
 
@@ -50,18 +61,23 @@ namespace empty_private
 
 template< class R >
 inline bool
-dispatch(R const & /*r*/, sake::int_tag<3>)
+dispatch(R const & /*r*/, sake::int_tag<4>)
 { return sake::range_static_size<R>::value == 0; }
 
 template< class R >
 inline bool
-dispatch(R const & r, sake::int_tag<2>)
+dispatch(R const & r, sake::int_tag<3>)
 { return r.empty(); }
 
 template< class R >
 inline bool
-dispatch(R const & r, sake::int_tag<1>)
+dispatch(R const & r, sake::int_tag<2>)
 { return ::sake_range_empty_private::adl(r); }
+
+template< class R >
+inline bool
+dispatch(R const & r, sake::int_tag<1>)
+{ return sake::range::default_impl::aux::empty(r); }
 
 template< class R >
 inline bool
@@ -79,14 +95,30 @@ empty(R const & r)
 {
     typedef typename boost_ext::mpl::
          if_< sake::range_has_static_size<R>,
-              sake::int_tag<3> >::type::template
+              sake::int_tag<4> >::type::template
     else_if < empty_private::is_callable_mem_fun< R const &, bool ( ) >,
-              sake::int_tag<2> >::type::template
+              sake::int_tag<3> >::type::template
     else_if < ::sake_range_empty_private::is_callable< bool ( R const & ) >,
-              sake::int_tag<1> >::type::template
+              sake::int_tag<2> >::type::template
+    else_   < sake::int_tag<1> >::type int_tag_;
+    return empty_private::dispatch(r, int_tag_());
+}
+
+namespace aux
+{
+
+template< class R >
+inline bool
+empty(R const & r)
+{
+    typedef typename boost_ext::mpl::
+         if_< sake::range_has_static_size<R>,
+              sake::int_tag<4> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
     return empty_private::dispatch(r, int_tag_());
 }
+
+} // namespace aux
 
 } // namespace default_impl
 

@@ -40,7 +40,7 @@ forward_declare( difference, operator- )
 namespace private_
 {
 
-template< class Derived, class Params > class common_base;
+template< class Derived, class Params > struct common_base;
 
 #define forward_declare( x ) \
 template< class Params > \
@@ -55,12 +55,6 @@ forward_declare( traversal )
 forward_declare( begin_introversal )
 forward_declare( end_introversal )
 #undef forward_declare
-
-template< class Params >
-struct chained_base_index;
-template< class Params, int = chained_base_index< Params >::value >
-class chained_base
-SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER;
 
 } // namespace private_
 

@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/range/private/adaptor/iter_at_helper.hpp
+ * sake/core/range/private/adaptor/base_iter_helper.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_RANGE_PRIVATE_ADAPTOR_AT_HELPER_HPP
-#define SAKE_CORE_RANGE_PRIVATE_ADAPTOR_AT_HELPER_HPP
+#ifndef SAKE_CORE_RANGE_PRIVATE_ADAPTOR_BASE_ITER_HELPER_HPP
+#define SAKE_CORE_RANGE_PRIVATE_ADAPTOR_BASE_ITER_HELPER_HPP
 
 #include <boost/mpl/not.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -35,7 +35,7 @@ inline typename boost::enable_if_c<
         I const &, typename sake::range_iterator<R>::type >::value,
     I const &
 >::type
-iter_at_helper(I const & i)
+base_iter_helper(I const & i)
 { return i; }
 
 template< class R, class D, class I, class P >
@@ -50,17 +50,17 @@ inline typename boost::enable_if_c<
     >::value,
     I const &
 >::type
-iter_at_helper(sake::iterator::adaptor<D,I,P> const & i)
+base_iter_helper(sake::iterator::adaptor<D,I,P> const & i)
 { return i.base(); }
 
 template< class R >
 inline sake::begin_tag
-iter_at_helper(sake::begin_tag)
+base_iter_helper(sake::begin_tag)
 { return sake::_begin; }
 
 template< class R >
 inline sake::end_tag
-iter_at_helper(sake::end_tag)
+base_iter_helper(sake::end_tag)
 { return sake::_end; }
 
 } // namespace adaptor_private
@@ -69,4 +69,4 @@ iter_at_helper(sake::end_tag)
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_RANGE_PRIVATE_ADAPTOR_AT_HELPER_HPP
+#endif // #ifndef SAKE_CORE_RANGE_PRIVATE_ADAPTOR_BASE_ITER_HELPER_HPP

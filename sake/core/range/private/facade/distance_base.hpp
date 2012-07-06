@@ -9,10 +9,12 @@
 #ifndef SAKE_CORE_RANGE_PRIVATE_FACADE_DISTANCE_BASE_HPP
 #define SAKE_CORE_RANGE_PRIVATE_FACADE_DISTANCE_BASE_HPP
 
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
 #include <sake/core/memberwise/swap.hpp>
 #include <sake/core/move/forward.hpp>
@@ -21,6 +23,7 @@
 #include <sake/core/range/facade_fwd.hpp>
 #include <sake/core/range/private/facade/size_base.hpp>
 #include <sake/core/range/private/facade/traits.hpp>
+#include <sake/core/utility/private/msc_adl_friend_workaround.hpp>
 
 namespace sake
 {
@@ -88,10 +91,17 @@ public:
 
     difference_type distance() const
     { return sake::range::core_access::distance(derived()); }
-
-    inline friend
-    difference_type range_distance(Derived const & this_)
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
+    inline friend difference_type
+    range_distance(sake::msc_adl_friend_workaround< Derived const > x)
+    { return x.value.distance(); }
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
+    template< class Derived_ >
+    inline friend typename boost::enable_if_c<
+       boost::is_same< Derived_, Derived >::value, difference_type >::type
+    range_distance(Derived_ const & this_)
     { return this_.distance(); }
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(

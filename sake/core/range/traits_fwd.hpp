@@ -18,7 +18,14 @@ template< class R >
 struct range_traits;
 
 template< class R, class Introversal = sake::null_introversal_tag >
-struct range_iterator;
+struct range_iterator
+{ typedef typename sake::range_traits<R>::template
+    iterator_with< Introversal >::type type; };
+
+template< class R, class Begin = void, class End = void >
+struct range_subrange
+{ typedef typename sake::range_traits<R>::template
+    subrange_with< Begin, End >::type type; };
 
 template< class R >
 struct range_value

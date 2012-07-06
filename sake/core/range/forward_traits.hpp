@@ -26,6 +26,8 @@
  *
  *     template< class Introversal >
  *     struct base_iterator_with { typedef ... type; };
+ *     template< class Begin, class End >
+ *     struct base_subrange_with { typedef ... type; };
  *
  *     static bool
  *     empty(R const & r);
@@ -40,6 +42,8 @@
  *
  *     template< class Introversal >
  *     struct iterator_with { typedef ... type; };
+ *     template< class Begin, class End >
+ *     struct subrange_with { typedef ... type; };
  *
  *     static iterator
  *     begin(R&& r);
@@ -57,6 +61,10 @@
  *     static typename iterator_with< Introversal >::type
  *     iter_at(R&& r, T x, Introversal);
  *
+ *     template< class Begin, class End >
+ *     static typename subrange_with< Begin, End >::type
+ *     sub(R&& r, Begin b, End e);
+ *
  *     template< class I >
  *     static reference
  *     at(R&& r, I i);
@@ -70,40 +78,43 @@
 #include <boost/static_assert.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/type_traits/add_reference.hpp>
+#include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
+#include <sake/core/iterator/adaptors/fwd.hpp>
 #include <sake/core/iterator/adaptors/move.hpp>
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/move/move.hpp>
-#include <sake/core/move/rv.hpp>
+#include <sake/core/range/adaptors/fwd.hpp>
+#include <sake/core/range/adaptors/move.hpp>
+#include <sake/core/range/forward_traits_fwd.hpp>
 #include <sake/core/range/has_value_ownership.hpp>
 #include <sake/core/range/traits.hpp>
+#include <sake/core/range/traits_fwd.hpp>
 
 namespace sake
 {
 
-template< class R >
-struct range_forward_traits;
-
-template< class R, class Introversal = sake::null_introversal_tag >
-struct range_forward_iterator
-    : sake::range_forward_traits<R>::template iterator_with< Introversal >
-{ };
-
-template< class R >
-struct range_forward_reference
-{ typedef typename sake::range_forward_traits<R>::reference type; };
-
-template< class R >
-struct range_forward_traversal
-{ typedef typename sake::range_forward_traits<R>::traversal type; };
-
 namespace range_forward_traits_private
 {
+
+template< class T >
+inline typename T::base_type const &
+base_helper(T const & x)
+{ return x.base(); }
+
+inline sake::begin_tag
+base_helper(sake::begin_tag)
+{ return sake::_begin; }
+
+inline sake::end_tag
+base_helper(sake::end_tag)
+{ return sake::_end; }
 
 template< class R >
 struct dispatch_bool
@@ -134,6 +145,7 @@ struct impl
 
 template< class R >
 struct dispatch< R, false >
+    : sake::range_traits<R>
 {
     typedef sake::range_traits<R> base_traits;
     typedef typename base_traits::iterator base_iterator;
@@ -144,31 +156,45 @@ struct dispatch< R, false >
     struct base_iterator_with
         : base_traits::template iterator_with< Introversal >
     { };
+    template< class Begin, class End >
+    struct base_subrange_with
+        : base_traits::template subrange_with< Begin, End >
+    { };
+
+private:
+    typedef typename boost_ext::add_reference<
+        typename boost_ext::add_rvalue_reference<R>::type >::type param_type;
+public:
 
     static base_iterator
-    begin(SAKE_RV_REF( R ) r)
+    begin(param_type r)
     { return base_traits::begin(SAKE_AS_LVALUE(r)); }
     template< class Introversal >
     static typename base_iterator_with< Introversal >::type
-    begin(SAKE_RV_REF( R ) r, Introversal)
+    begin(param_type r, Introversal)
     { return base_traits::begin(SAKE_AS_LVALUE(r), Introversal()); }
 
     static base_iterator
-    end(SAKE_RV_REF( R ) r)
+    end(param_type r)
     { return base_traits::end(SAKE_AS_LVALUE(r)); }
     template< class Introversal >
     static typename base_iterator_with< Introversal >::type
-    end(SAKE_RV_REF( R ) r, Introversal)
+    end(param_type r, Introversal)
     { return base_traits::end(SAKE_AS_LVALUE(r), Introversal()); }
 
     template< class T, class Introversal >
     static typename base_iterator_with< Introversal >::type
-    iter_at(SAKE_RV_REF( R ) r, T const & x, Introversal)
+    iter_at(param_type r, T const & x, Introversal)
     { return base_traits::iter_at(SAKE_AS_LVALUE(r), x, Introversal()); }
+
+    template< class Begin, class End >
+    static typename base_subrange_with< Begin, End >::type
+    sub(param_type r, Begin const & b, End const & e)
+    { return base_traits::sub(SAKE_AS_LVALUE(r), b, e); }
 
     template< class T >
     static base_reference
-    at(SAKE_RV_REF( R ) r, T const x)
+    at(param_type r, T const x)
     { return base_traits::at(SAKE_AS_LVALUE(r), x); }
 };
 
@@ -184,6 +210,10 @@ struct dispatch< R, true >
     struct base_iterator_with
         : base_traits::template iterator_with< Introversal >
     { };
+    template< class Begin, class End >
+    struct base_subrange_with
+        : base_traits::template subrange_with< Begin, End >
+    { };
 
     typedef sake::iterator::adaptors::move< base_iterator > iterator;
     typedef typename iterator::reference reference;
@@ -191,58 +221,65 @@ struct dispatch< R, true >
 
     template< class Introversal >
     struct iterator_with
-    {
-        typedef sake::iterator::adaptors::move<
-            typename base_iterator_with< Introversal >::type > type;
-    };
+    { typedef sake::iterator::adaptors::move<
+        typename base_iterator_with< Introversal >::type > type; };
+    template< class Begin, class End >
+    struct subrange_with
+    { typedef sake::range::adaptors::move<
+        typename base_subrange_with< Begin, End >::type > type; };
+
+private:
+    typedef typename boost_ext::add_reference<
+        typename boost_ext::add_rvalue_reference<R>::type >::type param_type;
+public:
 
     static iterator
-    begin(SAKE_RV_REF( R ) r)
+    begin(param_type r)
     { return iterator(base_traits::begin(SAKE_AS_LVALUE(r))); }
     template< class Introversal >
     static typename iterator_with< Introversal >::type
-    begin(SAKE_RV_REF( R ) r, Introversal)
+    begin(param_type r, Introversal)
     {
         return typename iterator_with< Introversal >::type(
             base_traits::begin(SAKE_AS_LVALUE(r), Introversal()));
     }
 
     static iterator
-    end(SAKE_RV_REF( R ) r)
+    end(param_type r)
     { return iterator(base_traits::end(SAKE_AS_LVALUE(r))); }
     template< class Introversal >
     static typename iterator_with< Introversal >::type
-    end(SAKE_RV_REF( R ) r, Introversal)
+    end(param_type r, Introversal)
     {
         return typename iterator_with< Introversal >::type(
             base_traits::end(SAKE_AS_LVALUE(r), Introversal()));
     }
 
-    template< class Introversal >
+    template< class T, class Introversal >
     static typename iterator_with< Introversal >::type
-    iter_at(SAKE_RV_REF( R ) r, sake::begin_tag, Introversal)
+    iter_at(param_type r, T const & x, Introversal)
     {
         return typename iterator_with< Introversal >::type(
-            base_traits::iter_at(SAKE_AS_LVALUE(r), sake::_begin, Introversal()));
+            base_traits::iter_at(SAKE_AS_LVALUE(r),
+            range_forward_traits_private::base_helper(x),
+            Introversal())
+        );
     }
-    template< class Introversal >
-    static typename iterator_with< Introversal >::type
-    iter_at(SAKE_RV_REF( R ) r, sake::end_tag, Introversal)
+
+    template< class Begin, class End >
+    static typename subrange_with< Begin, End >::type
+    sub(param_type r, Begin const & b, End const & e)
     {
-        return typename iterator_with< Introversal >::type(
-            base_traits::iter_at(SAKE_AS_LVALUE(r), sake::_end, Introversal()));
-    }
-    template< class I, class Introversal >
-    static typename iterator_with< Introversal >::type
-    iter_at(SAKE_RV_REF( R ) r, I const & i, Introversal)
-    {
-        return typename iterator_with< Introversal >::type(
-            base_traits::iter_at(SAKE_AS_LVALUE(r), i.base(), Introversal()));
+        return typename subrange_with< void, void >::type(base_traits::sub(
+            SAKE_AS_LVALUE(r),
+            range_forward_traits_private::base_helper(b),
+            range_forward_traits_private::base_helper(e)
+        ));
     }
 
     template< class T >
     static reference
-    at(SAKE_RV_REF( R ) r, T const x)
+    at(param_type r, T const x)
     { return sake::move(base_traits::at(SAKE_AS_LVALUE(r), x)); }
 };
 
@@ -258,6 +295,10 @@ struct impl< R& >
     template< class Introversal >
     struct base_iterator_with
         : base_traits::template iterator_with< Introversal >
+    { };
+    template< class Begin, class End >
+    struct base_subrange_with
+        : base_traits::template subrange_with< Begin, End >
     { };
 };
 

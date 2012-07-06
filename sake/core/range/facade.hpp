@@ -16,11 +16,14 @@
  * - range::keyword::chained_base
  *
  * Implementations to be defined in Derived:
- * - template< class This, class Introversal >
- *     struct derived_iterator_with_of
+ * - struct derived_iterator_with_of< This, Introversal >
  *     { typedef ... type; };
  * - static derived_iter_at(This& this_, T x, Introversal)
- *     -> iterator_with_of< This, Introversal >::type [defaulted]
+ *     -> iterator_with_of< This, Introversal >::type
+ * - struct derived_subrange_of< This, Begin, End >
+ *     { typedef ... type; };
+ * - static derived_sub(This& this_, Begin b, End e)
+ *     -> subrange_of< This, Begin, End >::type
  * - static derived_at(This& this_, T x)
  *     -> reference_of< This >::type [defaulted]
  * - derived_empty() const -> bool [defaulted]
@@ -35,14 +38,15 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/introversal_adaptor_relax.hpp>
 #include <sake/core/math/prior.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
@@ -51,17 +55,18 @@
 #include <sake/core/move/movable.hpp>
 #include <sake/core/range/core_access.hpp>
 #include <sake/core/range/debug.hpp>
+#include <sake/core/range/default_impl/distance.hpp>
+#include <sake/core/range/default_impl/empty.hpp>
+#include <sake/core/range/default_impl/size.hpp>
 #include <sake/core/range/facade_fwd.hpp>
 #include <sake/core/range/private/facade/at_enable.hpp>
-#include <sake/core/range/private/facade/distance.hpp>
-#include <sake/core/range/private/facade/empty.hpp>
 #include <sake/core/range/private/facade/explicit_constructor_enable.hpp>
 #include <sake/core/range/private/facade/front_back_base.hpp>
 #include <sake/core/range/private/facade/iter_at_enable.hpp>
-#include <sake/core/range/private/facade/iter_at_helper.hpp>
-#include <sake/core/range/private/facade/size.hpp>
+#include <sake/core/range/private/facade/sub_enable.hpp>
 #include <sake/core/range/private/facade/traits.hpp>
 #include <sake/core/utility/assert.hpp>
+#include <sake/core/utility/private/msc_adl_friend_workaround.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
@@ -116,16 +121,12 @@ public:
 
     template< class Introversal >
     struct iterator_with
-    {
-        typedef typename sake::range::core_access::
-            iterator_with< Derived, Introversal >::type type;
-    };
+    { typedef typename sake::range::core_access::
+        iterator_with< Derived, Introversal >::type type; };
     template< class Introversal >
     struct const_iterator_with
-    {
-        typedef typename sake::range::core_access::
-            iterator_with< Derived const, Introversal >::type type;
-    };
+    { typedef typename sake::range::core_access::
+        iterator_with< Derived const, Introversal >::type type; };
 
     template< class T >
     typename private_::iter_at_enabler< Params, T, iterator >::type
@@ -146,6 +147,26 @@ public:
         Params, T, const_iterator_with< Introversal > >::type
     iter_at(T const & x, Introversal) const
     { return sake::range::core_access::iter_at(derived(), x, Introversal()); }
+
+    template< class Begin, class End >
+    struct subrange_with
+    { typedef typename sake::range::core_access::
+        subrange_with< Derived, Begin, End >::type type; };
+    template< class Begin, class End >
+    struct const_subrange_with
+    { typedef typename sake::range::core_access::
+        subrange_with< Derived, Begin, End >::type type; };
+
+    template< class Begin, class End >
+    typename private_::sub_lazy_enabler<
+        Params, Begin, End, subrange_with< Begin, End > >::type
+    sub(Begin const & b, End const & e)
+    { return sake::range::core_access::sub(derived(), b, e); }
+    template< class Begin, class End >
+    typename private_::sub_lazy_enabler<
+        Params, Begin, End, const_subrange_with< Begin, End > >::type
+    sub(Begin const & b, End const & e) const
+    { return sake::range::core_access::sub(derived(), b, e); }
 
     template< class T >
     typename private_::at_enabler< Params, T, reference >::type
@@ -172,9 +193,17 @@ public:
 
     bool empty() const
     { return sake::range::core_access::empty(derived()); }
-    inline friend
-    bool range_empty(Derived const & this_)
+#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
+    inline friend bool
+    range_empty(sake::msc_adl_friend_workaround< Derived const > x)
+    { return x.value.empty(); }
+#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
+    template< class Derived_ >
+    inline friend typename boost::enable_if_c<
+        boost::is_same< Derived_, Derived >::value, bool >::type
+    range_empty(Derived_ const & this_)
     { return this_.empty(); }
+#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
 protected:
     template< class CDerived >
@@ -190,6 +219,13 @@ protected:
     template< class CDerived, class Introversal >
     struct iterator_with_of< CDerived const, Introversal >
     { typedef typename const_iterator_with< Introversal >::type type; };
+
+    template< class CDerived, class Begin, class End >
+    struct subrange_with_of
+    { typedef typename subrange_with< Begin, End >::type type; };
+    template< class CDerived, class Begin, class End >
+    struct subrange_with_of< CDerived const, Begin, End >
+    { typedef typename const_subrange_with< Begin, End >::type type; };
 
     template< class CDerived >
     struct reference_of
@@ -238,25 +274,6 @@ protected:
     explicit facade(sake::emplacer< V ( ) >)
     { }
 
-    template< class CDerived, class Introversal >
-    struct facade_iterator_with_of
-        : sake::iterator::introversal_adaptor_relax<
-              typename iterator_of< CDerived >::type,
-              Introversal
-          >
-    { };
-
-    template< class CDerived, class T, class Introversal >
-    static typename facade_iterator_with_of< CDerived, Introversal >::type
-    facade_iter_at(CDerived& this_, T const & x, Introversal)
-    {
-        BOOST_STATIC_ASSERT((!boost::is_same<
-            Introversal, sake::null_introversal_tag >::value));
-        typedef typename facade_iterator_with_of<
-            CDerived, Introversal >::type result_type;
-        return private_::iter_at_helper< result_type >(this_, x);
-    }
-
     template< class CDerived >
     static typename reference_of< CDerived >::type
     facade_at(CDerived& this_, sake::begin_tag)
@@ -293,26 +310,13 @@ protected:
     }
 
     bool facade_empty() const
-    { return private_::empty(derived()); }
+    { return sake::range::default_impl::aux::empty(derived()); }
     difference_type facade_distance() const
-    { return private_::distance(derived()); }
+    { return sake::range::default_impl::aux::distance(derived()); }
     size_type facade_size() const
-    { return private_::size(derived()); }
+    { return sake::range::default_impl::aux::size(derived()); }
 
     friend class sake::range::core_access;
-
-    template< class CDerived, class Introversal >
-    struct derived_iterator_with_of
-        : facade_iterator_with_of< CDerived, Introversal >
-    { };
-
-    template< class CDerived, class T, class Introversal >
-    static typename boost::lazy_disable_if_c<
-        boost::is_same< Introversal, sake::null_introversal_tag >::value,
-        facade_iterator_with_of< CDerived, Introversal >
-    >::type
-    derived_iter_at(CDerived& this_, T const & x, Introversal)
-    { return facade_iter_at(this_, x, Introversal()); }
 
     template< class CDerived, class T >
     static typename reference_of< CDerived >::type

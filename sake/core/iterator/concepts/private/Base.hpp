@@ -19,6 +19,7 @@
 #include <sake/core/concepts/Incrementable.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
 namespace sake

@@ -58,8 +58,7 @@ struct impl
 
     typedef sake::range::adaptors::transform<
         typename base_traits::outer_range,
-        sake::range::adapt::functional::transform<
-            sake::range::adapt::functional::transform< function_type > >
+        sake::range::adapt::functional::transform< function_type >
     > outer_range;
 
     static outer_range
@@ -67,7 +66,7 @@ struct impl
     {
         return outer_range(
             base_traits::outer(r.base()),
-            sake::make_emplacer(sake::make_emplacer(r.function()))
+            sake::make_emplacer(r.function())
         );
     }
 

@@ -21,6 +21,7 @@
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/concepts/private/Base.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 

@@ -13,6 +13,7 @@
 #ifndef SAKE_CORE_ITERATOR_DISTANCE_HPP
 #define SAKE_CORE_ITERATOR_DISTANCE_HPP
 
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_void.hpp>
@@ -33,6 +34,7 @@
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/multidim_traits.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/range/distance.hpp>
 #include <sake/core/range/distance_fwd.hpp>
 #include <sake/core/range/traits.hpp>
@@ -165,7 +167,11 @@ struct dispatch_index< sake::begin_tag, I >
                 typename sake::iterator_introversal<I>::type,
                 sake::begin_access_introversal_tag
             >,
-            boost_ext::mpl::or2<
+            boost_ext::mpl::or3<
+                boost::mpl::not_< boost_ext::is_convertible<
+                    typename sake::iterator_introversal<I>::type,
+                    boost::bidirectional_traversal_tag
+                > >,
                 has_operator_minus_helper<
                     I,
                     sake::has_operator_minus<
@@ -288,9 +294,7 @@ struct dispatch< I0, I1, 1 >
         typename traits1::outer_iterator j1 = traits1::outer(i1);
         if(j0 == j1)
             return sake::iterator::distance(
-                traits0::inner(i0, sake::null_introversal_tag()),
-                traits1::inner(i1, sake::null_introversal_tag())
-            );
+                traits0::inner(i0), traits1::inner(i1));
         type result = sake::iterator::distance(
             traits0::inner(i0, sake::end_access_introversal_tag()),
             sake::_end
@@ -300,7 +304,7 @@ struct dispatch< I0, I1, 1 >
         result += sake::iterator::distance(
             sake::range_traits< typename sake::iterator_value<
                 typename traits0::outer_iterator >::type const >::begin(*j0),
-            traits1::inner(i1, sake::null_introversal_tag())
+            traits1::inner(i1)
         );
         return result;
     }

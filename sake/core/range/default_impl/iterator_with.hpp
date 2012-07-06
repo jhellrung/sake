@@ -6,13 +6,17 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_RANGE_DEFAULT_IMPL_ITERATOR_WITH_INTROVERSAL_HPP
-#define SAKE_CORE_RANGE_DEFAULT_IMPL_ITERATOR_WITH_INTROVERSAL_HPP
+#ifndef SAKE_CORE_RANGE_DEFAULT_IMPL_ITERATOR_WITH_HPP
+#define SAKE_CORE_RANGE_DEFAULT_IMPL_ITERATOR_WITH_HPP
 
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
+
+#include <sake/core/iterator/adapt_introversal.hpp>
 #include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/introversal_adaptor_relax.hpp>
+#include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/introspection/has_template.hpp>
-#include <sake/core/range/traits_fwd.hpp>
 
 namespace sake
 {
@@ -36,10 +40,16 @@ SAKE_INTROSPECTION_DEFINE_HAS_TEMPLATE_PARAMS(
 namespace iterator_with_private
 {
 
-template<
-    class R,
-    bool = has_template_iterator_with<R>::value
->
+template< class R >
+struct dispatch_bool
+    : sake::range::default_impl::has_template_iterator_with<R>
+{ };
+template< class R >
+struct dispatch_bool< R const >
+    : sake::range::default_impl::has_template_const_iterator_with<R>
+{ };
+
+template< class R, bool = dispatch_bool<R>::value >
 struct dispatch;
 
 template< class R >
@@ -47,8 +57,14 @@ struct dispatch< R, false >
 {
     template< class Iterator, class Introversal >
     struct apply
-        : sake::iterator::introversal_adaptor_relax< Iterator, Introversal >
-    { };
+    {
+        BOOST_STATIC_ASSERT((boost::is_same<
+            typename sake::iterator_introversal< Iterator >::type,
+            sake::null_introversal_tag
+        >::value));
+        typedef typename sake::iterator::adapt_introversal<
+            Iterator, Introversal >::type type;
+    };
 };
 
 template< class R >
@@ -60,23 +76,13 @@ struct dispatch< R, true >
     { };
 };
 
-template<
-    class R,
-    bool = has_template_const_iterator_with<R>::value
->
-struct dispatch_const;
+template< class R >
+struct dispatch< R const, false >
+    : dispatch< R, false >
+{ };
 
 template< class R >
-struct dispatch_const< R, false >
-{
-    template< class Iterator, class Introversal >
-    struct apply
-        : sake::iterator::introversal_adaptor_relax< Iterator, Introversal >
-    { };
-};
-
-template< class R >
-struct dispatch_const< R, true >
+struct dispatch< R const, true >
 {
     template< class Iterator, class Introversal >
     struct apply
@@ -92,16 +98,10 @@ struct iterator_with
           apply< Iterator, Introversal >
 { };
 
-template< class R, class Iterator, class Introversal >
-struct iterator_with< R const, Iterator, Introversal >
-    : iterator_with_private::dispatch_const<R>::template
-          apply< Iterator, Introversal >
-{ };
-
 } // namespace default_impl
 
 } // namespace range
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_RANGE_DEFAULT_IMPL_ITERATOR_WITH_INTROVERSAL_HPP
+#endif // #ifndef SAKE_CORE_RANGE_DEFAULT_IMPL_ITERATOR_WITH_HPP

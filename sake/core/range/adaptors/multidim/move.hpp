@@ -17,7 +17,6 @@
 
 #include <sake/core/range/adapt/fwd.hpp>
 #include <sake/core/range/adapt/move.hpp>
-#include <sake/core/range/adapt/transform.hpp>
 #include <sake/core/range/adaptors/fwd.hpp>
 #include <sake/core/range/adaptors/transform.hpp>
 #include <sake/core/range/multidim_traits_fwd.hpp>
@@ -56,8 +55,7 @@ struct impl
 
     typedef sake::range::adaptors::transform<
         typename base_traits::outer_range,
-        sake::range::adapt::functional::transform<
-           sake::range::adapt::functional::move >
+        sake::range::adapt::functional::move
     > outer_range;
 
     static outer_range

@@ -31,6 +31,9 @@ namespace concepts
 namespace private_
 {
 
+template< class R >
+struct Base;
+
 template< class Traversal >
 struct TraversalBase_index;
 

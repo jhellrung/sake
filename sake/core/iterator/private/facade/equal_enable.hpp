@@ -15,7 +15,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/private/is_interoperable.hpp>
+#include <sake/core/iterator/private/is_semi_convertible_relax.hpp>
 
 namespace sake
 {
@@ -40,7 +40,7 @@ struct equal_enable
               typename D1::iterator_traversal,
               boost::single_pass_traversal_tag
           >,
-          sake::iterator::private_::is_interoperable< D0, D1 >
+          sake::iterator::private_::is_semi_convertible_relax< D0, D1 >
       >
 { };
 

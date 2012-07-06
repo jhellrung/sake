@@ -39,7 +39,9 @@ struct iterator_introversal
 };
 
 template< class I, class Introversal = sake::null_introversal_tag >
-struct iterator_relax;
+struct iterator_relax
+{ typedef typename sake::iterator_traits<I>::template
+    relax< Introversal >::type type; };
 
 namespace extension
 {

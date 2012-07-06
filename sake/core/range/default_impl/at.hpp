@@ -10,25 +10,19 @@
 #define SAKE_CORE_RANGE_DEFAULT_IMPL_AT_HPP
 
 #include <boost/mpl/placeholders.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
 
-#include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/mpl/or.hpp>
-#include <sake/boost_ext/type_traits/is_convertible.hpp>
+#include <sake/boost_ext/mpl/if.hpp>
 
 #include <sake/core/introspection/has_operator_bracket.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
-#include <sake/core/iterator/categories.hpp>
 #include <sake/core/math/prior.hpp>
 #include <sake/core/range/traits.hpp>
 #include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
-#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake_range_at_private
 {
@@ -132,15 +126,15 @@ template< class R >
 inline typename sake::range_reference<R>::type
 dispatch(R& r, sake::begin_tag, sake::int_tag<0>)
 {
-    typedef typename sake::range_reference<R>::type reference;
+    typedef typename sake::range_reference<R>::type result_type;
     typedef sake::is_convertible_wnrbt<
-        boost::mpl::_1, reference > is_convertible_wnrbt_;
+        boost::mpl::_1, result_type > is_convertible_wnrbt_;
     typedef typename boost_ext::mpl::
          if_< at_private::is_callable_mem_fun_front<
-                  R&, reference ( ), is_convertible_wnrbt_ >,
+                  R&, result_type ( ), is_convertible_wnrbt_ >,
               sake::int_tag<2> >::type::template
     else_if < ::sake_range_at_private::is_callable_front<
-                  reference ( R& ), is_convertible_wnrbt_ >,
+                  result_type ( R& ), is_convertible_wnrbt_ >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
     return dispatch_front(r, int_tag_());
@@ -173,15 +167,15 @@ template< class R >
 inline typename sake::range_reference<R>::type
 dispatch(R& r, sake::end_tag, sake::int_tag<0>)
 {
-    typedef typename sake::range_reference<R>::type reference;
+    typedef typename sake::range_reference<R>::type result_type;
     typedef sake::is_convertible_wnrbt<
-        boost::mpl::_1, reference > is_convertible_wnrbt_;
+        boost::mpl::_1, result_type > is_convertible_wnrbt_;
     typedef typename boost_ext::mpl::
          if_< at_private::is_callable_mem_fun_back<
-                  R&, reference ( ), is_convertible_wnrbt_ >,
+                  R&, result_type ( ), is_convertible_wnrbt_ >,
               sake::int_tag<2> >::type::template
     else_if < ::sake_range_at_private::is_callable_back<
-                  reference ( R& ), is_convertible_wnrbt_ >,
+                  result_type ( R& ), is_convertible_wnrbt_ >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
     return dispatch_back(r, int_tag_());
@@ -193,30 +187,18 @@ template< class R, class T >
 inline typename sake::range_reference<R>::type
 at(R& r, T const x)
 {
-    typedef sake::range_traits<R> traits_;
-    BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-        boost::is_same< T, sake::begin_tag >,
-        boost::is_same< T, sake::end_tag >,
-        boost_ext::mpl::and2<
-            boost_ext::is_convertible<
-                typename traits_::traversal,
-                boost::random_access_traversal_tag
-            >,
-            boost_ext::is_convertible< T, typename traits_::size_type >
-        >
-    >::value));
-    SAKE_USING_TYPEDEF( typename traits_, reference );
+    typedef typename sake::range_reference<R>::type result_type;
     typedef sake::is_convertible_wnrbt<
-        boost::mpl::_1, reference > is_convertible_wnrbt_;
+        boost::mpl::_1, result_type > is_convertible_wnrbt_;
     typedef typename boost_ext::mpl::
          if_< sake::has_operator_bracket<
-                  R&, reference ( T ), is_convertible_wnrbt_ >,
+                  R&, result_type ( T ), is_convertible_wnrbt_ >,
               sake::int_tag<3> >::type::template
     else_if < at_private::is_callable_mem_fun<
-                  R&, reference ( T ), is_convertible_wnrbt_ >,
+                  R&, result_type ( T ), is_convertible_wnrbt_ >,
               sake::int_tag<2> >::type::template
     else_if < ::sake_range_at_private::is_callable<
-                  reference ( R&, T ), is_convertible_wnrbt_ >,
+                  result_type ( R&, T ), is_convertible_wnrbt_ >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
     return at_private::dispatch(r, x, int_tag_());

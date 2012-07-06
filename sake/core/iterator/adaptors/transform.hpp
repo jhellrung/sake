@@ -31,7 +31,6 @@
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
-#include <sake/boost_ext/type_traits/is_convertible_wndp2bp.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
@@ -43,9 +42,12 @@
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/concepts/Iterator.hpp>
 #include <sake/core/iterator/core_access.hpp>
+#include <sake/core/iterator/is_convertible.hpp>
 #include <sake/core/iterator/keyword.hpp>
 #include <sake/core/iterator/multidim_traits_fwd.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/memberwise/mem_fun.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/range/adapt/fwd.hpp>
 #include <sake/core/range/adapt/transform.hpp>
@@ -86,6 +88,18 @@ class transform
     SAKE_USING_TYPEDEF( typename traits_, adaptor_ );
 public:
     SAKE_USING_TYPEDEF( typename adaptor_, reference );
+
+    SAKE_MEMBERWISE_MEM_FUN(
+        typename transform,
+        ( default_constructor )( swap ),
+        (( adaptor_ ))
+    )
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( adaptor_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
+    )
 
 private:
     template< class T0 >
@@ -153,7 +167,7 @@ private:
     template< class J, class G >
     struct converting_constructor_enable
         : boost_ext::mpl::and2<
-              boost_ext::is_convertible_wndp2bp<J,I>,
+              sake::iterator::is_convertible<J,I>,
               sake::is_convertible_wnrbt<
                   typename boost_ext::add_reference<G>::type, F >
           >

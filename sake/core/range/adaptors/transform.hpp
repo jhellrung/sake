@@ -31,6 +31,7 @@
 #include <sake/core/range/adaptor.hpp>
 #include <sake/core/range/adaptors/fwd.hpp>
 #include <sake/core/range/adaptors/multidim/transform.hpp>
+#include <sake/core/range/concepts/fwd.hpp>
 #include <sake/core/range/concepts/Range.hpp>
 #include <sake/core/range/core_access.hpp>
 #include <sake/core/range/keyword.hpp>
@@ -63,6 +64,9 @@ class transform
     typedef transform_private::traits< R, F, Params > traits_;
     SAKE_USING_TYPEDEF( typename traits_, adaptor_ );
 public:
+    SAKE_USING_TYPEDEF( typename adaptor_, difference_type );
+    SAKE_USING_TYPEDEF( typename adaptor_, size_type );
+
     SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE(
         typename transform,
         (( adaptor_ ))
@@ -109,7 +113,7 @@ private:
         typedef sake::iterator::adaptors::transform<
             typename adaptor_::template
                 base_iterator_with_of< This, Introversal >::type,
-            typename traits_::iterator_function_type,
+            typename traits_::bvo_function_type,
             Params
         > type;
     };
@@ -126,10 +130,40 @@ private:
             );
     }
 
+    template< class This, class Begin, class End >
+    struct derived_subrange_with_of
+    {
+        typedef sake::range::adaptors::transform<
+            typename adaptor_::template
+                base_subrange_with_of< This, Begin, End >::type,
+            typename traits_::bvo_function_type,
+            Params
+        > type;
+    };
+
+    template< class This, class Begin, class End >
+    static typename adaptor_::template
+        subrange_with_of< This, Begin, End >::type
+    derived_sub(This& this_, Begin const & b, End const & e)
+    {
+        return typename adaptor_::template
+            subrange_with_of< This, Begin, End >::type(
+                adaptor_::base_sub(this_, b, e),
+                this_.function()
+            );
+    }
+
     template< class This, class T >
     static typename adaptor_::template reference_of< This >::type
     derived_at(This& this_, T const x)
     { return this_.function()(adaptor_::base_at(this_, x)); }
+
+    bool derived_empty() const
+    { return adaptor_::base_empty(); }
+    difference_type derived_distance() const
+    { return adaptor_::base_distance(); }
+    size_type derived_size() const
+    { return adaptor_::base_size(); }
 };
 
 namespace transform_private
@@ -157,11 +191,11 @@ struct traits
     typedef typename boost::mpl::if_c<
         sake::is_by_value_optimal<F>::value,
         F, typename boost_ext::add_reference_add_const<F>::type
-    >::type iterator_function_type;
+    >::type bvo_function_type;
     typedef sake::iterator::adaptors::transform<
-        base_iterator, iterator_function_type, Params > iterator;
+        base_iterator, bvo_function_type, Params > iterator;
     typedef sake::iterator::adaptors::transform<
-        base_const_iterator, iterator_function_type, Params > const_iterator;
+        base_const_iterator, bvo_function_type, Params > const_iterator;
     typedef sake::range::adaptor<
         sake::range::adaptors::transform< R, F, Params >, R,
         boost::mpl::map3<

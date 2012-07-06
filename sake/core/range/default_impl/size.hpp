@@ -31,7 +31,7 @@ namespace sake_range_size_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
 template< class R >
-inline typename ::sake::range_size<R>::type
+inline typename ::sake::range_size< R const >::type
 adl(R const & r)
 { return range_calculate_size(r); }
 
@@ -46,6 +46,15 @@ namespace range
 namespace default_impl
 {
 
+namespace aux
+{
+
+template< class R >
+inline typename sake::range_size< R const >::type
+size(R const & r);
+
+} // namespace aux
+
 namespace size_private
 {
 
@@ -55,25 +64,30 @@ namespace size_private
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
 template< class R >
-inline typename sake::range_size<R>::type
-dispatch(R const & /*r*/, sake::int_tag<3>)
-{ return sake::range_static_size<R>::value; }
+inline typename sake::range_size< R const >::type
+dispatch(R const & /*r*/, sake::int_tag<4>)
+{ return sake::range_static_size< R const >::value; }
 
 template< class R >
-inline typename sake::range_size<R>::type
-dispatch(R const & r, sake::int_tag<2>)
+inline typename sake::range_size< R const >::type
+dispatch(R const & r, sake::int_tag<3>)
 { return r.size(); }
 
 template< class R >
-inline typename sake::range_size<R>::type
-dispatch(R const & r, sake::int_tag<1>)
+inline typename sake::range_size< R const >::type
+dispatch(R const & r, sake::int_tag<2>)
 { return ::sake_range_size_private::adl(r); }
 
 template< class R >
-inline typename sake::range_size<R>::type
+inline typename sake::range_size< R const >::type
+dispatch(R const & r, sake::int_tag<1>)
+{ return sake::range::default_impl::aux::size(r); }
+
+template< class R >
+inline typename sake::range_size< R const >::type
 dispatch(R const & r, sake::int_tag<0>)
 {
-    typedef sake::range_traits<R> traits_;
+    typedef sake::range_traits< R const > traits_;
     return static_cast< typename traits_::size_type >(
         traits_::end(r) - traits_::begin(r));
 }
@@ -81,26 +95,46 @@ dispatch(R const & r, sake::int_tag<0>)
 } // namespace size_private
 
 template< class R >
-inline typename sake::range_size<R>::type
+inline typename sake::range_size< R const >::type
 size(R const & r)
 {
-    typedef typename sake::range_size<R>::type size_type;
+    typedef typename sake::range_size< R const >::type result_type;
     typedef typename boost_ext::mpl::
-         if_< sake::range_has_static_size<R>,
+         if_< sake::range_has_static_size< R const >,
+              sake::int_tag<4> >::type::template
+    else_if < size_private::is_callable_mem_fun<
+                  R const &, result_type ( ) >,
               sake::int_tag<3> >::type::template
-    else_if < size_private::is_callable_mem_fun< R const &, size_type ( ) >,
+    else_if < ::sake_range_size_private::is_callable<
+                  result_type ( R const & ) >,
               sake::int_tag<2> >::type::template
-    else_if < ::sake_range_size_private::is_callable< size_type ( R const & ) >,
-              sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<1> >::type int_tag_;
+    return size_private::dispatch(r, int_tag_());
+}
+
+namespace aux
+{
+
+template< class R >
+inline typename sake::range_size< R const >::type
+size(R const & r)
+{
+    typedef typename boost_ext::mpl::
+         if_< sake::range_has_static_size< R const >,
+              sake::int_tag<4> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
     return size_private::dispatch(r, int_tag_());
 }
 
+} // namespace aux
+
 template< class R, class Size >
 struct has_intrinsic_size
     : boost_ext::mpl::or2<
-          size_private::is_callable_mem_fun< R const &, Size ( ) >,
-          ::sake_range_size_private::is_callable< Size ( R const & ) >
+          size_private::is_callable_mem_fun<
+              R const &, Size ( ) >,
+          ::sake_range_size_private::is_callable<
+              Size ( R const & ) >
       >
 { };
 

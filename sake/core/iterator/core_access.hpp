@@ -15,7 +15,6 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include <sake/boost_ext/mpl/or.hpp>
-#include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
@@ -23,6 +22,7 @@
 #include <sake/core/iterator/private/facade/compare_enable.hpp>
 #include <sake/core/iterator/private/facade/difference_enable.hpp>
 #include <sake/core/iterator/private/facade/equal_enable.hpp>
+#include <sake/core/iterator/private/is_convertible_relax.hpp>
 #include <sake/core/math/sign_t_fwd.hpp>
 
 namespace sake
@@ -49,6 +49,8 @@ template< class D0, class P0, class D1, class P1 > \
 
     template< class, class >
     friend class sake::iterator::facade_adl::facade;
+    template< class, class >
+    friend struct sake::iterator::facade_adl::private_::common_base;
 #define declare_friend( x ) \
     template< class, class, int > \
     friend class sake::iterator::facade_adl::private_::x ## _base;
@@ -72,12 +74,12 @@ template< class D0, class P0, class D1, class P1 > \
     // SinglePass
     template< class I, class J >
     static typename boost::enable_if_c<
-        boost_ext::is_convertible<J,I>::value, bool >::type
+        sake::iterator::private_::is_convertible_relax<J,I>::value, bool >::type
     equal(I const & i, J const & j)
     { return i.derived_equal(j); }
     template< class I, class J >
     static typename boost::disable_if_c<
-        boost_ext::is_convertible<J,I>::value, bool >::type
+        sake::iterator::private_::is_convertible_relax<J,I>::value, bool >::type
     equal(I const & i, J const & j)
     { return j.derived_equal(i); }
 
@@ -99,8 +101,9 @@ template< class D0, class P0, class D1, class P1 > \
 
     template< class I0, class I1 >
     static typename boost::lazy_enable_if_c<
-        boost_ext::is_convertible< I1, I0 >::value,
-        sake::iterator::private_::common_difference_type< I0, I1 > >::type
+        sake::iterator::private_::is_convertible_relax< I1, I0 >::value,
+        sake::iterator::private_::common_difference_type< I0, I1 >
+    >::type
     difference(I0 const & i0, I1 const & i1)
     { return i0.derived_difference(i1); }
     template< class I0, class I1 >
@@ -108,31 +111,40 @@ template< class D0, class P0, class D1, class P1 > \
         boost_ext::mpl::or3<
             boost::is_same< I1, sake::begin_tag >,
             boost::is_same< I1, sake::end_tag >,
-            boost_ext::is_convertible< I1, I0 >
+            sake::iterator::private_::is_convertible_relax< I1, I0 >
         >::value,
-        sake::iterator::private_::common_difference_type< I1, I0 > >::type
+        sake::iterator::private_::common_difference_type< I1, I0 >
+    >::type
     difference(I0 const & i0, I1 const & i1)
     { return -i1.derived_difference(i0); }
 
     template< class I0, class I1 >
     static typename boost::enable_if_c<
-        boost_ext::is_convertible< I1, I0 >::value, bool >::type
+        sake::iterator::private_::is_convertible_relax< I1, I0 >::value,
+        bool
+    >::type
     less(I0 const & i0, I1 const & i1)
     { return i0.derived_less(i1); }
     template< class I0, class I1 >
     static typename boost::disable_if_c<
-        boost_ext::is_convertible< I1, I0 >::value, bool >::type
+        sake::iterator::private_::is_convertible_relax< I1, I0 >::value,
+        bool
+    >::type
     less(I0 const & i0, I1 const & i1)
     { return !i1.derived_less_equal(i0); }
 
     template< class I0, class I1 >
     static typename boost::enable_if_c<
-        boost_ext::is_convertible< I1, I0 >::value, sake::sign_t >::type
+        sake::iterator::private_::is_convertible_relax< I1, I0 >::value,
+        sake::sign_t
+    >::type
     cmp(I0 const & i0, I1 const & i1)
     { return i0.derived_cmp(i1); }
     template< class I0, class I1 >
     static typename boost::disable_if_c<
-        boost_ext::is_convertible< I1, I0 >::value, sake::sign_t >::type
+        sake::iterator::private_::is_convertible_relax< I1, I0 >::value,
+        sake::sign_t
+    >::type
     cmp(I0 const & i0, I1 const & i1)
     { return -i1.derived_cmp(i0); }
 

@@ -18,7 +18,7 @@
 
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/private/is_interoperable.hpp>
+#include <sake/core/iterator/private/is_convertible_relax.hpp>
 
 namespace sake
 {
@@ -49,7 +49,7 @@ struct at_enable
                   sake::end_access_introversal_tag
               >
           >,
-          sake::iterator::private_::is_interoperable<D,T>
+          sake::iterator::private_::is_convertible_relax<T,D>
       >
 { };
 

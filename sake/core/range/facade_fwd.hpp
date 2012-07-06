@@ -41,11 +41,6 @@ forward_declare( size )
 forward_declare( subscript )
 #undef forward_declare
 
-template< class Params >
-struct chained_base_index;
-template< class Params, int = chained_base_index< Params >::value >
-struct chained_base;
-
 } // namespace private_
 
 } // namespace facade_adl

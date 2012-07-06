@@ -33,7 +33,10 @@ SAKE_INTROSPECTION_DEFINE_HAS_TEMPLATE_PARAMS(
 namespace relax_private
 {
 
-template< class I, bool = has_template_relax<I>::value >
+template<
+    class I,
+    bool = sake::iterator::default_impl::has_template_relax<I>::value
+>
 struct dispatch;
 
 template< class I >
@@ -57,12 +60,8 @@ struct dispatch< I, true >
 
 template< class I, class Introversal >
 struct relax
-{
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        Introversal, sake::null_introversal_tag >::value));
-    typedef typename relax_private::dispatch<I>::template
-        apply< Introversal >::type type;
-};
+{ typedef typename relax_private::dispatch<I>::template
+    apply< Introversal >::type type; };
 
 } // namespace default_impl
 

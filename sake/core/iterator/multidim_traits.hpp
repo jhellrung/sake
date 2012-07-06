@@ -50,6 +50,7 @@
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/introspection/has_type.hpp>
+#include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/multidim_traits_fwd.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
@@ -60,7 +61,11 @@
 namespace sake
 {
 
-template< class I, class Introversal, class Outer /*= void*/ >
+template<
+    class I,
+    class Introversal /*= sake::null_introversal_tag*/,
+    class Outer /*= void*/
+>
 struct iterator_multidim_inner
     : sake::range_iterator<
           typename boost_ext::remove_reference<
@@ -76,9 +81,54 @@ struct iterator_multidim_inner< I, Introversal, void >
       >
 { };
 
+namespace iterator_multidim_traits_private
+{
+
+template<
+    class I,
+    bool = sake::extension::iterator_multidim_traits<I>::enable_tag::value
+>
+struct dispatch;
+
+template< class I >
+struct dispatch< I, false >
+    : sake::extension::iterator_multidim_traits<I>
+{ };
+
+template< class I >
+struct dispatch< I, true >
+    : sake::extension::iterator_multidim_traits<I>
+{
+private:
+    typedef sake::extension::iterator_multidim_traits<I> extension_traits_;
+public:
+    SAKE_USING_TYPEDEF( typename extension_traits_, outer_iterator );
+
+    static typename sake::iterator_multidim_inner<
+        I, sake::null_introversal_tag, outer_iterator >::type
+    inner(I const & i)
+    { return inner(i, sake::null_introversal_tag()); }
+    template< class Introversal >
+    static typename sake::iterator_multidim_inner<
+        I, Introversal, outer_iterator >::type
+    inner(I const & i, Introversal)
+    { return extension_traits_::inner(i, Introversal()); }
+
+    template< class Outer, class Inner >
+    static typename sake::iterator_relax<I>::type
+    at(I const & i, Outer const & j, Inner const & k)
+    { return at(i, j, k, sake::null_introversal_tag()); }
+    template< class Outer, class Inner, class Introversal >
+    static typename sake::iterator_relax< I, Introversal >::type
+    at(I const & i, Outer const & j, Inner const & k, Introversal)
+    { return extension_traits_::at(i, j, k, Introversal()); }
+};
+
+} // namespace iterator_multidim_traits_private
+
 template< class I >
 struct iterator_multidim_traits
-    : sake::extension::iterator_multidim_traits<I>
+    : iterator_multidim_traits_private::dispatch<I>
 { };
 
 namespace extension

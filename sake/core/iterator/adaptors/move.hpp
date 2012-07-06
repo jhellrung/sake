@@ -22,7 +22,6 @@
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/is_convertible_wndp2bp.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
@@ -34,9 +33,12 @@
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/concepts/Iterator.hpp>
 #include <sake/core/iterator/core_access.hpp>
+#include <sake/core/iterator/is_convertible.hpp>
 #include <sake/core/iterator/keyword.hpp>
 #include <sake/core/iterator/multidim_traits_fwd.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/memberwise/mem_fun.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/range/adaptors/fwd.hpp>
@@ -75,6 +77,18 @@ class move
     SAKE_USING_TYPEDEF( typename traits_, adaptor_ );
 public:
     SAKE_USING_TYPEDEF( typename adaptor_, reference );
+
+    SAKE_MEMBERWISE_MEM_FUN(
+        typename move,
+        ( default_constructor )( swap ),
+        (( adaptor_ ))
+    )
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( adaptor_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
+    )
 
 private:
     template< class T0 >
@@ -117,22 +131,14 @@ public:
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-private:
-    template< class J >
-    struct converting_constructor_enabler
-        : boost::enable_if_c< boost_ext::is_convertible_wndp2bp<J,I>::value >
-    { };
-public:
     template< class J >
     move(sake::iterator::adaptors::move<J> const & other,
-        typename converting_constructor_enabler<J>::type* = 0)
+        typename boost::enable_if_c<
+            sake::iterator::is_convertible<J,I>::value >::type* = 0)
         : adaptor_(other.base())
     { }
 
     using adaptor_::base;
-
-    operator I const & () const
-    { return base(); }
 
 private:
     friend class sake::iterator::core_access;

@@ -29,7 +29,16 @@ SAKE_INTROSPECTION_DEFINE_HAS_TYPE( has_type_const_iterator, const_iterator )
 namespace iterator_private
 {
 
-template< class R, bool = has_type_iterator<R>::value >
+template< class R >
+struct dispatch_bool
+    : sake::range::default_impl::has_type_iterator<R>
+{ };
+template< class R >
+struct dispatch_bool< R const >
+    : sake::range::default_impl::has_type_const_iterator<R>
+{ };
+
+template< class R, bool = dispatch_bool<R>::value >
 struct dispatch;
 
 template< class R >
@@ -41,16 +50,13 @@ template< class R >
 struct dispatch< R, true >
 { typedef typename R::iterator type; };
 
-template< class R, bool = has_type_const_iterator<R>::value >
-struct dispatch_const;
-
 template< class R >
-struct dispatch_const< R, false >
+struct dispatch< R const, false >
     : boost::range_const_iterator<R>
 { };
 
 template< class R >
-struct dispatch_const< R, true >
+struct dispatch< R const, true >
 { typedef typename R::const_iterator type; };
 
 } // namespace iterator_private
@@ -58,11 +64,6 @@ struct dispatch_const< R, true >
 template< class R >
 struct iterator
     : iterator_private::dispatch<R>
-{ };
-
-template< class R >
-struct iterator< R const >
-    : iterator_private::dispatch_const<R>
 { };
 
 } // namespace default_impl

@@ -12,6 +12,7 @@
 #define SAKE_CORE_ITERATOR_ARCHETYPES_ITERATOR_HPP
 
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/add_const_if.hpp>
@@ -50,6 +51,13 @@ struct iterator
     BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
     typedef T value_type;
+
+    typedef typename boost_ext::is_convertible<
+        Traversal, boost::forward_traversal_tag
+    >::type has_default_contsructor_tag;
+    typedef boost::true_type has_nothrow_copy_constructor_tag;
+    typedef boost::true_type has_nothrow_copy_assign_tag;
+
 private:
     typedef typename boost_ext::add_const_if_c<
         !boost_ext::is_convertible<

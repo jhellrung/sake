@@ -34,8 +34,7 @@
  *     derived_less_equal(Other other) const -> bool [defaulted]
  *     derived_cmp(Other other) const -> sign_t [defaulted]
  * - Introversal
- *     template< class Introversal >
- *       struct derived_relax
+ *     struct derived_relax< Introversal >
  *       { typedef ... type; };
  *     derived_at_ip(Other other) -> void
  *     derived_at(Other other, Introversal) const
@@ -74,10 +73,15 @@
 #include <sake/core/iterator/private/facade/explicit_constructor_enable.hpp>
 #include <sake/core/iterator/private/facade/traits.hpp>
 #include <sake/core/iterator/private/facade/traversal_base.hpp>
+#include <sake/core/iterator/private/is_convertible_relax.hpp>
+#include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/math/sign.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/swap.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
@@ -99,6 +103,8 @@ protected:
     typedef Derived derived_type;
 public:
     using traversal_base_::derived;
+
+    SAKE_MEMBERWISE_SWAP( typename facade, (( traversal_base_ )) )
 
 private:
     typedef private_::traits< Params > traits_;
@@ -161,25 +167,24 @@ public:
      * at(T x, Introversal) -> relax< Introversal >::type
      **************************************************************************/
  
-    template< class Introversal = sake::null_introversal_tag >
-    struct relax
-    {
-        typedef typename sake::iterator::core_access::
-            relax< Derived, Introversal >::type type;
-    };
-
     template< class T >
     typename private_::at_enabler< Derived, T >::type
     at_ip(T const & x)
     { sake::iterator::core_access::at_ip(derived(), x); }
 
     template< class T >
-    typename private_::at_lazy_enabler< Derived, T, relax<> >::type
+    typename private_::at_lazy_enabler<
+        Derived, T,
+        typename traversal_base_::template relax<>
+    >::type
     at(T const & x) const
     { return at(x, sake::null_introversal_tag()); }
 
     template< class T, class Introversal >
-    typename private_::at_lazy_enabler< Derived, T, relax< Introversal > >::type
+    typename private_::at_lazy_enabler<
+        Derived, T,
+        typename traversal_base_::template relax< Introversal >
+    >::type
     at(T const & x, Introversal) const
     { return sake::iterator::core_access::at(derived(), x, Introversal()); }
  
@@ -187,6 +192,12 @@ protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename facade,
         (( traversal_base_ ))
+    )
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( traversal_base_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
     )
 
 private:
@@ -229,7 +240,7 @@ protected:
     using traversal_base_::derived_equal;
     template< class Other >
     typename boost::enable_if_c<
-        sake::iterator::private_::is_interoperable< Derived, Other >::value,
+        sake::iterator::private_::is_convertible_relax< Other, Derived >::value,
         bool
     >::type
     derived_equal(Other const & other) const
@@ -250,11 +261,13 @@ protected:
     { typedef Derived type; };
 
     template< class T, class Introversal >
-    typename relax< Introversal >::type
+    typename traversal_base_::template relax< Introversal >::type
     derived_at(T const & x, Introversal) const
     {
-        Derived result(derived());
-        result.at_ip(x);
+        typedef typename traversal_base_::template
+            relax< Introversal >::type result_type;
+        result_type result(derived());
+        sake::iterator_traits< result_type >::at_ip(result, x);
         return result;
     }
 };

@@ -9,18 +9,12 @@
 #ifndef SAKE_CORE_RANGE_DEFAULT_IMPL_ITER_AT_HPP
 #define SAKE_CORE_RANGE_DEFAULT_IMPL_ITER_AT_HPP
 
-#include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/utility/enable_if.hpp>
-
-#include <sake/boost_ext/mpl/or.hpp>
+#include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
-#include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/traits.hpp>
 #include <sake/core/range/traits.hpp>
 #include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
@@ -253,16 +247,7 @@ template< class R, class T, class Introversal >
 inline typename sake::range_iterator< R, Introversal >::type
 iter_at(R& r, T const & x, Introversal)
 {
-    typedef sake::range_traits<R> traits_;
-    BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-        boost::is_same< T, sake::begin_tag >,
-        boost::is_same< T, sake::end_tag >,
-        boost_ext::is_convertible< T, typename traits_::iterator >
-    >::value));
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        Introversal, sake::null_introversal_tag >::value));
-    typedef typename traits_::template
-        iterator_with< Introversal >::type result_type;
+    typedef typename sake::range_iterator< R, Introversal >::type result_type;
     typedef typename boost_ext::mpl::
          if_< boost_ext::is_convertible< T, result_type >,
               sake::int_tag<3> >::type::template

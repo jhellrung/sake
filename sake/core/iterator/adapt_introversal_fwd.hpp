@@ -9,6 +9,8 @@
 #ifndef SAKE_CORE_ITERATOR_INTROVERSAL_ADAPTOR_FWD_HPP
 #define SAKE_CORE_ITERATOR_INTROVERSAL_ADAPTOR_FWD_HPP
 
+#include <boost/mpl/set/set0.hpp>
+
 #include <sake/core/iterator/categories.hpp>
 
 namespace sake
@@ -18,17 +20,22 @@ namespace iterator
 {
 
 template<
-    class I,
-    bool ExplicitBegin, bool ExplicitEnd,
-    class IntroversalMask = sake::null_introversal_tag
->
-class introversal_adaptor;
-
-template<
     class I, class Introversal,
     class IntroversalMask = sake::null_introversal_tag
 >
-class introversal_adaptor_relax;
+class adapt_introversal;
+
+namespace adaptors
+{
+
+template<
+    class I,
+    class Tags = boost::mpl::set0<>,
+    class IntroversalMask = sake::null_introversal_tag
+>
+class introversal;
+
+} // namespace adaptors
 
 } // namespace iterator
 

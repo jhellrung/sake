@@ -11,6 +11,8 @@
 
 #include <boost/mpl/map/map0.hpp>
 
+#include <sake/core/iterator/adapt_introversal_fwd.hpp>
+
 namespace sake
 {
 
@@ -19,6 +21,9 @@ namespace iterator
 
 namespace adaptors
 {
+
+template< class I >
+class end_access;
 
 template< class I >
 class move;

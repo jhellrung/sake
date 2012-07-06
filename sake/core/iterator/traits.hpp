@@ -77,7 +77,6 @@
 #include <iterator>
 
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_void.hpp>
@@ -95,34 +94,64 @@
 #include <sake/core/iterator/default_impl/at_ip.hpp>
 #include <sake/core/iterator/default_impl/introversal.hpp>
 #include <sake/core/iterator/default_impl/relax.hpp>
+#include <sake/core/iterator/private/is_convertible_relax.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
+#include <boost/mpl/assert.hpp>
+
 namespace sake
 {
-
-template< class I, class Introversal /*= sake::null_introversal_tag*/ >
-struct iterator_relax
-{
-private:
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        Introversal, sake::null_introversal_tag >::value));
-    typedef sake::iterator_traits<I> traits_;
-    SAKE_USING_TYPEDEF( typename traits_, introversal );
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        introversal, Introversal >::value));
-public:
-    typedef typename traits_::template relax< Introversal >::type type;
-};
 
 template< class I >
 struct iterator_traits
     : sake::extension::iterator_traits<I>
 {
+private:
+    typedef sake::extension::iterator_traits<I> extension_traits_;
+public:
+    SAKE_USING_TYPEDEF( typename extension_traits_, value_type );
+    SAKE_USING_TYPEDEF( typename extension_traits_, difference_type );
+    SAKE_USING_TYPEDEF( typename extension_traits_, introversal );
+
+    BOOST_STATIC_ASSERT((!boost_ext::is_reference< value_type >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< value_type >::value));
+    BOOST_STATIC_ASSERT((boost_ext::mpl::or2<
+        boost::is_void< difference_type >,
+        boost::is_signed< difference_type >
+    >::value));
+
     template< class Introversal = sake::null_introversal_tag >
     struct relax
-        : sake::extension::iterator_traits<I>::template relax< Introversal >
-    { };
+    {
+        BOOST_STATIC_ASSERT((boost_ext::is_convertible<
+            Introversal, sake::null_introversal_tag >::value));
+        BOOST_STATIC_ASSERT((boost_ext::is_convertible<
+            introversal, Introversal >::value));
+        typedef typename extension_traits_::template
+            relax< Introversal >::type type;
+        BOOST_STATIC_ASSERT((boost_ext::is_convertible< I, type >::value));
+    };
+
+    template< class T >
+    static void
+    at_ip(I& i, T const & x)
+    {
+        BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
+            boost_ext::mpl::and2<
+                boost::is_same< T, sake::begin_tag >,
+                boost_ext::is_convertible<
+                    introversal, sake::begin_access_introversal_tag >
+            >,
+            boost_ext::mpl::and2<
+                boost::is_same< T, sake::end_tag >,
+                boost_ext::is_convertible<
+                    introversal, sake::end_access_introversal_tag >
+            >,
+            sake::iterator::private_::is_convertible_relax<T,I>
+        >::value));
+        extension_traits_::at_ip(i,x);
+    }
 
     template< class T >
     static typename relax<>::type
@@ -131,7 +160,22 @@ struct iterator_traits
     template< class T, class Introversal >
     static typename relax< Introversal >::type
     at(I const & i, T const & x, Introversal)
-    { return sake::extension::iterator_traits<I>::at(i, x, Introversal()); }
+    {
+        BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
+            boost_ext::mpl::and2<
+                boost::is_same< T, sake::begin_tag >,
+                boost_ext::is_convertible<
+                    introversal, sake::begin_access_introversal_tag >
+            >,
+            boost_ext::mpl::and2<
+                boost::is_same< T, sake::end_tag >,
+                boost_ext::is_convertible<
+                    introversal, sake::end_access_introversal_tag >
+            >,
+            sake::iterator::private_::is_convertible_relax<T,I>
+        >::value));
+        return extension_traits_::at(i, x, Introversal());
+    }
 };
 
 namespace extension
@@ -157,16 +201,6 @@ struct iterator_traits
     SAKE_USING_TYPEDEF( typename std_traits, difference_type );
     typedef typename std_traits::iterator_category category;
 
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< value_type >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< value_type >::value));
-    BOOST_STATIC_ASSERT((boost_ext::mpl::or2<
-        boost::is_void< difference_type >,
-        boost_ext::mpl::and2<
-            boost::is_integral< difference_type >,
-            boost::is_signed< difference_type >
-        >
-    >::value));
-
 #define is_convertible_( tag ) boost_ext::is_convertible< category, tag >
     typedef typename boost_ext::mpl::
          if_< is_convertible_( boost::incrementable_traversal_tag ),
@@ -188,46 +222,18 @@ struct iterator_traits
 
     template< class Introversal_ >
     struct relax
-    {
-        BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-            Introversal_, sake::null_introversal_tag >::value));
-        BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-            Introversal, Introversal_ >::value));
-        typedef typename sake::iterator::default_impl::
-            relax< I, Introversal_ >::type type;
-    };
+    { typedef typename sake::iterator::default_impl::
+        relax< I, Introversal_ >::type type; };
 
     template< class T >
     static void
     at_ip(I& i, T const & x)
-    {
-        BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-            boost::is_same< T, sake::begin_tag >,
-            boost::is_same< T, sake::end_tag >,
-            sake::iterator::private_::is_interoperable<I,T>
-        >::value));
-        sake::iterator::default_impl::at_ip(i, x);
-    }
+    { sake::iterator::default_impl::at_ip(i,x); }
 
     template< class T, class Introversal_ >
     static typename relax< Introversal_ >::type
     at(I const & i, T const & x, Introversal_)
-    {
-        BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-            boost_ext::mpl::and2<
-                boost::is_same< T, sake::begin_tag >,
-                boost_ext::is_convertible<
-                    introversal, sake::begin_access_introversal_tag >
-            >,
-            boost_ext::mpl::and2<
-                boost::is_same< T, sake::end_tag >,
-                boost_ext::is_convertible<
-                    introversal, sake::end_access_introversal_tag >
-            >,
-            sake::iterator::private_::is_interoperable<I,T>
-        >::value));
-        return sake::iterator::default_impl::at(i, x, Introversal_());
-    }
+    { return sake::iterator::default_impl::at(i, x, Introversal_()); }
 };
 
 template< class I >

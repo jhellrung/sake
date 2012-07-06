@@ -14,6 +14,10 @@
 #include <boost/type_traits/has_trivial_copy.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
+#include <sake/boost_ext/type_traits/is_convertible.hpp>
+
 #include <sake/core/introspection/has_operator_assign.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/move.hpp>
@@ -43,25 +47,29 @@ namespace private_
  * a temporary iterator.
  ******************************************************************************/
 
-template< class Value >
-struct subscript_dispatch_index
-{ static int const value = 0; };
+template< class Value, class Reference >
+struct subscript_dispatch_bool
+{ static bool const value = false; };
 
-template< class Value >
-struct subscript_dispatch_index< Value const >
-{
-    static int const value = 1 + (boost::has_trivial_copy< Value >::value
-                               || sake::is_by_value_optimal< Value >::value);
-};
+template< class Value, class Reference >
+struct subscript_dispatch_bool< Value const, Reference >
+    : boost_ext::mpl::and2<
+          boost_ext::mpl::or2<
+              boost::has_trivial_copy< Value >,
+              sake::is_by_value_optimal< Value >
+          >,
+          boost_ext::is_convertible< Value, Reference >
+      >
+{ };
 
 template<
     class This, class Value, class Reference,
-    int = subscript_dispatch_index< Value >::value
+    bool = subscript_dispatch_bool< Value, Reference >::value
 >
 struct subscript_dispatch;
 
 template< class This, class Value, class Reference >
-struct subscript_dispatch< This, Value const, Reference, 2 >
+struct subscript_dispatch< This, Value const, Reference, true >
 {
     typedef Value type;
     static type apply(This const & this_)
@@ -69,7 +77,7 @@ struct subscript_dispatch< This, Value const, Reference, 2 >
 };
 
 template< class This, class Value, class Reference >
-struct subscript_dispatch< This, Value const, Reference, 1 >
+struct subscript_dispatch< This, Value const, Reference, false >
 {
     class proxy
     {
@@ -87,7 +95,7 @@ struct subscript_dispatch< This, Value const, Reference, 1 >
 };
 
 template< class This, class Value, class Reference >
-struct subscript_dispatch< This, Value, Reference, 0 >
+struct subscript_dispatch< This, Value, Reference, false >
 {
     class proxy
     {

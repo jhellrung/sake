@@ -9,7 +9,7 @@
 #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_TRAVERSAL_BASE_HPP
 #define SAKE_CORE_ITERATOR_PRIVATE_FACADE_TRAVERSAL_BASE_HPP
 
-#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
@@ -26,6 +26,8 @@
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/swap.hpp>
+#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
@@ -63,6 +65,9 @@ protected:
     using begin_introversal_base_::derived;
 public:
 
+    SAKE_MEMBERWISE_SWAP(
+        typename traversal_base, (( begin_introversal_base_ )) )
+
     Derived&
     operator++()
     {
@@ -94,6 +99,12 @@ protected:
         typename traversal_base,
         (( begin_introversal_base_ ))
     )
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( begin_introversal_base_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
+    )
 
     template< class T >
     explicit traversal_base(SAKE_FWD2_REF( T ) x,
@@ -113,6 +124,8 @@ class traversal_base< Derived, Params, 1 >
 protected:
     using traversal_base_::derived;
 public:
+
+    SAKE_MEMBERWISE_SWAP( typename traversal_base, (( traversal_base_ )) )
 
     Derived&
     operator--()
@@ -134,7 +147,12 @@ protected:
         typename traversal_base,
         (( traversal_base_ ))
     )
-    BOOST_STATIC_ASSERT((has_default_constructor_tag::value));
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( traversal_base_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
+    )
 
     template< class T >
     explicit traversal_base(SAKE_FWD2_REF( T ) x,
@@ -157,6 +175,9 @@ private:
     typedef private_::traits< Params > traits_;
 public:
     SAKE_USING_TYPEDEF( typename traits_, difference_type );
+
+    SAKE_MEMBERWISE_SWAP( typename traversal_base, (( traversal_base_ )) )
+
 private:
     typedef private_::subscript_dispatch<
         Derived,
@@ -188,8 +209,10 @@ public:
     operator-(difference_type const n) const
     { return derived() + (-n); }
 
-    inline friend Derived
-    operator+(difference_type const n, Derived const & this_)
+    template< class Derived_ >
+    inline friend typename boost::enable_if_c<
+        boost::is_same< Derived_, Derived >::value, Derived >::type
+    operator+(difference_type const n, Derived_ const & this_)
     { return this_ + n; }
 
 protected:
@@ -197,7 +220,12 @@ protected:
         typename traversal_base,
         (( traversal_base_ ))
     )
-    BOOST_STATIC_ASSERT((has_default_constructor_tag::value));
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
+        (( traversal_base_ )),
+        ( has_copy_constructor )
+        ( has_nothrow_copy_constructor )
+        ( has_nothrow_copy_assign )
+    )
 
     template< class T >
     explicit traversal_base(SAKE_FWD2_REF( T ) x,

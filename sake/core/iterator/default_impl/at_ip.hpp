@@ -9,19 +9,11 @@
 #ifndef SAKE_CORE_ITERATOR_DEFAULT_IMPL_AT_IP_HPP
 #define SAKE_CORE_ITERATOR_DEFAULT_IMPL_AT_IP_HPP
 
-#include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
-
-#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/mpl/or.hpp>
-#include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
-#include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/private/is_interoperable.hpp>
 #include <sake/core/utility/int_tag.hpp>
 
 namespace sake_iterator_at_ip_private
@@ -163,20 +155,6 @@ template< class I, class T >
 inline void
 at_ip(I& i, T const & x)
 {
-    typedef typename sake::iterator_introversal<I>::type introversal;
-    BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-        boost_ext::mpl::and2<
-            boost::is_same< T, sake::begin_tag >,
-            boost_ext::is_convertible<
-                introversal, sake::begin_access_introversal_tag >
-        >,
-        boost_ext::mpl::and2<
-            boost::is_same< T, sake::end_tag >,
-            boost_ext::is_convertible<
-                introversal, sake::end_access_introversal_tag >
-        >,
-        sake::iterator::private_::is_interoperable<I,T>
-    >::value));
     typedef typename boost_ext::mpl::
          if_< at_ip_private::is_callable_mem_fun< I&, void ( T ) >,
               sake::int_tag<2> >::type::template

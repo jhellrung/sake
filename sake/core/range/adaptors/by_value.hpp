@@ -18,6 +18,7 @@
 #include <sake/core/range/adaptor.hpp>
 #include <sake/core/range/adaptors/fwd.hpp>
 #include <sake/core/range/core_access.hpp>
+#include <sake/core/utility/using_typedef.hpp>
 #include <sake/core/utility/value_constructor.hpp>
 
 namespace sake
@@ -35,6 +36,9 @@ class by_value
 {
     typedef sake::range::adaptor< by_value, R > adaptor_;
 public:
+    SAKE_USING_TYPEDEF( typename adaptor_, difference_type );
+    SAKE_USING_TYPEDEF( typename adaptor_, size_type );
+
     SAKE_MOVABLE_NONCOPYABLE( by_value )
     by_value(this_rvalue_param_type other)
         : adaptor_(sake::move(static_cast< adaptor_& >(other)))
@@ -65,10 +69,28 @@ private:
     derived_iter_at(This& this_, T const & x, Introversal)
     { return adaptor_::base_iter_at(this_, x, Introversal()); }
 
+    template< class This, class Begin, class End >
+    struct derived_subrange_with_of
+        : adaptor_::template base_subrange_with_of< This, Begin, End >
+    { };
+
+    template< class This, class Begin, class End >
+    static typename adaptor_::template
+        subrange_with_of< This, Begin, End >::type
+    derived_sub(This& this_, Begin const & b, End const & e)
+    { return adaptor_::base_sub(this_, b, e); }
+
     template< class This, class T >
     static typename adaptor_::template reference_of< This >::type
     derived_at(This& this_, T const x)
     { return adaptor_::base_at(this_, x); }
+
+    bool derived_empty() const
+    { return adaptor_::base_empty(); }
+    difference_type derived_distance() const
+    { return adaptor_::base_distance(); }
+    size_type derived_size() const
+    { return adaptor_::base_size(); }
 };
 
 } // namespace adaptors
