@@ -208,6 +208,7 @@ struct dispatch< T&, void, trait_name_private::always_true, false >
     : trait_name_private::dispatch<T>
 { };
 
+#if 0
 #if min_arity == 0
 
 template<
@@ -305,6 +306,7 @@ struct has_nullary< T const, Result, ResultPred, LiteralResult, true >
 { };
 
 #endif // #if min_arity == 0
+#endif // #if 0
 
 template< class T >
 struct fallback : T
@@ -316,15 +318,15 @@ struct fallback : T
     // trait for this class.
     using T::SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME;
     ::sake::introspection_private::dummy
-    SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME
+    SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME(
 #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
-        ( BOOST_PP_ENUM_PARAMS(
-            SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY,
-            ::sake::convertible_from_any BOOST_PP_INTERCEPT
-        ) ) const;
+        BOOST_PP_ENUM_PARAMS( SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY,
+            ::sake::convertible_from_any BOOST_PP_INTERCEPT )
 #else // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
-        (...) const;
+        ...
 #endif // #ifdef SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY
+        // volatile qualifier is key to avoid overload ambiguity.
+        ) const volatile;
 };
 
 template< class T >
@@ -342,11 +344,58 @@ class has_void_result;
 template< class T, class Signature, class ResultPred >
 class check_non_void_result;
 
+#if 0
+#if min_arity == 0
+
+template<
+    class T, class Result, class ResultPred, class LiteralResult,
+    bool = ::sake::boost_ext::mpl::and2<
+               ::sake::boost_ext::is_convertible< LiteralResult, Result >,
+               ::boost::mpl::apply1< ResultPred, LiteralResult >
+           >::value
+>
+struct has_static_nullary;
+
+template< class T, class Result, class ResultPred >
+struct dispatch< T, Result ( ), ResultPred, false >
+{
+private:
+    typedef typename ::sake::boost_ext::
+        remove_qualifiers< Result >::type noqual_result_type;
+public:
+    static bool const value = ::sake::boost_ext::and2<
+        trait_name_private::dispatch<T>,
+        ::sake::boost_ext::mpl::or4<
+            trait_name_private::has_static_nullary<
+                T, Result, ResultPred,
+                noqual_type
+            >,
+            trait_name_private::has_static_nullary<
+                T, Result, ResultPred,
+                noqual_type&
+            >,
+            trait_name_private::has_static_nullary<
+                T, Result, ResultPred,
+                noqual_type const &
+            >,
+            ::sake::boost_ext::mpl::and2<
+                ::boost::mpl::not_< trait_name_private::has_void_result<
+                    T, void ( ) > >,
+                trait_name_private::check_non_void_result<
+                    T, Result ( ), ResultPred >
+            >
+    >::value;
+    typedef dispatch type;
+};
+
+#endif // #if min_arity == 0
+#endif // #if 0
+
 #if !defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY ) \
  && !defined( BOOST_NO_VARIADIC_TEMPLATES )
 
-template< class T, class Result, class U0, class... U, class ResultPred >
-struct dispatch< T, Result ( U0, U... ), ResultPred, false >
+template< class T, class Result, class... U, class ResultPred >
+struct dispatch< T, Result ( U... ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
     : ::sake::boost_ext::mpl::and2<
@@ -355,14 +404,14 @@ struct dispatch< T, Result ( U0, U... ), ResultPred, false >
           trait_name_private::dispatch<T>,
 #endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::not_< trait_name_private::has_void_result<
-              T, void ( U0, U... ) > >,
+              T, void ( U... ) > >,
           trait_name_private::check_non_void_result<
-              T, Result ( U0, U... ), ResultPred >
+              T, Result ( U... ), ResultPred >
       >
 { };
 
-template< class T, class U0, class... U, class ResultPred >
-struct dispatch< T, void ( U0, U... ), ResultPred, false >
+template< class T, class... U, class ResultPred >
+struct dispatch< T, void ( U... ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
     : ::sake::boost_ext::mpl::and1<
@@ -372,10 +421,10 @@ struct dispatch< T, void ( U0, U... ), ResultPred, false >
 #endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::eval_if<
               trait_name_private::has_void_result<
-                  T, void ( U0, U... ) >,
+                  T, void ( U... ) >,
               ::boost::mpl::apply1< ResultPred, void >,
               trait_name_private::check_non_void_result<
-                  T, void ( U0, U... ), ResultPred >
+                  T, void ( U... ), ResultPred >
           >
       >
 { };
@@ -384,8 +433,8 @@ struct dispatch< T, void ( U0, U... ), ResultPred, false >
     ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( \
          ::sake::declval< U0 >(), ::sake::declval<U>()... )
 
-template< class T, class U0, class... U >
-class has_void_result< T, void ( U0, U... ) >
+template< class T, class... U >
+class has_void_result< T, void ( U... ) >
 {
     typedef typename trait_name_private::fallback<T>::type fallback_;
 public:
@@ -393,8 +442,8 @@ public:
     typedef has_void_result type;
 };
 
-template< class T, class Result, class U0, class... U, class ResultPred >
-class check_non_void_result< T, Result ( U0, U... ), ResultPred >
+template< class T, class Result, class... U, class ResultPred >
+class check_non_void_result< T, Result ( U... ), ResultPred >
 {
     typedef typename trait_name_private::fallback<T>::type fallback_;
     typedef ::sake::introspection_private::check_result<
@@ -411,11 +460,9 @@ public:
 
 #else // #if !defined( ... ) && !defined( ... )
 
-#if max_arity > 0
-#define BOOST_PP_ITERATION_LIMITS ( (min_arity > 0 ? min_arity : 1), max_arity )
+#define BOOST_PP_ITERATION_LIMITS ( min_arity, max_arity )
 #define BOOST_PP_FILENAME_1       <sake/core/introspection/private/is_callable_member_function.ipp>
 #include BOOST_PP_ITERATE()
-#endif // #if max_arity > 0
 
 #endif // #if !defined( ... ) && !defined( ... )
 

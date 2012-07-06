@@ -56,7 +56,7 @@ struct builtin_is_callable;
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME operator()
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS \
-    ( 1, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )
+    ( 0, SAKE_INTROSPECTION_DEFAULT_MAX_ARITY )
 #define SAKE_INTROSPECTION_BUILTIN_HAS_MEMBER_FUNCTION( T, Signature, ResultPred ) \
     ::sake::introspection_private::builtin_is_callable< T, Signature, ResultPred >
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
@@ -99,6 +99,7 @@ struct builtin_is_callable< R (*)( T... ), void, ResultPred >
 
 } // namespace introspection_private
 
+#if 0
 namespace default_impl
 {
 
@@ -179,6 +180,7 @@ struct dispatch< T, void ( ), ResultPred, false >
 } // namespace is_callable_private
 
 } // namespace default_impl
+#endif // #if 0
 
 } // namespace sake
 
