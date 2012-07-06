@@ -114,8 +114,7 @@ template<
     class Signature = void,
     class ResultPred = trait_name_private::always_true,
     bool = ::sake::boost_ext::is_builtin_object<
-        typename ::sake::boost_ext::remove_reference<T>::type
-    >::value
+        typename ::sake::boost_ext::remove_reference<T>::type >::value
 >
 struct dispatch;
 
@@ -223,7 +222,7 @@ struct has_nullary;
 // We would like this to just determine if
 //     Result r = x.f();
 // is syntactically valid, but that's not possible (using the same machinery as
-// above, at least).  So we'll have to settle for pretty much an exact match of
+// below, at least).  So we'll have to settle for pretty much an exact match of
 // the member function signature.  At the very least, we'll explore various
 // combinations of const qualifiers on the class type and const/reference
 // qualifiers on the result type.
@@ -330,20 +329,18 @@ struct fallback : T
 
 template< class T >
 struct fallback< T const >
-{ typedef fallback<T> const type; };
+{ typedef trait_name_private::fallback<T> const type; };
 template< class T >
 struct fallback< T& >
 {
-#ifdef BOOST_NO_RVALUE_REFERENCES
     BOOST_STATIC_ASSERT((!::sake::boost_ext::is_rvalue_reference< T& >::value));
-#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
     typedef typename trait_name_private::fallback<T>::type & type;
 };
 
 template< class T, class Signature >
 class has_void_result;
 template< class T, class Signature, class ResultPred >
-class non_void_result_helper;
+class check_non_void_result;
 
 #if !defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY ) \
  && !defined( BOOST_NO_VARIADIC_TEMPLATES )
@@ -359,7 +356,7 @@ struct dispatch< T, Result ( U0, U... ), ResultPred, false >
 #endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::not_< trait_name_private::has_void_result<
               T, void ( U0, U... ) > >,
-          trait_name_private::non_void_result_helper<
+          trait_name_private::check_non_void_result<
               T, Result ( U0, U... ), ResultPred >
       >
 { };
@@ -377,7 +374,7 @@ struct dispatch< T, void ( U0, U... ), ResultPred, false >
               trait_name_private::has_void_result<
                   T, void ( U0, U... ) >,
               ::boost::mpl::apply1< ResultPred, void >,
-              trait_name_private::non_void_result_helper<
+              trait_name_private::check_non_void_result<
                   T, void ( U0, U... ), ResultPred >
           >
       >
@@ -397,7 +394,7 @@ public:
 };
 
 template< class T, class Result, class U0, class... U, class ResultPred >
-class non_void_result_helper< T, Result ( U0, U... ), ResultPred >
+class check_non_void_result< T, Result ( U0, U... ), ResultPred >
 {
     typedef typename trait_name_private::fallback<T>::type fallback_;
     typedef ::sake::introspection_private::check_result<
@@ -407,7 +404,7 @@ class non_void_result_helper< T, Result ( U0, U... ), ResultPred >
 public:
     static bool const value =
         SAKE_EXPR_APPLY( check_result_, fallback_member_U0U );
-    typedef non_void_result_helper type;
+    typedef check_non_void_result type;
 };
 
 #undef fallback_member_U0U
@@ -453,13 +450,13 @@ struct SAKE_INTROSPECTION_TRAIT_NAME
 
 #define N BOOST_PP_ITERATION()
 
-#define class_U0N   BOOST_PP_ENUM_PARAMS( N, class U )
-#define U0N         BOOST_PP_ENUM_PARAMS( N, U )
+#define comma_class_U0N BOOST_PP_ENUM_TRAILING_PARAMS( N, class U )
+#define U0N             BOOST_PP_ENUM_PARAMS( N, U )
 #define fallback_member_U0N \
     ::sake::declval< fallback_ >(). SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME ( \
         BOOST_PP_ENUM_BINARY_PARAMS( N, ::sake::declval< U, >() BOOST_PP_INTERCEPT ) )
 
-template< class T, class Result, class_U0N, class ResultPred >
+template< class T, class Result comma_class_U0N, class ResultPred >
 struct dispatch< T, Result ( U0N ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
@@ -470,12 +467,12 @@ struct dispatch< T, Result ( U0N ), ResultPred, false >
 #endif // #if defined( __GNUC__ ) ## defined( ... )
           ::boost::mpl::not_< has_void_result<
               T, void ( U0N ) > >,
-          trait_name_private::non_void_result_helper<
+          trait_name_private::check_non_void_result<
               T, Result ( U0N ), ResultPred >
       >
 { };
 
-template< class T, class_U0N, class ResultPred >
+template< class T comma_class_U0N, class ResultPred >
 struct dispatch< T, void ( U0N ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
@@ -488,13 +485,13 @@ struct dispatch< T, void ( U0N ), ResultPred, false >
               trait_name_private::has_void_result<
                   T, void ( U0N ) >,
               ::boost::mpl::apply1< ResultPred, void >,
-              trait_name_private::non_void_result_helper<
+              trait_name_private::check_non_void_result<
                   T, void ( U0N ), ResultPred >
           >
       >
 { };
 
-template< class T, class_U0N >
+template< class T comma_class_U0N >
 class has_void_result< T, void ( U0N ) >
 {
     typedef typename trait_name_private::fallback<T>::type fallback_;
@@ -503,8 +500,8 @@ public:
     typedef has_void_result type;
 };
 
-template< class T, class Result, class_U0N, class ResultPred >
-class non_void_result_helper< T, Result ( U0N ), ResultPred >
+template< class T, class Result comma_class_U0N, class ResultPred >
+class check_non_void_result< T, Result ( U0N ), ResultPred >
 {
     typedef typename trait_name_private::fallback<T>::type fallback_;
     typedef ::sake::introspection_private::check_result<
@@ -514,10 +511,10 @@ class non_void_result_helper< T, Result ( U0N ), ResultPred >
 public:
     static bool const value =
         SAKE_EXPR_APPLY( check_result_, fallback_member_U0N );
-    typedef non_void_result_helper type;
+    typedef check_non_void_result type;
 };
 
-#undef class_U0N
+#undef comma_class_U0N
 #undef U0N
 #undef fallback_member_U0N
 
