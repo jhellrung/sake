@@ -13,7 +13,7 @@
  * #define SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER
  * #define SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF
  *
- * This provides macros to facilitate workarounds for MSVC and GCC compilers.
+ * This provides macros to facilitate workarounds for various compilers.
  *
  * SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
  * --------
