@@ -12,7 +12,7 @@
  * - iterator::keyword::reference
  * - iterator::keyword::difference
  * - iterator::keyword::traversal
- * - iterator::keyword::introversal
+ * - iterator::keyword::introterminal
  * - iterator::keyword::compare_enable
  * - iterator::keyword::difference_enable
  * - iterator::keyword::chained_base
@@ -33,24 +33,24 @@
  *     derived_less(Other other) const -> bool [defaulted]
  *     derived_less_equal(Other other) const -> bool [defaulted]
  *     derived_cmp(Other other) const -> sign_t [defaulted]
- * - Introversal
- *     struct derived_relax< Introversal >
+ * - Introterminal
+ *     struct derived_relax< Introterminal >
  *       { typedef ... type; };
  *     derived_at_ip(Other other) -> void
- *     derived_at(Other other, Introversal) const
- *         -> relax< Introversal >::type [defaulted]
+ *     derived_at(Other other, Introterminal) const
+ *         -> relax< Introterminal >::type [defaulted]
  * - BeginDetect
  *     derived_equal(begin_tag) const -> bool
  * - BeginAccess
  *     derived_at_ip(begin_tag) -> void
- *     derived_at(begin_tag, Introversal) const
- *         -> relax< Introversal >::type [defaulted]
+ *     derived_at(begin_tag, Introterminal) const
+ *         -> relax< Introterminal >::type [defaulted]
  * - EndDetect
  *     derived_equal(end_tag) const -> bool
  * - EndAccess
  *     derived_at_ip(end_tag) -> void
- *     derived_at(end_tag, Introversal) const
- *         -> relax< Introversal >::type [defaulted]
+ *     derived_at(end_tag, Introterminal) const
+ *         -> relax< Introterminal >::type [defaulted]
  * - RandomAccess + BeginAccess
  *     derived_difference(begin_tag) const -> difference_type
  * - RandomAccess + EndAccess
@@ -115,13 +115,13 @@ public:
      * typedef ... reference;
      * typedef ... difference_type;
      * typedef ... iterator_traversal;
-     * typedef ... iterator_introversal;
+     * typedef ... iterator_introterminal;
      **************************************************************************/
     SAKE_USING_TYPEDEF( typename traits_, value_type );
     SAKE_USING_TYPEDEF( typename traits_, reference );
     SAKE_USING_TYPEDEF( typename traits_, difference_type );
     SAKE_USING_TYPEDEF( typename traits_, iterator_traversal );
-    SAKE_USING_TYPEDEF( typename traits_, iterator_introversal );
+    SAKE_USING_TYPEDEF( typename traits_, iterator_introterminal );
 
     typedef typename sake::iterator::private_::category<
         iterator_traversal, facade_value_type
@@ -161,10 +161,10 @@ public:
      * friend operator+(difference_type n, Derived const & this_) -> Derived
      * operator-(difference_type n) -> Derived
      *
-     * Introversal
-     * template< class Introversal > struct relax { typedef ... type; };
+     * Introterminal
+     * template< class Introterminal > struct relax { typedef ... type; };
      * at_ip(T x) -> void
-     * at(T x, Introversal) -> relax< Introversal >::type
+     * at(T x, Introterminal) -> relax< Introterminal >::type
      **************************************************************************/
  
     template< class T >
@@ -178,15 +178,15 @@ public:
         typename traversal_base_::template relax<>
     >::type
     at(T const & x) const
-    { return at(x, sake::null_introversal_tag()); }
+    { return at(x, sake::null_introterminal_tag()); }
 
-    template< class T, class Introversal >
+    template< class T, class Introterminal >
     typename private_::at_lazy_enabler<
         Derived, T,
-        typename traversal_base_::template relax< Introversal >
+        typename traversal_base_::template relax< Introterminal >
     >::type
-    at(T const & x, Introversal) const
-    { return sake::iterator::core_access::at(derived(), x, Introversal()); }
+    at(T const & x, Introterminal) const
+    { return sake::iterator::core_access::at(derived(), x, Introterminal()); }
  
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
@@ -256,16 +256,16 @@ protected:
     sake::sign_t derived_cmp(Other const & other) const
     { return sake::sign(derived() - other); }
 
-    template< class Introversal >
+    template< class Introterminal >
     struct derived_relax
     { typedef Derived type; };
 
-    template< class T, class Introversal >
-    typename traversal_base_::template relax< Introversal >::type
-    derived_at(T const & x, Introversal) const
+    template< class T, class Introterminal >
+    typename traversal_base_::template relax< Introterminal >::type
+    derived_at(T const & x, Introterminal) const
     {
         typedef typename traversal_base_::template
-            relax< Introversal >::type result_type;
+            relax< Introterminal >::type result_type;
         result_type result(derived());
         sake::iterator_traits< result_type >::at_ip(result, x);
         return result;

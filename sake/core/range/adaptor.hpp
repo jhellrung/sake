@@ -171,16 +171,14 @@ protected:
         > type;
     };
 
-    template< class CDerived, class Introversal >
+    template< class CDerived, class Introterminal >
     struct base_iterator_with_of
-    {
-        typedef typename base_traits_of< CDerived >::type::template
-            iterator_with< Introversal >::type type;
-    };
+    { typedef typename base_traits_of< CDerived >::type::template
+        iterator_with< Introterminal >::type type; };
 
-    template< class CDerived, class T, class Introversal >
-    static typename base_iterator_with_of< CDerived, Introversal >::type
-    base_iter_at(CDerived& this_, T const & x, Introversal)
+    template< class CDerived, class T, class Introterminal >
+    static typename base_iterator_with_of< CDerived, Introterminal >::type
+    base_iter_at(CDerived& this_, T const & x, Introterminal)
     {
         typedef typename boost_ext::remove_reference<
             typename boost_ext::propagate_const< CDerived, R >::type
@@ -188,7 +186,7 @@ protected:
         return base_traits_of< CDerived >::type::iter_at(
             this_.protected_base(),
             adaptor_private::base_iter_helper< cbase_type >(x),
-            Introversal()
+            Introterminal()
         );
     }
 

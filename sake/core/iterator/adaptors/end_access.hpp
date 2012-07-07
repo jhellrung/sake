@@ -4,6 +4,8 @@
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * class iterator::adaptors::end_access<I>
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_ADAPTORS_END_ACCESS_HPP
@@ -54,6 +56,10 @@ template< class I >
 struct traits;
 
 } // namespace end_access_private
+
+/*******************************************************************************
+ * class iterator::adaptors::end_access<I>
+ ******************************************************************************/
 
 template< class I >
 class end_access
@@ -124,31 +130,36 @@ private:
     bool derived_less_equal(Other const & other) const
     { return m_base <= other.m_base; }
 
-    template< class Introversal >
+    template< class Introterminal >
     class derived_relax
     {
-        typedef typename sake::introversal_join<
-            typename sake::introversal_meet<
-                Introversal, sake::begin_detect_introversal_tag >::type,
-            sake::end_detect_introversal_tag
-        >::type base_relax_introversal;
+        typedef typename sake::introterminal_join<
+            typename sake::introterminal_meet<
+                Introterminal,
+                sake::begin_detect_introterminal_tag
+            >::type,
+            sake::end_detect_introterminal_tag
+        >::type base_introterminal;
     public:
         typedef sake::iterator::adaptors::end_access<
-            typename sake::iterator_relax< I, base_relax_introversal >::type
-        > type;
+            typename sake::iterator_relax< I, base_introterminal >::type > type;
     };
 
     void derived_at_ip(sake::end_tag)
     { m_base.reset(); }
 
-    template< class Introversal >
-    typename facade_::template relax< Introversal >::type
-    derived_at(sake::end_tag, Introversal) const
+    template< class Introterminal >
+    typename facade_::template relax< Introterminal >::type
+    derived_at(sake::end_tag, Introterminal) const
     {
         return typename facade_::template
-            relax< Introversal >::type(sake::_end);
+            relax< Introterminal >::type(sake::_end);
     }
 };
+
+/*******************************************************************************
+ * namespace iterator::adaptors::end_access_private
+ ******************************************************************************/
 
 namespace end_access_private
 {
@@ -174,16 +185,16 @@ struct traits
         base_traversal, boost::forward_traversal_tag
     >::type iterator_traversal;
 
-    typedef typename base_traits::introversal base_introversal;
+    typedef typename base_traits::introterminal base_introterminal;
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        base_introversal, sake::end_detect_introversal_tag >::value));
+        base_introterminal, sake::end_detect_introterminal_tag >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_convertible<
-        base_introversal, sake::end_access_introversal_tag >::value));
-    typedef typename sake::introversal_join<
-        typename sake::introversal_meet<
-            base_introversal, sake::begin_detect_introversal_tag >::type,
-        sake::end_access_introversal_tag
-    >::type iterator_introversal;
+        base_introterminal, sake::end_access_introterminal_tag >::value));
+    typedef typename sake::introterminal_join<
+        typename sake::introterminal_meet<
+            base_introterminal, sake::begin_detect_introterminal_tag >::type,
+        sake::end_access_introterminal_tag
+    >::type iterator_introterminal;
 
     typedef typename sake::is_template_base_of2<
         sake::iterator::facade, I,
@@ -195,7 +206,7 @@ struct traits
         sake::iterator::keyword::reference< reference >,
         sake::iterator::keyword::difference< difference_type >,
         sake::iterator::keyword::traversal< iterator_traversal >,
-        sake::iterator::keyword::introversal< iterator_introversal >,
+        sake::iterator::keyword::introterminal< iterator_introterminal >,
         sake::iterator::keyword::compare_enable< compare_enable >
     > facade_;
 };

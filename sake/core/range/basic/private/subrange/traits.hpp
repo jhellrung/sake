@@ -50,12 +50,12 @@ struct traits
     >::value));
     BOOST_STATIC_ASSERT((boost::mpl::contains<
         boost::mpl::vector4<
-            sake::null_introversal_tag,
-            sake::begin_access_introversal_tag,
-            sake::end_access_introversal_tag,
-            sake::begin_access_end_access_introversal_tag
+            sake::null_introterminal_tag,
+            sake::begin_access_introterminal_tag,
+            sake::end_access_introterminal_tag,
+            sake::begin_access_end_access_introterminal_tag
         >,
-        typename sake::iterator_introversal<I>::type
+        typename sake::iterator_introterminal<I>::type
     >::value));
     BOOST_STATIC_ASSERT((boost_ext::mpl::or2<
         boost::is_void<N>,

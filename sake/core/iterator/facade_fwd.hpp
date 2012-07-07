@@ -52,8 +52,8 @@ template< \
 class x ## _base \
 SAKE_WORKAROUND_DEFINE_FRIENDED_PRIMARY_TEMPLATE_WITH_DEFAULT_PARAMETER;
 forward_declare( traversal )
-forward_declare( begin_introversal )
-forward_declare( end_introversal )
+forward_declare( begin_introterminal )
+forward_declare( end_introterminal )
 #undef forward_declare
 
 } // namespace private_

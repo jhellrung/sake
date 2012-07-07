@@ -63,9 +63,9 @@ struct traits
     >::type iterator_traversal;
 
     typedef typename boost_ext::mpl::at<
-        Params, sake::iterator::keyword::tag::introversal,
-        sake::null_introversal_tag
-    >::type iterator_introversal;
+        Params, sake::iterator::keyword::tag::introterminal,
+        sake::null_introterminal_tag
+    >::type iterator_introterminal;
 
     typedef typename boost_ext::mpl::or2<
         boost_ext::is_convertible<

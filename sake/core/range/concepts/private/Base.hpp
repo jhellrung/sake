@@ -61,108 +61,108 @@ public:
     BOOST_MPL_ASSERT((boost_ext::is_convertible<
         traversal, boost::single_pass_traversal_tag >));
 
-    template< class Introversal >
+    template< class Introterminal >
     struct iterator_with
-        : traits_::template iterator_with< Introversal >
+        : traits_::template iterator_with< Introterminal >
     { };
     template< class Begin, class End >
     struct subrange_with
         : traits_::template subrange_with< Begin, End >
     { };
 
-    // Instantiate each introversal-iterator and assert its introversal is as
-    // requested from iterator_with.
-#define assert_introversal( tag ) \
+    // Instantiate each introterminal-iterator and assert its introterminal is
+    // as requested from iterator_with.
+#define assert_introterminal( tag ) \
     typedef typename iterator_with< \
-        sake::tag ## _introversal_tag >::type tag ## _iterator; \
+        sake::tag ## _introterminal_tag >::type tag ## _iterator; \
     BOOST_MPL_ASSERT((boost_ext::is_convertible< \
-        typename sake::iterator_introversal< tag ## _iterator >::type, \
-        sake::tag ## _introversal_tag \
+        typename sake::iterator_introterminal< tag ## _iterator >::type, \
+        sake::tag ## _introterminal_tag \
     >)); \
     BOOST_CONCEPT_ASSERT((sake::concepts::Iterator< tag ## _iterator >));
-    assert_introversal( null )
-    assert_introversal( begin_detect )
-    assert_introversal( begin_access )
-    assert_introversal( end_detect )
-    assert_introversal( end_access )
-    assert_introversal( begin_detect_end_detect )
-    assert_introversal( begin_access_end_detect )
-    assert_introversal( begin_detect_end_access )
-    assert_introversal( begin_access_end_access )
-#undef assert_introversal
+    assert_introterminal( null )
+    assert_introterminal( begin_detect )
+    assert_introterminal( begin_access )
+    assert_introterminal( end_detect )
+    assert_introterminal( end_access )
+    assert_introterminal( begin_detect_end_detect )
+    assert_introterminal( begin_access_end_detect )
+    assert_introterminal( begin_detect_end_access )
+    assert_introterminal( begin_access_end_access )
+#undef assert_introterminal
 
     BOOST_MPL_ASSERT((boost::is_same< null_iterator, iterator >));
 
-    // Assert convertibility among the various introversal-iterators.
-#define assert_introversal( from_tag, to_tag ) \
+    // Assert convertibility among the various introterminal-iterators.
+#define assert_introterminal( from_tag, to_tag ) \
     BOOST_MPL_ASSERT((boost_ext::is_convertible< \
         from_tag ## _iterator, to_tag ## _iterator >));
-    assert_introversal( begin_detect, null )
-    assert_introversal( begin_access, null )
-    assert_introversal( begin_access, begin_detect )
-    assert_introversal( end_detect, null )
-    assert_introversal( end_access, null )
-    assert_introversal( end_access, end_detect )
-    assert_introversal( begin_detect_end_detect, null )
-    assert_introversal( begin_detect_end_detect, begin_detect )
-    assert_introversal( begin_detect_end_detect, end_detect )
-    assert_introversal( begin_access_end_detect, null )
-    assert_introversal( begin_access_end_detect, begin_detect )
-    assert_introversal( begin_access_end_detect, begin_access )
-    assert_introversal( begin_access_end_detect, end_detect )
-    assert_introversal( begin_access_end_detect, begin_detect_end_detect )
-    assert_introversal( begin_detect_end_access, null )
-    assert_introversal( begin_detect_end_access, begin_detect )
-    assert_introversal( begin_detect_end_access, end_detect )
-    assert_introversal( begin_detect_end_access, end_access )
-    assert_introversal( begin_detect_end_access, begin_detect_end_detect )
-    assert_introversal( begin_access_end_access, null )
-    assert_introversal( begin_access_end_access, begin_detect )
-    assert_introversal( begin_access_end_access, begin_access )
-    assert_introversal( begin_access_end_access, end_detect )
-    assert_introversal( begin_access_end_access, end_access )
-    assert_introversal( begin_access_end_access, begin_detect_end_detect )
-    assert_introversal( begin_access_end_access, begin_access_end_detect )
-    assert_introversal( begin_access_end_access, begin_detect_end_access )
-#undef assert_introversal
+    assert_introterminal( begin_detect, null )
+    assert_introterminal( begin_access, null )
+    assert_introterminal( begin_access, begin_detect )
+    assert_introterminal( end_detect, null )
+    assert_introterminal( end_access, null )
+    assert_introterminal( end_access, end_detect )
+    assert_introterminal( begin_detect_end_detect, null )
+    assert_introterminal( begin_detect_end_detect, begin_detect )
+    assert_introterminal( begin_detect_end_detect, end_detect )
+    assert_introterminal( begin_access_end_detect, null )
+    assert_introterminal( begin_access_end_detect, begin_detect )
+    assert_introterminal( begin_access_end_detect, begin_access )
+    assert_introterminal( begin_access_end_detect, end_detect )
+    assert_introterminal( begin_access_end_detect, begin_detect_end_detect )
+    assert_introterminal( begin_detect_end_access, null )
+    assert_introterminal( begin_detect_end_access, begin_detect )
+    assert_introterminal( begin_detect_end_access, end_detect )
+    assert_introterminal( begin_detect_end_access, end_access )
+    assert_introterminal( begin_detect_end_access, begin_detect_end_detect )
+    assert_introterminal( begin_access_end_access, null )
+    assert_introterminal( begin_access_end_access, begin_detect )
+    assert_introterminal( begin_access_end_access, begin_access )
+    assert_introterminal( begin_access_end_access, end_detect )
+    assert_introterminal( begin_access_end_access, end_access )
+    assert_introterminal( begin_access_end_access, begin_detect_end_detect )
+    assert_introterminal( begin_access_end_access, begin_access_end_detect )
+    assert_introterminal( begin_access_end_access, begin_detect_end_access )
+#undef assert_introterminal
 
-    // Assert introversal relaxation agrees with the range's iterator_with.
-#define assert_introversal( from_tag, to_tag ) \
+    // Assert introterminal relaxation agrees with the range's iterator_with.
+#define assert_introterminal( from_tag, to_tag ) \
     BOOST_MPL_ASSERT((boost::is_same< \
         typename sake::iterator_relax< \
             from_tag ## _iterator, \
-            sake::to_tag ## _introversal_tag \
+            sake::to_tag ## _introterminal_tag \
         >::type, \
         to_tag ## _iterator \
     >));
-    assert_introversal( begin_detect, null )
-    assert_introversal( begin_access, null )
-    assert_introversal( begin_access, begin_detect )
-    assert_introversal( end_detect, null )
-    assert_introversal( end_access, null )
-    assert_introversal( end_access, end_detect )
-    assert_introversal( begin_detect_end_detect, null )
-    assert_introversal( begin_detect_end_detect, begin_detect )
-    assert_introversal( begin_detect_end_detect, end_detect )
-    assert_introversal( begin_access_end_detect, null )
-    assert_introversal( begin_access_end_detect, begin_detect )
-    assert_introversal( begin_access_end_detect, begin_access )
-    assert_introversal( begin_access_end_detect, end_detect )
-    assert_introversal( begin_access_end_detect, begin_detect_end_detect )
-    assert_introversal( begin_detect_end_access, null )
-    assert_introversal( begin_detect_end_access, begin_detect )
-    assert_introversal( begin_detect_end_access, end_detect )
-    assert_introversal( begin_detect_end_access, end_access )
-    assert_introversal( begin_detect_end_access, begin_detect_end_detect )
-    assert_introversal( begin_access_end_access, null )
-    assert_introversal( begin_access_end_access, begin_detect )
-    assert_introversal( begin_access_end_access, begin_access )
-    assert_introversal( begin_access_end_access, end_detect )
-    assert_introversal( begin_access_end_access, end_access )
-    assert_introversal( begin_access_end_access, begin_detect_end_detect )
-    assert_introversal( begin_access_end_access, begin_access_end_detect )
-    assert_introversal( begin_access_end_access, begin_detect_end_access )
-#undef assert_introversal
+    assert_introterminal( begin_detect, null )
+    assert_introterminal( begin_access, null )
+    assert_introterminal( begin_access, begin_detect )
+    assert_introterminal( end_detect, null )
+    assert_introterminal( end_access, null )
+    assert_introterminal( end_access, end_detect )
+    assert_introterminal( begin_detect_end_detect, null )
+    assert_introterminal( begin_detect_end_detect, begin_detect )
+    assert_introterminal( begin_detect_end_detect, end_detect )
+    assert_introterminal( begin_access_end_detect, null )
+    assert_introterminal( begin_access_end_detect, begin_detect )
+    assert_introterminal( begin_access_end_detect, begin_access )
+    assert_introterminal( begin_access_end_detect, end_detect )
+    assert_introterminal( begin_access_end_detect, begin_detect_end_detect )
+    assert_introterminal( begin_detect_end_access, null )
+    assert_introterminal( begin_detect_end_access, begin_detect )
+    assert_introterminal( begin_detect_end_access, end_detect )
+    assert_introterminal( begin_detect_end_access, end_access )
+    assert_introterminal( begin_detect_end_access, begin_detect_end_detect )
+    assert_introterminal( begin_access_end_access, null )
+    assert_introterminal( begin_access_end_access, begin_detect )
+    assert_introterminal( begin_access_end_access, begin_access )
+    assert_introterminal( begin_access_end_access, end_detect )
+    assert_introterminal( begin_access_end_access, end_access )
+    assert_introterminal( begin_access_end_access, begin_detect_end_detect )
+    assert_introterminal( begin_access_end_access, begin_access_end_detect )
+    assert_introterminal( begin_access_end_access, begin_detect_end_access )
+#undef assert_introterminal
 
     // Instantiate each subrange and assert it satisfies the Range concept.
 #define assert_subrange( prefix, begin_tag_, end_tag_ ) \
@@ -195,108 +195,108 @@ public:
     BOOST_CONCEPT_USAGE( Base )
     {
 
-#define assert_introversal( tag ) \
+#define assert_introterminal( tag ) \
         assert_result< tag ## _iterator >(traits_::iter_at( \
-            r, sake::_begin, sake::tag ## _introversal_tag())); \
+            r, sake::_begin, sake::tag ## _introterminal_tag())); \
         assert_result< tag ## _iterator >(traits_::iter_at( \
-            r, sake::_end, sake::tag ## _introversal_tag()));
-        assert_introversal( null )
-        assert_introversal( begin_detect )
-        assert_introversal( begin_access )
-        assert_introversal( end_detect )
-        assert_introversal( end_access )
-        assert_introversal( begin_detect_end_detect )
-        assert_introversal( begin_access_end_detect )
-        assert_introversal( begin_detect_end_access )
-        assert_introversal( begin_access_end_access )
-#undef assert_introversal
+            r, sake::_end, sake::tag ## _introterminal_tag()));
+        assert_introterminal( null )
+        assert_introterminal( begin_detect )
+        assert_introterminal( begin_access )
+        assert_introterminal( end_detect )
+        assert_introterminal( end_access )
+        assert_introterminal( begin_detect_end_detect )
+        assert_introterminal( begin_access_end_detect )
+        assert_introterminal( begin_detect_end_access )
+        assert_introterminal( begin_access_end_access )
+#undef assert_introterminal
 
-#define assert_introversal( from_tag, to_tag ) \
+#define assert_introterminal( from_tag, to_tag ) \
         assert_result< to_tag ## _iterator >(traits_::iter_at( \
             r, sake::declval< from_tag ## _iterator >(), \
-            sake::to_tag ## _introversal_tag()));
-        assert_introversal( null, null );
-        assert_introversal( null, begin_detect );
-        assert_introversal( null, begin_access );
-        assert_introversal( null, end_detect );
-        assert_introversal( null, end_access );
-        assert_introversal( null, begin_detect_end_detect );
-        assert_introversal( null, begin_access_end_detect );
-        assert_introversal( null, begin_detect_end_access );
-        assert_introversal( null, begin_access_end_access );
-        assert_introversal( begin_detect, null );
-        assert_introversal( begin_detect, begin_detect );
-        assert_introversal( begin_detect, begin_access );
-        assert_introversal( begin_detect, end_detect );
-        assert_introversal( begin_detect, end_access );
-        assert_introversal( begin_detect, begin_detect_end_detect );
-        assert_introversal( begin_detect, begin_access_end_detect );
-        assert_introversal( begin_detect, begin_detect_end_access );
-        assert_introversal( begin_detect, begin_access_end_access );
-        assert_introversal( begin_access, null );
-        assert_introversal( begin_access, begin_detect );
-        assert_introversal( begin_access, begin_access );
-        assert_introversal( begin_access, end_detect );
-        assert_introversal( begin_access, end_access );
-        assert_introversal( begin_access, begin_detect_end_detect );
-        assert_introversal( begin_access, begin_access_end_detect );
-        assert_introversal( begin_access, begin_detect_end_access );
-        assert_introversal( begin_access, begin_access_end_access );
-        assert_introversal( end_detect, null );
-        assert_introversal( end_detect, begin_detect );
-        assert_introversal( end_detect, begin_access );
-        assert_introversal( end_detect, end_detect );
-        assert_introversal( end_detect, end_access );
-        assert_introversal( end_detect, begin_detect_end_detect );
-        assert_introversal( end_detect, begin_access_end_detect );
-        assert_introversal( end_detect, begin_detect_end_access );
-        assert_introversal( end_detect, begin_access_end_access );
-        assert_introversal( end_access, null );
-        assert_introversal( end_access, begin_detect );
-        assert_introversal( end_access, begin_access );
-        assert_introversal( end_access, end_detect );
-        assert_introversal( end_access, end_access );
-        assert_introversal( end_access, begin_detect_end_detect );
-        assert_introversal( end_access, begin_access_end_detect );
-        assert_introversal( end_access, begin_detect_end_access );
-        assert_introversal( end_access, begin_access_end_access );
-        assert_introversal( begin_detect_end_detect, null );
-        assert_introversal( begin_detect_end_detect, begin_detect );
-        assert_introversal( begin_detect_end_detect, begin_access );
-        assert_introversal( begin_detect_end_detect, end_detect );
-        assert_introversal( begin_detect_end_detect, end_access );
-        assert_introversal( begin_detect_end_detect, begin_detect_end_detect );
-        assert_introversal( begin_detect_end_detect, begin_access_end_detect );
-        assert_introversal( begin_detect_end_detect, begin_detect_end_access );
-        assert_introversal( begin_detect_end_detect, begin_access_end_access );
-        assert_introversal( begin_access_end_detect, null );
-        assert_introversal( begin_access_end_detect, begin_detect );
-        assert_introversal( begin_access_end_detect, begin_access );
-        assert_introversal( begin_access_end_detect, end_detect );
-        assert_introversal( begin_access_end_detect, end_access );
-        assert_introversal( begin_access_end_detect, begin_detect_end_detect );
-        assert_introversal( begin_access_end_detect, begin_access_end_detect );
-        assert_introversal( begin_access_end_detect, begin_detect_end_access );
-        assert_introversal( begin_access_end_detect, begin_access_end_access );
-        assert_introversal( begin_detect_end_access, null );
-        assert_introversal( begin_detect_end_access, begin_detect );
-        assert_introversal( begin_detect_end_access, begin_access );
-        assert_introversal( begin_detect_end_access, end_detect );
-        assert_introversal( begin_detect_end_access, end_access );
-        assert_introversal( begin_detect_end_access, begin_detect_end_detect );
-        assert_introversal( begin_detect_end_access, begin_access_end_detect );
-        assert_introversal( begin_detect_end_access, begin_detect_end_access );
-        assert_introversal( begin_detect_end_access, begin_access_end_access );
-        assert_introversal( begin_access_end_access, null );
-        assert_introversal( begin_access_end_access, begin_detect );
-        assert_introversal( begin_access_end_access, begin_access );
-        assert_introversal( begin_access_end_access, end_detect );
-        assert_introversal( begin_access_end_access, end_access );
-        assert_introversal( begin_access_end_access, begin_detect_end_detect );
-        assert_introversal( begin_access_end_access, begin_access_end_detect );
-        assert_introversal( begin_access_end_access, begin_detect_end_access );
-        assert_introversal( begin_access_end_access, begin_access_end_access );
-#undef assert_introversal
+            sake::to_tag ## _introterminal_tag()));
+        assert_introterminal( null, null );
+        assert_introterminal( null, begin_detect );
+        assert_introterminal( null, begin_access );
+        assert_introterminal( null, end_detect );
+        assert_introterminal( null, end_access );
+        assert_introterminal( null, begin_detect_end_detect );
+        assert_introterminal( null, begin_access_end_detect );
+        assert_introterminal( null, begin_detect_end_access );
+        assert_introterminal( null, begin_access_end_access );
+        assert_introterminal( begin_detect, null );
+        assert_introterminal( begin_detect, begin_detect );
+        assert_introterminal( begin_detect, begin_access );
+        assert_introterminal( begin_detect, end_detect );
+        assert_introterminal( begin_detect, end_access );
+        assert_introterminal( begin_detect, begin_detect_end_detect );
+        assert_introterminal( begin_detect, begin_access_end_detect );
+        assert_introterminal( begin_detect, begin_detect_end_access );
+        assert_introterminal( begin_detect, begin_access_end_access );
+        assert_introterminal( begin_access, null );
+        assert_introterminal( begin_access, begin_detect );
+        assert_introterminal( begin_access, begin_access );
+        assert_introterminal( begin_access, end_detect );
+        assert_introterminal( begin_access, end_access );
+        assert_introterminal( begin_access, begin_detect_end_detect );
+        assert_introterminal( begin_access, begin_access_end_detect );
+        assert_introterminal( begin_access, begin_detect_end_access );
+        assert_introterminal( begin_access, begin_access_end_access );
+        assert_introterminal( end_detect, null );
+        assert_introterminal( end_detect, begin_detect );
+        assert_introterminal( end_detect, begin_access );
+        assert_introterminal( end_detect, end_detect );
+        assert_introterminal( end_detect, end_access );
+        assert_introterminal( end_detect, begin_detect_end_detect );
+        assert_introterminal( end_detect, begin_access_end_detect );
+        assert_introterminal( end_detect, begin_detect_end_access );
+        assert_introterminal( end_detect, begin_access_end_access );
+        assert_introterminal( end_access, null );
+        assert_introterminal( end_access, begin_detect );
+        assert_introterminal( end_access, begin_access );
+        assert_introterminal( end_access, end_detect );
+        assert_introterminal( end_access, end_access );
+        assert_introterminal( end_access, begin_detect_end_detect );
+        assert_introterminal( end_access, begin_access_end_detect );
+        assert_introterminal( end_access, begin_detect_end_access );
+        assert_introterminal( end_access, begin_access_end_access );
+        assert_introterminal( begin_detect_end_detect, null );
+        assert_introterminal( begin_detect_end_detect, begin_detect );
+        assert_introterminal( begin_detect_end_detect, begin_access );
+        assert_introterminal( begin_detect_end_detect, end_detect );
+        assert_introterminal( begin_detect_end_detect, end_access );
+        assert_introterminal( begin_detect_end_detect, begin_detect_end_detect );
+        assert_introterminal( begin_detect_end_detect, begin_access_end_detect );
+        assert_introterminal( begin_detect_end_detect, begin_detect_end_access );
+        assert_introterminal( begin_detect_end_detect, begin_access_end_access );
+        assert_introterminal( begin_access_end_detect, null );
+        assert_introterminal( begin_access_end_detect, begin_detect );
+        assert_introterminal( begin_access_end_detect, begin_access );
+        assert_introterminal( begin_access_end_detect, end_detect );
+        assert_introterminal( begin_access_end_detect, end_access );
+        assert_introterminal( begin_access_end_detect, begin_detect_end_detect );
+        assert_introterminal( begin_access_end_detect, begin_access_end_detect );
+        assert_introterminal( begin_access_end_detect, begin_detect_end_access );
+        assert_introterminal( begin_access_end_detect, begin_access_end_access );
+        assert_introterminal( begin_detect_end_access, null );
+        assert_introterminal( begin_detect_end_access, begin_detect );
+        assert_introterminal( begin_detect_end_access, begin_access );
+        assert_introterminal( begin_detect_end_access, end_detect );
+        assert_introterminal( begin_detect_end_access, end_access );
+        assert_introterminal( begin_detect_end_access, begin_detect_end_detect );
+        assert_introterminal( begin_detect_end_access, begin_access_end_detect );
+        assert_introterminal( begin_detect_end_access, begin_detect_end_access );
+        assert_introterminal( begin_detect_end_access, begin_access_end_access );
+        assert_introterminal( begin_access_end_access, null );
+        assert_introterminal( begin_access_end_access, begin_detect );
+        assert_introterminal( begin_access_end_access, begin_access );
+        assert_introterminal( begin_access_end_access, end_detect );
+        assert_introterminal( begin_access_end_access, end_access );
+        assert_introterminal( begin_access_end_access, begin_detect_end_detect );
+        assert_introterminal( begin_access_end_access, begin_access_end_detect );
+        assert_introterminal( begin_access_end_access, begin_detect_end_access );
+        assert_introterminal( begin_access_end_access, begin_access_end_access );
+#undef assert_introterminal
 
         assert_result< void_void_subrange >(traits_::sub(r,i,i));
         assert_result< begin_void_subrange >(traits_::sub(r, sake::_begin, i));

@@ -31,7 +31,7 @@ struct iterator_multidim_outer
 
 template<
     class I,
-    class Introversal = sake::null_introversal_tag,
+    class Introterminal = sake::null_introterminal_tag,
     class Outer = void
 >
 struct iterator_multidim_inner;

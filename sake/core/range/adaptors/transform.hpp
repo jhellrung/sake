@@ -57,6 +57,10 @@ struct traits;
 
 } // namespace transform_private
 
+/*******************************************************************************
+ * class range::adaptors::transform< R, F, Params = boost::mpl::map0<> >
+ ******************************************************************************/
+
 template< class R, class F, class Params /*= boost::mpl::map0<>*/ >
 class transform
     : public transform_private::traits< R, F, Params >::adaptor_
@@ -107,25 +111,23 @@ public:
 private:
     friend class sake::range::core_access;
 
-    template< class This, class Introversal >
+    template< class This, class Introterminal >
     struct derived_iterator_with_of
     {
+        typedef typename adaptor_::template
+            base_iterator_with_of< This, Introterminal >::type base_iterator;
         typedef sake::iterator::adaptors::transform<
-            typename adaptor_::template
-                base_iterator_with_of< This, Introversal >::type,
-            typename traits_::bvo_function_type,
-            Params
-        > type;
+            base_iterator, typename traits_::bvo_function_type, Params > type;
     };
 
-    template< class This, class T, class Introversal >
+    template< class This, class T, class Introterminal >
     static typename adaptor_::template
-        iterator_with_of< This, Introversal >::type
-    derived_iter_at(This& this_, T const & x, Introversal)
+        iterator_with_of< This, Introterminal >::type
+    derived_iter_at(This& this_, T const & x, Introterminal)
     {
         return typename adaptor_::template
-            iterator_with_of< This, Introversal >::type(
-                adaptor_::base_iter_at(this_, x, Introversal()),
+            iterator_with_of< This, Introterminal >::type(
+                adaptor_::base_iter_at(this_, x, Introterminal()),
                 this_.function()
             );
     }
@@ -133,12 +135,10 @@ private:
     template< class This, class Begin, class End >
     struct derived_subrange_with_of
     {
+        typedef typename adaptor_::template
+            base_subrange_with_of< This, Begin, End >::type base_subrange;
         typedef sake::range::adaptors::transform<
-            typename adaptor_::template
-                base_subrange_with_of< This, Begin, End >::type,
-            typename traits_::bvo_function_type,
-            Params
-        > type;
+            base_subrange, typename traits_::bvo_function_type, Params > type;
     };
 
     template< class This, class Begin, class End >
@@ -165,6 +165,10 @@ private:
     size_type derived_size() const
     { return adaptor_::base_size(); }
 };
+
+/*******************************************************************************
+ * namespace range::adaptors::transform_private
+ ******************************************************************************/
 
 namespace transform_private
 {

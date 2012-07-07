@@ -12,7 +12,7 @@
  * - iterator::keyword::reference
  * - iterator::keyword::difference
  * - iterator::keyword::traversal
- * - iterator::keyword::introversal
+ * - iterator::keyword::introterminal
  * - iterator::keyword::compare_enable
  * - iterator::keyword::difference_enable
  * - iterator::keyword::chained_base
@@ -146,7 +146,8 @@ protected:
 #define SAKE_OVERLOAD_CONSTRUCTOR_NAME \
     adaptor
 #define SAKE_OVERLOAD_ENABLE( r, n, T_tuple ) \
-    constructor_arg_packer::template enable< BOOST_PP_TUPLE_REM_CTOR( n, T_tuple ) >
+    constructor_arg_packer::template \
+        enable< BOOST_PP_TUPLE_REM_CTOR( n, T_tuple ) >
 #define SAKE_OVERLOAD_INITIALIZATION_LIST( \
     r, n, T_tuple, x_tuple, forward_x_tuple ) \
     member_base_( \
@@ -159,14 +160,14 @@ protected:
 
     typedef sake::iterator_traits<I> base_traits;
 
-    template< class T, class Introversal >
-    typename sake::iterator_relax< I, Introversal >::type
-    base_at(T const & x, Introversal) const
+    template< class T, class Introterminal >
+    typename sake::iterator_relax< I, Introterminal >::type
+    base_at(T const & x, Introterminal) const
     {
         return base_traits::at(
             base(),
             adaptor_private::as_convertible_relax<I>(x),
-            Introversal()
+            Introterminal()
         );
     }
 
@@ -218,7 +219,7 @@ protected:
     difference_type derived_difference(T const & x) const
     { return base() - adaptor_private::as_convertible_relax<I>(x); }
 
-    // Introversal / BeginAccess / EndAccess
+    // Introterminal / BeginAccess / EndAccess
     template< class T >
     void derived_at_ip(T const & x)
     {

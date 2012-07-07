@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct archetypes::iterator< T, Traversal, Introversal, Access >
+ * struct archetypes::iterator< T, Traversal, Introterminal, Access >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_ITERATOR_HPP
@@ -21,7 +21,7 @@
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/iterator/archetypes/access_tag.hpp>
-#include <sake/core/iterator/archetypes/private/introversal_base.hpp>
+#include <sake/core/iterator/archetypes/private/introterminal_base.hpp>
 #include <sake/core/iterator/archetypes/private/pointer_dispatch.hpp>
 #include <sake/core/iterator/archetypes/private/reference_dispatch.hpp>
 #include <sake/core/iterator/archetypes/private/subscript_base.hpp>
@@ -35,15 +35,15 @@ namespace sake
 namespace archetypes
 {
 
-template< class T, class Traversal, class Introversal, class Access >
+template< class T, class Traversal, class Introterminal, class Access >
 struct iterator
     : sake::archetypes::iterator_private::traversal_base<
-          sake::archetypes::iterator< T, Traversal, Introversal, Access >,
+          sake::archetypes::iterator< T, Traversal, Introterminal, Access >,
           Traversal
       >,
-      sake::archetypes::iterator_private::introversal_base<
-          sake::archetypes::iterator< T, Traversal, Introversal, Access >,
-          Introversal, Traversal
+      sake::archetypes::iterator_private::introterminal_base<
+          sake::archetypes::iterator< T, Traversal, Introterminal, Access >,
+          Introterminal, Traversal
       >,
       sake::archetypes::iterator_private::subscript_base<
           T, Traversal, Access >
@@ -78,7 +78,7 @@ public:
     typedef typename pointer_dispatch_::type pointer;
 
     typedef Traversal iterator_traversal;
-    typedef Introversal iterator_introversal;
+    typedef Introterminal iterator_introterminal;
 
     typedef typename sake::iterator::private_::category<
         Traversal, const_value_type
@@ -90,12 +90,12 @@ public:
     { return pointer_dispatch_::apply(); }
 };
 
-template< class T, class Traversal, class Introversal, class Access >
+template< class T, class Traversal, class Introterminal, class Access >
 inline typename boost::enable_if_c< boost_ext::is_convertible<
     Access, sake::iterator::archetypes::swappable_tag >::value >::type
 iter_swap(
-    sake::archetypes::iterator< T, Traversal, Introversal, Access >,
-    sake::archetypes::iterator< T, Traversal, Introversal, Access >)
+    sake::archetypes::iterator< T, Traversal, Introterminal, Access >,
+    sake::archetypes::iterator< T, Traversal, Introterminal, Access >)
 { }
 
 } // namespace archetypes

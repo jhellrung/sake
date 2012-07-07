@@ -10,6 +10,7 @@
 #define SAKE_CORE_ITERATOR_CONCEPTS_PRIVATE_BASE_HPP
 
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
@@ -49,21 +50,19 @@ public:
     SAKE_USING_TYPEDEF( typename traits_, pointer );
     SAKE_USING_TYPEDEF( typename traits_, difference_type );
     SAKE_USING_TYPEDEF( typename traits_, traversal );
-    SAKE_USING_TYPEDEF( typename traits_, introversal );
+    SAKE_USING_TYPEDEF( typename traits_, introterminal );
 
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
         traversal, boost::incrementable_traversal_tag >::value));
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        introversal, sake::null_introversal_tag >::value));
+        introterminal, sake::null_introterminal_tag >::value));
 
-    template< class Introversal >
+    template< class Introterminal >
     struct relax
-    { typedef typename traits_::template relax< Introversal >::type type; };
+    { typedef typename traits_::template relax< Introterminal >::type type; };
 
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        I, typename relax< introversal >::type >::value));
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        typename relax< introversal >::type, I >::value));
+    BOOST_STATIC_ASSERT((
+        boost::is_same< I, typename relax< introterminal >::type >::value));
 };
 
 } // namespace private_

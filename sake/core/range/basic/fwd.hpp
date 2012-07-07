@@ -18,6 +18,9 @@ namespace range
 namespace basic
 {
 
+template< class T >
+class empty;
+
 template< class I, class N = void >
 class subrange;
 

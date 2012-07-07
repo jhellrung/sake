@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/iterator/private/facade/end_introversal_base.hpp
+ * sake/core/iterator/private/facade/end_introterminal_base.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_END_INTROVERSAL_BASE_HPP
-#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_END_INTROVERSAL_BASE_HPP
+#ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_END_INTROTERMINAL_BASE_HPP
+#define SAKE_CORE_ITERATOR_PRIVATE_FACADE_END_INTROTERMINAL_BASE_HPP
 
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -42,15 +42,15 @@ namespace private_
 {
 
 template< class Params >
-struct end_introversal_base_index
+struct end_introterminal_base_index
 {
     typedef private_::traits< Params > traits_;
-    SAKE_USING_TYPEDEF( typename traits_, iterator_introversal );
+    SAKE_USING_TYPEDEF( typename traits_, iterator_introterminal );
     static int const value = boost_ext::mpl::
     eval_if<
         boost_ext::is_convertible<
-            iterator_introversal,
-            sake::end_access_introversal_tag
+            iterator_introterminal,
+            sake::end_access_introterminal_tag
         >,
         boost::mpl::if_<
             typename traits_::difference_enable,
@@ -60,8 +60,8 @@ struct end_introversal_base_index
     >::type::template
     else_if<
         boost_ext::is_convertible<
-            iterator_introversal,
-            sake::end_detect_introversal_tag
+            iterator_introterminal,
+            sake::end_detect_introterminal_tag
         >,
         sake::int_tag<1>
     >::type::template
@@ -71,15 +71,15 @@ struct end_introversal_base_index
 };
 
 template< class Derived, class Params >
-class end_introversal_base< Derived, Params, 0 >
+class end_introterminal_base< Derived, Params, 0 >
     : public private_::common_base< Derived, Params >
 {
     typedef private_::common_base< Derived, Params > common_base_;
 public:
-    SAKE_MEMBERWISE_SWAP( typename end_introversal_base, (( common_base_ )) )
+    SAKE_MEMBERWISE_SWAP( typename end_introterminal_base, (( common_base_ )) )
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
-        typename end_introversal_base,
+        typename end_introterminal_base,
         (( common_base_ ))
     )
     SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
@@ -90,15 +90,15 @@ protected:
     )
 
     template< class T >
-    explicit end_introversal_base(SAKE_FWD2_REF( T ) x,
+    explicit end_introterminal_base(SAKE_FWD2_REF( T ) x,
         typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            end_introversal_base, T >::value >::type* = 0)
+            end_introterminal_base, T >::value >::type* = 0)
         : common_base_(sake::forward<T>(x))
     { }
 };
 
 template< class Derived, class Params >
-class end_introversal_base< Derived, Params, 1 >
+class end_introterminal_base< Derived, Params, 1 >
     : public private_::common_base< Derived, Params >
 {
     typedef private_::common_base< Derived, Params > common_base_;
@@ -106,7 +106,7 @@ protected:
     using common_base_::derived;
 public:
 
-    SAKE_MEMBERWISE_SWAP( typename end_introversal_base, (( common_base_ )) )
+    SAKE_MEMBERWISE_SWAP( typename end_introterminal_base, (( common_base_ )) )
 
     template< class Derived_ >
     inline friend typename boost::enable_if_c<
@@ -132,7 +132,7 @@ public:
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
-        typename end_introversal_base,
+        typename end_introterminal_base,
         (( common_base_ ))
     )
     SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
@@ -143,9 +143,9 @@ protected:
     )
 
     template< class T >
-    explicit end_introversal_base(SAKE_FWD2_REF( T ) x,
+    explicit end_introterminal_base(SAKE_FWD2_REF( T ) x,
         typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            end_introversal_base, T >::value >::type* = 0)
+            end_introterminal_base, T >::value >::type* = 0)
         : common_base_(sake::forward<T>(x))
     { }
 
@@ -155,68 +155,68 @@ private:
 };
 
 template< class Derived, class Params >
-class end_introversal_base< Derived, Params, 2 >
-    : public private_::end_introversal_base< Derived, Params, 1 >
+class end_introterminal_base< Derived, Params, 2 >
+    : public private_::end_introterminal_base< Derived, Params, 1 >
 {
-    typedef private_::end_introversal_base<
-        Derived, Params, 1 > end_introversal_base_;
+    typedef private_::end_introterminal_base<
+        Derived, Params, 1 > end_introterminal_base_;
 protected:
-    using end_introversal_base_::derived;
+    using end_introterminal_base_::derived;
 public:
 
     SAKE_MEMBERWISE_SWAP(
-        typename end_introversal_base, (( end_introversal_base_ )) )
+        typename end_introterminal_base, (( end_introterminal_base_ )) )
 
     void end_ip()
     { sake::iterator::core_access::at_ip(derived(), sake::_end); }
 
-    template< class Introversal >
-    typename end_introversal_base_::template relax< Introversal >::type
-    end(Introversal) const
+    template< class Introterminal >
+    typename end_introterminal_base_::template relax< Introterminal >::type
+    end(Introterminal) const
     {
         return sake::iterator::core_access::at(
-            derived(), sake::_end, Introversal());
+            derived(), sake::_end, Introterminal());
     }
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
-        typename end_introversal_base,
-        (( end_introversal_base_ ))
+        typename end_introterminal_base,
+        (( end_introterminal_base_ ))
     )
     SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( end_introversal_base_ )),
+        (( end_introterminal_base_ )),
         ( has_copy_constructor )
         ( has_nothrow_copy_constructor )
         ( has_nothrow_copy_assign )
     )
 
     template< class T >
-    explicit end_introversal_base(SAKE_FWD2_REF( T ) x,
+    explicit end_introterminal_base(SAKE_FWD2_REF( T ) x,
         typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            end_introversal_base, T >::value >::type* = 0)
-        : end_introversal_base_(sake::forward<T>(x))
+            end_introterminal_base, T >::value >::type* = 0)
+        : end_introterminal_base_(sake::forward<T>(x))
     { }
 
     friend class sake::iterator::core_access;
 
-    using end_introversal_base_::derived_equal;
+    using end_introterminal_base_::derived_equal;
     bool derived_equal(sake::end_tag) const
     { return derived() == derived().at(sake::_end); }
 };
 
 template< class Derived, class Params >
-class end_introversal_base< Derived, Params, 3 >
-    : public private_::end_introversal_base< Derived, Params, 2 >
+class end_introterminal_base< Derived, Params, 3 >
+    : public private_::end_introterminal_base< Derived, Params, 2 >
 {
-    typedef private_::end_introversal_base<
-        Derived, Params, 2 > end_introversal_base_;
+    typedef private_::end_introterminal_base<
+        Derived, Params, 2 > end_introterminal_base_;
 protected:
-    using end_introversal_base_::derived;
+    using end_introterminal_base_::derived;
 public:
     SAKE_USING_TYPEDEF( typename private_::traits< Params >, difference_type );
 
     SAKE_MEMBERWISE_SWAP(
-        typename end_introversal_base, (( end_introversal_base_ )) )
+        typename end_introterminal_base, (( end_introterminal_base_ )) )
 
     template< class Derived_ >
     inline friend typename boost::enable_if_c<
@@ -231,26 +231,26 @@ public:
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
-        typename end_introversal_base,
-        (( end_introversal_base_ ))
+        typename end_introterminal_base,
+        (( end_introterminal_base_ ))
     )
     SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( end_introversal_base_ )),
+        (( end_introterminal_base_ )),
         ( has_copy_constructor )
         ( has_nothrow_copy_constructor )
         ( has_nothrow_copy_assign )
     )
 
     template< class T >
-    explicit end_introversal_base(SAKE_FWD2_REF( T ) x,
+    explicit end_introterminal_base(SAKE_FWD2_REF( T ) x,
         typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            end_introversal_base, T >::value >::type* = 0)
-        : end_introversal_base_(sake::forward<T>(x))
+            end_introterminal_base, T >::value >::type* = 0)
+        : end_introterminal_base_(sake::forward<T>(x))
     { }
 
     friend class sake::iterator::core_access;
 
-    using end_introversal_base_::derived_difference;
+    using end_introterminal_base_::derived_difference;
     difference_type derived_difference(sake::end_tag) const
     { return derived() - derived().at(sake::_end); }
 
@@ -267,4 +267,4 @@ private:
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_END_INTROVERSAL_BASE_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_END_INTROTERMINAL_BASE_HPP

@@ -5,10 +5,10 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * range::iter_at(R&& r, T const & x, Introversal)
- *     -> range_forward_iterator< R, Introversal >::type
- * range::citer_at(R const & r, T const & x, Introversal)
- *     -> range_iterator< R const, Introversal >::type
+ * range::iter_at(R&& r, T const & x, Introterminal)
+ *     -> range_forward_iterator< R, Introterminal >::type
+ * range::citer_at(R const & r, T const & x, Introterminal)
+ *     -> range_iterator< R const, Introterminal >::type
  * struct range::functional::iter_at
  * struct range::functional::citer_at
  ******************************************************************************/
@@ -18,9 +18,7 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
 
-#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/add_const_remove_reference.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -29,6 +27,7 @@
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/range/forward_traits.hpp>
+#include <sake/core/range/private/iter_at_static_assert_cond.hpp>
 #include <sake/core/range/traits.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
@@ -41,39 +40,31 @@ namespace range
 namespace result_of
 {
 
-template< class R, class T, class Introversal >
+template< class R, class T, class Introterminal >
 class iter_at
 {
-    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
-    typedef typename boost_ext::remove_qualifiers< Introversal >::type introversal;
-    BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-        boost::is_same< noqual_type, sake::begin_tag >,
-        boost::is_same< noqual_type, sake::end_tag >,
-        boost_ext::is_convertible<
-            noqual_type, typename sake::range_forward_iterator<R>::type >
-    >::value));
+    typedef typename boost_ext::
+        remove_qualifiers< Introterminal >::type introterminal;
+    BOOST_STATIC_ASSERT((
+        sake::range::private_::iter_at_static_assert_cond<R,T>::value));
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        introversal, sake::null_introversal_tag >::value));
+        introterminal, sake::null_introterminal_tag >::value));
 public:
-    typedef typename sake::range_forward_iterator< R, introversal >::type type;
+    typedef typename sake::range_forward_iterator< R, introterminal >::type type;
 };
 
-template< class R, class T, class Introversal >
+template< class R, class T, class Introterminal >
 class citer_at
 {
     typedef typename boost_ext::add_const_remove_reference<R>::type range_;
-    typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
-    typedef typename boost_ext::remove_qualifiers< Introversal >::type introversal;
-    BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-        boost::is_same< noqual_type, sake::begin_tag >,
-        boost::is_same< noqual_type, sake::end_tag >,
-        boost_ext::is_convertible<
-            noqual_type, typename sake::range_iterator< range_ >::type >
-    >::value));
+    typedef typename boost_ext::
+        remove_qualifiers< Introterminal >::type introterminal;
+    BOOST_STATIC_ASSERT((sake::range::private_::
+        iter_at_static_assert_cond< range_&, T >::value));
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        introversal, sake::null_introversal_tag >::value));
+        introterminal, sake::null_introterminal_tag >::value));
 public:
-    typedef typename sake::range_iterator< range_, introversal >::type type;
+    typedef typename sake::range_iterator< range_, introterminal >::type type;
 };
 
 } // namespace result_of
@@ -87,30 +78,30 @@ struct iter_at
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
-    template< class R, class T, class Introversal >
-    typename sake::range::result_of::iter_at< R, I, Introversal >::type
-    operator()(R&& r, T const & x, Introversal) const
+    template< class R, class T, class Introterminal >
+    typename result< iter_at ( R, T, Introterminal ) >::type
+    operator()(R&& r, T const & x, Introterminal) const
     {
         return sake::range_forward_traits<R>::iter_at(
-            sake::forward<R>(r), x, Introversal());
+            sake::forward<R>(r), x, Introterminal());
     }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-    template< class R, class T, class Introversal >
-    typename sake::range::result_of::iter_at< R&, I, Introversal >::type
-    operator()(R& r, T const & x, Introversal) const
+    template< class R, class T, class Introterminal >
+    typename result< iter_at ( R&, T, Introterminal ) >::type
+    operator()(R& r, T const & x, Introterminal) const
     {
         return sake::range_forward_traits< R& >::iter_at(
-            r, x, Introversal());
+            r, x, Introterminal());
     }
 
-    template< class R, class T, class Introversal >
-    typename sake::range::result_of::iter_at< R const &, I, Introversal >::type
-    operator()(R const & r, T const & x, Introversal) const
+    template< class R, class T, class Introterminal >
+    typename result< iter_at ( R const &, T, Introterminal ) >::type
+    operator()(R const & r, T const & x, Introterminal) const
     {
         return sake::range_forward_traits< R const & >::iter_at(
-            r, x, Introversal());
+            r, x, Introterminal());
     }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -121,10 +112,10 @@ struct citer_at
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::range::result_of::citer_at, 3 )
 
-    template< class R, class T, class Introversal >
-    typename sake::range::result_of::citer_at< R const &, I, Introversal >::type
-    operator()(R const & r, T const & x, Introversal) const
-    { return sake::range_traits< R const >::iter_at(r, x, Introversal()); }
+    template< class R, class T, class Introterminal >
+    typename result< citer_at ( R, T, Introterminal ) >::type
+    operator()(R const & r, T const & x, Introterminal) const
+    { return sake::range_traits< R const >::iter_at(r, x, Introterminal()); }
 };
 
 } // namespace functional

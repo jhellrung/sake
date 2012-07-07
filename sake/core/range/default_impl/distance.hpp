@@ -123,7 +123,7 @@ dispatch(R const & r, sake::int_tag<0>)
 {
     typedef sake::range_traits< R const > traits_;
     return sake::iterator::functional::distance()(
-        traits_::begin(r, sake::end_detect_introversal_tag()),
+        traits_::begin(r, sake::end_detect_introterminal_tag()),
         sake::_end
     );
 }

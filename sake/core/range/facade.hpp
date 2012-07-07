@@ -16,10 +16,10 @@
  * - range::keyword::chained_base
  *
  * Implementations to be defined in Derived:
- * - struct derived_iterator_with_of< This, Introversal >
+ * - struct derived_iterator_with_of< This, Introterminal >
  *     { typedef ... type; };
- * - static derived_iter_at(This& this_, T x, Introversal)
- *     -> iterator_with_of< This, Introversal >::type
+ * - static derived_iter_at(This& this_, T x, Introterminal)
+ *     -> iterator_with_of< This, Introterminal >::type
  * - struct derived_subrange_of< This, Begin, End >
  *     { typedef ... type; };
  * - static derived_sub(This& this_, Begin b, End e)
@@ -38,8 +38,6 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
@@ -66,7 +64,6 @@
 #include <sake/core/range/private/facade/sub_enable.hpp>
 #include <sake/core/range/private/facade/traits.hpp>
 #include <sake/core/utility/assert.hpp>
-#include <sake/core/utility/private/msc_adl_friend_workaround.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
@@ -119,34 +116,34 @@ public:
     SAKE_USING_TYPEDEF( typename traits_, size_type );
     SAKE_USING_TYPEDEF( typename traits_, range_traversal );
 
-    template< class Introversal >
+    template< class Introterminal >
     struct iterator_with
     { typedef typename sake::range::core_access::
-        iterator_with< Derived, Introversal >::type type; };
-    template< class Introversal >
+        iterator_with< Derived, Introterminal >::type type; };
+    template< class Introterminal >
     struct const_iterator_with
     { typedef typename sake::range::core_access::
-        iterator_with< Derived const, Introversal >::type type; };
+        iterator_with< Derived const, Introterminal >::type type; };
 
     template< class T >
     typename private_::iter_at_enabler< Params, T, iterator >::type
     iter_at(T const & x)
-    { return iter_at(x, sake::null_introversal_tag()); }
+    { return iter_at(x, sake::null_introterminal_tag()); }
     template< class T >
     typename private_::iter_at_enabler< Params, T, const_iterator >::type
     iter_at(T const & x) const
-    { return iter_at(x, sake::null_introversal_tag()); }
+    { return iter_at(x, sake::null_introterminal_tag()); }
 
-    template< class T, class Introversal >
+    template< class T, class Introterminal >
     typename private_::iter_at_lazy_enabler<
-        Params, T, iterator_with< Introversal > >::type
-    iter_at(T const & x, Introversal)
-    { return sake::range::core_access::iter_at(derived(), x, Introversal()); }
-    template< class T, class Introversal >
+        Params, T, iterator_with< Introterminal > >::type
+    iter_at(T const & x, Introterminal)
+    { return sake::range::core_access::iter_at(derived(), x, Introterminal()); }
+    template< class T, class Introterminal >
     typename private_::iter_at_lazy_enabler<
-        Params, T, const_iterator_with< Introversal > >::type
-    iter_at(T const & x, Introversal) const
-    { return sake::range::core_access::iter_at(derived(), x, Introversal()); }
+        Params, T, const_iterator_with< Introterminal > >::type
+    iter_at(T const & x, Introterminal) const
+    { return sake::range::core_access::iter_at(derived(), x, Introterminal()); }
 
     template< class Begin, class End >
     struct subrange_with
@@ -193,17 +190,9 @@ public:
 
     bool empty() const
     { return sake::range::core_access::empty(derived()); }
-#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     inline friend bool
-    range_empty(sake::msc_adl_friend_workaround< Derived const > x)
-    { return x.value.empty(); }
-#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
-    template< class Derived_ >
-    inline friend typename boost::enable_if_c<
-        boost::is_same< Derived_, Derived >::value, bool >::type
-    range_empty(Derived_ const & this_)
+    range_empty(facade const & this_)
     { return this_.empty(); }
-#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
 protected:
     template< class CDerived >
@@ -213,12 +202,12 @@ protected:
     struct iterator_of< CDerived const >
     { typedef const_iterator type; };
 
-    template< class CDerived, class Introversal >
+    template< class CDerived, class Introterminal >
     struct iterator_with_of
-    { typedef typename iterator_with< Introversal >::type type; };
-    template< class CDerived, class Introversal >
-    struct iterator_with_of< CDerived const, Introversal >
-    { typedef typename const_iterator_with< Introversal >::type type; };
+    { typedef typename iterator_with< Introterminal >::type type; };
+    template< class CDerived, class Introterminal >
+    struct iterator_with_of< CDerived const, Introterminal >
+    { typedef typename const_iterator_with< Introterminal >::type type; };
 
     template< class CDerived, class Begin, class End >
     struct subrange_with_of

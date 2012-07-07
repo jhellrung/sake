@@ -89,9 +89,9 @@ struct traits
     >::type iterator_traversal;
 
     typedef typename boost_ext::mpl::lazy_at<
-        Params, sake::iterator::keyword::tag::introversal,
-        sake::iterator_introversal<I>
-    >::type iterator_introversal;
+        Params, sake::iterator::keyword::tag::introterminal,
+        sake::iterator_introterminal<I>
+    >::type iterator_introterminal;
 
     typedef typename boost_ext::mpl::lazy_at<
         Params, sake::iterator::keyword::tag::compare_enable,
@@ -114,7 +114,7 @@ struct traits
         sake::iterator::keyword::reference< reference >,
         sake::iterator::keyword::difference< difference_type >,
         sake::iterator::keyword::traversal< iterator_traversal >,
-        sake::iterator::keyword::introversal< iterator_introversal >,
+        sake::iterator::keyword::introterminal< iterator_introterminal >,
         sake::iterator::keyword::compare_enable< compare_enable >,
         sake::iterator::keyword::difference_enable< difference_enable >
     > nominal_facade_param_types;

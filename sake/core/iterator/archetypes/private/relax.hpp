@@ -19,28 +19,28 @@ namespace sake
 namespace archetypes
 {
 
-template< class T, class Traversal, class Introversal, class Access >
+template< class T, class Traversal, class Introterminal, class Access >
 struct iterator;
 
 namespace iterator_private
 {
 
-template< class Derived, class Introversal_ >
+template< class Derived, class Introterminal_ >
 struct relax;
 
 template<
-    class T, class Traversal, class Introversal, class Access,
-    class Introversal_
+    class T, class Traversal, class Introterminal, class Access,
+    class Introterminal_
 >
 struct relax<
-    sake::archetypes::iterator< T, Traversal, Introversal, Access >,
-    Introversal_
+    sake::archetypes::iterator< T, Traversal, Introterminal, Access >,
+    Introterminal_
 >
 {
     BOOST_STATIC_ASSERT((
-        boost_ext::is_convertible< Introversal, Introversal_ >::value));
+        boost_ext::is_convertible< Introterminal, Introterminal_ >::value));
     typedef sake::archetypes::iterator<
-        T, Traversal, Introversal_, Access > type;
+        T, Traversal, Introterminal_, Access > type;
 };
 
 } // namespace iterator_private

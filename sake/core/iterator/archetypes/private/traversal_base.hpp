@@ -46,9 +46,11 @@ struct traversal_base< Derived, boost::single_pass_traversal_tag >
     : sake::archetypes::iterator_private::traversal_base<
           Derived, boost::incrementable_traversal_tag >
 {
-    inline friend bool operator==(traversal_base, traversal_base)
+    inline friend bool
+    operator==(traversal_base, traversal_base)
     { return true; }
-    inline friend bool operator!=(traversal_base, traversal_base)
+    inline friend bool
+    operator!=(traversal_base, traversal_base)
     { return false; }
 
 protected:
@@ -98,19 +100,25 @@ struct traversal_base< Derived, boost::random_access_traversal_tag >
     Derived operator-(difference_type) const
     { return *static_cast< Derived const * >(this); }
 
-    inline friend Derived operator+(difference_type, traversal_base)
+    inline friend Derived
+    operator+(difference_type, traversal_base)
     { return Derived(); }
 
-    inline friend difference_type operator-(traversal_base, traversal_base)
+    inline friend difference_type
+    operator-(traversal_base, traversal_base)
     { return 0; }
 
-    inline friend bool operator<(traversal_base, traversal_base)
+    inline friend bool
+    operator<(traversal_base, traversal_base)
     { return false; }
-    inline friend bool operator>(traversal_base, traversal_base)
+    inline friend bool
+    operator>(traversal_base, traversal_base)
     { return false; }
-    inline friend bool operator<=(traversal_base, traversal_base)
+    inline friend bool
+    operator<=(traversal_base, traversal_base)
     { return true; }
-    inline friend bool operator>=(traversal_base, traversal_base)
+    inline friend bool
+    operator>=(traversal_base, traversal_base)
     { return true; }
 };
 

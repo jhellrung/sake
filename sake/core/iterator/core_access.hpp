@@ -55,8 +55,8 @@ template< class D0, class P0, class D1, class P1 > \
     template< class, class, int > \
     friend class sake::iterator::facade_adl::private_::x ## _base;
     declare_friend( traversal )
-    declare_friend( begin_introversal )
-    declare_friend( end_introversal )
+    declare_friend( begin_introterminal )
+    declare_friend( end_introterminal )
 #undef declare_friend
 
     // Dereferenceable
@@ -148,21 +148,21 @@ template< class D0, class P0, class D1, class P1 > \
     cmp(I0 const & i0, I1 const & i1)
     { return -i1.derived_cmp(i0); }
 
-    // Introversal
-    template< class Derived, class Introversal >
+    // Introterminal
+    template< class Derived, class Introterminal >
     struct relax
     {
         typedef typename Derived::template
-            derived_relax< Introversal >::type type;
+            derived_relax< Introterminal >::type type;
     };
     template< class Derived, class T >
     static void
     at_ip(Derived& this_, T const & x)
     { return this_.derived_at_ip(x); }
-    template< class Derived, class T, class Introversal >
-    static typename Derived::template relax< Introversal >::type
-    at(Derived const & this_, T const & x, Introversal)
-    { return this_.derived_at(x, Introversal()); }
+    template< class Derived, class T, class Introterminal >
+    static typename Derived::template relax< Introterminal >::type
+    at(Derived const & this_, T const & x, Introterminal)
+    { return this_.derived_at(x, Introterminal()); }
 
     // BeginDetect
     template< class Derived >

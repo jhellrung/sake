@@ -18,7 +18,7 @@
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
-#include <sake/core/iterator/private/facade/begin_introversal_base.hpp>
+#include <sake/core/iterator/private/facade/begin_introterminal_base.hpp>
 #include <sake/core/iterator/private/facade/post_increment_dispatch.hpp>
 #include <sake/core/iterator/private/facade/subscript_dispatch.hpp>
 #include <sake/core/iterator/private/facade/traits.hpp>
@@ -56,17 +56,16 @@ struct traversal_base_index
 
 template< class Derived, class Params >
 class traversal_base< Derived, Params, 0 >
-    : public private_::begin_introversal_base< Derived, Params >
+    : public private_::begin_introterminal_base< Derived, Params >
 {
-    typedef private_::begin_introversal_base<
-        Derived, Params
-    > begin_introversal_base_;
+    typedef private_::begin_introterminal_base<
+        Derived, Params > begin_introterminal_base_;
 protected:
-    using begin_introversal_base_::derived;
+    using begin_introterminal_base_::derived;
 public:
 
     SAKE_MEMBERWISE_SWAP(
-        typename traversal_base, (( begin_introversal_base_ )) )
+        typename traversal_base, (( begin_introterminal_base_ )) )
 
     Derived&
     operator++()
@@ -97,10 +96,10 @@ public:
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename traversal_base,
-        (( begin_introversal_base_ ))
+        (( begin_introterminal_base_ ))
     )
     SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( begin_introversal_base_ )),
+        (( begin_introterminal_base_ )),
         ( has_copy_constructor )
         ( has_nothrow_copy_constructor )
         ( has_nothrow_copy_assign )
@@ -110,7 +109,7 @@ protected:
     explicit traversal_base(SAKE_FWD2_REF( T ) x,
         typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
             traversal_base, T >::value >::type* = 0)
-        : begin_introversal_base_(sake::forward<T>(x))
+        : begin_introterminal_base_(sake::forward<T>(x))
     { }
 };
 
@@ -119,8 +118,7 @@ class traversal_base< Derived, Params, 1 >
     : public private_::traversal_base< Derived, Params, 0 >
 {
     typedef private_::traversal_base<
-        Derived, Params, 0
-    > traversal_base_;
+        Derived, Params, 0 > traversal_base_;
 protected:
     using traversal_base_::derived;
 public:
@@ -167,8 +165,7 @@ class traversal_base< Derived, Params, 2 >
     : public private_::traversal_base< Derived, Params, 1 >
 {
     typedef private_::traversal_base<
-        Derived, Params, 1
-    > traversal_base_;
+        Derived, Params, 1 > traversal_base_;
 protected:
     using traversal_base_::derived;
 private:

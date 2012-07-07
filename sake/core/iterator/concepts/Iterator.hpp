@@ -9,7 +9,7 @@
 #ifndef SAKE_CORE_ITERATOR_CONCEPTS_ITERATOR_HPP
 #define SAKE_CORE_ITERATOR_CONCEPTS_ITERATOR_HPP
 
-#include <sake/core/iterator/concepts/private/IntroversalBase.hpp>
+#include <sake/core/iterator/concepts/private/IntroterminalBase.hpp>
 #include <sake/core/iterator/concepts/private/TraversalBase.hpp>
 
 namespace sake
@@ -21,7 +21,7 @@ namespace concepts
 template< class I >
 struct Iterator
     : sake::iterator::concepts::private_::TraversalBase<I>,
-      sake::iterator::concepts::private_::IntroversalBase<I>
+      sake::iterator::concepts::private_::IntroterminalBase<I>
 { };
 
 } // namespace concepts

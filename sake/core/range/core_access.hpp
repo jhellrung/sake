@@ -29,17 +29,15 @@ class core_access
     template< class, class, int >
     friend class sake::range::facade_adl::private_::size_base;
 
-    template< class Derived, class Introversal >
+    template< class Derived, class Introterminal >
     struct iterator_with
-    {
-        typedef typename Derived::template
-            derived_iterator_with_of< Derived, Introversal >::type type;
-    };
+    { typedef typename Derived::template
+        derived_iterator_with_of< Derived, Introterminal >::type type; };
 
-    template< class Derived, class T, class Introversal >
-    static typename iterator_with< Derived, Introversal >::type
-    iter_at(Derived& this_, T const & x, Introversal)
-    { return Derived::derived_iter_at(this_, x, Introversal()); }
+    template< class Derived, class T, class Introterminal >
+    static typename iterator_with< Derived, Introterminal >::type
+    iter_at(Derived& this_, T const & x, Introterminal)
+    { return Derived::derived_iter_at(this_, x, Introterminal()); }
 
     template< class Derived, class Begin, class End >
     struct subrange_with

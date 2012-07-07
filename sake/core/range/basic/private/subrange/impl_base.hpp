@@ -54,11 +54,11 @@ struct range_tag { };
 template< class I >
 struct impl_base_index
 {
-    typedef typename sake::iterator_introversal<I>::type introversal;
+    typedef typename sake::iterator_introterminal<I>::type introterminal;
     static bool const implicit_begin = boost_ext::is_convertible<
-        introversal, sake::begin_access_introversal_tag >::value;
+        introterminal, sake::begin_access_introterminal_tag >::value;
     static bool const implicit_end = boost_ext::is_convertible<
-        introversal, sake::end_access_introversal_tag >::value;
+        introterminal, sake::end_access_introterminal_tag >::value;
     static int const value = implicit_begin + 2 * implicit_end;
 };
 
@@ -76,8 +76,8 @@ class impl_base<I,0>
     typedef subrange_private::traits<I> traits_;
     SAKE_USING_TYPEDEF( typename traits_, facade_ );
     BOOST_STATIC_ASSERT((boost::is_same<
-        typename sake::iterator_introversal<I>::type,
-        sake::null_introversal_tag
+        typename sake::iterator_introterminal<I>::type,
+        sake::null_introterminal_tag
     >::value));
 public:
     SAKE_USING_TYPEDEF( typename facade_, reference );
@@ -141,12 +141,12 @@ protected:
           m_end(sake::range_traits<R>::iter_at(r,e))
     { }
 
-    I derived_iter_at_(sake::begin_tag, sake::null_introversal_tag) const
+    I derived_iter_at_(sake::begin_tag, sake::null_introterminal_tag) const
     { return m_begin; }
-    I derived_iter_at_(sake::end_tag, sake::null_introversal_tag) const
+    I derived_iter_at_(sake::end_tag, sake::null_introterminal_tag) const
     { return m_end; }
     template< class T >
-    I derived_iter_at_(T const & x, sake::null_introversal_tag) const
+    I derived_iter_at_(T const & x, sake::null_introterminal_tag) const
     { return x; }
 
     friend class sake::range::core_access;
@@ -181,8 +181,8 @@ class impl_base<I,1>
     typedef subrange_private::traits<I> traits_;
     SAKE_USING_TYPEDEF( typename traits_, facade_ );
     BOOST_STATIC_ASSERT((boost::is_same<
-        typename sake::iterator_introversal<I>::type,
-        sake::begin_access_introversal_tag
+        typename sake::iterator_introterminal<I>::type,
+        sake::begin_access_introterminal_tag
     >::value));
 public:
     SAKE_USING_TYPEDEF( typename facade_, reference );
@@ -224,37 +224,37 @@ protected:
     template< class R >
     impl_base(subrange_private::range_tag, R& r)
         : m_end(sake::range_traits<R>::end(
-              r, sake::begin_access_introversal_tag()))
+              r, sake::begin_access_introterminal_tag()))
     { }
 
     template< class R, class End >
     impl_base(R& r, sake::begin_tag, End const & e)
         : m_end(sake::range_traits<R>::iter_at(
-              r, e, sake::begin_access_introversal_tag()))
+              r, e, sake::begin_access_introterminal_tag()))
     { }
 
 private:
-    template< class Introversal >
+    template< class Introterminal >
     struct enable_if_is_convertible
         : boost::lazy_enable_if_c<
               boost_ext::is_convertible<
-                  sake::begin_access_introversal_tag, Introversal >::value,
-              typename facade_::template iterator_with< Introversal >
+                  sake::begin_access_introterminal_tag, Introterminal >::value,
+              typename facade_::template iterator_with< Introterminal >
           >
     { };
 protected:
-    template< class Introversal >
-    typename enable_if_is_convertible< Introversal >::type
-    derived_iter_at_(sake::end_tag, Introversal) const
+    template< class Introterminal >
+    typename enable_if_is_convertible< Introterminal >::type
+    derived_iter_at_(sake::end_tag, Introterminal) const
     { return m_end; }
-    template< class T, class Introversal >
-    typename enable_if_is_convertible< Introversal >::type
-    derived_iter_at_(T const & x, Introversal) const
+    template< class T, class Introterminal >
+    typename enable_if_is_convertible< Introterminal >::type
+    derived_iter_at_(T const & x, Introterminal) const
     {
         return sake::iterator::at(
             m_end,
             sake::iterator::adaptor_private::as_convertible_relax<I>(x),
-            Introversal()
+            Introterminal()
         );
     }
 
@@ -286,8 +286,8 @@ class impl_base<I,2>
     typedef subrange_private::traits<I> traits_;
     SAKE_USING_TYPEDEF( typename traits_, facade_ );
     BOOST_STATIC_ASSERT((boost::is_same<
-        typename sake::iterator_introversal<I>::type,
-        sake::end_access_introversal_tag
+        typename sake::iterator_introterminal<I>::type,
+        sake::end_access_introterminal_tag
     >::value));
 public:
     SAKE_USING_TYPEDEF( typename facade_, reference );
@@ -330,37 +330,37 @@ protected:
     template< class R >
     impl_base(subrange_private::range_tag, R& r)
         : m_begin(sake::range_traits<R>::begin(
-              r, sake::end_access_introversal_tag()))
+              r, sake::end_access_introterminal_tag()))
     { }
 
     template< class R, class Begin >
     impl_base(R& r, Begin const & b, sake::end_tag)
         : m_begin(sake::range_traits<R>::iter_at(
-              r, b, sake::end_access_introversal_tag()))
+              r, b, sake::end_access_introterminal_tag()))
     { }
 
 private:
-    template< class Introversal >
+    template< class Introterminal >
     struct enable_if_is_convertible
         : boost::lazy_enable_if_c<
               boost_ext::is_convertible<
-                  sake::end_access_introversal_tag, Introversal >::value,
-              typename facade_::template iterator_with< Introversal >
+                  sake::end_access_introterminal_tag, Introterminal >::value,
+              typename facade_::template iterator_with< Introterminal >
           >
     { };
 protected:
-    template< class Introversal >
-    typename enable_if_is_convertible< Introversal >::type
-    derived_iter_at_(sake::begin_tag, Introversal) const
+    template< class Introterminal >
+    typename enable_if_is_convertible< Introterminal >::type
+    derived_iter_at_(sake::begin_tag, Introterminal) const
     { return m_begin; }
-    template< class T, class Introversal >
-    typename enable_if_is_convertible< Introversal >::type
-    derived_iter_at_(T const & x, Introversal) const
+    template< class T, class Introterminal >
+    typename enable_if_is_convertible< Introterminal >::type
+    derived_iter_at_(T const & x, Introterminal) const
     {
         return sake::iterator::at(
             m_begin,
             sake::iterator::adaptor_private::as_convertible_relax<I>(x),
-            Introversal()
+            Introterminal()
         );
     }
 
@@ -395,8 +395,8 @@ class impl_base<I,3>
     typedef subrange_private::traits<I> traits_;
     SAKE_USING_TYPEDEF( typename traits_, facade_ );
     BOOST_STATIC_ASSERT((boost::is_same<
-        typename sake::iterator_introversal<I>::type,
-        sake::begin_access_end_access_introversal_tag
+        typename sake::iterator_introterminal<I>::type,
+        sake::begin_access_end_access_introterminal_tag
     >::value));
 public:
     SAKE_USING_TYPEDEF( typename facade_, reference );
@@ -425,23 +425,23 @@ protected:
     template< class R >
     impl_base(subrange_private::range_tag, R& r)
         : m_i(sake::range_traits<R>::begin(
-              r, sake::begin_access_end_access_introversal_tag()))
+              r, sake::begin_access_end_access_introterminal_tag()))
     { }
 
     template< class R >
     impl_base(R& r, sake::begin_tag, sake::end_tag)
         : m_i(sake::range_traits<R>::begin(
-              r, sake::begin_access_end_access_introversal_tag()))
+              r, sake::begin_access_end_access_introterminal_tag()))
     { }
 
-    template< class T, class Introversal >
-    typename facade_::template iterator_with< Introversal >::type
-    derived_iter_at_(T const & x, Introversal) const
+    template< class T, class Introterminal >
+    typename facade_::template iterator_with< Introterminal >::type
+    derived_iter_at_(T const & x, Introterminal) const
     {
         return sake::iterator::at(
             m_i,
             sake::iterator::adaptor_private::as_convertible_relax<I>(x),
-            Introversal()
+            Introterminal()
         );
     }
 

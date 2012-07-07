@@ -12,7 +12,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <sake/core/iterator/adapt_introversal.hpp>
+#include <sake/core/iterator/adapt_introterminal.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
@@ -55,25 +55,24 @@ struct dispatch;
 template< class R >
 struct dispatch< R, false >
 {
-    template< class Iterator, class Introversal >
+    template< class Iterator, class Introterminal >
     struct apply
     {
         BOOST_STATIC_ASSERT((boost::is_same<
-            typename sake::iterator_introversal< Iterator >::type,
-            sake::null_introversal_tag
+            typename sake::iterator_introterminal< Iterator >::type,
+            sake::null_introterminal_tag
         >::value));
-        typedef typename sake::iterator::adapt_introversal<
-            Iterator, Introversal >::type type;
+        typedef typename sake::iterator::adapt_introterminal<
+            Iterator, Introterminal >::type type;
     };
 };
 
 template< class R >
 struct dispatch< R, true >
 {
-    template< class Iterator, class Introversal >
+    template< class Iterator, class Introterminal >
     struct apply
-        : R::template iterator_with< Introversal >
-    { };
+    { typedef typename R::template iterator_with< Introterminal >::type type; };
 };
 
 template< class R >
@@ -84,18 +83,18 @@ struct dispatch< R const, false >
 template< class R >
 struct dispatch< R const, true >
 {
-    template< class Iterator, class Introversal >
+    template< class Iterator, class Introterminal >
     struct apply
-        : R::template const_iterator_with< Introversal >
-    { };
+    { typedef typename R::template
+        const_iterator_with< Introterminal >::type type; };
 };
 
 } // namespace iterator_with_private
 
-template< class R, class Iterator, class Introversal >
+template< class R, class Iterator, class Introterminal >
 struct iterator_with
     : iterator_with_private::dispatch<R>::template
-          apply< Iterator, Introversal >
+          apply< Iterator, Introterminal >
 { };
 
 } // namespace default_impl

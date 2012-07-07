@@ -8,15 +8,14 @@
  * class iterator::adaptors::move<I>
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_MOVE_ADAPTORS_ITERATOR_HPP
-#define SAKE_CORE_ITERATOR_MOVE_ADAPTORS_ITERATOR_HPP
+#ifndef SAKE_CORE_ITERATOR_ADAPTORS_MOVE_HPP
+#define SAKE_CORE_ITERATOR_ADAPTORS_MOVE_HPP
 
 #include <boost/concept/assert.hpp>
 #include <boost/config.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/map/map10.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
@@ -26,10 +25,9 @@
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
-#include <sake/core/functional/construct.hpp>
 #include <sake/core/iterator/adaptor.hpp>
 #include <sake/core/iterator/adaptors/fwd.hpp>
-#include <sake/core/iterator/adaptors/transform.hpp>
+#include <sake/core/iterator/adaptors/multidim/move.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/concepts/Iterator.hpp>
 #include <sake/core/iterator/core_access.hpp>
@@ -37,12 +35,11 @@
 #include <sake/core/iterator/keyword.hpp>
 #include <sake/core/iterator/multidim_traits_fwd.hpp>
 #include <sake/core/iterator/traits.hpp>
+#include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/move.hpp>
-#include <sake/core/range/adaptors/fwd.hpp>
-#include <sake/core/range/adaptors/move.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 #include <sake/core/utility/value_constructor_enable.hpp>
 
@@ -148,104 +145,25 @@ private:
     reference derived_dereference() const
     { return traits_::dereference(base()); }
 
-    template< class Introversal >
+    template< class Introterminal >
     struct derived_relax
     {
         typedef sake::iterator::adaptors::move<
-            typename sake::iterator_relax< I, Introversal >::type > type;
+            typename sake::iterator_relax< I, Introterminal >::type > type;
     };
 
-    template< class T, class Introversal >
-    typename derived_relax< Introversal >::type
-    derived_at(T const & x, Introversal) const
+    template< class T, class Introterminal >
+    typename derived_relax< Introterminal >::type
+    derived_at(T const & x, Introterminal) const
     {
-        return typename derived_relax< Introversal >::type(
-            adaptor_::base_at(x, Introversal()));
+        return typename derived_relax< Introterminal >::type(
+            adaptor_::base_at(x, Introterminal()));
     }
 };
-
-} // namespace adaptors
-
-} // namespace iterator
-
-/*******************************************************************************
- * struct extension::iterator_multidim_traits< iterator::adaptors::move<I> >
- ******************************************************************************/
-
-namespace extension
-{
-
-template< class I >
-struct iterator_multidim_traits<
-    sake::iterator::adaptors::move<I>,
-    typename boost::enable_if_c<
-        sake::iterator_multidim_enable<I>::value >::type
->
-{
-    typedef boost::true_type enable_tag;
-
-    typedef sake::iterator::adaptors::move<I> this_type;
-    typedef sake::iterator_multidim_traits<I> base_traits;
-
-    typedef typename base_traits::outer_iterator base_outer_iterator;
-    typedef typename sake::iterator_reference<
-        base_outer_iterator
-    >::type base_inner_range;
-    typedef sake::range::adaptors::move< base_inner_range > inner_range;
-
-    typedef sake::iterator::adaptors::transform<
-        base_outer_iterator,
-        sake::functional::construct< inner_range >
-    > outer_iterator;
-
-    template< class Introversal >
-    struct inner_iterator_with
-        : inner_range::template iterator_with< Introversal >
-    { };
-
-    static outer_iterator
-    outer(this_type const & i)
-    { return outer_iterator(base_traits::outer(i.base())); }
-
-    template< class Introversal >
-    static typename inner_iterator_with< Introversal >::type
-    inner(this_type const & i, Introversal)
-    {
-        return typename inner_iterator_with< Introversal >::type(
-            base_traits::inner(i.base(), Introversal()));
-    }
-
-    template< class Inner >
-    static void
-    at_ip(this_type& i, outer_iterator const & j, Inner const & k)
-    {
-        base_traits::at_ip(i.protected_base(), j.base(), k.base());
-        return i;
-    }
-
-    template< class Inner, class Introversal >
-    static typename this_type::template relax< Introversal >::type
-    at(
-        this_type const & i,
-        outer_iterator const & j, Inner const & k,
-        Introversal)
-    {
-        return typename this_type::template relax< Introversal >::type(
-            base_traits::at(i.base(), j.base(), k.base(), Introversal()));
-    }
-};
-
-} // namespace extension
 
 /*******************************************************************************
  * namespace iterator::adaptors::move_private
  ******************************************************************************/
-
-namespace iterator
-{
-
-namespace adaptors
-{
 
 namespace move_private
 {
@@ -319,4 +237,4 @@ BOOST_CONCEPT_ASSERT((
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_MOVE_ADAPTORS_ITERATOR_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_ADAPTORS_MOVE_HPP

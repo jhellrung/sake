@@ -17,10 +17,10 @@ namespace sake
 template< class R >
 struct range_forward_traits;
 
-template< class R, class Introversal = sake::null_introversal_tag >
+template< class R, class Introterminal = sake::null_introterminal_tag >
 struct range_forward_iterator
-    : sake::range_forward_traits<R>::template iterator_with< Introversal >
-{ };
+{ typedef typename sake::range_forward_traits<R>::template
+    iterator_with< Introterminal >::type type; };
 
 template< class R >
 struct range_forward_reference

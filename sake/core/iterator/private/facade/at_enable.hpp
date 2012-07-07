@@ -9,11 +9,8 @@
 #ifndef SAKE_CORE_ITERATOR_PRIVATE_FACADE_AT_ENABLE_HPP
 #define SAKE_CORE_ITERATOR_PRIVATE_FACADE_AT_ENABLE_HPP
 
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/iterator/begin_end_tag.hpp>
@@ -34,22 +31,22 @@ namespace private_
 
 template< class D, class T >
 struct at_enable
-    : boost_ext::mpl::or3<
-          boost_ext::mpl::and2<
-              boost::is_same< T, sake::begin_tag >,
-              boost_ext::is_convertible<
-                  typename D::iterator_introversal,
-                  sake::begin_access_introversal_tag
-              >
-          >,
-          boost_ext::mpl::and2<
-              boost::is_same< T, sake::end_tag >,
-              boost_ext::is_convertible<
-                  typename D::iterator_introversal,
-                  sake::end_access_introversal_tag
-              >
-          >,
-          sake::iterator::private_::is_convertible_relax<T,D>
+    : sake::iterator::private_::is_convertible_relax<T,D>
+{ };
+
+template< class D >
+struct at_enable< D, sake::begin_tag >
+    : boost_ext::is_convertible<
+          typename D::iterator_introterminal,
+          sake::begin_access_introterminal_tag
+      >
+{ };
+
+template< class D >
+struct at_enable< D, sake::end_tag >
+    : boost_ext::is_convertible<
+          typename D::iterator_introterminal,
+          sake::end_access_introterminal_tag
       >
 { };
 

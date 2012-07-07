@@ -27,20 +27,20 @@ namespace sake_range_iter_at_private
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 3, 3 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-template< class R, class T, class Introversal >
-inline typename ::sake::range_iterator< R, Introversal >::type
-adl(R& r, T const & x, Introversal)
-{ return range_iter_at(r, x, Introversal()); }
+template< class R, class T, class Introterminal >
+inline typename ::sake::range_iterator< R, Introterminal >::type
+adl(R& r, T const & x, Introterminal)
+{ return range_iter_at(r, x, Introterminal()); }
 
 #define SAKE_INTROSPECTION_TRAIT_NAME    is_callable_begin
 #define SAKE_INTROSPECTION_FUNCTION_NAME range_begin
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 2 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-template< class R, class Introversal >
-inline typename ::sake::range_iterator< R, Introversal >::type
-adl_begin(R& r, Introversal)
-{ return range_begin(r, Introversal()); }
+template< class R, class Introterminal >
+inline typename ::sake::range_iterator< R, Introterminal >::type
+adl_begin(R& r, Introterminal)
+{ return range_begin(r, Introterminal()); }
 
 template< class R >
 inline typename ::sake::range_iterator<R>::type
@@ -57,10 +57,10 @@ std_adl_begin(R& r)
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 2 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-template< class R, class Introversal >
-inline typename ::sake::range_iterator< R, Introversal >::type
-adl_end(R& r, Introversal)
-{ return range_end(r, Introversal()); }
+template< class R, class Introterminal >
+inline typename ::sake::range_iterator< R, Introterminal >::type
+adl_end(R& r, Introterminal)
+{ return range_end(r, Introterminal()); }
 
 template< class R >
 inline typename ::sake::range_iterator<R>::type
@@ -91,77 +91,77 @@ namespace iter_at_private
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 2, 2 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
-template< class R, class T, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch(R& /*r*/, T const & x, Introversal, sake::int_tag<3>)
+template< class R, class T, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch(R& /*r*/, T const & x, Introterminal, sake::int_tag<3>)
 { return x; }
 
-template< class R, class T, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch(R& r, T const & x, Introversal, sake::int_tag<2>)
-{ return r.iter_at(x, Introversal()); }
+template< class R, class T, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch(R& r, T const & x, Introterminal, sake::int_tag<2>)
+{ return r.iter_at(x, Introterminal()); }
 
-template< class R, class T, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch(R& r, T const & x, Introversal, sake::int_tag<1>)
-{ return ::sake_range_iter_at_private::adl(r, x, Introversal()); }
+template< class R, class T, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch(R& r, T const & x, Introterminal, sake::int_tag<1>)
+{ return ::sake_range_iter_at_private::adl(r, x, Introterminal()); }
 
-template< class R, class T, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch(R& r, T const & x, Introversal, sake::int_tag<0>)
-{ return typename sake::range_iterator< R, Introversal >::type(r,x); }
+template< class R, class T, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch(R& r, T const & x, Introterminal, sake::int_tag<0>)
+{ return typename sake::range_iterator< R, Introterminal >::type(r,x); }
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun_begin
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME begin
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 1 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_begin(R& r, Introversal, sake::int_tag<5>)
-{ return r.begin(Introversal()); }
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_begin(R& r, Introterminal, sake::int_tag<5>)
+{ return r.begin(Introterminal()); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_begin(R& r, Introversal, sake::int_tag<4>)
-{ return ::sake_range_iter_at_private::adl_begin(r, Introversal()); }
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_begin(R& r, Introterminal, sake::int_tag<4>)
+{ return ::sake_range_iter_at_private::adl_begin(r, Introterminal()); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_begin(R& r, Introversal, sake::int_tag<3>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_begin(R& r, Introterminal, sake::int_tag<3>)
 { return r.begin(); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_begin(R& r, Introversal, sake::int_tag<2>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_begin(R& r, Introterminal, sake::int_tag<2>)
 { return ::sake_range_iter_at_private::adl_begin(r); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_begin(R& r, Introversal, sake::int_tag<1>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_begin(R& r, Introterminal, sake::int_tag<1>)
 { return ::sake_range_iter_at_private::std_adl_begin(r); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_begin(R& r, Introversal, sake::int_tag<0>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_begin(R& r, Introterminal, sake::int_tag<0>)
 {
-    return typename sake::range_iterator< R, Introversal >::type(
+    return typename sake::range_iterator< R, Introterminal >::type(
         r, sake::_begin);
 }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch(R& r, sake::begin_tag, Introversal, sake::int_tag<0>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch(R& r, sake::begin_tag, Introterminal, sake::int_tag<0>)
 {
     typedef sake::range_traits<R> traits_;
     typedef typename traits_::template
-        iterator_with< Introversal >::type result_type;
+        iterator_with< Introterminal >::type result_type;
     typedef typename boost_ext::mpl::
          if_< iter_at_private::is_callable_mem_fun_begin<
-                  R&, result_type ( Introversal ) >,
+                  R&, result_type ( Introterminal ) >,
               sake::int_tag<5> >::type::template
     else_if < ::sake_range_iter_at_private::is_callable_begin<
-                  result_type ( R&, Introversal ) >,
+                  result_type ( R&, Introterminal ) >,
               sake::int_tag<4> >::type::template
     else_if < iter_at_private::is_callable_mem_fun_begin<
                   R&, result_type ( ) >,
@@ -173,7 +173,7 @@ dispatch(R& r, sake::begin_tag, Introversal, sake::int_tag<0>)
                   typename traits_::iterator, result_type >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    return dispatch_begin(r, Introversal(), int_tag_());
+    return dispatch_begin(r, Introterminal(), int_tag_());
 }
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun_end
@@ -181,52 +181,52 @@ dispatch(R& r, sake::begin_tag, Introversal, sake::int_tag<0>)
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 1 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_end(R& r, Introversal, sake::int_tag<5>)
-{ return r.end(Introversal()); }
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_end(R& r, Introterminal, sake::int_tag<5>)
+{ return r.end(Introterminal()); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_end(R& r, Introversal, sake::int_tag<4>)
-{ return ::sake_range_iter_at_private::adl_end(r, Introversal()); }
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_end(R& r, Introterminal, sake::int_tag<4>)
+{ return ::sake_range_iter_at_private::adl_end(r, Introterminal()); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_end(R& r, Introversal, sake::int_tag<3>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_end(R& r, Introterminal, sake::int_tag<3>)
 { return r.end(); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_end(R& r, Introversal, sake::int_tag<2>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_end(R& r, Introterminal, sake::int_tag<2>)
 { return ::sake_range_iter_at_private::adl_end(r); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_end(R& r, Introversal, sake::int_tag<1>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_end(R& r, Introterminal, sake::int_tag<1>)
 { return ::sake_range_iter_at_private::std_adl_end(r); }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch_end(R& r, Introversal, sake::int_tag<0>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch_end(R& r, Introterminal, sake::int_tag<0>)
 {
-    return typename sake::range_iterator< R, Introversal >::type(
+    return typename sake::range_iterator< R, Introterminal >::type(
         r, sake::_end);
 }
 
-template< class R, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-dispatch(R& r, sake::end_tag, Introversal, sake::int_tag<0>)
+template< class R, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+dispatch(R& r, sake::end_tag, Introterminal, sake::int_tag<0>)
 {
     typedef sake::range_traits<R> traits_;
     typedef typename traits_::template
-        iterator_with< Introversal >::type result_type;
+        iterator_with< Introterminal >::type result_type;
     typedef typename boost_ext::mpl::
          if_< iter_at_private::is_callable_mem_fun_end<
-                  R&, result_type ( Introversal ) >,
+                  R&, result_type ( Introterminal ) >,
               sake::int_tag<5> >::type::template
     else_if < ::sake_range_iter_at_private::is_callable_end<
-                  result_type ( R&, Introversal ) >,
+                  result_type ( R&, Introterminal ) >,
               sake::int_tag<4> >::type::template
     else_if < iter_at_private::is_callable_mem_fun_end<
                   R&, result_type ( ) >,
@@ -238,27 +238,27 @@ dispatch(R& r, sake::end_tag, Introversal, sake::int_tag<0>)
                   typename traits_::iterator, result_type >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    return dispatch_end(r, Introversal(), int_tag_());
+    return dispatch_end(r, Introterminal(), int_tag_());
 }
 
 } // namespace iter_at_private
 
-template< class R, class T, class Introversal >
-inline typename sake::range_iterator< R, Introversal >::type
-iter_at(R& r, T const & x, Introversal)
+template< class R, class T, class Introterminal >
+inline typename sake::range_iterator< R, Introterminal >::type
+iter_at(R& r, T const & x, Introterminal)
 {
-    typedef typename sake::range_iterator< R, Introversal >::type result_type;
+    typedef typename sake::range_iterator< R, Introterminal >::type result_type;
     typedef typename boost_ext::mpl::
          if_< boost_ext::is_convertible< T, result_type >,
               sake::int_tag<3> >::type::template
     else_if < iter_at_private::is_callable_mem_fun<
-                  R&, result_type ( T, Introversal ) >,
+                  R&, result_type ( T, Introterminal ) >,
               sake::int_tag<2> >::type::template
     else_if < ::sake_range_iter_at_private::is_callable<
-                  result_type ( R&, T, Introversal ) >,
+                  result_type ( R&, T, Introterminal ) >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    return iter_at_private::dispatch(r, x, Introversal(), int_tag_());
+    return iter_at_private::dispatch(r, x, Introterminal(), int_tag_());
 }
 
 } // namespace default_impl

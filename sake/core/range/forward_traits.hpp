@@ -24,7 +24,7 @@
  *     typedef ... base_reference;
  *     typedef ... base_traversal;
  *
- *     template< class Introversal >
+ *     template< class Introterminal >
  *     struct base_iterator_with { typedef ... type; };
  *     template< class Begin, class End >
  *     struct base_subrange_with { typedef ... type; };
@@ -40,26 +40,26 @@
  *     typedef ... reference;
  *     typedef ... traversal;
  *
- *     template< class Introversal >
+ *     template< class Introterminal >
  *     struct iterator_with { typedef ... type; };
  *     template< class Begin, class End >
  *     struct subrange_with { typedef ... type; };
  *
  *     static iterator
  *     begin(R&& r);
- *     template< class Introversal >
- *     static typename iterator_with< Introversal >::type
- *     begin(R&& r, Introversal);
+ *     template< class Introterminal >
+ *     static typename iterator_with< Introterminal >::type
+ *     begin(R&& r, Introterminal);
  *
  *     static iterator
  *     end(R&& r);
- *     template< class Introversal >
- *     static typename iterator_with< Introversal >::type
- *     end(R&& r, Introversal);
+ *     template< class Introterminal >
+ *     static typename iterator_with< Introterminal >::type
+ *     end(R&& r, Introterminal);
  *
- *     template< class T, class Introversal >
- *     static typename iterator_with< Introversal >::type
- *     iter_at(R&& r, T x, Introversal);
+ *     template< class T, class Introterminal >
+ *     static typename iterator_with< Introterminal >::type
+ *     iter_at(R&& r, T x, Introterminal);
  *
  *     template< class Begin, class End >
  *     static typename subrange_with< Begin, End >::type
@@ -152,9 +152,9 @@ struct dispatch< R, false >
     typedef typename base_traits::reference base_reference;
     typedef typename base_traits::traversal base_traversal;
 
-    template< class Introversal >
+    template< class Introterminal >
     struct base_iterator_with
-        : base_traits::template iterator_with< Introversal >
+        : base_traits::template iterator_with< Introterminal >
     { };
     template< class Begin, class End >
     struct base_subrange_with
@@ -169,23 +169,23 @@ public:
     static base_iterator
     begin(param_type r)
     { return base_traits::begin(SAKE_AS_LVALUE(r)); }
-    template< class Introversal >
-    static typename base_iterator_with< Introversal >::type
-    begin(param_type r, Introversal)
-    { return base_traits::begin(SAKE_AS_LVALUE(r), Introversal()); }
+    template< class Introterminal >
+    static typename base_iterator_with< Introterminal >::type
+    begin(param_type r, Introterminal)
+    { return base_traits::begin(SAKE_AS_LVALUE(r), Introterminal()); }
 
     static base_iterator
     end(param_type r)
     { return base_traits::end(SAKE_AS_LVALUE(r)); }
-    template< class Introversal >
-    static typename base_iterator_with< Introversal >::type
-    end(param_type r, Introversal)
-    { return base_traits::end(SAKE_AS_LVALUE(r), Introversal()); }
+    template< class Introterminal >
+    static typename base_iterator_with< Introterminal >::type
+    end(param_type r, Introterminal)
+    { return base_traits::end(SAKE_AS_LVALUE(r), Introterminal()); }
 
-    template< class T, class Introversal >
-    static typename base_iterator_with< Introversal >::type
-    iter_at(param_type r, T const & x, Introversal)
-    { return base_traits::iter_at(SAKE_AS_LVALUE(r), x, Introversal()); }
+    template< class T, class Introterminal >
+    static typename base_iterator_with< Introterminal >::type
+    iter_at(param_type r, T const & x, Introterminal)
+    { return base_traits::iter_at(SAKE_AS_LVALUE(r), x, Introterminal()); }
 
     template< class Begin, class End >
     static typename base_subrange_with< Begin, End >::type
@@ -206,9 +206,9 @@ struct dispatch< R, true >
     typedef typename base_traits::reference base_reference;
     typedef typename base_traits::traversal base_traversal;
 
-    template< class Introversal >
+    template< class Introterminal >
     struct base_iterator_with
-        : base_traits::template iterator_with< Introversal >
+        : base_traits::template iterator_with< Introterminal >
     { };
     template< class Begin, class End >
     struct base_subrange_with
@@ -219,10 +219,10 @@ struct dispatch< R, true >
     typedef typename iterator::reference reference;
     typedef typename iterator::iterator_traversal traversal;
 
-    template< class Introversal >
+    template< class Introterminal >
     struct iterator_with
     { typedef sake::iterator::adaptors::move<
-        typename base_iterator_with< Introversal >::type > type; };
+        typename base_iterator_with< Introterminal >::type > type; };
     template< class Begin, class End >
     struct subrange_with
     { typedef sake::range::adaptors::move<
@@ -236,33 +236,33 @@ public:
     static iterator
     begin(param_type r)
     { return iterator(base_traits::begin(SAKE_AS_LVALUE(r))); }
-    template< class Introversal >
-    static typename iterator_with< Introversal >::type
-    begin(param_type r, Introversal)
+    template< class Introterminal >
+    static typename iterator_with< Introterminal >::type
+    begin(param_type r, Introterminal)
     {
-        return typename iterator_with< Introversal >::type(
-            base_traits::begin(SAKE_AS_LVALUE(r), Introversal()));
+        return typename iterator_with< Introterminal >::type(
+            base_traits::begin(SAKE_AS_LVALUE(r), Introterminal()));
     }
 
     static iterator
     end(param_type r)
     { return iterator(base_traits::end(SAKE_AS_LVALUE(r))); }
-    template< class Introversal >
-    static typename iterator_with< Introversal >::type
-    end(param_type r, Introversal)
+    template< class Introterminal >
+    static typename iterator_with< Introterminal >::type
+    end(param_type r, Introterminal)
     {
-        return typename iterator_with< Introversal >::type(
-            base_traits::end(SAKE_AS_LVALUE(r), Introversal()));
+        return typename iterator_with< Introterminal >::type(
+            base_traits::end(SAKE_AS_LVALUE(r), Introterminal()));
     }
 
-    template< class T, class Introversal >
-    static typename iterator_with< Introversal >::type
-    iter_at(param_type r, T const & x, Introversal)
+    template< class T, class Introterminal >
+    static typename iterator_with< Introterminal >::type
+    iter_at(param_type r, T const & x, Introterminal)
     {
-        return typename iterator_with< Introversal >::type(
+        return typename iterator_with< Introterminal >::type(
             base_traits::iter_at(SAKE_AS_LVALUE(r),
             range_forward_traits_private::base_helper(x),
-            Introversal())
+            Introterminal())
         );
     }
 
@@ -292,9 +292,9 @@ struct impl< R& >
     typedef typename base_traits::reference base_reference;
     typedef typename base_traits::traversal base_traversal;
 
-    template< class Introversal >
+    template< class Introterminal >
     struct base_iterator_with
-        : base_traits::template iterator_with< Introversal >
+        : base_traits::template iterator_with< Introterminal >
     { };
     template< class Begin, class End >
     struct base_subrange_with

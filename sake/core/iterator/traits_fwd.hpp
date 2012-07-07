@@ -32,16 +32,16 @@ struct iterator_traversal
 { typedef typename sake::iterator_traits<I>::traversal type; };
 
 template< class I >
-struct iterator_introversal
+struct iterator_introterminal
 {
-    typedef typename sake::iterator_traits<I>::introversal type;
+    typedef typename sake::iterator_traits<I>::introterminal type;
     static unsigned int const value = type::value;
 };
 
-template< class I, class Introversal = sake::null_introversal_tag >
+template< class I, class Introterminal = sake::null_introterminal_tag >
 struct iterator_relax
 { typedef typename sake::iterator_traits<I>::template
-    relax< Introversal >::type type; };
+    relax< Introterminal >::type type; };
 
 namespace extension
 {
@@ -51,7 +51,7 @@ struct iterator_traits;
 
 namespace default_impl
 {
-template< class I, class Introversal = void >
+template< class I, class Introterminal = void >
 struct iterator_traits;
 } // namespace default_impl
 

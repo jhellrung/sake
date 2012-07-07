@@ -1,19 +1,19 @@
 /*******************************************************************************
- * sake/core/iterator/adaptors/private/introversal/impl_base.hpp
+ * sake/core/iterator/adaptors/private/introterminal/impl_base.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_ADAPTORS_PRIVATE_INTROVERSAL_IMPL_BASE_HPP
-#define SAKE_CORE_ITERATOR_ADAPTORS_PRIVATE_INTROVERSAL_IMPL_BASE_HPP
+#ifndef SAKE_CORE_ITERATOR_ADAPTORS_PRIVATE_INTROTERMINAL_IMPL_BASE_HPP
+#define SAKE_CORE_ITERATOR_ADAPTORS_PRIVATE_INTROTERMINAL_IMPL_BASE_HPP
 
 #include <boost/mpl/has_key.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <sake/core/iterator/adaptors/private/introversal/traits.hpp>
+#include <sake/core/iterator/adaptors/private/introterminal/traits.hpp>
 #include <sake/core/iterator/at.hpp>
 #include <sake/core/iterator/at_ip.hpp>
 #include <sake/core/iterator/begin.hpp>
@@ -40,7 +40,7 @@ namespace iterator
 namespace adaptors
 {
 
-namespace introversal_private
+namespace introterminal_private
 {
 
 template< class Tags >
@@ -54,22 +54,24 @@ struct impl_base_index
 };
 
 template<
-    class I, class Tags, class IntroversalMask,
+    class I, class Tags, class IntroterminalMask,
     int = impl_base_index< Tags >::value
 >
 class impl_base;
 
 /*******************************************************************************
- * class iterator::adaptors::introversal_private::impl_base< ..., 0 >
+ * class iterator::adaptors::introterminal_private::impl_base< ..., 0 >
  ******************************************************************************/
 
-template< class I, class Tags, class IntroversalMask >
-class impl_base< I, Tags, IntroversalMask, 0 >
-    : public introversal_private::traits< I, Tags, IntroversalMask >::adaptor_
+template< class I, class Tags, class IntroterminalMask >
+class impl_base< I, Tags, IntroterminalMask, 0 >
+    : public introterminal_private::traits<
+          I, Tags, IntroterminalMask >::adaptor_
 {
-    typedef introversal_private::traits< I, Tags, IntroversalMask > traits_;
+    typedef introterminal_private::traits<
+        I, Tags, IntroterminalMask > traits_;
     SAKE_USING_TYPEDEF( typename traits_, adaptor_ );
-    SAKE_USING_TYPEDEF( typename traits_, base_introversal );
+    SAKE_USING_TYPEDEF( typename traits_, base_introterminal );
 public:
     using adaptor_::base;
     SAKE_MEMBERWISE_SWAP( typename impl_base, (( adaptor_ )) )
@@ -87,15 +89,15 @@ protected:
 
     template< class R >
     impl_base(R& r, sake::begin_tag)
-        : adaptor_(sake::range_traits<R>::begin(r, base_introversal()))
+        : adaptor_(sake::range_traits<R>::begin(r, base_introterminal()))
     { }
     template< class R >
     impl_base(R& r, sake::end_tag)
-        : adaptor_(sake::range_traits<R>::end(r, base_introversal()))
+        : adaptor_(sake::range_traits<R>::end(r, base_introterminal()))
     { }
     template< class R, class J >
     impl_base(R& r, J const & j)
-        : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introversal()))
+        : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introterminal()))
     { }
 
     template< class J >
@@ -124,41 +126,43 @@ protected:
 
     friend class sake::iterator::core_access;
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal) const
     {
         static unsigned int const result_base_value =
-            Introversal::value & IntroversalMask::value;
+            Introterminal::value & IntroterminalMask::value;
         return sake::iterator::at(
             base(),
             sake::iterator::adaptor_private::as_convertible_relax<I>(j),
-            sake::introversal_tag_c< result_base_value >()
+            sake::introterminal_tag_c< result_base_value >()
         );
     }
 
-    template< class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(sake::begin_tag, Introversal) const
-    { return derived_iter_at(sake::_begin, Introversal()); }
+    template< class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(sake::begin_tag, Introterminal) const
+    { return derived_iter_at(sake::_begin, Introterminal()); }
 
-    template< class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(sake::end_tag, Introversal) const
-    { return derived_iter_at(sake::_end, Introversal()); }
+    template< class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(sake::end_tag, Introterminal) const
+    { return derived_iter_at(sake::_end, Introterminal()); }
 };
 
 /*******************************************************************************
- * class iterator::adaptors::introversal_private::impl_base< ..., 1 >
+ * class iterator::adaptors::introterminal_private::impl_base< ..., 1 >
  ******************************************************************************/
 
-template< class I, class Tags, class IntroversalMask >
-class impl_base< I, Tags, IntroversalMask, 1 >
-    : public introversal_private::traits< I, Tags, IntroversalMask >::adaptor_
+template< class I, class Tags, class IntroterminalMask >
+class impl_base< I, Tags, IntroterminalMask, 1 >
+    : public introterminal_private::traits<
+          I, Tags, IntroterminalMask >::adaptor_
 {
-    typedef introversal_private::traits< I, Tags, IntroversalMask > traits_;
+    typedef introterminal_private::traits<
+        I, Tags, IntroterminalMask > traits_;
     SAKE_USING_TYPEDEF( typename traits_, adaptor_ );
-    SAKE_USING_TYPEDEF( typename traits_, base_introversal );
+    SAKE_USING_TYPEDEF( typename traits_, base_introterminal );
     SAKE_USING_TYPEDEF( typename traits_, null_base_type );
 public:
     SAKE_USING_TYPEDEF( typename adaptor_, difference_type );
@@ -172,17 +176,17 @@ protected:
 
     template< class R >
     impl_base(R& r, sake::begin_tag)
-        : adaptor_(sake::range_traits<R>::begin(r, base_introversal())),
+        : adaptor_(sake::range_traits<R>::begin(r, base_introterminal())),
           m_begin(adaptor_::base())
     { }
     template< class R >
     impl_base(R& r, sake::end_tag)
-        : adaptor_(sake::range_traits<R>::begin(r, base_introversal())),
+        : adaptor_(sake::range_traits<R>::begin(r, base_introterminal())),
           m_begin(sake::range_traits<R>::begin(r))
     { }
     template< class R, class J >
     impl_base(R& r, J const & j)
-        : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introversal())),
+        : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introterminal())),
           m_begin(sake::range_traits<R>::begin(r))
     { }
 
@@ -229,70 +233,72 @@ protected:
     void derived_at_ip(sake::begin_tag)
     { sake::iterator::at_ip(adaptor_::protected_base(), m_begin); }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal) const
     {
         static bool const explicit_begin = 0 !=
-           (sake::begin_access_introversal_tag::value
-          & ~(base_introversal::value & IntroversalMask::value)
-          & Introversal::value);
+           (sake::begin_access_introterminal_tag::value
+          & ~(base_introterminal::value & IntroterminalMask::value)
+          & Introterminal::value);
         typedef sake::int_tag< explicit_begin > int_tag_;
-        return derived_at(j, Introversal(), int_tag_());
+        return derived_at(j, Introterminal(), int_tag_());
     }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<0>) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal, sake::int_tag<0>) const
     {
         static unsigned int const result_base_value =
-            Introversal::value & IntroversalMask::value;
+            Introterminal::value & IntroterminalMask::value;
         return sake::iterator::at(
             base(),
             sake::iterator::adaptor_private::as_convertible_relax<I>(j),
-            sake::introversal_tag_c< result_base_value >()
+            sake::introterminal_tag_c< result_base_value >()
         );
     }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<1>) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal, sake::int_tag<1>) const
     {
         typedef typename adaptor_::template
-            relax< Introversal >::type result_type;
+            relax< Introterminal >::type result_type;
         static unsigned int const result_base_value =
-            sake::end_access_introversal_tag::value
-          & Introversal::value & IntroversalMask::value;
+            sake::end_access_introterminal_tag::value
+          & Introterminal::value & IntroterminalMask::value;
         return result_type(
             sake::iterator::at(
                 base(),
                 sake::iterator::adaptor_private::as_convertible_relax<I>(j),
-                sake::introversal_tag_c< result_base_value >()
+                sake::introterminal_tag_c< result_base_value >()
             ),
             m_begin, sake::_end
         );
     }
 
-    template< class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(sake::begin_tag, Introversal) const
-    { return derived_at(m_begin, Introversal()); }
+    template< class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(sake::begin_tag, Introterminal) const
+    { return derived_at(m_begin, Introterminal()); }
 
 private:
     null_base_type m_begin;
 };
 
 /*******************************************************************************
- * class iterator::adaptors::introversal_private::impl_base< ..., 2 >
+ * class iterator::adaptors::introterminal_private::impl_base< ..., 2 >
  ******************************************************************************/
 
-template< class I, class Tags, class IntroversalMask >
-class impl_base< I, Tags, IntroversalMask, 2 >
-    : public introversal_private::traits< I, Tags, IntroversalMask >::adaptor_
+template< class I, class Tags, class IntroterminalMask >
+class impl_base< I, Tags, IntroterminalMask, 2 >
+    : public introterminal_private::traits<
+          I, Tags, IntroterminalMask >::adaptor_
 {
-    typedef introversal_private::traits< I, Tags, IntroversalMask > traits_;
+    typedef introterminal_private::traits<
+        I, Tags, IntroterminalMask > traits_;
     SAKE_USING_TYPEDEF( typename traits_, adaptor_ );
-    SAKE_USING_TYPEDEF( typename traits_, base_introversal );
+    SAKE_USING_TYPEDEF( typename traits_, base_introterminal );
     SAKE_USING_TYPEDEF( typename traits_, null_base_type );
 public:
     SAKE_USING_TYPEDEF( typename adaptor_, difference_type );
@@ -306,17 +312,17 @@ protected:
 
     template< class R >
     impl_base(R& r, sake::begin_tag)
-        : adaptor_(sake::range_traits<R>::begin(r, base_introversal())),
+        : adaptor_(sake::range_traits<R>::begin(r, base_introterminal())),
           m_end(sake::range_traits<R>::end(r))
     { }
     template< class R >
     impl_base(R& r, sake::end_tag)
-        : adaptor_(sake::range_traits<R>::end(r, base_introversal())),
+        : adaptor_(sake::range_traits<R>::end(r, base_introterminal())),
           m_end(adaptor_::base())
     { }
     template< class R, class J >
     impl_base(R& r, J const & j)
-        : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introversal())),
+        : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introterminal())),
           m_end(sake::range_traits<R>::end(r))
     { }
 
@@ -363,70 +369,72 @@ protected:
     void derived_at_ip(sake::end_tag)
     { sake::iterator::at_ip(adaptor_::protected_base(), m_end); }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal) const
     {
         static bool const explicit_end = 0 !=
-           (sake::end_access_introversal_tag::value
-          & ~(base_introversal::value & IntroversalMask::value)
-          & Introversal::value);
+           (sake::end_access_introterminal_tag::value
+          & ~(base_introterminal::value & IntroterminalMask::value)
+          & Introterminal::value);
         typedef sake::int_tag< explicit_end > int_tag_;
-        return derived_at(j, Introversal(), int_tag_());
+        return derived_at(j, Introterminal(), int_tag_());
     }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<0>) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal, sake::int_tag<0>) const
     {
         static unsigned int const result_base_value =
-            Introversal::value & IntroversalMask::value;
+            Introterminal::value & IntroterminalMask::value;
         return sake::iterator::at(
             base(),
             sake::iterator::adaptor_private::as_convertible_relax<I>(j),
-            sake::introversal_tag_c< result_base_value >()
+            sake::introterminal_tag_c< result_base_value >()
         );
     }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<1>) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal, sake::int_tag<1>) const
     {
         typedef typename adaptor_::template
-            relax< Introversal >::type result_type;
+            relax< Introterminal >::type result_type;
         static unsigned int const result_base_value =
-            sake::begin_access_introversal_tag::value
-          & Introversal::value & IntroversalMask::value;
+            sake::begin_access_introterminal_tag::value
+          & Introterminal::value & IntroterminalMask::value;
         return result_type(
             sake::iterator::at(
                 base(),
                 sake::iterator::adaptor_private::as_convertible_relax<I>(j),
-                sake::introversal_tag_c< result_base_value >()
+                sake::introterminal_tag_c< result_base_value >()
             ),
             sake::_begin, m_end
         );
     }
 
-    template< class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(sake::end_tag, Introversal) const
-    { return derived_at(m_end, Introversal()); }
+    template< class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(sake::end_tag, Introterminal) const
+    { return derived_at(m_end, Introterminal()); }
 
 private:
     null_base_type m_end;
 };
 
 /*******************************************************************************
- * class iterator::adaptors::introversal_private::impl_base< ..., 3 >
+ * class iterator::adaptors::introterminal_private::impl_base< ..., 3 >
  ******************************************************************************/
 
-template< class I, class Tags, class IntroversalMask >
-class impl_base< I, Tags, IntroversalMask, 3 >
-    : public introversal_private::traits< I, Tags, IntroversalMask >::adaptor_
+template< class I, class Tags, class IntroterminalMask >
+class impl_base< I, Tags, IntroterminalMask, 3 >
+    : public introterminal_private::traits<
+          I, Tags, IntroterminalMask >::adaptor_
 {
-    typedef introversal_private::traits< I, Tags, IntroversalMask > traits_;
+    typedef introterminal_private::traits<
+        I, Tags, IntroterminalMask > traits_;
     SAKE_USING_TYPEDEF( typename traits_, adaptor_ );
-    SAKE_USING_TYPEDEF( typename traits_, base_introversal );
+    SAKE_USING_TYPEDEF( typename traits_, base_introterminal );
     SAKE_USING_TYPEDEF( typename traits_, null_base_type );
 public:
     SAKE_USING_TYPEDEF( typename adaptor_, difference_type );
@@ -441,19 +449,19 @@ protected:
 
     template< class R >
     impl_base(R& r, sake::begin_tag)
-        : adaptor_(sake::range_traits<R>::begin(r, base_introversal())),
+        : adaptor_(sake::range_traits<R>::begin(r, base_introterminal())),
           m_begin(adaptor_::base()),
           m_end(sake::range_traits<R>::end(r))
     { }
     template< class R >
     impl_base(R& r, sake::end_tag)
-        : adaptor_(sake::range_traits<R>::end(r, base_introversal())),
+        : adaptor_(sake::range_traits<R>::end(r, base_introterminal())),
           m_begin(sake::range_traits<R>::begin(r)),
           m_end(adaptor_::base())
     { }
     template< class R, class J >
     impl_base(R& r, J const & j)
-        : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introversal())),
+        : adaptor_(sake::range_traits<R>::iter_at(r, j, base_introterminal())),
           m_begin(sake::range_traits<R>::begin(r)),
           m_end(sake::range_traits<R>::end(r))
     { }
@@ -512,105 +520,105 @@ protected:
     void derived_at_ip(sake::end_tag)
     { sake::iterator::at_ip(adaptor_::protected_base(), m_end); }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal) const
     {
         static bool const explicit_begin = 0 !=
-           (sake::begin_access_introversal_tag::value
-          & ~(base_introversal::value & IntroversalMask::value)
-          & Introversal::value);
+           (sake::begin_access_introterminal_tag::value
+          & ~(base_introterminal::value & IntroterminalMask::value)
+          & Introterminal::value);
         static bool const explicit_end = 0 !=
-           (sake::end_access_introversal_tag::value
-          & ~(base_introversal::value & IntroversalMask::value)
-          & Introversal::value);
+           (sake::end_access_introterminal_tag::value
+          & ~(base_introterminal::value & IntroterminalMask::value)
+          & Introterminal::value);
         typedef sake::int_tag< explicit_begin + 2 * explicit_end > int_tag_;
-        return derived_at(j, Introversal(), int_tag_());
+        return derived_at(j, Introterminal(), int_tag_());
     }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<0>) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal, sake::int_tag<0>) const
     {
         static unsigned int const result_base_value =
-            Introversal::value & IntroversalMask::value;
+            Introterminal::value & IntroterminalMask::value;
         return sake::iterator::at(
             base(),
             sake::iterator::adaptor_private::as_convertible_relax<I>(j),
-            sake::introversal_tag_c< result_base_value >()
+            sake::introterminal_tag_c< result_base_value >()
         );
     }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<1>) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal, sake::int_tag<1>) const
     {
         typedef typename adaptor_::template
-            relax< Introversal >::type result_type;
+            relax< Introterminal >::type result_type;
         static unsigned int const result_base_value =
-            sake::end_access_introversal_tag::value
-          & Introversal::value & IntroversalMask::value;
+            sake::end_access_introterminal_tag::value
+          & Introterminal::value & IntroterminalMask::value;
         return result_type(
             sake::iterator::at(
                 base(),
                 sake::iterator::adaptor_private::as_convertible_relax<I>(j),
-                sake::introversal_tag_c< result_base_value >()
+                sake::introterminal_tag_c< result_base_value >()
             ),
             m_begin, sake::_end
         );
     }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<2>) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal, sake::int_tag<2>) const
     {
         typedef typename adaptor_::template
-            relax< Introversal >::type result_type;
+            relax< Introterminal >::type result_type;
         static unsigned int const result_base_value =
-            sake::begin_access_introversal_tag::value
-          & Introversal::value & IntroversalMask::value;
+            sake::begin_access_introterminal_tag::value
+          & Introterminal::value & IntroterminalMask::value;
         return result_type(
             sake::iterator::at(
                 base(),
                 sake::iterator::adaptor_private::as_convertible_relax<I>(j),
-                sake::introversal_tag_c< result_base_value >()
+                sake::introterminal_tag_c< result_base_value >()
             ),
             sake::_begin, m_end
         );
     }
 
-    template< class J, class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(J const & j, Introversal, sake::int_tag<3>) const
+    template< class J, class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(J const & j, Introterminal, sake::int_tag<3>) const
     {
         typedef typename adaptor_::template
-            relax< Introversal >::type result_type;
+            relax< Introterminal >::type result_type;
         return result_type(
             sake::iterator::at(
                 base(),
                 sake::iterator::adaptor_private::as_convertible_relax<I>(j),
-                sake::null_introversal_tag()
+                sake::null_introterminal_tag()
             ),
             m_begin, m_end
         );
     }
 
-    template< class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(sake::begin_tag, Introversal) const
-    { return derived_at(m_begin, Introversal()); }
+    template< class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(sake::begin_tag, Introterminal) const
+    { return derived_at(m_begin, Introterminal()); }
 
-    template< class Introversal >
-    typename adaptor_::template relax< Introversal >::type
-    derived_at(sake::end_tag, Introversal) const
-    { return derived_at(m_end, Introversal()); }
+    template< class Introterminal >
+    typename adaptor_::template relax< Introterminal >::type
+    derived_at(sake::end_tag, Introterminal) const
+    { return derived_at(m_end, Introterminal()); }
 
 private:
     null_base_type m_begin;
     null_base_type m_end;
 };
 
-} // namespace introversal_private
+} // namespace introterminal_private
 
 } // namespace adaptors
 
@@ -618,4 +626,4 @@ private:
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_ADAPTORS_PRIVATE_INTROVERSAL_IMPL_BASE_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_ADAPTORS_PRIVATE_INTROTERMINAL_IMPL_BASE_HPP

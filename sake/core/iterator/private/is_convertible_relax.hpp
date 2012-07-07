@@ -30,14 +30,14 @@ namespace private_
 template< class I, class J >
 class is_convertible_relax_helper
 {
-    typedef typename sake::introversal_meet<
-        typename sake::iterator_introversal<I>::type,
-        typename sake::iterator_introversal<J>::type
-    >::type introversal;
+    typedef typename sake::introterminal_meet<
+        typename sake::iterator_introterminal<I>::type,
+        typename sake::iterator_introterminal<J>::type
+    >::type introterminal;
 public:
     static bool const value = boost_ext::is_convertible<
-        typename sake::iterator_relax< I, introversal >::type,
-        typename sake::iterator_relax< J, introversal >::type
+        typename sake::iterator_relax< I, introterminal >::type,
+        typename sake::iterator_relax< J, introterminal >::type
     >::value;
     typedef is_convertible_relax_helper type;
 };
@@ -47,7 +47,7 @@ struct is_convertible_relax
     : boost_ext::mpl::and3<
           sake::is_iterator<I>,
           sake::is_iterator<J>,
-          is_convertible_relax_helper<I,J>
+          private_::is_convertible_relax_helper<I,J>
       >
 { };
 

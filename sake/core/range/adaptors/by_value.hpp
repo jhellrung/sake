@@ -58,16 +58,16 @@ public:
 private:
     friend class sake::range::core_access;
 
-    template< class This, class Introversal >
+    template< class This, class Introterminal >
     struct derived_iterator_with_of
-        : adaptor_::template base_iterator_with_of< This, Introversal >
+        : adaptor_::template base_iterator_with_of< This, Introterminal >
     { };
 
-    template< class This, class T, class Introversal >
+    template< class This, class T, class Introterminal >
     static typename adaptor_::template
-        iterator_with_of< This, Introversal >::type
-    derived_iter_at(This& this_, T const & x, Introversal)
-    { return adaptor_::base_iter_at(this_, x, Introversal()); }
+        iterator_with_of< This, Introterminal >::type
+    derived_iter_at(This& this_, T const & x, Introterminal)
+    { return adaptor_::base_iter_at(this_, x, Introterminal()); }
 
     template< class This, class Begin, class End >
     struct derived_subrange_with_of

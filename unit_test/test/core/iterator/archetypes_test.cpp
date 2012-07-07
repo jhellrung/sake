@@ -9,7 +9,7 @@
 #include <boost/concept/assert.hpp>
 
 #include <sake/core/iterator/archetypes/access.hpp>
-#include <sake/core/iterator/archetypes/introversal.hpp>
+#include <sake/core/iterator/archetypes/introterminal.hpp>
 #include <sake/core/iterator/archetypes/traversal.hpp>
 #include <sake/core/iterator/concepts/BeginAccess.hpp>
 #include <sake/core/iterator/concepts/BeginDetect.hpp>

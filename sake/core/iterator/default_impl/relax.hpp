@@ -42,7 +42,7 @@ struct dispatch;
 template< class I >
 struct dispatch< I, false >
 {
-    template< class Introversal >
+    template< class Introterminal >
     struct apply
     { typedef I type; };
 };
@@ -50,18 +50,17 @@ struct dispatch< I, false >
 template< class I >
 struct dispatch< I, true >
 {
-    template< class Introversal >
+    template< class Introterminal >
     struct apply
-        : I::template relax< Introversal >
-    { };
+    { typedef typename I::template relax< Introterminal >::type type; };
 };
 
 } // namespace relax_private
 
-template< class I, class Introversal >
+template< class I, class Introterminal >
 struct relax
 { typedef typename relax_private::dispatch<I>::template
-    apply< Introversal >::type type; };
+    apply< Introterminal >::type type; };
 
 } // namespace default_impl
 

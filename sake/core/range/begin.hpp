@@ -5,10 +5,10 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * range::begin(R&& r, Introversal = null_introversal_tag())
- *     -> range_forward_iterator< R, Introversal >::type
- * range::cbegin(R const & r, Introversal = null_introversal_tag())
- *     -> range_iterator< R const, Introversal >::type
+ * range::begin(R&& r, Introterminal = null_introterminal_tag())
+ *     -> range_forward_iterator< R, Introterminal >::type
+ * range::cbegin(R const & r, Introterminal = null_introterminal_tag())
+ *     -> range_iterator< R const, Introterminal >::type
  * struct range::functional::begin
  * struct range::functional::cbegin
  ******************************************************************************/
@@ -40,25 +40,28 @@ namespace range
 namespace result_of
 {
 
-template< class R, class Introversal = sake::null_introversal_tag >
+template< class R, class Introterminal = sake::null_introterminal_tag >
 class begin
 {
-    typedef typename boost_ext::remove_qualifiers< Introversal >::type introversal;
+    typedef typename boost_ext::
+        remove_qualifiers< Introterminal >::type introterminal;
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        introversal, sake::null_introversal_tag >::value));
+        introterminal, sake::null_introterminal_tag >::value));
 public:
-    typedef typename sake::range_forward_iterator< R, introversal >::type type;
+    typedef typename sake::range_forward_iterator<
+        R, introterminal >::type type;
 };
 
-template< class R, class Introversal = sake::null_introversal_tag >
+template< class R, class Introterminal = sake::null_introterminal_tag >
 class cbegin
 {
     typedef typename boost_ext::add_const_remove_reference<R>::type range_;
-    typedef typename boost_ext::remove_qualifiers< Introversal >::type introversal;
+    typedef typename boost_ext::
+        remove_qualifiers< Introterminal >::type introterminal;
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        introversal, sake::null_introversal_tag >::value));
+        introterminal, sake::null_introterminal_tag >::value));
 public:
-    typedef typename sake::range_iterator< range_, introversal >::type type;
+    typedef typename sake::range_iterator< range_, introterminal >::type type;
 };
 
 } // namespace result_of
@@ -73,39 +76,39 @@ struct begin
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class R >
-    typename sake::range::result_of::begin<R>::type
+    typename result< begin ( R ) >::type
     operator()(R&& r) const
     { return sake::range_forward_traits<R>::begin(sake::forward<R>(r)); }
 
-    template< class R, class Introversal >
-    typename sake::range::result_of::begin< R, Introversal >::type
-    operator()(R&& r, Introversal) const
+    template< class R, class Introterminal >
+    typename result< begin ( R, Introterminal ) >::type
+    operator()(R&& r, Introterminal) const
     {
         return sake::range_forward_traits<R>::begin(
-            sake::forward<R>(r), Introversal());
+            sake::forward<R>(r), Introterminal());
     }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class R >
-    typename sake::range::result_of::begin< R& >::type
+    typename result< begin ( R& ) >::type
     operator()(R& r) const
     { return sake::range_forward_traits< R& >::begin(r); }
 
-    template< class R, class Introversal >
-    typename sake::range::result_of::begin< R&, Introversal >::type
-    operator()(R& r, Introversal) const
-    { return sake::range_forward_traits< R& >::begin(r, Introversal()); }
+    template< class R, class Introterminal >
+    typename result< begin ( R&, Introterminal ) >::type
+    operator()(R& r, Introterminal) const
+    { return sake::range_forward_traits< R& >::begin(r, Introterminal()); }
 
     template< class R >
-    typename sake::range::result_of::begin< R const & >::type
+    typename result< begin ( R const & ) >::type
     operator()(R const & r) const
     { return sake::range_forward_traits< R const & >::begin(r); }
 
-    template< class R, class Introversal >
-    typename sake::range::result_of::begin< R const &, Introversal >::type
-    operator()(R const & r, Introversal) const
-    { return sake::range_forward_traits< R const & >::begin(r, Introversal()); }
+    template< class R, class Introterminal >
+    typename result< begin ( R const &, Introterminal ) >::type
+    operator()(R const & r, Introterminal) const
+    { return sake::range_forward_traits< R const & >::begin(r, Introterminal()); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -116,14 +119,14 @@ struct cbegin
     SAKE_RESULT_FROM_METAFUNCTION( sake::range::result_of::cbegin, (1,2) )
 
     template< class R >
-    typename sake::range::result_of::cbegin< R const & >::type
+    typename result< cbegin ( R ) >::type
     operator()(R const & r) const
     { return sake::range_traits< R const >::begin(r); }
 
-    template< class R, class Introversal >
-    typename sake::range::result_of::cbegin< R const &, Introversal >::type
-    operator()(R const & r, Introversal) const
-    { return sake::range_traits< R const >::begin(r, Introversal()); }
+    template< class R, class Introterminal >
+    typename result< cbegin ( R, Introterminal ) >::type
+    operator()(R const & r, Introterminal) const
+    { return sake::range_traits< R const >::begin(r, Introterminal()); }
 };
 
 } // namespace functional

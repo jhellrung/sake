@@ -55,10 +55,10 @@ protected:
 public:
     SAKE_MEMBERWISE_SWAP( typename common_base, (( chained_base_type )) )
 
-    template< class Introversal = sake::null_introversal_tag >
+    template< class Introterminal = sake::null_introterminal_tag >
     struct relax
     { typedef typename sake::iterator::core_access::
-        relax< Derived, Introversal >::type type; };
+        relax< Derived, Introterminal >::type type; };
 
 protected:
     Derived& derived()

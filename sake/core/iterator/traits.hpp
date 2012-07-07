@@ -7,7 +7,7 @@
  *
  * struct iterator_traits<I>
  * struct extension::iterator_traits<I>
- * struct default_impl::iterator_traits< I, Introversal = void >
+ * struct default_impl::iterator_traits< I, Introterminal = void >
  *
  * struct iterator_value<I>
  * struct iterator_reference<I>
@@ -15,10 +15,8 @@
  * struct iterator_difference<I>
  * struct iterator_traversal<I>
  *
- * struct iterator_introversal<I>
- * struct iterator_begin_introversal<I>
- * struct iterator_end_introversal<I>
- * struct iterator_relax< I, Introversal = null_introversal_tag >
+ * struct iterator_introterminal<I>
+ * struct iterator_relax< I, Introterminal = null_introterminal_tag >
  *
  * iterator_traits has the following interface.
  *
@@ -31,9 +29,9 @@
  *     typedef ... difference_type;
  *     typedef ... traversal;
  *
- *     typedef ... introversal;
+ *     typedef ... introterminal;
  *
- *     template< class Introversal = null_introversal_tag >
+ *     template< class Introterminal = null_introterminal_tag >
  *     struct relax { typedef ... type; };
  *
  *     template< class T >
@@ -41,9 +39,9 @@
  *     at_ip(I& i, T x);
  *     static typename relax<>::type
  *     at(I i, T x);
- *     template< class T, class Introversal >
- *     static typename relax< Introversal >::type
- *     at(I i, T x, Introversal);
+ *     template< class T, class Introterminal >
+ *     static typename relax< Introterminal >::type
+ *     at(I i, T x, Introterminal);
  * };
  *
  * extension::iterator_traits must have the following interface.
@@ -57,17 +55,17 @@
  *     typedef ... difference_type;
  *     typedef ... traversal;
  *
- *     typedef ... introversal;
+ *     typedef ... introterminal;
  *
- *     template< class Introversal = null_introversal_tag >
+ *     template< class Introterminal = null_introterminal_tag >
  *     struct relax { typedef ... type; };
  *
  *     template< class T >
  *     static void
  *     at_ip(I& i, T x);
- *     template< class T, class Introversal >
- *     static typename relax< Introversal >::type
- *     at(I i, T x, Introversal);
+ *     template< class T, class Introterminal >
+ *     static typename relax< Introterminal >::type
+ *     at(I i, T x, Introterminal);
  * };
  ******************************************************************************/
 
@@ -76,13 +74,11 @@
 
 #include <iterator>
 
+#include <boost/mpl/assert.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/type_traits/is_void.hpp>
 
-#include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_cv_or.hpp>
@@ -92,14 +88,12 @@
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/default_impl/at.hpp>
 #include <sake/core/iterator/default_impl/at_ip.hpp>
-#include <sake/core/iterator/default_impl/introversal.hpp>
+#include <sake/core/iterator/default_impl/introterminal.hpp>
 #include <sake/core/iterator/default_impl/relax.hpp>
+#include <sake/core/iterator/private/at_static_assert_cond.hpp>
 #include <sake/core/iterator/private/fwd.hpp>
-#include <sake/core/iterator/private/is_convertible_relax.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/utility/using_typedef.hpp>
-
-#include <boost/mpl/assert.hpp>
 
 namespace sake
 {
@@ -113,7 +107,7 @@ private:
 public:
     SAKE_USING_TYPEDEF( typename extension_traits_, value_type );
     SAKE_USING_TYPEDEF( typename extension_traits_, difference_type );
-    SAKE_USING_TYPEDEF( typename extension_traits_, introversal );
+    SAKE_USING_TYPEDEF( typename extension_traits_, introterminal );
 
     BOOST_STATIC_ASSERT((!boost_ext::is_reference< value_type >::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< value_type >::value));
@@ -122,15 +116,15 @@ public:
         boost::is_signed< difference_type >
     >::value));
 
-    template< class Introversal = sake::null_introversal_tag >
+    template< class Introterminal = sake::null_introterminal_tag >
     struct relax
     {
         BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-            Introversal, sake::null_introversal_tag >::value));
+            Introterminal, sake::null_introterminal_tag >::value));
         BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-            introversal, Introversal >::value));
+            introterminal, Introterminal >::value));
         typedef typename extension_traits_::template
-            relax< Introversal >::type type;
+            relax< Introterminal >::type type;
         BOOST_STATIC_ASSERT((boost_ext::is_convertible< I, type >::value));
     };
 
@@ -138,44 +132,22 @@ public:
     static void
     at_ip(I& i, T const & x)
     {
-        BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-            boost_ext::mpl::and2<
-                boost::is_same< T, sake::begin_tag >,
-                boost_ext::is_convertible<
-                    introversal, sake::begin_access_introversal_tag >
-            >,
-            boost_ext::mpl::and2<
-                boost::is_same< T, sake::end_tag >,
-                boost_ext::is_convertible<
-                    introversal, sake::end_access_introversal_tag >
-            >,
-            sake::iterator::private_::is_convertible_relax<T,I>
-        >::value));
+        BOOST_STATIC_ASSERT((
+            sake::iterator::private_::at_static_assert_cond<I,T>::value));
         extension_traits_::at_ip(i,x);
     }
 
     template< class T >
     static typename relax<>::type
     at(I const & i, T const & x)
-    { return at(i, x, sake::null_introversal_tag()); }
-    template< class T, class Introversal >
-    static typename relax< Introversal >::type
-    at(I const & i, T const & x, Introversal)
+    { return at(i, x, sake::null_introterminal_tag()); }
+    template< class T, class Introterminal >
+    static typename relax< Introterminal >::type
+    at(I const & i, T const & x, Introterminal)
     {
-        BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-            boost_ext::mpl::and2<
-                boost::is_same< T, sake::begin_tag >,
-                boost_ext::is_convertible<
-                    introversal, sake::begin_access_introversal_tag >
-            >,
-            boost_ext::mpl::and2<
-                boost::is_same< T, sake::end_tag >,
-                boost_ext::is_convertible<
-                    introversal, sake::end_access_introversal_tag >
-            >,
-            sake::iterator::private_::is_convertible_relax<T,I>
-        >::value));
-        return extension_traits_::at(i, x, Introversal());
+        BOOST_STATIC_ASSERT((
+            sake::iterator::private_::at_static_assert_cond<I,T>::value));
+        return extension_traits_::at(i, x, Introterminal());
     }
 };
 
@@ -192,7 +164,7 @@ struct iterator_traits
 namespace default_impl
 {
 
-template< class I, class Introversal /*= void*/ >
+template< class I, class Introterminal /*= void*/ >
 struct iterator_traits
 {
     typedef std::iterator_traits<I> std_traits;
@@ -204,43 +176,52 @@ struct iterator_traits
 
 #define is_convertible_( tag ) boost_ext::is_convertible< category, tag >
     typedef typename boost_ext::mpl::
-         if_< is_convertible_( boost::incrementable_traversal_tag ),
-              category >::type::template
-    else_if < is_convertible_( std::random_access_iterator_tag ),
-              boost::random_access_traversal_tag >::type::template
-    else_if < is_convertible_( std::bidirectional_iterator_tag ),
-              boost::bidirectional_traversal_tag >::type::template
-    else_if < is_convertible_( std::forward_iterator_tag ),
-              boost::forward_traversal_tag >::type::template
-    else_if < is_convertible_( std::input_iterator_tag ),
-              boost::single_pass_traversal_tag >::type::template
-    else_if < is_convertible_( std::output_iterator_tag ),
-              boost::incrementable_traversal_tag >::type::template
-    else_   < void >::type traversal;
+    eval_if< is_convertible_( boost::incrementable_traversal_tag ),
+        typename boost_ext::mpl::
+             if_< is_convertible_( boost::random_access_traversal_tag ),
+                  boost::random_access_traversal_tag >::type::template
+        else_if < is_convertible_( boost::bidirectional_traversal_tag ),
+                  boost::bidirectional_traversal_tag >::type::template
+        else_if < is_convertible_( boost::forward_traversal_tag ),
+                  boost::forward_traversal_tag >::type::template
+        else_if < is_convertible_( boost::single_pass_traversal_tag ),
+                  boost::single_pass_traversal_tag >::type::template
+        else_   < boost::incrementable_traversal_tag > >::type::template
+    else_if< is_convertible_( std::random_access_iterator_tag ),
+             boost::random_access_traversal_tag >::type::template
+    else_if< is_convertible_( std::bidirectional_iterator_tag ),
+             boost::bidirectional_traversal_tag >::type::template
+    else_if< is_convertible_( std::forward_iterator_tag ),
+             boost::forward_traversal_tag >::type::template
+    else_if< is_convertible_( std::input_iterator_tag ),
+             boost::single_pass_traversal_tag >::type::template
+    else_if< is_convertible_( std::output_iterator_tag ),
+             boost::incrementable_traversal_tag >::type::template
+    else_  < void >::type traversal;
 #undef is_convertible_
 
-    typedef Introversal introversal;
+    typedef Introterminal introterminal;
 
-    template< class Introversal_ >
+    template< class Introterminal_ >
     struct relax
     { typedef typename sake::iterator::default_impl::
-        relax< I, Introversal_ >::type type; };
+        relax< I, Introterminal_ >::type type; };
 
     template< class T >
     static void
     at_ip(I& i, T const & x)
     { sake::iterator::default_impl::at_ip(i,x); }
 
-    template< class T, class Introversal_ >
-    static typename relax< Introversal_ >::type
-    at(I const & i, T const & x, Introversal_)
-    { return sake::iterator::default_impl::at(i, x, Introversal_()); }
+    template< class T, class Introterminal_ >
+    static typename relax< Introterminal_ >::type
+    at(I const & i, T const & x, Introterminal_)
+    { return sake::iterator::default_impl::at(i, x, Introterminal_()); }
 };
 
 template< class I >
 struct iterator_traits< I, void >
     : sake::default_impl::iterator_traits<
-          I, typename sake::iterator::default_impl::introversal<I>::type >
+          I, typename sake::iterator::default_impl::introterminal<I>::type >
 { };
 
 } // namespace default_impl

@@ -39,7 +39,7 @@ template< class I, class R >
 struct range_constructor_enable_iterator
     : boost_ext::is_convertible<
           typename sake::range_iterator<
-              R, typename sake::iterator_introversal<I>::type >::type,
+              R, typename sake::iterator_introterminal<I>::type >::type,
           I
       >
 { };

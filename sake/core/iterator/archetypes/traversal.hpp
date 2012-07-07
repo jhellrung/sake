@@ -5,11 +5,16 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct iterator::archetypes::incrementable< T, IV = ..., A = ... >
- * struct iterator::archetypes::single_pass< T, IV = ..., A = ... >
- * struct iterator::archetypes::forward< T, IV = ..., A = ... >
- * struct iterator::archetypes::bidirectional< T, IV = ..., A = ... >
- * struct iterator::archetypes::random_access< T, IV = ..., A = ... >
+ * struct iterator::archetypes::incrementable<
+ *     T, Introterminal = ..., Access = ... >
+ * struct iterator::archetypes::single_pass<
+ *     T, Introterminal = ..., Access = ... >
+ * struct iterator::archetypes::forward<
+ *     T, Introterminal = ..., Access = ... >
+ * struct iterator::archetypes::bidirectional<
+ *     T, Introterminal = ..., Access = ... >
+ * struct iterator::archetypes::random_access<
+ *     T, Introterminal = ..., Access = ... >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_TRAVERSAL_HPP
@@ -31,7 +36,7 @@ namespace archetypes
 #define define_archetype( traversal ) \
 template< \
     class T, \
-    class Introversal = sake::null_introversal_tag, \
+    class Introterminal = sake::null_introterminal_tag, \
     class Access = sake::iterator::archetypes::readable_tag \
 > \
 struct traversal \
@@ -39,7 +44,7 @@ struct traversal \
     typedef sake::archetypes::iterator< \
         T, \
         boost::traversal ## _traversal_tag, \
-        Introversal, \
+        Introterminal, \
         Access \
     > type; \
 };

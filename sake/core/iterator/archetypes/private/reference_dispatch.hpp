@@ -25,7 +25,7 @@ namespace iterator_private
 template<
     class T, class Access,
     bool = boost_ext::is_convertible<
-        Access, sake::iterator::archetypes::writable_tag >::value
+               Access, sake::iterator::archetypes::writable_tag >::value
 >
 struct proxy_reference;
 
@@ -56,7 +56,7 @@ struct proxy_reference< void, Access, true >
 template<
     class T, class Access,
     bool = boost_ext::is_convertible<
-        Access, sake::iterator::archetypes::lvalue_tag >::value
+               Access, sake::iterator::archetypes::lvalue_tag >::value
 >
 struct reference_dispatch;
 

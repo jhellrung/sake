@@ -18,6 +18,9 @@ namespace iterator
 namespace private_
 {
 
+template< class I, class T >
+struct at_static_assert_cond;
+
 template< class I, class J >
 struct is_convertible_relax;
 

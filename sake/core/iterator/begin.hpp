@@ -5,8 +5,8 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * iterator::begin(I const & i, Introversal = null_introversal_tag())
- *     -> sake::iterator_relax< I, Introversal >::type
+ * iterator::begin(I const & i, Introterminal = null_introterminal_tag())
+ *     -> sake::iterator_relax< I, Introterminal >::type
  * struct iterator::functional::begin
  ******************************************************************************/
 
@@ -33,15 +33,16 @@ namespace iterator
 namespace result_of
 {
 
-template< class I, class Introversal = sake::null_introversal_tag >
+template< class I, class Introterminal = sake::null_introterminal_tag >
 class begin
 {
     typedef typename boost_ext::remove_qualifiers<I>::type iterator;
-    typedef typename boost_ext::remove_qualifiers< Introversal >::type introversal;
+    typedef typename boost_ext::
+        remove_qualifiers< Introterminal >::type introterminal;
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        introversal, sake::null_introversal_tag >::value));
+        introterminal, sake::null_introterminal_tag >::value));
 public:
-    typedef typename sake::iterator_relax< iterator, introversal >::type type;
+    typedef typename sake::iterator_relax< iterator, introterminal >::type type;
 };
 
 } // namespace result_of
@@ -54,14 +55,14 @@ struct begin
     SAKE_RESULT_FROM_METAFUNCTION( sake::iterator::result_of::begin, (1,2) )
 
     template< class I >
-    typename sake::iterator::result_of::begin< I const & >::type
+    typename result< begin ( I ) >::type
     operator()(I const & i) const
     { return sake::iterator_traits<I>::at(i, sake::_begin); }
 
-    template< class I, class Introversal >
-    typename sake::iterator::result_of::begin< I const &, Introversal >::type
-    operator()(I const & i, Introversal) const
-    { return sake::iterator_traits<I>::at(i, sake::_begin, Introversal()); }
+    template< class I, class Introterminal >
+    typename result< begin ( I, Introterminal ) >::type
+    operator()(I const & i, Introterminal) const
+    { return sake::iterator_traits<I>::at(i, sake::_begin, Introterminal()); }
 };
 
 } // namespace functional

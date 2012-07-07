@@ -11,7 +11,7 @@
 
 #include <boost/mpl/map/map0.hpp>
 
-#include <sake/core/iterator/adapt_introversal_fwd.hpp>
+#include <sake/core/iterator/adapt_introterminal_fwd.hpp>
 
 namespace sake
 {

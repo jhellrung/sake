@@ -26,9 +26,9 @@
  *     static outer_range
  *     outer(R& r);
  *
- *     template< class Outer, class Inner, class Introversal >
- *     static typename range_iterator< R, Introversal >::type
- *     iter_at(R& r, Outer j, Inner k, Introversal);
+ *     template< class Outer, class Inner, class Introterminal >
+ *     static typename range_iterator< R, Introterminal >::type
+ *     iter_at(R& r, Outer j, Inner k, Introterminal);
  * };
  ******************************************************************************/
 
@@ -71,12 +71,12 @@ public:
     template< class Outer, class Inner >
     static typename sake::range_iterator<R>::type
     iter_at(R& r, Outer const & j, Inner const & k)
-    { return iter_at(r, j, k, sake::null_introversal_tag()); }
+    { return iter_at(r, j, k, sake::null_introterminal_tag()); }
 
-    template< class Outer, class Inner, class Introversal >
-    static typename sake::range_iterator< R, Introversal >::type
-    iter_at(R& r, Outer const & j, Inner const & k, Introversal)
-    { return extension_traits_::iter_at(r, j, k, Introversal()); }
+    template< class Outer, class Inner, class Introterminal >
+    static typename sake::range_iterator< R, Introterminal >::type
+    iter_at(R& r, Outer const & j, Inner const & k, Introterminal)
+    { return extension_traits_::iter_at(r, j, k, Introterminal()); }
 };
 
 } // namespace range_multidim_traits_private
@@ -123,10 +123,10 @@ struct impl
     outer(R& r)
     { return r.outer(); }
 
-    template< class OuterJ, class InnerK, class Introversal >
-    static typename sake::range_iterator< R, Introversal >::type
-    iter_at(R& r, OuterJ const & j, InnerK const & k, Introversal)
-    { return r.iter_at(j, k, Introversal()); }
+    template< class OuterJ, class InnerK, class Introterminal >
+    static typename sake::range_iterator< R, Introterminal >::type
+    iter_at(R& r, OuterJ const & j, InnerK const & k, Introterminal)
+    { return r.iter_at(j, k, Introterminal()); }
 };
 
 template< class R, bool = has_type_outer_range<R>::value >

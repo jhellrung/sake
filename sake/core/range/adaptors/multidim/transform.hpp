@@ -19,7 +19,6 @@
 #include <sake/core/range/adapt/fwd.hpp>
 #include <sake/core/range/adapt/transform.hpp>
 #include <sake/core/range/adaptors/fwd.hpp>
-#include <sake/core/range/adaptors/transform.hpp>
 #include <sake/core/range/multidim_traits_fwd.hpp>
 #include <sake/core/range/traits.hpp>
 #include <sake/core/range/traits_fwd.hpp>
@@ -70,12 +69,12 @@ struct impl
         );
     }
 
-    template< class Outer, class Inner, class Introversal >
-    static typename sake::range_iterator< This, Introversal >::type
-    iter_at(This& r, Outer const & j, Inner const & k, Introversal)
+    template< class Outer, class Inner, class Introterminal >
+    static typename sake::range_iterator< This, Introterminal >::type
+    iter_at(This& r, Outer const & j, Inner const & k, Introterminal)
     {
-        return typename range_iterator< This, Introversal >::type(
-            base_traits::iter_at(r.base(), j.base(), k.base(), Introversal()),
+        return typename range_iterator< This, Introterminal >::type(
+            base_traits::iter_at(r.base(), j.base(), k.base(), Introterminal()),
             r.function()
         );
     }

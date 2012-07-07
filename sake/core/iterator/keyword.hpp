@@ -9,7 +9,7 @@
  * struct iterator::keyword::reference<T>
  * struct iterator::keyword::difference<T>
  * struct iterator::keyword::traversal<T>
- * struct iterator::keyword::introversal<T>
+ * struct iterator::keyword::introterminal<T>
  *
  * struct iterator::keyword::compare_enable<T>
  * struct iterator::keyword::compare_enable_c< Cond >
@@ -54,7 +54,7 @@ SAKE_TEMPLATE_KEYWORD_VALUE( value )
 SAKE_TEMPLATE_KEYWORD_VALUE( reference )
 SAKE_TEMPLATE_KEYWORD_VALUE( difference )
 SAKE_TEMPLATE_KEYWORD_VALUE( traversal )
-SAKE_TEMPLATE_KEYWORD_VALUE( introversal )
+SAKE_TEMPLATE_KEYWORD_VALUE( introterminal )
 
 SAKE_TEMPLATE_KEYWORD_VALUE( chained_base )
 SAKE_TEMPLATE_KEYWORD_VALUE( member )

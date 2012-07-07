@@ -79,7 +79,7 @@ struct distance
     SAKE_RESULT_FROM_METAFUNCTION( sake::iterator::result_of::distance, 2 )
 
     template< class I0, class I1 >
-    typename sake::iterator::result_of::distance< I0, I1 >::type
+    typename result< distance ( I0, I1 ) >::type
     operator()(I0 const & i0, I1 const & i1) const
     { return distance_private::dispatch< I0, I1 >::apply(i0, i1); }
 };
@@ -142,8 +142,8 @@ template< class I >
 struct dispatch_index< sake::begin_tag, I >
 {
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        typename sake::iterator_introversal<I>::type,
-        sake::begin_detect_introversal_tag
+        typename sake::iterator_introterminal<I>::type,
+        sake::begin_detect_introterminal_tag
     >::value));
     typedef typename sake::iterator_difference<I>::type type;
     static int const value = boost_ext::mpl::
@@ -164,12 +164,12 @@ struct dispatch_index< sake::begin_tag, I >
     else_if<
         boost_ext::mpl::and2<
             boost_ext::is_convertible<
-                typename sake::iterator_introversal<I>::type,
-                sake::begin_access_introversal_tag
+                typename sake::iterator_introterminal<I>::type,
+                sake::begin_access_introterminal_tag
             >,
             boost_ext::mpl::or3<
                 boost::mpl::not_< boost_ext::is_convertible<
-                    typename sake::iterator_introversal<I>::type,
+                    typename sake::iterator_introterminal<I>::type,
                     boost::bidirectional_traversal_tag
                 > >,
                 has_operator_minus_helper<
@@ -191,8 +191,8 @@ template< class I >
 struct dispatch_index< I, sake::begin_tag >
 {
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        typename sake::iterator_introversal<I>::type,
-        sake::begin_detect_introversal_tag
+        typename sake::iterator_introterminal<I>::type,
+        sake::begin_detect_introterminal_tag
     >::value));
     typedef typename sake::iterator_difference<I>::type type;
     static int const value = boost_ext::mpl::
@@ -212,8 +212,8 @@ template< class I >
 struct dispatch_index< I, sake::end_tag >
 {
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        typename sake::iterator_introversal<I>::type,
-        sake::end_detect_introversal_tag
+        typename sake::iterator_introterminal<I>::type,
+        sake::end_detect_introterminal_tag
     >::value));
     typedef typename sake::iterator_difference<I>::type type;
     static int const value = boost_ext::mpl::
@@ -234,8 +234,8 @@ struct dispatch_index< I, sake::end_tag >
     else_if<
         boost_ext::mpl::and2<
             boost_ext::is_convertible<
-                typename sake::iterator_introversal<I>::type,
-                sake::end_access_introversal_tag
+                typename sake::iterator_introterminal<I>::type,
+                sake::end_access_introterminal_tag
             >,
             boost_ext::mpl::or2<
                 has_operator_minus_helper<
@@ -257,8 +257,8 @@ template< class I >
 struct dispatch_index< sake::end_tag, I >
 {
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        typename sake::iterator_introversal<I>::type,
-        sake::end_detect_introversal_tag
+        typename sake::iterator_introterminal<I>::type,
+        sake::end_detect_introterminal_tag
     >::value));
     typedef typename sake::iterator_difference<I>::type type;
     static int const value = boost_ext::mpl::
@@ -296,7 +296,7 @@ struct dispatch< I0, I1, 1 >
             return sake::iterator::distance(
                 traits0::inner(i0), traits1::inner(i1));
         type result = sake::iterator::distance(
-            traits0::inner(i0, sake::end_access_introversal_tag()),
+            traits0::inner(i0, sake::end_access_introterminal_tag()),
             sake::_end
         );
         while(++j0 != j1)

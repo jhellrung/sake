@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/iterator/introversal_adaptor_fwd.hpp
+ * sake/core/iterator/adapt_introterminal_fwd.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_ITERATOR_INTROVERSAL_ADAPTOR_FWD_HPP
-#define SAKE_CORE_ITERATOR_INTROVERSAL_ADAPTOR_FWD_HPP
+#ifndef SAKE_CORE_ITERATOR_ADAPT_INTROTERMINAL_FWD_HPP
+#define SAKE_CORE_ITERATOR_ADAPT_INTROTERMINAL_FWD_HPP
 
 #include <boost/mpl/set/set0.hpp>
 
@@ -20,10 +20,10 @@ namespace iterator
 {
 
 template<
-    class I, class Introversal,
-    class IntroversalMask = sake::null_introversal_tag
+    class I, class Introterminal,
+    class IntroterminalMask = sake::null_introterminal_tag
 >
-class adapt_introversal;
+class adapt_introterminal;
 
 namespace adaptors
 {
@@ -31,9 +31,9 @@ namespace adaptors
 template<
     class I,
     class Tags = boost::mpl::set0<>,
-    class IntroversalMask = sake::null_introversal_tag
+    class IntroterminalMask = sake::null_introterminal_tag
 >
-class introversal;
+class introterminal;
 
 } // namespace adaptors
 
@@ -41,4 +41,4 @@ class introversal;
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_ITERATOR_INTROVERSAL_ADAPTOR_FWD_HPP
+#endif // #ifndef SAKE_CORE_ITERATOR_ADAPT_INTROTERMINAL_FWD_HPP

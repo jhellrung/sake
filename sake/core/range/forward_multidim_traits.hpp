@@ -26,9 +26,9 @@
  *     static outer_range
  *     outer(R&& r);
  *
- *     template< class Outer, class Inner, class Introversal >
- *     static typename range_iterator< R, Introversal >::type
- *     iter_at(R&& r, Outer j, Inner k, Introversal);
+ *     template< class Outer, class Inner, class Introterminal >
+ *     static typename range_iterator< R, Introterminal >::type
+ *     iter_at(R&& r, Outer j, Inner k, Introterminal);
  * };
  ******************************************************************************/
 
@@ -114,15 +114,15 @@ public:
     iter_at(param_type r, Outer const & j, Inner const & k)
     { return base_traits::iter_at(SAKE_AS_LVALUE(r), j, k); }
 
-    template< class Outer, class Inner, class Introversal >
-    static typename sake::range_iterator< R, Introversal >::type
-    iter_at(param_type r, Outer const & j, Inner const & k, Introversal)
+    template< class Outer, class Inner, class Introterminal >
+    static typename sake::range_iterator< R, Introterminal >::type
+    iter_at(param_type r, Outer const & j, Inner const & k, Introterminal)
     {
         BOOST_STATIC_ASSERT((boost::is_same<
-            typename sake::range_iterator< R, Introversal >::type,
-            typename sake::range_forward_iterator< R, Introversal >::type
+            typename sake::range_iterator< R, Introterminal >::type,
+            typename sake::range_forward_iterator< R, Introterminal >::type
         >::value));
-        return base_traits::iter_at(SAKE_AS_LVALUE(r), j, k, Introversal());
+        return base_traits::iter_at(SAKE_AS_LVALUE(r), j, k, Introterminal());
     }
 };
 
@@ -155,13 +155,13 @@ public:
             base_traits::iter_at(SAKE_AS_LVALUE(r), j.base(), k.base()));
     }
 
-    template< class Outer, class Inner, class Introversal >
-    static typename sake::range_forward_iterator< R, Introversal >::type
-    iter_at(param_type r, Outer const & j, Inner const & k, Introversal)
+    template< class Outer, class Inner, class Introterminal >
+    static typename sake::range_forward_iterator< R, Introterminal >::type
+    iter_at(param_type r, Outer const & j, Inner const & k, Introterminal)
     {
-        return typename sake::range_forward_iterator< R, Introversal >::type(
+        return typename sake::range_forward_iterator< R, Introterminal >::type(
             base_traits::iter_at(
-                SAKE_AS_LVALUE(r), j.base(), k.base(), Introversal()));
+                SAKE_AS_LVALUE(r), j.base(), k.base(), Introterminal()));
     }
 };
 

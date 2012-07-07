@@ -7,7 +7,7 @@
  *
  * struct range_traits<R>
  *
- * struct range_iterator< R, Introversal = null_introversal_tag >
+ * struct range_iterator< R, Introterminal = null_introterminal_tag >
  * struct range_value<R>
  * struct range_reference<R>
  * struct range_difference<R>
@@ -29,26 +29,26 @@
  *     typedef ... size_type;
  *     typedef ... traversal;
  *
- *     template< class Introversal >
+ *     template< class Introterminal >
  *     struct iterator_with { typedef ... type; };
  *     template< class Begin, class End >
  *     struct subrange_with { typedef ... type; };
  *
  *     static iterator
  *     begin(R& r);
- *     template< class Introversal >
- *     static typename iterator_with< Introversal >::type
- *     begin(R& r, Introversal);
+ *     template< class Introterminal >
+ *     static typename iterator_with< Introterminal >::type
+ *     begin(R& r, Introterminal);
  *
  *     static iterator
  *     end(R& r);
- *     template< class Introversal >
- *     static typename iterator_with< Introversal >::type
- *     end(R& r, Introversal);
+ *     template< class Introterminal >
+ *     static typename iterator_with< Introterminal >::type
+ *     end(R& r, Introterminal);
  *
- *     template< class T, class Introversal >
- *     static typename iterator_with< Introversal >::type
- *     iter_at(R& r, T x, Introversal);
+ *     template< class T, class Introterminal >
+ *     static typename iterator_with< Introterminal >::type
+ *     iter_at(R& r, T x, Introterminal);
  *
  *     template< class Begin, class End >
  *     static typename subrange_with< Begin, End >::type
@@ -80,14 +80,14 @@
  *     typedef ... iterator;
  *     typedef ... size_type;
  *
- *     template< class Introversal >
+ *     template< class Introterminal >
  *     struct iterator_with { typedef ... type; };
  *     template< class Begin, class End >
  *     struct subrange_with { typedef ... type; };
  *
- *     template< class T, class Introversal >
- *     static typename iterator_with< Introversal >::type
- *     iter_at(R& r, T x, Introversal);
+ *     template< class T, class Introterminal >
+ *     static typename iterator_with< Introterminal >::type
+ *     iter_at(R& r, T x, Introterminal);
  *
  *     template< class Begin, class End >
  *     static typename subrange_with< Begin, End >::type
@@ -128,7 +128,7 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
-#include <sake/core/iterator/adapt_introversal.hpp>
+#include <sake/core/iterator/adapt_introterminal.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/traits.hpp>
@@ -139,6 +139,7 @@
 #include <sake/core/range/default_impl/iterator_with.hpp>
 #include <sake/core/range/default_impl/sub.hpp>
 #include <sake/core/range/default_impl/subrange_with.hpp>
+#include <sake/core/range/private/iter_at_static_assert_cond.hpp>
 #include <sake/core/range/private/traits/distance_base.hpp>
 #include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/using_typedef.hpp>
@@ -162,16 +163,16 @@ public:
 
     SAKE_USING_TYPEDEF( typename extension_traits_, size_type );
 
-    template< class Introversal >
+    template< class Introterminal >
     struct iterator_with
     {
         BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-            Introversal, sake::null_introversal_tag >::value));
+            Introterminal, sake::null_introterminal_tag >::value));
         typedef typename extension_traits_::template
-            iterator_with< Introversal >::type type;
+            iterator_with< Introterminal >::type type;
         BOOST_MPL_ASSERT((boost_ext::mpl::or2<
             boost::mpl::not_< boost::is_same<
-                Introversal, sake::null_introversal_tag > >,
+                Introterminal, sake::null_introterminal_tag > >,
             boost::is_same< type, iterator >
         >));
     };
@@ -179,37 +180,34 @@ public:
     template< class T >
     static iterator
     iter_at(R& r, T const & x)
-    { return iter_at(r, x, sake::null_introversal_tag()); }
+    { return iter_at(r, x, sake::null_introterminal_tag()); }
 
-    template< class T, class Introversal >
-    static typename iterator_with< Introversal >::type
-    iter_at(R& r, T const & x, Introversal)
+    template< class T, class Introterminal >
+    static typename iterator_with< Introterminal >::type
+    iter_at(R& r, T const & x, Introterminal)
     {
-        BOOST_STATIC_ASSERT((boost_ext::mpl::or3<
-            boost::is_same< T, sake::begin_tag >,
-            boost::is_same< T, sake::end_tag >,
-            boost_ext::is_convertible< T, iterator >
-        >::value));
+        BOOST_STATIC_ASSERT((
+            sake::range::private_::iter_at_static_assert_cond<R,T>::value));
         BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-            Introversal, sake::null_introversal_tag >::value));
-        return extension_traits_::iter_at(r, x, Introversal());
+            Introterminal, sake::null_introterminal_tag >::value));
+        return extension_traits_::iter_at(r, x, Introterminal());
     }
 
     static iterator
     begin(R& r)
-    { return iter_at(r, sake::_begin, sake::null_introversal_tag()); }
-    template< class Introversal >
-    static typename iterator_with< Introversal >::type
-    begin(R& r, Introversal)
-    { return iter_at(r, sake::_begin, Introversal()); }
+    { return iter_at(r, sake::_begin, sake::null_introterminal_tag()); }
+    template< class Introterminal >
+    static typename iterator_with< Introterminal >::type
+    begin(R& r, Introterminal)
+    { return iter_at(r, sake::_begin, Introterminal()); }
 
     static iterator
     end(R& r)
-    { return iter_at(r, sake::_end, sake::null_introversal_tag()); }
-    template< class Introversal >
-    static typename iterator_with< Introversal >::type
-    end(R& r, Introversal)
-    { return iter_at(r, sake::_end, Introversal()); }
+    { return iter_at(r, sake::_end, sake::null_introterminal_tag()); }
+    template< class Introterminal >
+    static typename iterator_with< Introterminal >::type
+    end(R& r, Introterminal)
+    { return iter_at(r, sake::_end, Introterminal()); }
 
     template< class Begin, class End >
     struct subrange_with
@@ -286,10 +284,10 @@ public:
     typedef sake::iterator_traits< Iterator > iterator_traits;
     SAKE_USING_TYPEDEF( typename iterator_traits, reference );
 
-    template< class Introversal >
+    template< class Introterminal >
     struct iterator_with
     { typedef typename sake::range::default_impl::
-        iterator_with< R, Iterator, Introversal >::type type; };
+        iterator_with< R, Iterator, Introterminal >::type type; };
 
     template< class Begin, class End >
     struct subrange_with
@@ -307,10 +305,10 @@ public:
         >::type type;
     };
 
-    template< class T, class Introversal >
-    static typename iterator_with< Introversal >::type
-    iter_at(R& r, T const & x, Introversal)
-    { return sake::range::default_impl::iter_at(r, x, Introversal()); }
+    template< class T, class Introterminal >
+    static typename iterator_with< Introterminal >::type
+    iter_at(R& r, T const & x, Introterminal)
+    { return sake::range::default_impl::iter_at(r, x, Introterminal()); }
 
     template< class Begin, class End >
     static typename subrange_with< Begin, End >::type
@@ -341,9 +339,9 @@ struct range_traits< T[N], void >
     typedef T* iterator;
     typedef std::size_t size_type;
 
-    template< class Introversal >
+    template< class Introterminal >
     struct iterator_with
-        : sake::iterator::adapt_introversal< T*, Introversal >
+        : sake::iterator::adapt_introterminal< T*, Introterminal >
     { };
     template< class Begin, class End >
     struct subrange_with
@@ -351,16 +349,16 @@ struct range_traits< T[N], void >
         subrange_with< void, T*, Begin, End >::type type; };
 
     static T*
-    iter_at(T* const p, sake::begin_tag, sake::null_introversal_tag)
+    iter_at(T* const p, sake::begin_tag, sake::null_introterminal_tag)
     { return p; }
     static T*
-    iter_at(T* const p, sake::end_tag, sake::null_introversal_tag)
+    iter_at(T* const p, sake::end_tag, sake::null_introterminal_tag)
     { return p + N; }
 
-    template< class U, class Introversal >
-    static typename iterator_with< Introversal >::type
-    iter_at(this_type& r, U const & x, Introversal)
-    { return sake::range::default_impl::iter_at(r, x, Introversal()); }
+    template< class U, class Introterminal >
+    static typename iterator_with< Introterminal >::type
+    iter_at(this_type& r, U const & x, Introterminal)
+    { return sake::range::default_impl::iter_at(r, x, Introterminal()); }
 
     template< class Begin, class End >
     static typename subrange_with< Begin, End >::type

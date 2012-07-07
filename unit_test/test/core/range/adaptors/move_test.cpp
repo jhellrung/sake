@@ -45,8 +45,8 @@ void helper(sake::test::environment& env, R r)
     BOOST_STATIC_ASSERT((sake::range_has_static_size<R>::value));
     BOOST_STATIC_ASSERT((sake::range_static_size<R>::value == 3));
     typedef typename sake::range_iterator<
-        R, sake::end_detect_introversal_tag >::type iter_type;
-    iter_type i = sake::range::begin(r, sake::end_detect_introversal_tag());
+        R, sake::end_detect_introterminal_tag >::type iter_type;
+    iter_type i = sake::range::begin(r, sake::end_detect_introterminal_tag());
     for(; i != sake::_end; ++i) {
         typename sake::range_value<R>::type x = *i;
         SAKE_TEST_CHECK_RELATION( env, x.value, !=, 0 );

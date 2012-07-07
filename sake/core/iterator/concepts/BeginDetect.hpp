@@ -12,7 +12,7 @@
 #define SAKE_CORE_ITERATOR_CONCEPTS_BEGIN_DETECT_HPP
 
 #include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/concepts/private/IntroversalBase.hpp>
+#include <sake/core/iterator/concepts/private/IntroterminalBase.hpp>
 
 namespace sake
 {
@@ -25,8 +25,8 @@ namespace concepts
 
 template< class I >
 struct BeginDetect
-    : sake::iterator::concepts::private_::IntroversalBase<
-          I, sake::begin_detect_introversal_tag >
+    : sake::iterator::concepts::private_::IntroterminalBase<
+          I, sake::begin_detect_introterminal_tag >
 { };
 
 } // namespace concepts

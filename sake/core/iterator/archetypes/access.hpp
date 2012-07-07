@@ -5,12 +5,18 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct iterator::archetypes::readable< T, TV = ..., IV = ... >
- * struct iterator::archetypes::writable< T, TV = ..., IV = ... >
- * struct iterator::archetypes::swappable< T, TV = ..., IV = ... >
- * struct iterator::archetypes::readable_writable< T, TV = ..., IV = ... >
- * struct iterator::archetypes::readable_lvalue< T, TV = ..., IV = ... >
- * struct iterator::archetypes::writable_lvalue< T, TV = ..., IV = ... >
+ * struct iterator::archetypes::readable<
+ *     T, Traversal = ..., Introterminal = ... >
+ * struct iterator::archetypes::writable<
+ *     T, Traversal = ..., Introterminal = ... >
+ * struct iterator::archetypes::swappable<
+ *     T, Traversal = ..., Introterminal = ... >
+ * struct iterator::archetypes::readable_writable<
+ *     T, Traversal = ..., Introterminal = ... >
+ * struct iterator::archetypes::readable_lvalue<
+ *     T, Traversal = ..., Introterminal = ... >
+ * struct iterator::archetypes::writable_lvalue<
+ *     T, Traversal = ..., Introterminal = ... >
  ******************************************************************************/
 
 #ifndef SAKE_CORE_ITERATOR_ARCHETYPES_ACCESS_HPP
@@ -33,14 +39,14 @@ namespace archetypes
 template< \
     class T, \
     class Traversal = boost::incrementable_traversal_tag, \
-    class Introversal = sake::null_introversal_tag \
+    class Introterminal = sake::null_introterminal_tag \
 > \
 struct access \
 { \
     typedef sake::archetypes::iterator< \
         T, \
         Traversal, \
-        Introversal, \
+        Introterminal, \
         sake::iterator::archetypes::access ## _tag \
     > type; \
 };

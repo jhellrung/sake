@@ -9,12 +9,12 @@
 #ifndef SAKE_CORE_RANGE_DEFAULT_IMPL_SUBRANGE_WITH_HPP
 #define SAKE_CORE_RANGE_DEFAULT_IMPL_SUBRANGE_WITH_HPP
 
-#include <sake/core/iterator/adapt_introversal.hpp>
+#include <sake/core/iterator/adapt_introterminal.hpp>
 #include <sake/core/introspection/has_template.hpp>
 #include <sake/core/range/basic/fwd.hpp>
 #include <sake/core/range/basic/subrange.hpp>
 #include <sake/core/range/default_impl/iterator_with.hpp>
-#include <sake/core/range/private/introversal_from_begin_end.hpp>
+#include <sake/core/range/private/introterminal_of_begin_end.hpp>
 
 namespace sake
 {
@@ -42,14 +42,14 @@ template< class R, class Iterator, class Begin, class End >
 class helper
 {
     typedef typename sake::range::private_::
-        introversal_from_begin_end< Begin, End >::type introversal;
+        introterminal_of_begin_end< Begin, End >::type introterminal;
 public:
     typedef sake::range::basic::subrange<
-        typename sake::iterator::adapt_introversal<
+        typename sake::iterator::adapt_introterminal<
             typename sake::range::default_impl::iterator_with<
-                R, Iterator, introversal >::type,
-            introversal,
-            introversal
+                R, Iterator, introterminal >::type,
+            introterminal,
+            introterminal
         >::type
     > type;
 };

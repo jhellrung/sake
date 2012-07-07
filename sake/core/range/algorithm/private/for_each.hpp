@@ -120,10 +120,10 @@ dispatch(SAKE_FWD2_REF( R ) r, F f, sake::int_tag<0>)
 {
     typedef sake::range_forward_traits< SAKE_FWD2_PARAM( R ) > traits_;
     typedef typename traits_::template iterator_with<
-        sake::end_detect_introversal_tag >::type iterator;
+        sake::end_detect_introterminal_tag >::type iterator;
     iterator i = traits_::begin(
         sake::forward<R>(r),
-        sake::end_detect_introversal_tag()
+        sake::end_detect_introterminal_tag()
     );
     for(; i != sake::_end; ++i)
         f(*i);

@@ -13,7 +13,6 @@
 
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 
-#include <sake/core/config.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
 #include <sake/core/memberwise/swap.hpp>
 #include <sake/core/move/forward.hpp>
@@ -22,7 +21,6 @@
 #include <sake/core/range/facade_fwd.hpp>
 #include <sake/core/range/private/facade/subscript_base.hpp>
 #include <sake/core/range/private/facade/traits.hpp>
-#include <sake/core/utility/private/msc_adl_friend_workaround.hpp>
 
 namespace sake
 {
@@ -90,17 +88,9 @@ public:
 
     size_type size() const
     { return sake::range::core_access::size(derived()); }
-#if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
     inline friend size_type
-    range_calculate_size(sake::msc_adl_friend_workaround< Derived const > x)
-    { return x.value.size(); }
-#else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
-    template< class Derived_ >
-    inline friend typename boost::enable_if_c<
-        boost::is_same< Derived_, Derived >::value, size_type >::type
-    range_calculate_size(Derived_ const & this_)
+    range_calculate_size(size_base const & this_)
     { return this_.size(); }
-#endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(

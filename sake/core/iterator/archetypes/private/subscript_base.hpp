@@ -29,16 +29,15 @@ namespace iterator_private
 template<
     class T, class Access,
     bool = boost_ext::is_convertible<
-        Access, sake::iterator::archetypes::writable_tag >::value
+               Access, sake::iterator::archetypes::writable_tag >::value
 >
 class subscript_proxy;
 
 template< class T, class Access >
 class subscript_proxy< T, Access, false >
 {
-    typedef sake::archetypes::iterator_private::reference_dispatch<
-        T const, Access
-    > reference_dispatch_;
+    typedef sake::archetypes::iterator_private::
+        reference_dispatch< T const, Access > reference_dispatch_;
 public:
     operator typename reference_dispatch_::type () const
     { return reference_dispatch_::apply(); }
@@ -47,9 +46,8 @@ public:
 template< class T, class Access >
 class subscript_proxy< T, Access, true >
 {
-    typedef sake::archetypes::iterator_private::reference_dispatch<
-        T, Access
-    > reference_dispatch_;
+    typedef sake::archetypes::iterator_private::
+        reference_dispatch< T, Access > reference_dispatch_;
 public:
     operator typename reference_dispatch_::type () const
     { return reference_dispatch_::apply(); }
@@ -60,7 +58,7 @@ public:
 template<
     class T, class Traversal, class Access,
     bool = boost_ext::is_convertible<
-        Traversal, boost::random_access_traversal_tag >::value
+               Traversal, boost::random_access_traversal_tag >::value
 >
 class subscript_base;
 
