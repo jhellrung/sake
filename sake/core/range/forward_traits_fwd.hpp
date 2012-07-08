@@ -22,6 +22,11 @@ struct range_forward_iterator
 { typedef typename sake::range_forward_traits<R>::template
     iterator_with< Introterminal >::type type; };
 
+template< class R, class Begin = void, class End = void >
+struct range_forward_subrange
+{ typedef typename sake::range_forward_traits<R>::template
+    subrange_with< Begin, End >::type type; };
+
 template< class R >
 struct range_forward_reference
 { typedef typename sake::range_forward_traits<R>::reference type; };

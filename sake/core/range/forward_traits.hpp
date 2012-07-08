@@ -7,7 +7,8 @@
  *
  * struct range_forward_traits<R>
  *
- * struct range_forward_iterator<R>
+ * struct range_forward_iterator< R, Introterminal = null_introterminal_tag >
+ * struct range_forward_subrange< R, Begin = void, End = void >
  * struct range_forward_reference<R>
  * struct range_forward_traversal<R>
  *
