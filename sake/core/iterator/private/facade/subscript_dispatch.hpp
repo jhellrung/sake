@@ -148,7 +148,7 @@ struct subscript_dispatch< This, Value, Reference, false >
         // movable implicit rvalues
         proxy const &
         operator=(operator_assign_rv_sink_default_type x) const
-        { return x(sake::rv_sink_visitors::make_operator_assign(*this)); }
+        { return x(sake::rv_sink_visitors::construct::operator_assign(*this)); }
         // const lvalues + non-movable rvalues
         template< class T >
         typename operator_assign_rv_sink_traits::template

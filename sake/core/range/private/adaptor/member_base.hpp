@@ -15,8 +15,8 @@
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 
 #include <sake/core/config.hpp>
+#include <sake/core/emplacer/construct.hpp>
 #include <sake/core/emplacer/constructible.hpp>
-#include <sake/core/emplacer/make.hpp>
 #include <sake/core/keyword/arg_pack_tag.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
 #include <sake/core/memberwise/swap.hpp>
@@ -76,10 +76,10 @@ protected:
     member_base(sake::keyword::arg_pack_tag, ArgPack arg_pack)
         : facade_(
               arg_pack[sake::range::keyword::_chained_base
-                     | sake::make_emplacer()]),
+                     | sake::construct::emplacer()]),
           m_base(sake::emplacer_constructible<R>(
               arg_pack[sake::range::keyword::_base
-                     | sake::make_emplacer()]))
+                     | sake::construct::emplacer()]))
     { }
 
     typename boost_ext::add_reference<R>::type
@@ -125,12 +125,12 @@ protected:
     member_base(sake::keyword::arg_pack_tag, ArgPack arg_pack)
         : facade_(
               arg_pack[sake::range::keyword::_chained_base
-                     | sake::make_emplacer()]),
+                     | sake::construct::emplacer()]),
           m_pair(
               arg_pack[sake::range::keyword::_base
-                     | sake::make_emplacer()],
+                     | sake::construct::emplacer()],
               arg_pack[sake::range::keyword::_member
-                     | sake::make_emplacer()])
+                     | sake::construct::emplacer()])
     { }
 
     typename boost_ext::add_reference<R>::type

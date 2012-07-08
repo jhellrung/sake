@@ -15,7 +15,7 @@
 #include <sake/boost_ext/type_traits/propagate_const.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
-#include <sake/core/emplacer/make.hpp>
+#include <sake/core/emplacer/construct.hpp>
 #include <sake/core/range/adapt/fwd.hpp>
 #include <sake/core/range/adapt/transform.hpp>
 #include <sake/core/range/adaptors/fwd.hpp>
@@ -65,7 +65,7 @@ struct impl
     {
         return outer_range(
             base_traits::outer(r.base()),
-            sake::make_emplacer(r.function())
+            sake::construct::emplacer(r.function())
         );
     }
 

@@ -645,9 +645,9 @@ struct dispatch< LHS, RHS, true >
     {
         std::ostringstream message(std::ostringstream::out);
         message << "{ " << expression << " } == "
-                   "{ " << sake::make_ostreamable(lhs)
+                   "{ " << sake::construct::ostreamable(lhs)
                         << ' ' << op << ' '
-                        << sake::make_ostreamable(rhs) << " }";
+                        << sake::construct::ostreamable(rhs) << " }";
         sake::assert_failure_action::functional::print()(o,
             macro, expression, filename, function, line_number,
             message.str().c_str()
@@ -663,9 +663,9 @@ struct dispatch< LHS, RHS, true >
     {
         std::ostringstream message(std::ostringstream::out);
         message << "{ " << subexpression << " } == "
-                   "{ " << sake::make_ostreamable(lhs)
+                   "{ " << sake::construct::ostreamable(lhs)
                         << ' ' << op << ' '
-                        << sake::make_ostreamable(rhs) << " } "
+                        << sake::construct::ostreamable(rhs) << " } "
                    "(subexpression " << subexpression_index << " within { " << expression << " })";
         sake::assert_failure_action::functional::print()(o,
             macro, expression, filename, function, line_number,
@@ -787,9 +787,9 @@ struct failure_action
     RHS ## n const & rhs ## n
 #define or_stream_lhsn_opn_rhsn( z, n, data ) \
     BOOST_PP_EXPR_IF( n, << " || " ) \
-    << sake::make_ostreamable( lhs ## n ) \
+    << sake::construct::ostreamable( lhs ## n ) \
     << ' ' << op ## n << ' ' \
-    << sake::make_ostreamable( rhs ## n )
+    << sake::construct::ostreamable( rhs ## n )
 #define lhsn_opn_rhsn( z, n, data ) lhs ## n, op ## n, rhs ## n
 
     template< BOOST_PP_ENUM( N, class_LHSn_class_RHSn, ~ ) >

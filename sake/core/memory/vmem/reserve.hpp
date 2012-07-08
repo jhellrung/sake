@@ -19,7 +19,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <sake/core/data_structures/tuple/make.hpp>
+#include <sake/core/data_structures/tuple/construct.hpp>
 #include <sake/core/data_structures/tuple/tuple.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/memory/vmem/get_granularity.hpp>
@@ -78,7 +78,7 @@ reserve(std::size_t size)
 
 #endif // #ifdef BOOST_WINDOWS
 
-    return sake::make_tuple(p, size);
+    return sake::construct::tuple(p, size);
 }
 
 } // namespace vmem

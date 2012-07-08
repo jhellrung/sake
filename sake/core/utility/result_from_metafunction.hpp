@@ -41,6 +41,7 @@
 #include <boost/preprocessor/repetition/deduce_z.hpp>
 #include <boost/preprocessor/detail/is_binary.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
@@ -69,9 +70,8 @@
     )
 
 #define SAKE_RESULT_FROM_METAFUNCTION_result( z, n, data ) \
-    template< class This, BOOST_PP_ENUM_PARAMS_Z( z, n, class T ) > \
+    template< class This BOOST_PP_ENUM_TRAILING_PARAMS_Z( z, n, class T ) > \
     struct result< This ( BOOST_PP_ENUM_PARAMS_Z( z, n, T ) ) > \
-        : data< BOOST_PP_ENUM_PARAMS_Z( z, n, T ) > \
-    { };
+    { typedef typename data< BOOST_PP_ENUM_PARAMS_Z( z, n, T ) >::type type; };
 
 #endif // #ifndef SAKE_CORE_UTILITY_RESULT_FROM_METAFUNCTION_HPP

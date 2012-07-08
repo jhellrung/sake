@@ -19,7 +19,7 @@
  * struct primary_rv_sink<T>
  *
  * struct rv_sink_visitors::operator_assign<T>
- * rv_sink_visitors::make_operator_assign(T& x)
+ * rv_sink_visitors::construct::operator_assign(T& x)
  *     -> rv_sink_visitors::operator_assign<T>
  ******************************************************************************/
 
@@ -257,7 +257,7 @@ struct rv_sink_traits1
 
 /*******************************************************************************
  * struct rv_sink_visitors::operator_assign<T>
- * rv_sink_visitors::make_operator_assign(T& x)
+ * rv_sink_visitors::construct::operator_assign(T& x)
  *     -> rv_sink_visitors::operator_assign<T>
  ******************************************************************************/
 
@@ -276,10 +276,15 @@ private:
     T& m_this;
 };
 
+namespace construct
+{
+
 template< class T >
 inline sake::rv_sink_visitors::operator_assign<T>
-make_operator_assign(T& x)
+operator_assign(T& x)
 { return sake::rv_sink_visitors::operator_assign<T>(x); }
+
+} // namespace construct
 
 } // namespace rv_sink_visitors
 

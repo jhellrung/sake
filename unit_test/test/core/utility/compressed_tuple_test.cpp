@@ -9,7 +9,7 @@
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
 
-#include <sake/core/emplacer/make.hpp>
+#include <sake/core/emplacer/construct.hpp>
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/move.hpp>
@@ -216,8 +216,8 @@ void compressed_tuple_test(sake::test::environment& env)
             sake::compressed_tuple< type, type > y(x);
             sake::compressed_tuple< type, type > z(sake::move(y));
             y = SAKE_RV_CAST((sake::compressed_tuple< type, type >(
-                sake::make_emplacer(stats),
-                sake::make_emplacer(stats)
+                sake::construct::emplacer(stats),
+                sake::construct::emplacer(stats)
             )));
             z = x;
             x = sake::move(y);
@@ -339,16 +339,16 @@ void compressed_tuple_test(sake::test::environment& env)
         stats.reset();
         {
             sake::compressed_tuple< type, type, type > x(
-                sake::make_emplacer(stats),
-                sake::make_emplacer(stats),
-                sake::make_emplacer(stats)
+                sake::construct::emplacer(stats),
+                sake::construct::emplacer(stats),
+                sake::construct::emplacer(stats)
             );
             sake::compressed_tuple< type, type, type > y(x);
             sake::compressed_tuple< type, type, type > z(sake::move(y));
             y = SAKE_RV_CAST((sake::compressed_tuple< type, type, type >(
-                sake::make_emplacer(stats),
-                sake::make_emplacer(stats),
-                sake::make_emplacer(stats)
+                sake::construct::emplacer(stats),
+                sake::construct::emplacer(stats),
+                sake::construct::emplacer(stats)
             )));
             z = x;
             x = sake::move(y);

@@ -6,7 +6,7 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#include <sake/core/emplacer/make.hpp>
+#include <sake/core/emplacer/construct.hpp>
 
 #include <sake/test/environment.hpp>
 #include <sake/test/test.hpp>
@@ -25,7 +25,7 @@ struct X
 
 void emplacer_test(sake::test::environment& env)
 {
-    X x = sake::make_emplacer(42, 43).construct<X>();
+    X x = sake::construct::emplacer(42, 43).construct<X>();
     SAKE_TEST_CHECK_RELATION( env, x.a, ==, 42 );
     SAKE_TEST_CHECK_RELATION( env, x.b, ==, 43 );
 }

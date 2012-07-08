@@ -7,10 +7,10 @@
  ******************************************************************************/
 
 #include <sake/core/config.hpp>
-#include <sake/core/data_structures/tuple/make.hpp>
+#include <sake/core/data_structures/tuple/construct.hpp>
 #include <sake/core/data_structures/tuple/operators.hpp>
 #include <sake/core/data_structures/tuple/tuple.hpp>
-#include <sake/core/emplacer/make.hpp>
+#include <sake/core/emplacer/construct.hpp>
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/move.hpp>
@@ -187,10 +187,11 @@ void tuple_test(sake::test::environment& env)
             );
             sake::tuple< short, type > x(w);
             sake::tuple< int, type > y(sake::move(x));
-            sake::tuple< long, type > z(sake::make_tuple(0, sake::move(x._1)));
+            sake::tuple< long, type > z(
+                sake::construct::tuple(0, sake::move(x._1)));
             x = w;
             y = sake::move(x);
-            z = sake::make_tuple(0, sake::move(x._1));
+            z = sake::construct::tuple(0, sake::move(x._1));
         }
         SAKE_TEST_CHECK_RELATION( env, stats.n_other_constructor, ==, 1 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 1 );
@@ -284,16 +285,16 @@ void tuple_test(sake::test::environment& env)
         stats.reset();
         {
             sake::tuple< type, type, type > x(
-                sake::make_emplacer(stats),
-                sake::make_emplacer(stats),
-                sake::make_emplacer(stats)
+                sake::construct::emplacer(stats),
+                sake::construct::emplacer(stats),
+                sake::construct::emplacer(stats)
             );
             sake::tuple< type, type, type > y(x);
             sake::tuple< type, type, type > z(sake::move(y));
             y = sake::tuple< type, type, type >(
-                sake::make_emplacer(stats),
-                sake::make_emplacer(stats),
-                sake::make_emplacer(stats)
+                sake::construct::emplacer(stats),
+                sake::construct::emplacer(stats),
+                sake::construct::emplacer(stats)
             );
             z = x;
             x = sake::move(y);

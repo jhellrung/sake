@@ -16,7 +16,7 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
-#include <sake/core/emplacer/make.hpp>
+#include <sake/core/emplacer/construct.hpp>
 #include <sake/core/iterator/adaptors/fwd.hpp>
 #include <sake/core/iterator/multidim_traits_fwd.hpp>
 #include <sake/core/iterator/traits.hpp>
@@ -72,7 +72,7 @@ struct iterator_multidim_traits<
     {
         return outer_iterator(
             base_traits::outer(i.base()),
-            sake::make_emplacer(i.function())
+            sake::construct::emplacer(i.function())
         );
     }
 

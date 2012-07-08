@@ -21,7 +21,7 @@
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
-#include <sake/core/emplacer/make.hpp>
+#include <sake/core/emplacer/construct.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/range/is_adapt_by_value.hpp>
@@ -64,7 +64,7 @@ struct dispatch<R,3>
     typedef sake::range::adaptors::by_value<
         sake::range::adaptors::move<R> > type;
     static type apply(R&& r) const
-    { return type(sake::make_emplacer(sake::move(r))); }
+    { return type(sake::construct::emplacer(sake::move(r))); }
 };
 
 template< class R >
@@ -157,7 +157,7 @@ struct dispatch<R,3>
     typedef sake::range::adaptors::by_value<
         sake::range::adaptors::move<R> > type;
     type operator()(SAKE_RV_REF( R ) r) const
-    { return type(sake::make_emplacer(r)); }
+    { return type(sake::construct::emplacer(r)); }
 };
 
 template< class R >

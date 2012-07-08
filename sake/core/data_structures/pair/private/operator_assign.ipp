@@ -67,7 +67,7 @@ public:
 
     // implicit movable rvalues
     pair& operator=(operator_assign_rv_sink_default_type s)
-    { return s(sake::rv_sink_visitors::make_operator_assign(*this)); }
+    { return s(sake::rv_sink_visitors::construct::operator_assign(*this)); }
 
     // const lvalues + non-movable rvalues
     template< class Sequence >

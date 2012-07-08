@@ -5,7 +5,6 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * construct<T>(T0&& x0, ... ) -> T
  * struct functional::construct<T>
  ******************************************************************************/
 
@@ -150,69 +149,6 @@ struct construct< void >
 };
 
 } // namespace functional
-
-#if !defined( BOOST_NO_RVALUE_REFERENCES ) \
- && !defined( BOOST_NO_VARIADIC_TEMPLATES )
-
-template< class T, class... U >
-inline T
-construct(U&&... x)
-{ return sake::functional::construct<T>()(sake::forward<U>(x)...); }
-
-#else // #if !defined( ... ) && !defined( ... )
-
-template< class T >
-inline T
-construct()
-{ return sake::functional::construct<T>()(); }
-
-#ifndef BOOST_NO_RVALUE_REFERENCES
-
-template< class T, class U >
-inline T
-construct(U&& x)
-{ return sake::functional::construct<T>()(sake::forward<U>(x)); }
-
-#else // #ifndef BOOST_NO_RVALUE_REFERENCES
-
-template< class T, class U >
-inline T
-construct(U& x)
-{ return sake::functional::construct<T>()(x); }
-
-template< class T >
-inline T
-construct(typename sake::rv_sink_traits1<T>::primary_type x)
-{ return sake::functional::construct<T>()(sake::move(x.value)); }
-
-template< class T >
-inline T
-construct(typename sake::rv_sink_traits1<T>::template
-    default_< construct > x)
-{ return x(); }
-
-template< class T, class U >
-inline typename sake::rv_sink_traits1<T>::template cref_enabler<U,T>::type
-construct(U const & x)
-{ return sake::functional::construct<T>()(x); }
-
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
-
-#define SAKE_OVERLOAD_DECLARE_TEMPLATE_PARAMS( r, n, classT_tuple ) \
-    class T, BOOST_PP_TUPLE_REM_CTOR( n, classT_tuple )
-#define SAKE_OVERLOAD_RESULT_TYPE \
-    T
-#define SAKE_OVERLOAD_FUNCTION_NAME \
-    construct
-#define SAKE_OVERLOAD_BODY( r, n, T_tuple, x_tuple, forward_x_tuple ) \
-    return sake::functional::construct<T>() forward_x_tuple ;
-#define SAKE_OVERLOAD_MIN_ARITY         2
-#define SAKE_OVERLOAD_PERFECT_MAX_ARITY SAKE_CONSTRUCT_PERFECT_MAX_ARITY
-#define SAKE_OVERLOAD_FWD_MAX_ARITY     SAKE_CONSTRUCT_FWD_MAX_ARITY
-#define SAKE_OVERLOAD_FWD2_MAX_ARITY    SAKE_CONSTRUCT_FWD2_MAX_ARITY
-#include SAKE_OVERLOAD_GENERATE()
-
-#endif // #if !defined( ... ) && !defined( ... )
 
 } // namespace sake
 

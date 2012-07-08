@@ -15,8 +15,8 @@
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 
 #include <sake/core/config.hpp>
+#include <sake/core/emplacer/construct.hpp>
 #include <sake/core/emplacer/constructible.hpp>
-#include <sake/core/emplacer/make.hpp>
 #include <sake/core/iterator/keyword.hpp>
 #include <sake/core/iterator/private/adaptor/member_storage.hpp>
 #include <sake/core/iterator/private/adaptor/traits.hpp>
@@ -78,10 +78,10 @@ protected:
     member_base(sake::keyword::arg_pack_tag, ArgPack arg_pack)
         : facade_(
               arg_pack[sake::iterator::keyword::_chained_base
-                     | sake::make_emplacer()]),
+                     | sake::construct::emplacer()]),
           m_base(sake::emplacer_constructible<I>(
               arg_pack[sake::iterator::keyword::_base
-                     | sake::make_emplacer()]))
+                     | sake::construct::emplacer()]))
     { }
 
     I &
@@ -135,12 +135,12 @@ protected:
     member_base(sake::keyword::arg_pack_tag, ArgPack arg_pack)
         : facade_(
               arg_pack[sake::iterator::keyword::_chained_base
-                     | sake::make_emplacer()]),
+                     | sake::construct::emplacer()]),
           m_pair(
               arg_pack[sake::iterator::keyword::_base
-                     | sake::make_emplacer()],
+                     | sake::construct::emplacer()],
               arg_pack[sake::iterator::keyword::_member
-                     | sake::make_emplacer()])
+                     | sake::construct::emplacer()])
     { }
 
     I &

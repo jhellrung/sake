@@ -7,7 +7,7 @@
  ******************************************************************************/
 
 #include <sake/core/config.hpp>
-#include <sake/core/data_structures/pair/make.hpp>
+#include <sake/core/data_structures/pair/construct.hpp>
 #include <sake/core/data_structures/pair/operators.hpp>
 #include <sake/core/data_structures/pair/pair.hpp>
 #include <sake/core/math/cmp.hpp>
@@ -108,10 +108,11 @@ void pair_test(sake::test::environment& env)
             sake::pair< char, type > w(static_cast< char >(0), (type(stats)));
             sake::pair< short, type > x(w);
             sake::pair< int, type > y(sake::move(x));
-            sake::pair< long, type > z(sake::make_pair(0, sake::move(x.second)));
+            sake::pair< long, type > z(
+                sake::construct::pair(0, sake::move(x.second)));
             x = w;
             y = sake::move(x);
-            z = sake::make_pair(0, sake::move(x.second));
+            z = sake::construct::pair(0, sake::move(x.second));
         }
         SAKE_TEST_CHECK_RELATION( env, stats.n_other_constructor, ==, 1 );
         SAKE_TEST_CHECK_RELATION( env, stats.n_copy_constructor, ==, 1 );
