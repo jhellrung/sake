@@ -135,7 +135,7 @@ elif platform == 'posix':
         print("*** ERROR: Unknown CXX: " + env['CXX'])
         Exit(2)
 else:
-    print("Unknown PLATFORM:", platform)
+    print("Unknown PLATFORM: " + platform)
     Exit(2)
 env.Append(CPPDEFINES=cpp_defines)
 env.Append(CCFLAGS=cc_flags)
