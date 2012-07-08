@@ -78,10 +78,11 @@ struct traits;
 
 template< class T, class Tags /*= ref_tag::default_tags*/ >
 class reference_wrapper
-    : public private_::traits< T, Tags >::forwarding_base
+    : public private_::traits< T, Tags >::forwarding_base_
 {
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Tags >::value));
-    typedef typename private_::traits< T, Tags >::forwarding_base forwarding_base;
+    typedef private_::traits< T, Tags > traits_;
+    SAKE_USING_TYPEDEF( typename traits_, forwarding_base_ );
 public:
     typedef T type;
     typedef Tags tags;
@@ -151,10 +152,10 @@ private:
     template< class Signature > struct derived_enable;
     template< class Signature > struct derived_result;
 
-    typedef typename forwarding_base::protected_nullary_result_type
-        private_nullary_result_type;
+    SAKE_USING_TYPEDEF(
+        typename forwarding_base_, protected_nullary_result_type );
 
-    private_nullary_result_type derived_apply() const;
+    protected_nullary_result_type derived_apply() const;
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
@@ -272,7 +273,7 @@ struct traits
                 sake::noncopy_assignable_base
             >::type
         >::type
-    > forwarding_base;
+    > forwarding_base_;
 };
 
 } // namespace private_
@@ -391,7 +392,7 @@ derived_result
 { };
 
 template< class T, class Tags >
-inline typename reference_wrapper< T, Tags >::private_nullary_result_type
+inline typename reference_wrapper< T, Tags >::protected_nullary_result_type
 reference_wrapper< T, Tags >::
 derived_apply() const
 { return (*m_p)(); }
