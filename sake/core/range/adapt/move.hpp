@@ -150,10 +150,10 @@ operator|(R const & r, sake::range::adapt::functional::move)
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace move_adl_barrier
-{ sake::range::algorithm::functional::move const move = { }; }
+{ sake::range::adapt::functional::move const move = { }; }
 using namespace move_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-sake::range::algorithm::functional::move const move = { };
+sake::range::adapt::functional::move const move = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace adapt
