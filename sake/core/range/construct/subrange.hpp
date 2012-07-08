@@ -1,19 +1,24 @@
 /*******************************************************************************
- * sake/core/range/basic/sub.hpp
+ * sake/core/range/construct/subrange.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * range::sub(I i,J j) -> range::result_of::sub<I,J>::type
- * range::sub(begin_tag, I i) -> range::result_of::sub< begin_tag, I >::type
- * range::sub(I i, end_tag) -> range::result_of::sub< I, end_tag >::type
- * range::sub(I i, N) -> range::result_of::sub<I,N>::type
- * range::sub_c<N>(I i) -> range::result_of::sub_c<I,N>::type
+ * range::construct::subrange(I i,J j)
+ *     -> range::construct::result_of::subrange<I,J>::type
+ * range::construct::subrange(begin_tag, I i)
+ *     -> range::construct::result_of::subrange< begin_tag, I >::type
+ * range::construct::subrange(I i, end_tag)
+ *     -> range::construct::result_of::subrange< I, end_tag >::type
+ * range::construct::subrange(I i, N)
+ *     -> range::construct::result_of::subrange<I,N>::type
+ * range::construct::subrange_c<N>(I i)
+ *     -> range::construct::result_of::subrange_c<I,N>::type
  ******************************************************************************/
 
-#ifndef SAKE_CORE_RANGE_BASIC_SUB_HPP
-#define SAKE_CORE_RANGE_BASIC_SUB_HPP
+#ifndef SAKE_CORE_RANGE_CONSTRUCT_SUBRANGE_HPP
+#define SAKE_CORE_RANGE_CONSTRUCT_SUBRANGE_HPP
 
 #include <cstddef>
 
@@ -24,6 +29,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/introspection/has_isc_value.hpp>
 #include <sake/core/iterator/adapt_introterminal.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
@@ -37,51 +43,61 @@ namespace sake
 namespace range
 {
 
+namespace construct
+{
+
 namespace result_of
 {
 
-template< class I, class J >
-struct sub;
+template< class T, class U >
+struct subrange;
 
 template< class I, std::size_t N >
-struct sub_c;
+struct subrange_c;
 
 } // namespace result_of
 
 namespace functional
 {
 
-struct sub
+struct subrange
 {
-    SAKE_RESULT_FROM_METAFUNCTION( sake::range::result_of::sub, 2 )
+    SAKE_RESULT_FROM_METAFUNCTION(
+        sake::range::construct::result_of::subrange, 2 )
 
-    template< class I, class J >
-    typename result< sub ( I, J ) >::type
-    operator()(I const & i, J const & j) const
-    { return typename result< sub ( I, J ) >::type(i,j); }
+    template< class T, class U >
+    typename result< subrange ( T, U ) >::type
+    operator()(T const & x, U const & y) const
+    { return typename result< subrange ( T, U ) >::type(x,y); }
 };
 
 } // namespace functional
 
-static sake::range::functional::sub const sub = { };
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace subrange_adl_barrier
+{ sake::range::construct::functional::subrange const subrange = { }; }
+using namespace subrange_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+sake::range::construct::functional::subrange const subrange = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 template< std::size_t N, class I >
-inline typename sake::range::result_of::sub_c<I,N>::type
-sub_c(I const & i)
-{ return typename sake::range::result_of::sub_c<I,N>::type(i); }
+inline typename sake::range::construct::result_of::subrange_c<I,N>::type
+subrange_c(I const & i)
+{ return typename sake::range::construct::result_of::subrange_c<I,N>::type(i); }
 
 namespace result_of
 {
 
-namespace sub_private
+namespace subrange_private
 {
 
-template< class I, class J, bool = sake::has_isc_value<J>::value >
+template< class I, class U, bool = sake::has_isc_value<U>::value >
 struct dispatch1;
 
-template< class I, class J >
+template< class T, class U >
 struct dispatch0
-    : sub_private::dispatch1<I,J>
+    : subrange_private::dispatch1<T,U>
 { };
 
 template< class I >
@@ -137,26 +153,28 @@ struct dispatch0< I, N, true >
     > type;
 };
 
-} // namespace sub_private
+} // namespace subrange_private
 
-template< class I, class J >
-struct sub
-    : sub_private::dispatch0<
-          typename boost_ext::remove_qualifiers<I>::type,
-          typename boost_ext::remove_qualifiers<J>::type
+template< class T, class U >
+struct subrange
+    : subrange_private::dispatch0<
+          typename boost_ext::remove_qualifiers<T>::type,
+          typename boost_ext::remove_qualifiers<U>::type
       >
 { };
 
 template< class I, std::size_t N >
-struct sub_c
-    : sake::range::result_of::sub<
+struct subrange_c
+    : sake::range::construct::result_of::subrange<
           I, boost::integral_constant< std::size_t, N > >
 { };
 
 } // namespace result_of
 
+} // namespace construct
+
 } // namespace range
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_RANGE_BASIC_SUB_HPP
+#endif // #ifndef SAKE_CORE_RANGE_CONSTRUCT_SUBRANGE_HPP
