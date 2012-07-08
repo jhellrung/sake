@@ -70,18 +70,14 @@ struct inv_ip
     SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::inv_ip, 1 )
 
     template< class T >
-    T&
-    operator()(T& x) const
+    T& operator()(T& x) const
     { return inv_ip_private::impl(x); }
 
-    float&
-    operator()(float& x) const
+    float& operator()(float& x) const
     { return x = 1/x; }
-    double&
-    operator()(double& x) const
+    double& operator()(double& x) const
     { return x = 1/x; }
-    long double&
-    operator()(long double& x) const
+    long double& operator()(long double& x) const
     { return x = 1/x; }
 };
 
@@ -102,16 +98,6 @@ namespace sake
 
 namespace inv_ip_private
 {
-
-template< class T >
-struct dispatch_index
-    : boost_ext::mpl::
-           if_< inv_ip_private::is_callable_mem_fun< T&, T& ( ) >, sake::int_tag<4> >::type::template
-      else_if < inv_ip_private::is_callable_mem_fun< T&         >, sake::int_tag<3> >::type::template
-      else_if < ::sake_inv_ip_private::is_callable<   T& ( T& ) >, sake::int_tag<2> >::type::template
-      else_if < ::sake_inv_ip_private::is_callable< void ( T& ) >, sake::int_tag<1> >::type::template
-      else_   < sake::int_tag<0> >
-{ };
 
 template< class T >
 inline T&
@@ -143,25 +129,15 @@ inline T&
 impl(T& x)
 {
     typedef typename boost_ext::mpl::
-         if_<
-        inv_ip_private::is_callable_mem_fun< T&, T& ( ) >,
-        sake::int_tag<4>
-    >::type::template
-    else_if <
-        inv_ip_private::is_callable_mem_fun< T& >,
-        sake::int_tag<3>
-    >::type::template
-    else_if <
-        ::sake_inv_ip_private::is_callable< T& ( T& ) >,
-        sake::int_tag<2>
-    >::type::template
-    else_if <
-        ::sake_inv_ip_private::is_callable< void ( T& ) >,
-        sake::int_tag<1>
-    >::type::template
-    else_   <
-        sake::int_tag<0>
-    >::type int_tag_;
+         if_< inv_ip_private::is_callable_mem_fun< T&, T& ( ) >,
+              sake::int_tag<4> >::type::template
+    else_if < inv_ip_private::is_callable_mem_fun< T&, void ( ) >,
+              sake::int_tag<3> >::type::template
+    else_if < ::sake_inv_ip_private::is_callable< T& ( T& ) >,
+              sake::int_tag<2> >::type::template
+    else_if < ::sake_inv_ip_private::is_callable< void ( T& ) >,
+              sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type int_tag_;
     return inv_ip_private::dispatch(x, int_tag_());
 }
 

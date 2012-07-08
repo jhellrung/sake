@@ -5,9 +5,9 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * range::iter_at(R&& r, T const & x, Introterminal)
+ * range::iter_at(R&& r, T x, Introterminal)
  *     -> range_forward_iterator< R, Introterminal >::type
- * range::citer_at(R const & r, T const & x, Introterminal)
+ * range::citer_at(R const & r, T x, Introterminal)
  *     -> range_iterator< R const, Introterminal >::type
  * struct range::functional::iter_at
  * struct range::functional::citer_at
@@ -121,11 +121,9 @@ struct citer_at
 } // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-namespace iter_at_adl_barrier
-{
-    sake::range::functional::iter_at const iter_at = { };
-    sake::range::functional::citer_at const citer_at = { };
-}
+namespace iter_at_adl_barrier {
+sake::range::functional::iter_at const iter_at = { };
+sake::range::functional::citer_at const citer_at = { }; }
 using namespace iter_at_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::range::functional::iter_at const iter_at = { };

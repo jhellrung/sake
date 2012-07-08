@@ -132,11 +132,9 @@ struct cend
 } // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-namespace end_adl_barrier
-{
-    sake::range::functional::end const end = { };
-    sake::range::functional::cend const cend = { };
-}
+namespace end_adl_barrier {
+sake::range::functional::end const end = { };
+sake::range::functional::cend const cend = { }; }
 using namespace end_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::range::functional::end const end = { };

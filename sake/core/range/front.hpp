@@ -92,11 +92,9 @@ struct cfront
 } // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-namespace front_adl_barrier
-{
-    sake::range::functional::front const front = { };
-    sake::range::functional::cfront const cfront = { };
-}
+namespace front_adl_barrier {
+sake::range::functional::front const front = { };
+sake::range::functional::cfront const cfront = { }; }
 using namespace front_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::range::functional::front const front = { };

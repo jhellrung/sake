@@ -274,18 +274,27 @@ private:
     typedef typename boost_ext::add_reference<T>::type ref_type;
 public:
     static int const value = boost_ext::mpl::
-         if_< boost::is_floating_point< noqual_type >      , sake::int_tag<7> >::type::template
-    else_if < is_callable_mem_fun<T>                       , sake::int_tag<6> >::type::template
-    else_if < ::sake_inv_private::is_callable< void ( T ) >, sake::int_tag<5> >::type::template
+         if_< boost::is_floating_point< noqual_type >,
+              sake::int_tag<7> >::type::template
+    else_if < inv_private::is_callable_mem_fun< T, void ( ) >,
+              sake::int_tag<6> >::type::template
+    else_if < ::sake_inv_private::is_callable< void ( T ) >,
+              sake::int_tag<5> >::type::template
 #ifndef BOOST_NO_RVALUE_REFERENCES
-    else_if < boost_ext::is_reference<T>, sake::int_tag<0> >::type::template
+    else_if < boost_ext::is_reference<T>,
+              sake::int_tag<0> >::type::template
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
-    else_if_not< sake::has_move_emulation<T>, sake::int_tag<0> >::type::template
+    else_if_not< sake::has_move_emulation<T>,
+              sake::int_tag<0> >::type::template
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
-    else_if < inv_ip_private::is_callable_mem_fun< ref_type, ref_type ( ) >, sake::int_tag<4> >::type::template
-    else_if < inv_ip_private::is_callable_mem_fun< ref_type >              , sake::int_tag<3> >::type::template
-    else_if < ::sake_inv_ip_private::is_callable< ref_type ( ref_type ) >  , sake::int_tag<2> >::type::template
-    else_if < ::sake_inv_ip_private::is_callable< void ( ref_type ) >      , sake::int_tag<1> >::type::template
+    else_if < inv_ip_private::is_callable_mem_fun< ref_type, ref_type ( ) >,
+              sake::int_tag<4> >::type::template
+    else_if < inv_ip_private::is_callable_mem_fun< ref_type, void ( ) >,
+              sake::int_tag<3> >::type::template
+    else_if < ::sake_inv_ip_private::is_callable< ref_type ( ref_type ) >,
+              sake::int_tag<2> >::type::template
+    else_if < ::sake_inv_ip_private::is_callable< void ( ref_type ) >,
+              sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type::value;
 };
 

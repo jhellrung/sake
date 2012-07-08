@@ -170,9 +170,9 @@ struct intlog2_nothrow
 } // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-namespace intlog2_adl_barrier
-{ sake::functional::intlog2 const intlog2 = { };
-  sake::functional::intlog2_nothrow const intlog2_nothrow = { }; }
+namespace intlog2_adl_barrier {
+sake::functional::intlog2 const intlog2 = { };
+sake::functional::intlog2_nothrow const intlog2_nothrow = { }; }
 using namespace intlog2_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::intlog2 const intlog2 = { };

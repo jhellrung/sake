@@ -132,11 +132,9 @@ struct cbegin
 } // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-namespace begin_adl_barrier
-{
-    sake::range::functional::begin const begin = { };
-    sake::range::functional::cbegin const cbegin = { };
-}
+namespace begin_adl_barrier {
+sake::range::functional::begin const begin = { };
+sake::range::functional::cbegin const cbegin = { }; }
 using namespace begin_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::range::functional::begin const begin = { };

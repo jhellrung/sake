@@ -92,11 +92,9 @@ struct cback
 } // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-namespace back_adl_barrier
-{
-    sake::range::functional::back const back = { };
-    sake::range::functional::cback const cback = { };
-}
+namespace back_adl_barrier {
+sake::range::functional::back const back = { };
+sake::range::functional::cback const cback = { }; }
 using namespace back_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::range::functional::back const back = { };

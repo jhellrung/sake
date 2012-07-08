@@ -111,11 +111,9 @@ struct cat
 } // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-namespace at_adl_barrier
-{
-    sake::range::functional::at const at = { };
-    sake::range::functional::cat const cat = { };
-}
+namespace at_adl_barrier {
+sake::range::functional::at const at = { };
+sake::range::functional::cat const cat = { }; }
 using namespace at_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::range::functional::at const at = { };
