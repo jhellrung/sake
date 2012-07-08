@@ -58,9 +58,7 @@ class emplacer_access
 
     template< class T, class V >
     static typename boost::enable_if_c<
-        boost::is_pod<T>::value,
-        T
-    >::type
+        boost::is_pod<T>::value, T >::type
     construct(sake::emplacer< V ( ) >)
     {
         BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
@@ -71,9 +69,7 @@ class emplacer_access
 
     template< class T, class V >
     static typename boost::disable_if_c<
-        boost::is_pod<T>::value,
-        T
-    >::type
+        boost::is_pod<T>::value, T >::type
     construct(sake::emplacer< V ( ) >)
     {
         BOOST_STATIC_ASSERT((boost::is_object<T>::value));
