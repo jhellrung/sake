@@ -158,7 +158,11 @@ template<
     class Relax = typename sake::iterator_relax< I, Introterminal >::type
 >
 struct IntroterminalRelax
+#ifdef SAKE_ITERATOR_CONCEPT_COMPLETE
     : sake::iterator::concepts::private_::IntroterminalBase< Relax, Introterminal >
+#else // #ifdef SAKE_ITERATOR_CONCEPT_COMPLETE
+    : sake::iterator::concepts::private_::Base< Relax >
+#endif // #ifdef SAKE_ITERATOR_CONCEPT_COMPLETE
 {
 private:
     typedef sake::iterator_traits<I> traits_;
