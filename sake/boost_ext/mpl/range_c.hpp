@@ -48,9 +48,7 @@ struct push_front<
 template< class T, T A, T B >
 struct range_c
     : range_c_private::push_front<
-          typename boost_ext::mpl::range_c< T, A + 1, B >::type,
-          A
-      >::type
+          typename boost_ext::mpl::range_c< T, A + 1, B >::type, A >::type
 { };
 
 template< class T, T N >
