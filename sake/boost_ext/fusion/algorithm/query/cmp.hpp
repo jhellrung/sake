@@ -27,6 +27,7 @@
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/static_cmp.hpp>
@@ -185,7 +186,13 @@ struct cmp
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace cmp_adl_barrier
+{ boost_ext::fusion::functional::cmp const cmp = { }; }
+using namespace cmp_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 boost_ext::fusion::functional::cmp const cmp = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace fusion
 

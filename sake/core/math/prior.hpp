@@ -22,6 +22,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/is_iterator.hpp>
 #include <sake/core/iterator/traits.hpp>
@@ -72,7 +73,13 @@ struct prior
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace prior_adl_barrier
+{ sake::functional::prior const prior = { }; }
+using namespace prior_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::prior const prior = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 template< int N, class T >
 inline T

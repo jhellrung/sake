@@ -25,6 +25,8 @@
 #define SAKE_OPERATORS_OP   ||
 #include <sake/core/functional/operators/private/binary.ipp>
 
+#include <sake/core/config.hpp>
+
 namespace sake
 {
 
@@ -48,7 +50,13 @@ typedef logical_or or_;
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace or_adl_barrier
+{ sake::operators::functional::or_ const or_ = { }; }
+using namespace or_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::operators::functional::or_ const or_ = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace operators
 

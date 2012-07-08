@@ -19,6 +19,7 @@
 
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/math/unbounded_tag.hpp>
 #include <sake/core/utility/assert.hpp>
@@ -87,7 +88,13 @@ struct clamp_ip
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace clamp_ip_adl_barrier
+{ sake::functional::clamp_ip const clamp_ip = { }; }
+using namespace clamp_ip_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::clamp_ip const clamp_ip = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

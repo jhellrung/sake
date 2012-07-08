@@ -132,6 +132,7 @@
 #include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/preprocessor/tuple/rem.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/math/zero_fwd.hpp>
 #include <sake/core/utility/debug.hpp>
 #include <sake/core/utility/ostreamable.hpp>
@@ -711,10 +712,19 @@ struct dispatch< LHS, RHS, false >
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace assert_adl_barrier {
+sake::assert_failure_action::functional::print const print = { };
+sake::assert_failure_action::functional::abort const abort = { };
+sake::assert_failure_action::functional::terminate const terminate = { };
+sake::assert_failure_action::functional::exit const exit = { }; }
+using namespace assert_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::assert_failure_action::functional::print const print = { };
 sake::assert_failure_action::functional::abort const abort = { };
 sake::assert_failure_action::functional::terminate const terminate = { };
 sake::assert_failure_action::functional::exit const exit = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace assert_failure_action
 

@@ -25,6 +25,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/introspection/has_operator_minus.hpp>
 #include <sake/core/iterator/begin.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
@@ -86,7 +87,13 @@ struct distance
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace distance_adl_barrier
+{ sake::iterator::functional::distance const distance = { }; }
+using namespace distance_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::iterator::functional::distance const distance = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 namespace result_of
 {

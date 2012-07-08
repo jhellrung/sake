@@ -216,8 +216,13 @@ struct SAKE_OPERATORS_NAME
 
 } // namespace functional
 
-sake::operators::functional::
-    SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace BOOST_PP_CAT( SAKE_OPERATORS_NAME, _adl_barrier )
+{ sake::operators::functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { }; }
+using namespace BOOST_PP_CAT( SAKE_OPERATORS_NAME, _adl_barrier );
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+sake::operators::functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace operators
 

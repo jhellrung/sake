@@ -28,6 +28,7 @@
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/concepts/Function.hpp>
+#include <sake/core/config.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
 #include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
@@ -275,7 +276,13 @@ operator|(R const & r, sake::range::adapt::functional::transform<F> const & f)
 
 } // namespace functional
 
-static sake::range::adapt::functional::transform<> const transform = { };
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace transform_adl_barrier
+{ sake::range::adapt::functional::transform<> const transform = { }; }
+using namespace transform_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+sake::range::adapt::functional::transform<> const transform = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace adapt
 

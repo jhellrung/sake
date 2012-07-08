@@ -17,6 +17,7 @@
 
 #include <boost/logic/tribool.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/math/indeterminate_fwd.hpp>
 #include <sake/core/math/fuzzy_sign_t.hpp>
 #include <sake/core/math/sign_t.hpp>
@@ -95,7 +96,13 @@ inline boost::logic::tribool operator||(boost::logic::tribool const b, indetermi
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace indeterminate_adl_barrier
+{ sake::functional::indeterminate const indeterminate = { }; }
+using namespace indeterminate_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::indeterminate const indeterminate = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

@@ -33,6 +33,7 @@
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/expr_traits/type_tag_of.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 #include <sake/core/utility/type_tag.hpp>
@@ -128,7 +129,13 @@ struct move
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace move_adl_barrier
+{ sake::functional::move const move = { }; }
+using namespace move_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::move const move = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
 

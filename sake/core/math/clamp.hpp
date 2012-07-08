@@ -22,6 +22,7 @@
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/math/unbounded_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/assert.hpp>
@@ -230,7 +231,13 @@ struct clamp
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace clamp_adl_barrier
+{ sake::functional::clamp const clamp = { }; }
+using namespace clamp_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::clamp const clamp = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

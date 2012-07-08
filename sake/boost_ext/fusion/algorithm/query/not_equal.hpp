@@ -30,6 +30,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/functional/operators/not_equal.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
@@ -200,7 +201,13 @@ struct not_equal
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace not_equal_adl_barrier
+{ boost_ext::fusion::functional::not_equal const not_equal = { }; }
+using namespace not_equal_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 boost_ext::fusion::functional::not_equal const not_equal = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace fusion
 

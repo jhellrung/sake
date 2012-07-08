@@ -21,6 +21,7 @@
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/is_rvalue_reference.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/type_traits/has_copy_constructor.hpp>
 #include <sake/core/type_traits/has_nothrow_move_constructor.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -78,7 +79,13 @@ struct move_if_noexcept
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace move_if_noexcept_adl_barrier
+{ sake::functional::move_if_noexcept const move_if_noexcept = { }; }
+using namespace move_if_noexcept_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::move_if_noexcept const move_if_noexcept = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

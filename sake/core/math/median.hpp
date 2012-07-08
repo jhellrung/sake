@@ -19,6 +19,7 @@
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
@@ -129,7 +130,13 @@ struct median
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace median_adl_barrier
+{ sake::functional::median const median = { }; }
+using namespace median_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::median const median = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

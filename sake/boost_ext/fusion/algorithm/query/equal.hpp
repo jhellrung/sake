@@ -29,6 +29,7 @@
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/functional/operators/equal.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
@@ -198,7 +199,13 @@ struct equal
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace equal_adl_barrier
+{ boost_ext::fusion::functional::equal const equal = { }; }
+using namespace equal_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 boost_ext::fusion::functional::equal const equal = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace fusion
 

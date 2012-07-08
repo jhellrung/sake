@@ -20,6 +20,7 @@
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/is_iterator.hpp>
 #include <sake/core/iterator/traits.hpp>
@@ -71,7 +72,13 @@ struct next
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace next_adl_barrier
+{ sake::functional::next const next = { }; }
+using namespace next_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::next const next = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 template< int N, class T >
 inline T

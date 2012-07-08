@@ -16,6 +16,7 @@
 
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
@@ -99,7 +100,13 @@ struct min
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace min_adl_barrier
+{ sake::functional::min const min = { }; }
+using namespace min_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::min const min = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

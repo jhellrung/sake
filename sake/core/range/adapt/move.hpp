@@ -18,6 +18,7 @@
 
 #include <boost/config.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/range/adapt/fwd.hpp>
@@ -147,7 +148,13 @@ operator|(R const & r, sake::range::adapt::functional::move)
 
 } // namespace functional
 
-static sake::range::adapt::functional::move const move = { };
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace move_adl_barrier
+{ sake::range::algorithm::functional::move const move = { }; }
+using namespace move_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+sake::range::algorithm::functional::move const move = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace adapt
 

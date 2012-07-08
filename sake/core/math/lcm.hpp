@@ -12,8 +12,9 @@
 #define SAKE_CORE_MATH_LCM_HPP
 
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
-
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+
+#include <sake/core/config.hpp>
 #include <sake/core/functional/result_from_metafunction.hpp>
 #include <sake/core/math/abs_ip.hpp>
 #include <sake/core/math/gcd.hpp>
@@ -56,7 +57,13 @@ struct lcm
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace lcm_adl_barrier
+{ sake::functional::lcm const lcm = { }; }
+using namespace lcm_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::lcm const lcm = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

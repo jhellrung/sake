@@ -20,6 +20,7 @@
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/expr_traits/apply.hpp>
 #include <sake/core/expr_traits/typeof.hpp>
 #include <sake/core/functional/operators/private/relational_common.hpp>
@@ -238,8 +239,13 @@ struct SAKE_OPERATORS_NAME
 
 } // namespace functional
 
-sake::operators::functional::
-    SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace BOOST_PP_CAT( SAKE_OPERATORS_NAME, _adl_barrier )
+{ sake::operators::functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { }; }
+using namespace BOOST_PP_CAT( SAKE_OPERATORS_NAME, _adl_barrier );
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+sake::operators::functional::SAKE_OPERATORS_NAME const SAKE_OPERATORS_NAME = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace operators
 

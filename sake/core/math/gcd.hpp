@@ -14,6 +14,7 @@
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/math/abs_ip.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/move.hpp>
@@ -83,7 +84,13 @@ struct gcd
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace gcd_adl_barrier
+{ sake::functional::gcd const gcd = { }; }
+using namespace gcd_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::gcd const gcd = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 namespace gcd_private
 {

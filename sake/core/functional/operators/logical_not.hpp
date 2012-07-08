@@ -25,6 +25,8 @@
 #define SAKE_OPERATORS_OP   !
 #include <sake/core/functional/operators/private/unary.ipp>
 
+#include <sake/core/config.hpp>
+
 namespace sake
 {
 
@@ -48,7 +50,13 @@ typedef logical_not not_;
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace not_adl_barrier
+{ sake::operators::functional::not_ const not_ = { }; }
+using namespace not_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::operators::functional::not_ const not_ = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace operators
 

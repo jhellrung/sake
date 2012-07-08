@@ -21,6 +21,7 @@
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference_to_nonconst.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/is_iterator.hpp>
 #include <sake/core/iterator/traits.hpp>
@@ -72,7 +73,13 @@ struct advance
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace advance_adl_barrier
+{ sake::functional::advance const advance = { }; }
+using namespace advance_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::advance const advance = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 namespace advance_private
 {

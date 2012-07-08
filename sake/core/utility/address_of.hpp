@@ -19,6 +19,7 @@
 
 #include <sake/boost_ext/type_traits/propagate_cv.hpp>
 
+#include <sake/core/config.hpp>
 #include <sake/core/move/rv.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
@@ -69,7 +70,13 @@ struct address_of
 
 } // namespace functional
 
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace address_of_adl_barrier
+{ sake::functional::address_of const address_of = { }; }
+using namespace address_of_adl_barrier;
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 sake::functional::address_of const address_of = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 

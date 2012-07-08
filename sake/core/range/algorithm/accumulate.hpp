@@ -16,6 +16,7 @@
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/concepts/Function.hpp>
+#include <sake/core/config.hpp>
 #include <sake/core/functional/operators/plus.hpp>
 #include <sake/core/math/zero.hpp>
 #include <sake/core/move/forward.hpp>
@@ -206,7 +207,13 @@ private:
 
 } // namespace functional
 
-static sake::range::algorithm::functional::accumulate const accumulate = { };
+#ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+namespace accumulate_adl_barrier
+{ sake::range::algorithm::functional::accumulate const accumulate = { }; }
+using namespace accumulate_adl_barrier
+#else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
+sake::range::algorithm::functional::accumulate const accumulate = { };
+#endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace algorithm
 
