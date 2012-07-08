@@ -15,7 +15,7 @@ namespace sake
 struct unbounded_tag
 { };
 
-unbounded_tag const unbounded = { };
+unbounded_tag const _unbounded = { };
 
 } // namespace sake
 
