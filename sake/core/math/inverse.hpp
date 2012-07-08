@@ -131,12 +131,11 @@ public:
     operator U() const
     { return sake::one.as<U>() / static_cast<U>(m_value); }
 
-    inline friend
-    T inv(inverse const & this_)
+    inline friend T
+    inv(inverse const & this_)
     { return this_.m_value; }
-
-    inline friend
-    T inv(this_rvalue_param_type this_)
+    inline friend T
+    inv(this_rvalue_param_type this_)
     { return sake::move(this_.m_value); }
 
 private:
