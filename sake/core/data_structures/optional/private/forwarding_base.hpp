@@ -26,6 +26,7 @@
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/template_keyword.hpp>
+#include <sake/core/utility/using_typedef.hpp>
 
 namespace sake
 {
@@ -79,31 +80,29 @@ protected:
     template< class Signature >
     class derived_result
     {
-        typedef typename sake::forwarding::deduced_result< Signature, T >::type deduced_result_;
+        typedef typename sake::forwarding::
+            deduced_result< Signature, T >::type deduced_result_;
     public:
         typedef typename boost::mpl::if_c<
             boost::is_void< deduced_result_ >::value,
-            void,
-            sake::optional< deduced_result_ >
+            void, sake::optional< deduced_result_ >
         >::type type;
     };
 
-private:
-    typedef typename forwarding_base_::protected_nullary_result_type
-        private_nullary_result_type;
-public:
+    SAKE_USING_TYPEDEF(
+        typename forwarding_base_, protected_nullary_result_type );
 
-    private_nullary_result_type derived_apply()
+    protected_nullary_result_type derived_apply()
     {
         return derived().initialized() ?
                derived().get()() :
-               sake::default_construct< private_nullary_result_type >();
+               sake::default_construct< protected_nullary_result_type >();
     }
-    private_nullary_result_type derived_apply() const
+    protected_nullary_result_type derived_apply() const
     {
         return derived().initialized() ?
                derived().get()() :
-               sake::default_construct< private_nullary_result_type >();
+               sake::default_construct< protected_nullary_result_type >();
     }
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
