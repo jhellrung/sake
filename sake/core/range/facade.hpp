@@ -20,7 +20,7 @@
  *     { typedef ... type; };
  * - static derived_iter_at(This& this_, T x, Introterminal)
  *     -> iterator_with_of< This, Introterminal >::type
- * - struct derived_subrange_of< This, Begin, End >
+ * - struct derived_subrange_with_of< This, Begin, End >
  *     { typedef ... type; };
  * - static derived_sub(This& this_, Begin b, End e)
  *     -> subrange_of< This, Begin, End >::type
