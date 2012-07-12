@@ -36,7 +36,8 @@ struct is_base_of_sans_qualifiers
 template< class B, class D >
 struct not_is_base_of_sans_qualifiers
 {
-    static bool const value = !boost_ext::is_base_of_sans_qualifiers<B,D>::value;
+    static bool const value =
+        !boost_ext::is_base_of_sans_qualifiers<B,D>::value;
     typedef not_is_base_of_sans_qualifiers type;
 };
 
