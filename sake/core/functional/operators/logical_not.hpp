@@ -26,6 +26,7 @@
 #include <sake/core/functional/operators/private/unary.ipp>
 
 #include <sake/core/config.hpp>
+#include <sake/core/functional/operators/fwd.hpp>
 
 namespace sake
 {
@@ -42,13 +43,6 @@ struct not_
 { };
 
 } // namespace result_of
-
-namespace functional
-{
-
-typedef logical_not not_;
-
-} // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace not_adl_barrier

@@ -26,6 +26,7 @@
 #include <sake/core/functional/operators/private/binary.ipp>
 
 #include <sake/core/config.hpp>
+#include <sake/core/functional/operators/fwd.hpp>
 
 namespace sake
 {
@@ -42,13 +43,6 @@ struct and_
 { };
 
 } // namespace result_of
-
-namespace functional
-{
-
-typedef logical_and and_;
-
-} // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace and_adl_barrier
