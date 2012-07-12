@@ -34,8 +34,8 @@ namespace sake
 {
 
 SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
-   has_type_has_move_constructor_tag,
-   has_move_constructor_tag
+    has_type_has_move_constructor_tag,
+    has_move_constructor_tag
 )
 
 /*******************************************************************************

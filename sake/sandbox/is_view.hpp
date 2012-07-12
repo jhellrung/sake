@@ -48,8 +48,8 @@ namespace default_impl
 {
 
 SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
-   range_has_type_is_view_tag,
-   is_view_tag
+    range_has_type_is_view_tag,
+    is_view_tag
 )
 
 template< class R >

@@ -52,8 +52,8 @@ namespace default_impl
 {
 
 SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
-   range_has_type_is_adapt_by_value_tag,
-   is_adapt_by_value_tag
+    range_has_type_is_adapt_by_value_tag,
+    is_adapt_by_value_tag
 )
 
 template< class R >

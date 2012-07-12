@@ -54,8 +54,8 @@ namespace default_impl
 {
 
 SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
-   range_has_type_has_value_ownership_tag,
-   has_value_ownership_tag
+    range_has_type_has_value_ownership_tag,
+    has_value_ownership_tag
 )
 
 template< class R >

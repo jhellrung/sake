@@ -65,8 +65,8 @@ SAKE_INTROSPECTION_DEFINE_HAS_ISC(
 )
 
 SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
-   range_has_type_static_size_tag,
-   static_size_tag
+    range_has_type_static_size_tag,
+    static_size_tag
 )
 
 namespace range_static_size_private

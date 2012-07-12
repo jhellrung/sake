@@ -33,8 +33,8 @@ namespace sake
 {
 
 SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
-   has_type_has_trivial_copy_assign_tag,
-   has_trivial_copy_assign_tag
+    has_type_has_trivial_copy_assign_tag,
+    has_trivial_copy_assign_tag
 )
 
 /*******************************************************************************

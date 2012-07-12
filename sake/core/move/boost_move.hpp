@@ -37,10 +37,10 @@ namespace boost
 template< class T >
 class rv : public T
 {
-   rv();
-   ~rv();
-   rv(rv const &);
-   void operator=(rv const &);
+    rv();
+    ~rv();
+    rv(rv const &);
+    void operator=(rv const &);
 }
 #ifdef __GNUC__
 __attribute__ (( __may_alias__ ))

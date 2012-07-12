@@ -33,8 +33,8 @@ namespace sake
 {
 
 SAKE_INTROSPECTION_DEFINE_HAS_TYPE(
-   has_type_has_trivial_default_constructor_tag,
-   has_trivial_default_constructor_tag
+    has_type_has_trivial_default_constructor_tag,
+    has_trivial_default_constructor_tag
 )
 
 /*******************************************************************************
