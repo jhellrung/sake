@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/move/forward.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -22,9 +22,9 @@
  * references-to-const and references-to-non-const, so this is only appropriate
  * for parameters whose values will only be read or moved.  Also, if
  * BOOST_NO_RVALUE_REFERENCES is not defined, rvalues will *not* be deduced to
- * emulated rvalue references unless wrapped with SAKE_MOVE_RVALUE (see
- * move_rvalue.hpp).  Only *explicit* emulated rvalue references produced by,
- * e.g., sake::move or sake::forward, will be deduced correctly.
+ * emulated rvalue references unless wrapped with SAKE_RV_CAST (see
+ * rv_cast.hpp).  Only *explicit* emulated rvalue references produced by, e.g.,
+ * sake::move or sake::forward, will be deduced correctly.
  *
  * Example:
  *
@@ -68,11 +68,11 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_convertible.hpp>
 
 #include <sake/boost_ext/type_traits/add_reference.hpp>
 #include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
+#include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/is_lvalue_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
@@ -104,11 +104,13 @@ template< class T, class U >
 inline T&&
 forward(U&& x)
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_lvalue_reference<T>::value ||
-                          boost_ext::is_lvalue_reference<U>::value));
-    BOOST_STATIC_ASSERT((boost::is_convertible<
-        typename boost_ext::remove_reference<U>::type*,
-        typename boost_ext::remove_reference<T>::type*
+    BOOST_STATIC_ASSERT((
+        !boost_ext::is_lvalue_reference<T>::value
+      || boost_ext::is_lvalue_reference<U>::value
+    ));
+    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
+        typename boost_ext::remove_reference<U>::type *,
+        typename boost_ext::remove_reference<T>::type *
     >::value));
     return static_cast< T&& >(x);
 }
@@ -131,7 +133,7 @@ namespace forward_private
 template< class T, class U >
 struct dispatch
 {
-    BOOST_STATIC_ASSERT((boost::is_convertible< U*, T* >::value));
+    BOOST_STATIC_ASSERT((boost_ext::is_convertible< U*, T* >::value));
     typedef typename boost_ext::add_rvalue_reference<T>::type result_type;
     static result_type apply(boost::rv<U> const & x)
     { return static_cast< result_type >(const_cast< boost::rv<U>& >(x)); }
@@ -140,7 +142,7 @@ struct dispatch
 template< class T, class U >
 struct dispatch< T, U& >
 {
-    BOOST_STATIC_ASSERT((boost::is_convertible< U*, T* >::value));
+    BOOST_STATIC_ASSERT((boost_ext::is_convertible< U*, T* >::value));
     typedef typename boost_ext::add_rvalue_reference<T>::type result_type;
     static result_type apply(U& x)
     { return static_cast< result_type >(x); }
@@ -159,7 +161,7 @@ struct dispatch< T&, U& >
         // Need this assert at member function scope (rather than at class
         // scope) since the full signature of both forward overloads below need
         // to be known before the correct overload can be selected.
-        BOOST_STATIC_ASSERT((boost::is_convertible< U*, T* >::value));
+        BOOST_STATIC_ASSERT((boost_ext::is_convertible< U*, T* >::value));
         return static_cast< result_type >(x);
     }
 };
