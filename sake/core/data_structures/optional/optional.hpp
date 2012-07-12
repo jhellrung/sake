@@ -60,6 +60,9 @@
 #include <sake/core/type_traits/has_nothrow_destructor.hpp>
 #include <sake/core/type_traits/has_nothrow_move_assign.hpp>
 #include <sake/core/type_traits/has_nothrow_move_constructor.hpp>
+#include <sake/core/type_traits/has_trivial_copy_assign.hpp>
+#include <sake/core/type_traits/has_trivial_copy_constructor.hpp>
+#include <sake/core/type_traits/has_trivial_destructor.hpp>
 #include <sake/core/utility/address_of.hpp>
 #include <sake/core/utility/assert.hpp>
 #include <sake/core/utility/define_friend_function.hpp>
@@ -137,6 +140,8 @@ public:
 
     typedef sake::has_nothrow_copy_constructor< nocv_type >
         has_nothrow_copy_constructor_tag;
+    typedef sake::has_trivial_copy_constructor< nocv_type >
+        has_trivial_copy_constructor_tag;
     optional(optional const & other)
         BOOST_NOEXCEPT_IF((has_nothrow_copy_constructor_tag::value));
 
@@ -147,10 +152,13 @@ public:
 
     typedef sake::has_nothrow_destructor< nocv_type >
         has_nothrow_destructor_tag;
+    typedef sake::has_trivial_destructor< nocv_type >
+        has_trivial_destructor_tag;
     ~optional()
         BOOST_NOEXCEPT_IF((has_nothrow_destructor_tag::value));
 
     struct has_nothrow_copy_assign_tag;
+    struct has_trivial_copy_assign_tag;
     optional& operator=(this_copy_assign_param_type other)
         BOOST_NOEXCEPT_IF((has_nothrow_copy_assign_tag::value));
 
@@ -244,11 +252,12 @@ struct optional< T& >
 
     typedef boost::true_type has_nothrow_default_constructor_tag;
     optional() BOOST_NOEXCEPT;
-    typedef boost::true_type has_nothrow_copy_constructor_tag;
+    typedef boost::true_type has_trivial_copy_constructor_tag;
     //optional(optional const &);
+    typedef boost::true_type has_trivial_destructor_tag;
     //~optional();
 
-    typedef boost::true_type has_nothrow_copy_assign_tag;
+    typedef boost::true_type has_trivial_copy_assign_tag;
     //optional& operator=(optional const &);
 
     optional(sake::optional<>);
@@ -377,14 +386,23 @@ optional<T>::
 template< class T >
 struct optional<T>::
 has_nothrow_copy_assign_tag
-    : boost::mpl::if_c<
-          sake::has_operator_assign< T&, void ( T const & ) >::value,
-          sake::has_nothrow_copy_assign<T>,
-          boost_ext::mpl::and2<
-              has_nothrow_destructor_tag,
-              has_nothrow_copy_constructor_tag
+    : boost_ext::mpl::and2<
+          has_nothrow_copy_constructor_tag,
+          boost::mpl::if_<
+              sake::has_operator_assign< T&, void ( T const & ) >,
+              sake::has_nothrow_copy_assign<T>,
+              has_nothrow_destructor_tag
           >
       >::type
+{ };
+
+template< class T >
+struct optional<T>::
+has_trivial_copy_assign_tag
+    : boost_ext::mpl::and2<
+          sake::has_trivial_copy_assign<T>,
+          sake::has_trivial_copy_constructor<T>
+      >
 { };
 
 template< class T >
