@@ -38,7 +38,8 @@
 #include <sake/core/utility/type_tag.hpp>
 
 #define SAKE_RV_CAST( expression ) \
-    ::sake::rv_cast_private::impl( SAKE_EXPR_TYPE_TAG_OF( expression ), expression )
+    ::sake::rv_cast_private::impl( \
+        SAKE_EXPR_TYPE_TAG_OF( expression ), expression )
 
 namespace sake
 {
