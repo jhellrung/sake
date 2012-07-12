@@ -23,9 +23,10 @@
 #include <sake/core/iterator/private/adaptor/as_assignable.hpp>
 #include <sake/core/iterator/private/adaptor/as_convertible.hpp>
 #include <sake/core/iterator/private/adaptor/as_convertible_relax.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/swap.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/range/traits.hpp>
 #include <sake/core/range/traits_fwd.hpp>
 #include <sake/core/utility/int_tag.hpp>
@@ -80,12 +81,8 @@ protected:
         typename impl_base,
         (( adaptor_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( adaptor_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( adaptor_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( adaptor_ )) )
 
     template< class R >
     impl_base(R& r, sake::begin_tag)

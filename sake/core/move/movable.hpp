@@ -132,17 +132,15 @@
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
 #include <sake/core/memberwise/copy_assign.hpp>
-#include <sake/core/memberwise/copy_constructor.hpp>
+#include <sake/core/memberwise/copy_constructor_tags.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
 #include <sake/core/memberwise/move_assign.hpp>
 #include <sake/core/memberwise/move_constructor.hpp>
+#include <sake/core/memberwise/move_tags.hpp>
 #include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/move.hpp>
-#include <sake/core/type_traits/has_copy_constructor.hpp>
-#include <sake/core/type_traits/has_move_constructor.hpp>
 #include <sake/core/type_traits/has_nothrow_copy_assign.hpp>
-#include <sake/core/type_traits/has_nothrow_copy_constructor.hpp>
-#include <sake/core/type_traits/has_nothrow_move_assign.hpp>
-#include <sake/core/type_traits/has_nothrow_move_constructor.hpp>
+#include <sake/core/type_traits/has_trivial_copy_assign.hpp>
 #include <sake/core/utility/noncopyable.hpp>
 
 #define SAKE_BASIC_MOVABLE_COPYABLE_IF_C( typenameT, cond ) \
@@ -193,12 +191,8 @@
 
 
 #define SAKE_MOVABLE_MEMBERWISE_typedef_has_xxx_tags( r, member_seq ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_copy_constructor ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_constructor ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_move_constructor ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_move_constructor ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_assign ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_move_assign )
+    SAKE_MEMBERWISE_COPY_TAGS_R( r, member_seq ) \
+    SAKE_MEMBERWISE_MOVE_TAGS_R( r, member_seq )
 
 
 
@@ -386,8 +380,7 @@
     { return *static_cast< _sake_movable_rv_conv_type * >(this); } \
     operator _sake_movable_rv_conv_type const & () const \
     { return *static_cast< _sake_movable_rv_conv_type const * >(this); } \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_copy_constructor ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_constructor ) \
+    SAKE_MEMBERWISE_COPY_CONSTRUCTOR_TAGS_R( r, member_seq ) \
     SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_COPY_ASSIGN_IF_ANY_HAS_UME_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typename() T, member_seq )
@@ -418,8 +411,7 @@
     { return *static_cast< _sake_movable_rv_conv_type * >(this); } \
     operator _sake_movable_rv_conv_type const & () const \
     { return *static_cast< _sake_movable_rv_conv_type const * >(this); } \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_copy_constructor ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_constructor ) \
+    SAKE_MEMBERWISE_COPY_CONSTRUCTOR_TAGS_R( r, member_seq ) \
     SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_COPY_ASSIGN_R( r, typename() T, member_seq ) \
     T& operator=(_sake_movable_emulation_enable_move_assign_param_type other) \
@@ -454,8 +446,7 @@
     { return *static_cast< _sake_movable_rv_conv_type * >(this); } \
     operator _sake_movable_rv_conv_type const & () const \
     { return *static_cast< _sake_movable_rv_conv_type const * >(this); } \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_copy_constructor ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_constructor ) \
+    SAKE_MEMBERWISE_COPY_CONSTRUCTOR_TAGS_R( r, member_seq ) \
     SAKE_MEMBERWISE_MOVE_CONSTRUCTOR_R( r, typename() T, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typename() T, member_seq ) \
     typedef typename() ::boost::mpl::if_c< \
@@ -467,6 +458,7 @@
         SAKE_MEMBERWISE_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_copy_assign ) \
     >::type has_nothrow_copy_assign_tag; \
     template< class, class > friend class ::sake::has_type_has_nothrow_copy_assign_tag; \
+    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_trivial_copy_assign ) \
     T& operator=(_sake_movable_copy_assign_param_type other) \
         BOOST_NOEXCEPT_IF((has_nothrow_copy_assign_tag::value)) \
     { return operator=(::sake::move(other)); }

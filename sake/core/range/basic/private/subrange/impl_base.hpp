@@ -27,9 +27,10 @@
 #include <sake/core/iterator/traits_fwd.hpp>
 #include <sake/core/math/advance.hpp>
 #include <sake/core/math/prior.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/swap.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/range/core_access.hpp>
 #include <sake/core/range/basic/private/subrange/traits.hpp>
 #include <sake/core/range/traits.hpp>
@@ -112,12 +113,8 @@ protected:
         typename impl_base,
         (( I )( m_begin )) (( I )( m_end ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( I )( m_begin )) (( I )( m_end )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( I )( m_begin )) (( I )( m_end )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( I )( m_begin )) (( I )( m_end )) )
 
     template< class Begin, class End >
     impl_base(Begin const & b, End const & e,
@@ -205,12 +202,8 @@ protected:
         typename impl_base,
         (( I )( m_end ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( I )( m_end )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( I )( m_end )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( I )( m_end )) )
 
     template< class J >
     explicit impl_base(subrange_private::iterator_tag, J const & j)
@@ -310,12 +303,8 @@ protected:
         typename impl_base,
         (( I )( m_begin ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( I )( m_begin )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( I )( m_begin )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( I )( m_begin )) )
 
     template< class J >
     explicit impl_base(subrange_private::iterator_tag, J const & j)
@@ -410,12 +399,8 @@ protected:
         typename impl_base,
         (( I )( m_i ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( I )( m_i )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( I )( m_i )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( I )( m_i )) )
 
     template< class J >
     explicit impl_base(subrange_private::iterator_tag, J const & j)

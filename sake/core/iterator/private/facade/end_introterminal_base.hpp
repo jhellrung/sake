@@ -23,9 +23,10 @@
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/private/facade/common_base.hpp>
 #include <sake/core/iterator/private/facade/traits.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/swap.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/int_tag.hpp>
 
@@ -82,12 +83,8 @@ protected:
         typename end_introterminal_base,
         (( common_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( common_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( common_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( common_base_ )) )
 
     template< class T >
     explicit end_introterminal_base(SAKE_FWD2_REF( T ) x,
@@ -135,12 +132,8 @@ protected:
         typename end_introterminal_base,
         (( common_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( common_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( common_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( common_base_ )) )
 
     template< class T >
     explicit end_introterminal_base(SAKE_FWD2_REF( T ) x,
@@ -183,12 +176,8 @@ protected:
         typename end_introterminal_base,
         (( end_introterminal_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( end_introterminal_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( end_introterminal_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( end_introterminal_base_ )) )
 
     template< class T >
     explicit end_introterminal_base(SAKE_FWD2_REF( T ) x,
@@ -234,12 +223,8 @@ protected:
         typename end_introterminal_base,
         (( end_introterminal_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( end_introterminal_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( end_introterminal_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( end_introterminal_base_ )) )
 
     template< class T >
     explicit end_introterminal_base(SAKE_FWD2_REF( T ) x,

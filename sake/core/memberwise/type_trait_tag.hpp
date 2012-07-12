@@ -1,5 +1,5 @@
 /*******************************************************************************
- * sake/core/memberwise/private/type_trait_tag.hpp
+ * sake/core/memberwise/type_trait_tag.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
@@ -10,8 +10,8 @@
  * #define SAKE_MEMBERWISE_TYPE_TRAIT_TAG_VALUE[_R]( [r,] member_seq, trait )
  ******************************************************************************/
 
-#ifndef SAKE_CORE_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
-#define SAKE_CORE_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
+#ifndef SAKE_CORE_MEMBERWISE_TYPE_TRAIT_TAG_HPP
+#define SAKE_CORE_MEMBERWISE_TYPE_TRAIT_TAG_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/detail/is_unary.hpp>
@@ -27,11 +27,6 @@
 #include <sake/boost_ext/preprocessor/seq/for_each.hpp>
 #include <sake/boost_ext/preprocessor/seq/is_nil.hpp>
 #include <sake/boost_ext/preprocessor/seq/size_01x.hpp>
-
-// Include the most common type traits.
-#include <sake/core/type_traits/has_copy_constructor.hpp>
-#include <sake/core/type_traits/has_nothrow_copy_assign.hpp>
-#include <sake/core/type_traits/has_nothrow_copy_constructor.hpp>
 
 #define SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG( member_seq, traits ) \
     SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( BOOST_PP_DEDUCE_R(), member_seq, traits )
@@ -81,4 +76,4 @@
     BOOST_PP_CAT( SAKE_BOOST_EXT_PP_SEQ_FOR_EACH_, r ) ( \
         SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_0, member_seq, trait_seq )
 
-#endif // #ifndef SAKE_CORE_MEMBERWISE_PRIVATE_TYPEDEF_HAS_XXX_TAG_HPP
+#endif // #ifndef SAKE_CORE_MEMBERWISE_TYPE_TRAIT_TAG_HPP

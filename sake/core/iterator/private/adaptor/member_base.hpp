@@ -21,9 +21,10 @@
 #include <sake/core/iterator/private/adaptor/member_storage.hpp>
 #include <sake/core/iterator/private/adaptor/traits.hpp>
 #include <sake/core/keyword/arg_pack_tag.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/swap.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/utility/compressed_pair/compressed_pair.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
@@ -67,12 +68,8 @@ protected:
         typename member_base,
         (( facade_ )) (( I )( m_base ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( facade_ )) (( I )( m_base )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( facade_ )) (( I )( m_base )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( facade_ )) (( I )( m_base )) )
 
     template< class ArgPack >
     member_base(sake::keyword::arg_pack_tag, ArgPack arg_pack)
@@ -103,10 +100,6 @@ class member_base< Derived, I, Params, true >
     SAKE_USING_TYPEDEF( typename traits_, facade_ );
 public:
     SAKE_USING_TYPEDEF( typename facade_, iterator_traversal );
-
-    SAKE_MEMBERWISE_SWAP(
-        typename member_base, (( facade_ )) (( m_pair_type )( m_pair )) )
-
 protected:
     typedef typename boost_ext::mpl::at<
         Params, sake::iterator::keyword::tag::member
@@ -118,18 +111,19 @@ private:
     typedef sake::compressed_pair<
         I, typename member_storage_::type
     > m_pair_type;
+public:
+
+    SAKE_MEMBERWISE_SWAP(
+        typename member_base, (( facade_ )) (( m_pair_type )( m_pair )) )
+
 protected:
 
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename member_base,
         (( facade_ )) (( m_pair_type )( m_pair ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( facade_ )) (( m_pair_type )( m_pair )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( facade_ )) (( m_pair_type )( m_pair )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( facade_ )) (( m_pair_type )( m_pair )) )
 
     template< class ArgPack >
     member_base(sake::keyword::arg_pack_tag, ArgPack arg_pack)

@@ -20,8 +20,9 @@
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/concepts/Iterator.hpp>
 #include <sake/core/iterator/core_access.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/mem_fun.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/as_lvalue.hpp>
 #include <sake/core/utility/conversion_operators/core_access.hpp>
 #include <sake/core/utility/type_tag.hpp>
@@ -53,12 +54,8 @@ public:
         ( default_constructor )( swap ),
         (( impl_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( impl_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( impl_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( impl_base_ )) )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 

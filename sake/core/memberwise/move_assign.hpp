@@ -25,13 +25,12 @@
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
-#include <sake/core/type_traits/has_nothrow_move_assign.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
+#include <sake/core/memberwise/move_assign_tags.hpp>
 
 #define SAKE_MEMBERWISE_MOVE_ASSIGN( typenameT, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_R( BOOST_PP_DEDUCE_R(), typenameT, member_seq )
 #define SAKE_MEMBERWISE_MOVE_ASSIGN_R( r, typenameT, member_seq ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_move_assign ) \
+    SAKE_MEMBERWISE_MOVE_ASSIGN_TAGS_R( r, member_seq ) \
     SAKE_MEMBERWISE_MOVE_ASSIGN_impl( r, \
         SAKE_BOOST_EXT_PP_KEYWORD_GET_PREFIX_TYPENAME( typenameT ) BOOST_PP_EMPTY, \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( typenameT ), \

@@ -40,8 +40,9 @@
 #include <sake/core/math/advance.hpp>
 #include <sake/core/math/next.hpp>
 #include <sake/core/move/as_lvalue.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/mem_fun.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/range/basic/fwd.hpp>
 #include <sake/core/range/basic/private/subrange/impl_base.hpp>
 #include <sake/core/range/basic/private/subrange/range_constructor_enable.hpp>
@@ -78,12 +79,8 @@ public:
         ( default_constructor )( swap ),
         (( impl_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( impl_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( impl_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( impl_base_ )) )
 
     template< class J >
     explicit subrange(J const & j,
@@ -224,12 +221,8 @@ public:
         ( default_constructor )( swap ),
         (( facade_ )) (( I )( m_begin ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( facade_ )) (( I )( m_begin )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( facade_ )) (( I )( m_begin )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( facade_ )) (( I )( m_begin )) )
 
     template< class J >
     explicit subrange(J const & j,

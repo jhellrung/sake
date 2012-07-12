@@ -35,8 +35,9 @@
 #include <sake/core/iterator/keyword.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/mem_fun.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/utility/is_template_base_of.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
@@ -77,12 +78,8 @@ public:
         ( default_constructor )( swap ),
         (( sake::optional<I> )( m_base ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( sake::optional<I> )( m_base )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( sake::optional<I> )( m_base )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( sake::optional<I> )( m_base )) )
 
     explicit end_access(I const & i)
         : m_base(i, i != sake::_end)

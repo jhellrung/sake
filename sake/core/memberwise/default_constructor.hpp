@@ -27,9 +27,7 @@
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
-#include <sake/core/type_traits/has_default_constructor.hpp>
-#include <sake/core/type_traits/has_nothrow_default_constructor.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
+#include <sake/core/memberwise/default_constructor_tags.hpp>
 
 #define SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR( T, member_seq ) \
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR_impl( BOOST_PP_DEDUCE_R(), \
@@ -43,8 +41,7 @@
     )
 
 #define SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR_impl( r, T, member_seq ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_default_constructor ) \
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG_R( r, member_seq, has_nothrow_default_constructor ) \
+    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR_TAGS_R( r, member_seq ) \
     T() SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR_BODY()
 
 #ifndef BOOST_NO_DEFAULTED_FUNCTIONS

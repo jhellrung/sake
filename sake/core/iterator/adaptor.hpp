@@ -44,9 +44,10 @@
 #include <sake/core/keyword/arg_packer.hpp>
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/sign_t.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/swap.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/overload.hpp>
 #include <sake/core/utility/using_typedef.hpp>
@@ -84,12 +85,8 @@ protected:
         typename adaptor,
         (( member_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( member_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( member_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( member_base_ )) )
 
 private:
     typedef typename adaptor_private::constructor_param_specs<

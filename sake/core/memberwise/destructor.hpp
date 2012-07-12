@@ -25,6 +25,8 @@
 
 #include <sake/boost_ext/preprocessor/keyword/typename.hpp>
 
+#include <sake/core/memberwise/destructor_tags.hpp>
+
 #define SAKE_MEMBERWISE_DESTRUCTOR( T, member_seq ) \
     SAKE_MEMBERWISE_DESTRUCTOR_impl( BOOST_PP_DEDUCE_R(), \
         SAKE_BOOST_EXT_PP_KEYWORD_REMOVE_PREFIX_TYPENAME( T ), \
@@ -37,6 +39,7 @@
     )
 
 #define SAKE_MEMBERWISE_DESTRUCTOR_impl( r, T, member_seq ) \
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS_R( r, member_seq ) \
     ~T() SAKE_MEMBERWISE_DESTRUCTOR_BODY()
 
 #ifndef BOOST_NO_DEFAULTED_FUNCTIONS

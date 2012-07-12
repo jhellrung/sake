@@ -37,6 +37,7 @@
 #include <sake/core/iterator/adaptors/fwd.hpp>
 #include <sake/core/iterator/adaptors/multidim/transform.hpp>
 #include <sake/core/iterator/categories.hpp>
+#include <sake/core/iterator/concepts/fwd.hpp>
 #include <sake/core/iterator/concepts/Iterator.hpp>
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/is_convertible.hpp>
@@ -44,8 +45,9 @@
 #include <sake/core/iterator/multidim_traits_fwd.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/mem_fun.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
 #include <sake/core/utility/overload.hpp>
@@ -87,12 +89,8 @@ public:
         ( default_constructor )( swap ),
         (( adaptor_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( adaptor_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( adaptor_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( adaptor_ )) )
 
 private:
     template< class T0 >

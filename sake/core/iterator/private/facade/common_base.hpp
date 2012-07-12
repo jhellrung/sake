@@ -19,9 +19,10 @@
 #include <sake/core/iterator/core_access.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
 #include <sake/core/iterator/keyword.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/swap.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
 
 namespace sake
@@ -70,12 +71,8 @@ protected:
         typename common_base,
         (( chained_base_type ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( chained_base_type )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( chained_base_type )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( chained_base_type )) )
 
     template< class T >
     explicit common_base(SAKE_FWD2_REF( T ) x,

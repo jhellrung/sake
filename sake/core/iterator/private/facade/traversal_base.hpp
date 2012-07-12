@@ -25,9 +25,10 @@
 #include <sake/core/math/cmp.hpp>
 #include <sake/core/math/sign_t.hpp>
 #include <sake/core/math/zero.hpp>
+#include <sake/core/memberwise/copy_tags.hpp>
 #include <sake/core/memberwise/default_constructor.hpp>
+#include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/swap.hpp>
-#include <sake/core/memberwise/type_trait_tag.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
@@ -98,12 +99,8 @@ protected:
         typename traversal_base,
         (( begin_introterminal_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( begin_introterminal_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( begin_introterminal_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( begin_introterminal_base_ )) )
 
     template< class T >
     explicit traversal_base(SAKE_FWD2_REF( T ) x,
@@ -145,12 +142,8 @@ protected:
         typename traversal_base,
         (( traversal_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( traversal_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( traversal_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( traversal_base_ )) )
 
     template< class T >
     explicit traversal_base(SAKE_FWD2_REF( T ) x,
@@ -217,12 +210,8 @@ protected:
         typename traversal_base,
         (( traversal_base_ ))
     )
-    SAKE_MEMBERWISE_TYPEDEF_TYPE_TRAIT_TAG(
-        (( traversal_base_ )),
-        ( has_copy_constructor )
-        ( has_nothrow_copy_constructor )
-        ( has_nothrow_copy_assign )
-    )
+    SAKE_MEMBERWISE_COPY_TAGS( (( traversal_base_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( traversal_base_ )) )
 
     template< class T >
     explicit traversal_base(SAKE_FWD2_REF( T ) x,
