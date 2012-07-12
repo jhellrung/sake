@@ -13,15 +13,16 @@
 #include <boost/concept/usage.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
+#include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/concepts/Void.hpp>
 #include <sake/core/config.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
+#include <sake/core/iterator/concepts/fwd.hpp>
 #include <sake/core/iterator/concepts/Iterator.hpp>
 #include <sake/core/iterator/traits.hpp>
 #include <sake/core/iterator/traits_fwd.hpp>
@@ -87,11 +88,18 @@ public:
 #undef assert_introterminal
     BOOST_MPL_ASSERT((boost::is_same< null_iterator, iterator >));
 
+    BOOST_CONCEPT_ASSERT((sake::concepts::Iterator< iterator >));
+    typedef sake::iterator_traits< iterator > iterator_traits_;
+    BOOST_MPL_ASSERT((boost::is_same< typename iterator_traits_::value_type, value_type >));
+    BOOST_MPL_ASSERT((boost::is_same< typename iterator_traits_::reference, reference >));
+    BOOST_MPL_ASSERT((boost::is_same< typename iterator_traits_::difference_type, difference_type >));
+    BOOST_MPL_ASSERT((boost::is_same< typename iterator_traits_::traversal, traversal >));
+
 #ifdef SAKE_RANGE_CONCEPT_COMPLETE
+
     // Assert each introterminal-iterator satisfies the Iterator concept.
 #define assert_introterminal( tag ) \
     BOOST_CONCEPT_ASSERT((sake::concepts::Iterator< tag ## _iterator >));
-    assert_introterminal( null )
     assert_introterminal( begin_detect )
     assert_introterminal( begin_access )
     assert_introterminal( end_detect )
@@ -101,53 +109,16 @@ public:
     assert_introterminal( begin_detect_end_access )
     assert_introterminal( begin_access_end_access )
 #undef assert_introterminal
-#endif // #ifdef SAKE_RANGE_CONCEPT_COMPLETE
 
     // Assert each introterminal-iterator's associated types are identical to
     // the range's associated types.
 #define assert_introterminal( tag ) \
-    BOOST_MPL_ASSERT((boost::is_same< \
-        typename tag ## _iter_traits::value_type, value_type >));
-    assert_introterminal( null )
-    assert_introterminal( begin_detect )
-    assert_introterminal( begin_access )
-    assert_introterminal( end_detect )
-    assert_introterminal( end_access )
-    assert_introterminal( begin_detect_end_detect )
-    assert_introterminal( begin_access_end_detect )
-    assert_introterminal( begin_detect_end_access )
-    assert_introterminal( begin_access_end_access )
-#undef assert_introterminal
-#define assert_introterminal( tag ) \
-    BOOST_MPL_ASSERT((boost::is_same< \
-        typename tag ## _iter_traits::reference, reference >));
-    assert_introterminal( null )
-    assert_introterminal( begin_detect )
-    assert_introterminal( begin_access )
-    assert_introterminal( end_detect )
-    assert_introterminal( end_access )
-    assert_introterminal( begin_detect_end_detect )
-    assert_introterminal( begin_access_end_detect )
-    assert_introterminal( begin_detect_end_access )
-    assert_introterminal( begin_access_end_access )
-#undef assert_introterminal
-#define assert_introterminal( tag ) \
-    BOOST_MPL_ASSERT((boost::is_same< \
-        typename tag ## _iter_traits::difference_type, difference_type >));
-    assert_introterminal( null )
-    assert_introterminal( begin_detect )
-    assert_introterminal( begin_access )
-    assert_introterminal( end_detect )
-    assert_introterminal( end_access )
-    assert_introterminal( begin_detect_end_detect )
-    assert_introterminal( begin_access_end_detect )
-    assert_introterminal( begin_detect_end_access )
-    assert_introterminal( begin_access_end_access )
-#undef assert_introterminal
-#define assert_introterminal( tag ) \
-    BOOST_MPL_ASSERT((boost::is_same< \
-        typename tag ## _iter_traits::traversal, traversal >));
-    assert_introterminal( null )
+    BOOST_MPL_ASSERT((boost_ext::mpl::and4< \
+        boost::is_same< typename tag ## _iter_traits::value_type, value_type >, \
+        boost::is_same< typename tag ## _iter_traits::reference, reference >, \
+        boost::is_same< typename tag ## _iter_traits::difference_type, difference_type >, \
+        boost::is_same< typename tag ## _iter_traits::traversal, traversal > \
+    >));
     assert_introterminal( begin_detect )
     assert_introterminal( begin_access )
     assert_introterminal( end_detect )
@@ -165,7 +136,6 @@ public:
         typename tag ## _iter_traits::introterminal, \
         sake::tag ## _introterminal_tag \
     >));
-    assert_introterminal( null )
     assert_introterminal( begin_detect )
     assert_introterminal( begin_access )
     assert_introterminal( end_detect )
@@ -181,34 +151,32 @@ public:
     BOOST_MPL_ASSERT((boost_ext::is_convertible< \
         from_tag ## _iterator, to_tag ## _iterator >));
     assert_introterminal( begin_detect, null )
+    assert_introterminal( begin_access, null )
     assert_introterminal( begin_access, begin_detect )
     assert_introterminal( end_detect, null )
+    assert_introterminal( end_access, null )
     assert_introterminal( end_access, end_detect )
+    assert_introterminal( begin_detect_end_detect, null )
     assert_introterminal( begin_detect_end_detect, begin_detect )
     assert_introterminal( begin_detect_end_detect, end_detect )
-    assert_introterminal( begin_access_end_detect, begin_detect_end_detect )
-    assert_introterminal( begin_detect_end_access, begin_detect_end_detect )
-    assert_introterminal( begin_access_end_access, begin_access_end_detect )
-    assert_introterminal( begin_access_end_access, begin_detect_end_access )
-#ifdef SAKE_RANGE_CONCEPT_COMPLETE
-    assert_introterminal( begin_access, null )
-    assert_introterminal( end_access, null )
-    assert_introterminal( begin_detect_end_detect, null )
     assert_introterminal( begin_access_end_detect, null )
     assert_introterminal( begin_access_end_detect, begin_detect )
     assert_introterminal( begin_access_end_detect, begin_access )
     assert_introterminal( begin_access_end_detect, end_detect )
+    assert_introterminal( begin_access_end_detect, begin_detect_end_detect )
     assert_introterminal( begin_detect_end_access, null )
     assert_introterminal( begin_detect_end_access, begin_detect )
     assert_introterminal( begin_detect_end_access, end_detect )
     assert_introterminal( begin_detect_end_access, end_access )
+    assert_introterminal( begin_detect_end_access, begin_detect_end_detect )
     assert_introterminal( begin_access_end_access, null )
     assert_introterminal( begin_access_end_access, begin_detect )
     assert_introterminal( begin_access_end_access, begin_access )
     assert_introterminal( begin_access_end_access, end_detect )
     assert_introterminal( begin_access_end_access, end_access )
     assert_introterminal( begin_access_end_access, begin_detect_end_detect )
-#endif // #ifdef SAKE_RANGE_CONCEPT_COMPLETE
+    assert_introterminal( begin_access_end_access, begin_access_end_detect )
+    assert_introterminal( begin_access_end_access, begin_detect_end_access )
 #undef assert_introterminal
 
     // Assert introterminal relaxation agrees with the range's iterator_with.
@@ -221,34 +189,32 @@ public:
         to_tag ## _iterator \
     >));
     assert_introterminal( begin_detect, null )
+    assert_introterminal( begin_access, null )
     assert_introterminal( begin_access, begin_detect )
     assert_introterminal( end_detect, null )
+    assert_introterminal( end_access, null )
     assert_introterminal( end_access, end_detect )
+    assert_introterminal( begin_detect_end_detect, null )
     assert_introterminal( begin_detect_end_detect, begin_detect )
     assert_introterminal( begin_detect_end_detect, end_detect )
-    assert_introterminal( begin_access_end_detect, begin_detect_end_detect )
-    assert_introterminal( begin_detect_end_access, begin_detect_end_detect )
-    assert_introterminal( begin_access_end_access, begin_access_end_detect )
-    assert_introterminal( begin_access_end_access, begin_detect_end_access )
-#ifdef SAKE_RANGE_CONCEPT_COMPLETE
-    assert_introterminal( begin_access, null )
-    assert_introterminal( end_access, null )
-    assert_introterminal( begin_detect_end_detect, null )
     assert_introterminal( begin_access_end_detect, null )
     assert_introterminal( begin_access_end_detect, begin_detect )
     assert_introterminal( begin_access_end_detect, begin_access )
     assert_introterminal( begin_access_end_detect, end_detect )
+    assert_introterminal( begin_access_end_detect, begin_detect_end_detect )
     assert_introterminal( begin_detect_end_access, null )
     assert_introterminal( begin_detect_end_access, begin_detect )
     assert_introterminal( begin_detect_end_access, end_detect )
     assert_introterminal( begin_detect_end_access, end_access )
+    assert_introterminal( begin_detect_end_access, begin_detect_end_detect )
     assert_introterminal( begin_access_end_access, null )
     assert_introterminal( begin_access_end_access, begin_detect )
     assert_introterminal( begin_access_end_access, begin_access )
     assert_introterminal( begin_access_end_access, end_detect )
     assert_introterminal( begin_access_end_access, end_access )
     assert_introterminal( begin_access_end_access, begin_detect_end_detect )
-#endif // #ifdef SAKE_RANGE_CONCEPT_COMPLETE
+    assert_introterminal( begin_access_end_access, begin_access_end_detect )
+    assert_introterminal( begin_access_end_access, begin_detect_end_access )
 #undef assert_introterminal
 
     // Typedef each subrange.
@@ -260,7 +226,6 @@ public:
     assert_subrange( begin_end, sake::begin_tag, sake::end_tag )
 #undef assert_subrange
 
-#ifdef SAKE_RANGE_CONCEPT_COMPLETE
     // Assert each subrange satisfies the Range concept.
 #define assert_subrange( prefix ) \
     typedef typename boost::mpl::if_c< \
@@ -274,7 +239,6 @@ public:
     assert_subrange( void_end )
     assert_subrange( begin_end )
 #undef assert_subrange
-#endif // #ifdef SAKE_RANGE_CONCEPT_COMPLETE
 
     // Assert each subrange's iterators are convertible to the base range's
     // iterators.
@@ -289,14 +253,21 @@ public:
     assert_subrange( begin_end )
 #undef assert_subrange
 
+#endif // #ifdef SAKE_RANGE_CONCEPT_COMPLETE
+
     BOOST_CONCEPT_USAGE( Base )
     {
 
+        assert_result< iterator >(traits_::begin(r));
+        assert_result< iterator >(traits_::end(r));
+
+#ifdef SAKE_RANGE_CONCEPT_COMPLETE
+
 #define assert_introterminal( tag ) \
-        assert_result< tag ## _iterator >(traits_::iter_at( \
-            r, sake::_begin, sake::tag ## _introterminal_tag())); \
-        assert_result< tag ## _iterator >(traits_::iter_at( \
-            r, sake::_end, sake::tag ## _introterminal_tag()));
+        assert_result< tag ## _iterator >(traits_::begin( \
+            r, sake::tag ## _introterminal_tag())); \
+        assert_result< tag ## _iterator >(traits_::end( \
+            r, sake::tag ## _introterminal_tag()));
         assert_introterminal( null )
         assert_introterminal( begin_detect )
         assert_introterminal( begin_access )
@@ -315,25 +286,6 @@ public:
         assert_introterminal( null, null );
         assert_introterminal( null, begin_detect );
         assert_introterminal( null, end_detect );
-        assert_introterminal( begin_detect, begin_detect );
-        assert_introterminal( begin_detect, begin_access );
-        assert_introterminal( begin_detect, begin_detect_end_detect );
-        assert_introterminal( begin_access, begin_access );
-        assert_introterminal( begin_access, begin_access_end_detect );
-        assert_introterminal( end_detect, end_detect );
-        assert_introterminal( end_detect, end_access );
-        assert_introterminal( end_detect, begin_detect_end_detect );
-        assert_introterminal( end_access, end_access );
-        assert_introterminal( end_access, begin_detect_end_access );
-        assert_introterminal( begin_detect_end_detect, begin_detect_end_detect );
-        assert_introterminal( begin_detect_end_detect, begin_access_end_detect );
-        assert_introterminal( begin_detect_end_detect, begin_detect_end_access );
-        assert_introterminal( begin_access_end_detect, begin_access_end_detect );
-        assert_introterminal( begin_access_end_detect, begin_access_end_access );
-        assert_introterminal( begin_detect_end_access, begin_detect_end_access );
-        assert_introterminal( begin_detect_end_access, begin_access_end_access );
-        assert_introterminal( begin_access_end_access, begin_access_end_access );
-#ifdef SAKE_RANGE_CONCEPT_COMPLETE
         assert_introterminal( null, begin_access );
         assert_introterminal( null, end_access );
         assert_introterminal( null, begin_detect_end_detect );
@@ -341,21 +293,29 @@ public:
         assert_introterminal( null, begin_detect_end_access );
         assert_introterminal( null, begin_access_end_access );
         assert_introterminal( begin_detect, null );
+        assert_introterminal( begin_detect, begin_detect );
+        assert_introterminal( begin_detect, begin_access );
         assert_introterminal( begin_detect, end_detect );
         assert_introterminal( begin_detect, end_access );
+        assert_introterminal( begin_detect, begin_detect_end_detect );
         assert_introterminal( begin_detect, begin_access_end_detect );
         assert_introterminal( begin_detect, begin_detect_end_access );
         assert_introterminal( begin_detect, begin_access_end_access );
         assert_introterminal( begin_access, null );
         assert_introterminal( begin_access, begin_detect );
+        assert_introterminal( begin_access, begin_access );
         assert_introterminal( begin_access, end_detect );
         assert_introterminal( begin_access, end_access );
         assert_introterminal( begin_access, begin_detect_end_detect );
+        assert_introterminal( begin_access, begin_access_end_detect );
         assert_introterminal( begin_access, begin_detect_end_access );
         assert_introterminal( begin_access, begin_access_end_access );
         assert_introterminal( end_detect, null );
         assert_introterminal( end_detect, begin_detect );
         assert_introterminal( end_detect, begin_access );
+        assert_introterminal( end_detect, end_detect );
+        assert_introterminal( end_detect, end_access );
+        assert_introterminal( end_detect, begin_detect_end_detect );
         assert_introterminal( end_detect, begin_access_end_detect );
         assert_introterminal( end_detect, begin_detect_end_access );
         assert_introterminal( end_detect, begin_access_end_access );
@@ -363,8 +323,10 @@ public:
         assert_introterminal( end_access, begin_detect );
         assert_introterminal( end_access, begin_access );
         assert_introterminal( end_access, end_detect );
+        assert_introterminal( end_access, end_access );
         assert_introterminal( end_access, begin_detect_end_detect );
         assert_introterminal( end_access, begin_access_end_detect );
+        assert_introterminal( end_access, begin_detect_end_access );
         assert_introterminal( end_access, begin_access_end_access );
         assert_introterminal( begin_detect_end_detect, null );
         assert_introterminal( begin_detect_end_detect, begin_detect );
@@ -372,6 +334,9 @@ public:
         assert_introterminal( begin_detect_end_detect, end_detect );
         assert_introterminal( begin_detect_end_detect, end_access );
         assert_introterminal( begin_detect_end_detect, begin_access_end_access );
+        assert_introterminal( begin_detect_end_detect, begin_detect_end_detect );
+        assert_introterminal( begin_detect_end_detect, begin_access_end_detect );
+        assert_introterminal( begin_detect_end_detect, begin_detect_end_access );
         assert_introterminal( begin_access_end_detect, null );
         assert_introterminal( begin_access_end_detect, begin_detect );
         assert_introterminal( begin_access_end_detect, begin_access );
@@ -379,6 +344,8 @@ public:
         assert_introterminal( begin_access_end_detect, end_access );
         assert_introterminal( begin_access_end_detect, begin_detect_end_detect );
         assert_introterminal( begin_access_end_detect, begin_detect_end_access );
+        assert_introterminal( begin_access_end_detect, begin_access_end_detect );
+        assert_introterminal( begin_access_end_detect, begin_access_end_access );
         assert_introterminal( begin_detect_end_access, null );
         assert_introterminal( begin_detect_end_access, begin_detect );
         assert_introterminal( begin_detect_end_access, begin_access );
@@ -386,6 +353,8 @@ public:
         assert_introterminal( begin_detect_end_access, end_access );
         assert_introterminal( begin_detect_end_access, begin_detect_end_detect );
         assert_introterminal( begin_detect_end_access, begin_access_end_detect );
+        assert_introterminal( begin_detect_end_access, begin_detect_end_access );
+        assert_introterminal( begin_detect_end_access, begin_access_end_access );
         assert_introterminal( begin_access_end_access, null );
         assert_introterminal( begin_access_end_access, begin_detect );
         assert_introterminal( begin_access_end_access, begin_access );
@@ -394,13 +363,15 @@ public:
         assert_introterminal( begin_access_end_access, begin_detect_end_detect );
         assert_introterminal( begin_access_end_access, begin_access_end_detect );
         assert_introterminal( begin_access_end_access, begin_detect_end_access );
-#endif // #ifdef SAKE_RANGE_CONCEPT_COMPLETE
+        assert_introterminal( begin_access_end_access, begin_access_end_access );
 #undef assert_introterminal
 
         assert_result< void_void_subrange >(traits_::sub(r,i,i));
         assert_result< begin_void_subrange >(traits_::sub(r, sake::_begin, i));
         assert_result< void_end_subrange >(traits_::sub(r, i, sake::_end));
         assert_result< begin_end_subrange >(traits_::sub(r, sake::_begin, sake::_end));
+
+#endif // #ifdef SAKE_RANGE_CONCEPT_COMPLETE
 
         assert_result< bool >(traits_::empty(r));
     }
