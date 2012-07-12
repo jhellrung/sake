@@ -45,7 +45,7 @@ struct X
     // typename boost::lazy_enable_if<
     //     sake::boost_ext::mpl::all<
     //         boost::mpl::vector ## n < T0, ... >,
-    //         boost::is_convertible< boost::mpl::_1, int >
+    //         sake::boost_ext::is_convertible< boost::mpl::_1, int >
     //     >,
     //     boost::mpl::identity< R< n > >
     // >::type
@@ -55,7 +55,7 @@ struct X
 #define SAKE_OVERLOAD_ENABLE( r, n, T_tuple ) \
     sake::boost_ext::mpl::all< \
         BOOST_PP_CAT( boost::mpl::vector, n ) < BOOST_PP_TUPLE_REM_CTOR( n, T_tuple ) >, \
-        boost::is_convertible< boost::mpl::_1, int > \
+        sake::boost_ext::is_convertible< boost::mpl::_1, int > \
     >
 #define SAKE_OVERLOAD_RESULT( r, n, T_tuple ) \
     boost::mpl::always< R< n > >::apply< void T_tuple >
