@@ -22,9 +22,9 @@
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/move.hpp>
 #include <sake/core/range/adapt/fwd.hpp>
-#include <sake/core/range/adapt/traits/base.hpp>
-#include <sake/core/range/adapt/traits/enable.hpp>
-#include <sake/core/range/adaptors/move.hpp>
+#include <sake/core/range/adaptors/construct/fwd.hpp>
+#include <sake/core/range/adaptors/construct/move.hpp>
+#include <sake/core/range/adaptors/traits/enable.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
 
 namespace sake
@@ -36,25 +36,15 @@ namespace range
 namespace adapt
 {
 
-/*******************************************************************************
- * struct range::adapt::result_of::move<R>
- ******************************************************************************/
-
 namespace result_of
 {
 
 template< class R >
 struct move
-{
-    typedef sake::range::adaptors::move<
-        typename sake::range::adapt::traits::base<R>::type > type;
-};
+    : sake::range::adaptors::construct::result_of::move<R>
+{ };
 
 } // namespace result_of
-
-/*******************************************************************************
- * namespace range::adapt::move_private
- ******************************************************************************/
 
 namespace move_private
 {
@@ -73,10 +63,6 @@ impl(SAKE_FWD2_REF( R ) r)
 namespace functional
 {
 
-/*******************************************************************************
- * struct range::adapt::functional::move
- ******************************************************************************/
-
 struct move
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::range::adapt::result_of::move, 1 )
@@ -91,31 +77,26 @@ struct move
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class R >
-    typename sake::range::adapt::traits::lazy_val_enabler<
-        R, result< move ( R ) > >::type
+    typename sake::range::adaptors::traits::lazy_val_enabler< R,
+        result< move ( R ) > >::type
     operator()(R r) const
     { return move_private::impl(sake::move(r)); }
 
     template< class R >
-    typename sake::range::adapt::traits::lazy_ref_enabler<
-        R, result< move ( R& ) > >::type
+    typename sake::range::adaptors::traits::lazy_ref_enabler< R,
+        result< move ( R& ) > >::type
     operator()(R& r) const
     { return move_private::impl(r); }
 
     template< class R >
-    typename sake::range::adapt::traits::lazy_ref_enabler<
-        R, result< move ( R const & ) > >::type
+    typename sake::range::adaptors::traits::lazy_ref_enabler< R,
+        result< move ( R const & ) > >::type
     operator()(R const & r) const
     { return move_private::impl(r); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 };
-
-/*******************************************************************************
- * r | range::adapt::move
- *     -> range::adapt::result_of::move<R>::type
- ******************************************************************************/
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -127,20 +108,20 @@ operator|(R&& r, sake::range::adapt::functional::move)
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class R >
-inline typename sake::range::adapt::traits::lazy_val_enabler<
-    R, sake::range::adapt::result_of::move<R> >::type
+inline typename sake::range::adaptors::traits::lazy_val_enabler< R,
+    sake::range::adapt::result_of::move<R> >::type
 operator|(R r, sake::range::adapt::functional::move)
 { return move_private::impl(sake::move(r)); }
 
 template< class R >
-inline typename sake::range::adapt::traits::lazy_ref_enabler<
-    R, sake::range::adapt::result_of::move< R& > >::type
+inline typename sake::range::adaptors::traits::lazy_ref_enabler< R,
+    sake::range::adapt::result_of::move< R& > >::type
 operator|(R& r, sake::range::adapt::functional::move)
 { return move_private::impl(r); }
 
 template< class R >
-inline typename sake::range::adapt::traits::lazy_ref_enabler<
-    R, sake::range::adapt::result_of::move< R const & > >::type
+inline typename sake::range::adaptors::traits::lazy_ref_enabler< R,
+    sake::range::adapt::result_of::move< R const & > >::type
 operator|(R const & r, sake::range::adapt::functional::move)
 { return move_private::impl(r); }
 

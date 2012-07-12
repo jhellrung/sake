@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/range/adapt/traits/base.hpp
+ * sake/core/range/adaptors/traits/base.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_RANGE_ADAPT_TRAITS_BASE_HPP
-#define SAKE_CORE_RANGE_ADAPT_TRAITS_BASE_HPP
+#ifndef SAKE_CORE_RANGE_ADAPTORS_TRAITS_BASE_HPP
+#define SAKE_CORE_RANGE_ADAPTORS_TRAITS_BASE_HPP
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
@@ -24,7 +24,7 @@ namespace sake
 namespace range
 {
 
-namespace adapt
+namespace adaptors
 {
 
 namespace traits
@@ -55,10 +55,10 @@ struct base
 
 } // namespace traits
 
-} // namespace adapt
+} // namespace adaptors
 
 } // namespace range
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_RANGE_ADAPT_TRAITS_BASE_HPP
+#endif // #ifndef SAKE_CORE_RANGE_ADAPTORS_TRAITS_BASE_HPP

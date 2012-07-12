@@ -4,6 +4,9 @@
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * range::algorithm::accumulate(R&& r, T x, F f)
+ *     -> range::algorithm::result_of::accumulate<R,T,F>::type
  ******************************************************************************/
 
 #ifndef SAKE_CORE_RANGE_ALGORITHM_ACCUMULATE_HPP
@@ -11,6 +14,7 @@
 
 #include <boost/concept/assert.hpp>
 #include <boost/config.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
@@ -41,38 +45,29 @@ namespace range
 namespace algorithm
 {
 
-/*******************************************************************************
- * struct range::algorithm::result_of::accumulate< R, T = ..., F = ... >
- ******************************************************************************/
-
 namespace result_of
 {
 
 template<
     class R,
-    class T = typename sake::range_forward_traits<R>::value_type,
-    class F = sake::operators::functional::plus
+    class T /*= typename sake::range_forward_traits<R>::value_type*/,
+    class F /*= sake::operators::functional::plus*/
 >
 struct accumulate
 {
     typedef typename boost_ext::remove_qualifiers<T>::type type;
 private:
-    BOOST_CONCEPT_ASSERT((sake::concepts::Range<
-        typename boost_ext::remove_reference<R>::type >));
+    typedef typename boost_ext::remove_reference<R>::type range_type;
+    typedef typename sake::range_forward_reference<R>::type reference;
+    typedef typename boost_ext::remove_qualifiers<F>::type function_type;
+    BOOST_CONCEPT_ASSERT((sake::concepts::Range< range_type >));
     BOOST_CONCEPT_ASSERT((sake::concepts::Function<
-        typename boost_ext::remove_qualifiers<F>::type,
-        type (
-            typename sake::result_of::move< type& >::type,
-            typename sake::range_forward_reference<R>::type
-        )
+        function_type,
+        type ( typename sake::result_of::move< type& >::type, reference )
     >));
 };
 
 } // namespace result_of
-
-/*******************************************************************************
- * struct range::algorithm::functional::accumulate
- ******************************************************************************/
 
 namespace functional
 {
@@ -115,18 +110,27 @@ private:
     typedef sake::rv_sink_traits<> rv_sink_traits_;
     template< class T, class F = sake::operators::functional::plus >
     class rv_sink_visitor
+        : sake::base_member< typename boost::remove_cv<
+              typename sake::call_traits<F>::param_type >::type >
     {
-        T& x;
-        typename sake::call_traits<F>::param_type f;
-        rv_sink_visitor(T& x_, typename sake::call_traits<F>::param_type f_)
-            : x(x_), f(f_)
+        typedef sake::base_member< typename boost::remove_cv<
+            typename sake::call_traits<F>::param_type >::type > base_member_;
+        typedef typename sake::call_traits<
+            typename boost_ext::add_rvalue_reference<T>::type
+        >::param_type value_type;
+        value_type x;
+        explicit rv_sink_visitor(value_type x_)
+            : x(x_)
+        { }
+        rv_sink_visitor(value_type x_, F const & f)
+            : base_member_(f), x(X_)
         { }
         friend struct accumulate;
     public:
         typedef T result_type;
         template< class R >
         T operator()(SAKE_RV_REF( R ) r) const
-        { return apply_impl(r, sake::move(x), f); }
+        { return apply_impl(r,x,f); }
     };
     template< class, class > friend class rv_sink_visitor;
     template< class T, class F = sake::operators::functional::plus >
@@ -144,12 +148,13 @@ public:
     operator()(R& r, T x, F const & f) const
     { return apply_impl(r, sake::move(x), f); }
 
+    // movable implicit rvalues
     template< class T >
     T operator()(typename rv_sink_default<T>::type r, T x) const
-    { return r(rv_sink_visitor<T>(x, sake::operators::plus)); }
+    { return r(rv_sink_visitor<T>(sake::move(x))); }
     template< class T, class F >
     T operator()(typename rv_sink_default<T,F>::type r, T x, F const & f) const
-    { return r(rv_sink_visitor<T,F>(x,f)); }
+    { return r(rv_sink_visitor<T,F>(sake::move(x), f)); }
 
     // const lvalues + non-movable rvalues
     template< class R, class T >
@@ -167,12 +172,11 @@ public:
 
 private:
     template< class R >
-    static typename result< accumulate (
-        SAKE_FWD2_PARAM( R ) ) >::type
+    static typename result< accumulate ( SAKE_FWD2_PARAM( R ) ) >::type
     apply_impl(SAKE_FWD2_REF( R ) r)
     {
-        typedef typename result< accumulate (
-            SAKE_FWD2_PARAM( R ) ) >::type result_type;
+        typedef typename result<
+            accumulate ( SAKE_FWD2_PARAM( R ) ) >::type result_type;
         return accumulate_private::impl(
             sake::forward<R>(r),
             sake::zero.as< result_type >(),
@@ -181,8 +185,7 @@ private:
     }
 
     template< class R, class T >
-    static typename result< accumulate (
-        SAKE_FWD2_PARAM( R ), SAKE_FWD2_PARAM( T ) ) >::type
+    static typename result< accumulate ( SAKE_FWD2_PARAM( R ), T ) >::type
     apply_impl(SAKE_FWD2_REF( R ) r, SAKE_FWD2_REF( T ) x)
     {
         return accumulate_private::impl(
@@ -193,8 +196,7 @@ private:
     }
 
     template< class R, class T, class F >
-    static typename result< accumulate (
-        SAKE_FWD2_PARAM( R ), SAKE_FWD2_PARAM( T ), F ) >::type
+    static typename result< accumulate ( SAKE_FWD2_PARAM( R ), T, F ) >::type
     apply_impl(SAKE_FWD2_REF( R ) r, SAKE_FWD2_REF( T ) x, F const & f)
     {
         return accumulate_private::impl(

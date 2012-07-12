@@ -23,8 +23,8 @@
 #include <sake/core/iterator/distance.hpp>
 #include <sake/core/iterator/distance_fwd.hpp>
 #include <sake/core/iterator/facade_fwd.hpp>
-#include <sake/core/range/adapt/fwd.hpp>
-#include <sake/core/range/adapt/transform.hpp>
+#include <sake/core/range/adaptors/construct/fwd.hpp>
+#include <sake/core/range/adaptors/construct/transform.hpp>
 #include <sake/core/range/algorithm/accumulate.hpp>
 #include <sake/core/range/algorithm/fwd.hpp>
 #include <sake/core/range/distance.hpp>
@@ -110,9 +110,10 @@ inline typename sake::range_difference< R const >::type
 dispatch(R const & r, sake::int_tag<1>)
 {
     return sake::range::algorithm::functional::accumulate()(
-        sake::range_multidim_traits< R const >::outer(r)
-      | sake::range::adapt::functional::transform<
-            sake::range::functional::distance >(),
+        sake::range::adaptors::construct::functional::transform()(
+            sake::range_multidim_traits< R const >::outer(r),
+            sake::range::functional::distance()
+        ),
         static_cast< typename sake::range_difference< R const >::type >(0)
     );
 }

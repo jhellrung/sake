@@ -42,7 +42,7 @@ struct enabler
       >::value >
 { };
 
-template< class This >
+template< class This, class F, class Params >
 struct impl
 {
     typedef boost::true_type enable_tag;
@@ -51,13 +51,12 @@ struct impl
         typename boost_ext::propagate_const<
             This, typename This::base_type >::type
     >::type base_;
-    SAKE_USING_TYPEDEF( typename This, function_type );
    
     typedef sake::range_multidim_traits< base_ > base_traits;
 
     typedef sake::range::adaptors::transform<
         typename base_traits::outer_range,
-        sake::range::adapt::functional::transform< function_type >
+        sake::range::adapt::functional::transform< F, Params >
     > outer_range;
 
     static outer_range
@@ -89,7 +88,7 @@ struct range_multidim_traits<
         sake::range::adaptors::transform< R, F, Params > >::type
 >
     : range_multidim_traits_adaptors_transform_private::impl<
-          sake::range::adaptors::transform< R, F, Params > >
+          sake::range::adaptors::transform< R, F, Params >, F, Params >
 { };
 
 template< class R, class F, class Params >
@@ -99,7 +98,7 @@ struct range_multidim_traits<
         sake::range::adaptors::transform< R, F, Params > const >::type
 >
     : range_multidim_traits_adaptors_transform_private::impl<
-          sake::range::adaptors::transform< R, F, Params > const >
+          sake::range::adaptors::transform< R, F, Params > const, F, Params >
 { };
 
 } // namespace extension

@@ -1,20 +1,20 @@
 /*******************************************************************************
- * sake/core/range/construct/subrange.hpp
+ * sake/core/range/basic/construct/subrange.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * range::construct::subrange(I i,J j)
- *     -> range::construct::result_of::subrange<I,J>::type
- * range::construct::subrange(begin_tag, I i)
- *     -> range::construct::result_of::subrange< begin_tag, I >::type
- * range::construct::subrange(I i, end_tag)
- *     -> range::construct::result_of::subrange< I, end_tag >::type
- * range::construct::subrange(I i, N)
- *     -> range::construct::result_of::subrange<I,N>::type
- * range::construct::subrange_c<N>(I i)
- *     -> range::construct::result_of::subrange_c<I,N>::type
+ * range::basic::construct::subrange(I i,J j)
+ *     -> range::basic::construct::result_of::subrange<I,J>::type
+ * range::basic::construct::subrange(begin_tag, I i)
+ *     -> range::basic::construct::result_of::subrange< begin_tag, I >::type
+ * range::basic::construct::subrange(I i, end_tag)
+ *     -> range::basic::construct::result_of::subrange< I, end_tag >::type
+ * range::basic::construct::subrange(I i, N)
+ *     -> range::basic::construct::result_of::subrange<I,N>::type
+ * range::basic::construct::subrange_c<N>(I i)
+ *     -> range::basic::construct::result_of::subrange_c<I,N>::type
  ******************************************************************************/
 
 #ifndef SAKE_CORE_RANGE_CONSTRUCT_SUBRANGE_HPP
@@ -43,6 +43,9 @@ namespace sake
 namespace range
 {
 
+namespace basic
+{
+
 namespace construct
 {
 
@@ -63,7 +66,7 @@ namespace functional
 struct subrange
 {
     SAKE_RESULT_FROM_METAFUNCTION(
-        sake::range::construct::result_of::subrange, 2 )
+        sake::range::basic::construct::result_of::subrange, 2 )
 
     template< class T, class U >
     typename result< subrange ( T, U ) >::type
@@ -75,16 +78,20 @@ struct subrange
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 namespace subrange_adl_barrier
-{ sake::range::construct::functional::subrange const subrange = { }; }
+{ sake::range::basic::construct::functional::subrange const subrange = { }; }
 using namespace subrange_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-sake::range::construct::functional::subrange const subrange = { };
+sake::range::basic::construct::functional::subrange const subrange = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 template< std::size_t N, class I >
-inline typename sake::range::construct::result_of::subrange_c<I,N>::type
+inline typename sake::range::basic::construct::
+    result_of::subrange_c<I,N>::type
 subrange_c(I const & i)
-{ return typename sake::range::construct::result_of::subrange_c<I,N>::type(i); }
+{
+    return typename sake::range::basic::construct::
+        result_of::subrange_c<I,N>::type(i);
+}
 
 namespace result_of
 {
@@ -165,11 +172,13 @@ struct subrange
 
 template< class I, std::size_t N >
 struct subrange_c
-    : sake::range::construct::result_of::subrange<
+    : sake::range::basic::construct::result_of::subrange<
           I, boost::integral_constant< std::size_t, N > >
 { };
 
 } // namespace result_of
+
+} // namespace basic
 
 } // namespace construct
 

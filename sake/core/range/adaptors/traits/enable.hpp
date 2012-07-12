@@ -1,13 +1,13 @@
 /*******************************************************************************
- * sake/core/range/adapt/traits/enable.hpp
+ * sake/core/range/adaptors/traits/enable.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_RANGE_ADAPT_TRAITS_ENABLE_HPP
-#define SAKE_CORE_RANGE_ADAPT_TRAITS_ENABLE_HPP
+#ifndef SAKE_CORE_RANGE_ADAPTORS_TRAITS_ENABLE_HPP
+#define SAKE_CORE_RANGE_ADAPTORS_TRAITS_ENABLE_HPP
 
 #include <boost/config.hpp>
 
@@ -29,7 +29,7 @@ namespace sake
 namespace range
 {
 
-namespace adapt
+namespace adaptors
 {
 
 namespace traits
@@ -50,13 +50,13 @@ struct val_enable< boost::rv<R> >
 
 template< class R >
 struct ref_enable
-    : boost::mpl::not_< sake::range::adapt::traits::val_enable<R> >
+    : boost::mpl::not_< sake::range::adaptors::traits::val_enable<R> >
 { };
 
 template< class R, class Result >
 struct lazy_val_enabler
     : boost::lazy_enable_if_c<
-          sake::range::adapt::traits::val_enable<R>::value,
+          sake::range::adaptors::traits::val_enable<R>::value,
           Result
       >
 { };
@@ -64,14 +64,14 @@ struct lazy_val_enabler
 template< class R, class Result >
 struct lazy_ref_enabler
     : boost::lazy_disable_if_c<
-          sake::range::adapt::traits::val_enable<R>::value,
+          sake::range::adaptors::traits::val_enable<R>::value,
           Result
       >
 { };
 
 } // namespace traits
 
-} // namespace adapt
+} // namespace adaptors
 
 } // namespace range
 
@@ -79,4 +79,4 @@ struct lazy_ref_enabler
 
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
-#endif // #ifndef SAKE_CORE_RANGE_ADAPT_TRAITS_ENABLE_HPP
+#endif // #ifndef SAKE_CORE_RANGE_ADAPTORS_TRAITS_ENABLE_HPP

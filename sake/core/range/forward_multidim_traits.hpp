@@ -44,10 +44,10 @@
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
 #include <sake/core/move/as_lvalue.hpp>
+#include <sake/core/range/adaptors/construct/fwd.hpp>
+#include <sake/core/range/adaptors/construct/move.hpp>
 #include <sake/core/range/adaptors/fwd.hpp>
 #include <sake/core/range/adaptors/transform.hpp>
-#include <sake/core/range/adapt/fwd.hpp>
-#include <sake/core/range/adapt/move.hpp>
 #include <sake/core/range/forward_multidim_traits_fwd.hpp>
 #include <sake/core/range/forward_traits.hpp>
 #include <sake/core/range/forward_traits_fwd.hpp>
@@ -105,6 +105,8 @@ private:
         typename boost_ext::add_rvalue_reference<R>::type >::type param_type;
 public:
 
+    typedef base_outer_range outer_range;
+
     static base_outer_range
     outer(param_type r)
     { return base_traits::outer(SAKE_AS_LVALUE(r)); }
@@ -135,7 +137,7 @@ struct dispatch1< R, true >
 
     typedef sake::range::adaptors::transform<
         base_outer_range,
-        sake::range::adapt::functional::move
+        sake::range::adaptors::construct::functional::move
     > outer_range;
 
 private:

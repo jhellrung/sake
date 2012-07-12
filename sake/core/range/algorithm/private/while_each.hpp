@@ -1,54 +1,54 @@
 /*******************************************************************************
- * sake/core/range/algorithm/private/for_each.hpp
+ * sake/core/range/algorithm/private/while_each.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  ******************************************************************************/
 
-#ifndef SAKE_CORE_RANGE_ALGORITHM_PRIVATE_FOR_EACH_HPP
-#define SAKE_CORE_RANGE_ALGORITHM_PRIVATE_FOR_EACH_HPP
+#ifndef SAKE_CORE_RANGE_ALGORITHM_PRIVATE_WHILE_EACH_HPP
+#define SAKE_CORE_RANGE_ALGORITHM_PRIVATE_WHILE_EACH_HPP
 
-#include <cstddef>
+// #include <cstddef>
 
-#include <sake/boost_ext/mpl/if.hpp>
-#include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+// #include <sake/boost_ext/mpl/if.hpp>
+// #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
-#include <sake/core/introspection/is_callable_function.hpp>
-#include <sake/core/iterator/begin_end_tag.hpp>
-#include <sake/core/iterator/categories.hpp>
-#include <sake/core/iterator/multidim_traits.hpp>
-#include <sake/core/iterator/multidim_traits_fwd.hpp>
-#include <sake/core/iterator/traits.hpp>
-#include <sake/core/iterator/traits_fwd.hpp>
-#include <sake/core/move/forward.hpp>
-#include <sake/core/range/algorithm/for_each.hpp>
-#include <sake/core/range/algorithm/fwd.hpp>
-#include <sake/core/range/apply/for_each.hpp>
-#include <sake/core/range/apply/fwd.hpp>
-#include <sake/core/range/forward_multidim_traits.hpp>
-#include <sake/core/range/forward_multidim_traits_fwd.hpp>
-#include <sake/core/range/forward_traits.hpp>
-#include <sake/core/range/forward_traits_fwd.hpp>
-#include <sake/core/range/static_size.hpp>
-#include <sake/core/utility/call_traits.hpp>
-#include <sake/core/utility/int_tag.hpp>
-#include <sake/core/utility/using_typedef.hpp>
+// #include <sake/core/introspection/is_callable_function.hpp>
+// #include <sake/core/iterator/begin_end_tag.hpp>
+// #include <sake/core/iterator/categories.hpp>
+// #include <sake/core/iterator/multidim_traits.hpp>
+// #include <sake/core/iterator/multidim_traits_fwd.hpp>
+// #include <sake/core/iterator/traits.hpp>
+// #include <sake/core/iterator/traits_fwd.hpp>
+// #include <sake/core/move/forward.hpp>
+// #include <sake/core/range/algorithm/for_each.hpp>
+// #include <sake/core/range/algorithm/fwd.hpp>
+// #include <sake/core/range/apply/for_each.hpp>
+// #include <sake/core/range/apply/fwd.hpp>
+// #include <sake/core/range/forward_multidim_traits.hpp>
+// #include <sake/core/range/forward_multidim_traits_fwd.hpp>
+// #include <sake/core/range/forward_traits.hpp>
+// #include <sake/core/range/forward_traits_fwd.hpp>
+// #include <sake/core/range/static_size.hpp>
+// #include <sake/core/utility/call_traits.hpp>
+// #include <sake/core/utility/int_tag.hpp>
+// #include <sake/core/utility/using_typedef.hpp>
 
-namespace sake_range_algorithm_for_each_private
+namespace sake_range_algorithm_while_each_private
 {
 
 #define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
-#define SAKE_INTROSPECTION_FUNCTION_NAME range_for_each
-#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
+#define SAKE_INTROSPECTION_FUNCTION_NAME range_while_each
+#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 3, 3 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-template< class R, class F >
+template< class R, class P, class F >
 inline void
-adl(SAKE_FWD2_REF( R ) r, F const & f)
-{ range_for_each(sake::forward<R>(r), f); }
+adl(SAKE_FWD2_REF( R ) r, P const & p, F const & f)
+{ return range_while_each(sake::forward<R>(r), p, f); }
 
-} // namespace sake_range_algorithm_for_each_private
+} // namespace sake_range_algorithm_while_each_private
 
 namespace sake
 {
@@ -59,17 +59,17 @@ namespace range
 namespace algorithm
 {
 
-namespace for_each_private
+namespace while_each_private
 {
 
-template< class R, class F >
+template< class R, class P, class F >
 inline void
-dispatch(SAKE_FWD2_REF( R ) r, F const & f, sake::int_tag<4>)
-{ ::sake_range_algorithm_for_each_private::adl(sake::forward<R>(r), f); }
+dispatch(SAKE_FWD2_REF( R ) r, P const & p, F const & f, sake::int_tag<4>)
+{ ::sake_range_algorithm_while_each_private::adl(sake::forward<R>(r), p, f); }
 
-template< class R, class F >
+template< class R, class P, class F >
 inline void
-dispatch(SAKE_FWD2_REF( R ) r, F const & f, sake::int_tag<3>)
+dispatch(SAKE_FWD2_REF( R ) r, P const & p, F const & f, sake::int_tag<3>)
 {
     typedef sake::range_forward_multidim_traits< SAKE_FWD2_PARAM( R ) > traits_;
     sake::range::algorithm::functional::for_each()(
@@ -79,7 +79,7 @@ dispatch(SAKE_FWD2_REF( R ) r, F const & f, sake::int_tag<3>)
     );
 }
 
-template< class R, class F >
+template< class R, class P, class F >
 inline void
 dispatch(SAKE_FWD2_REF( R ) r, F const & f, sake::int_tag<2>)
 {
@@ -113,9 +113,9 @@ dispatch(SAKE_FWD2_REF( R ) r, F const & f, sake::int_tag<2>)
         inner_traits_::sub(*bi, sake::_begin, iterator_traits_::inner(e)), f);
 }
 
-template< class R, class F >
+template< class R, class P, class F >
 inline void
-dispatch(SAKE_FWD2_REF( R ) r, F f, sake::int_tag<1>)
+dispatch(SAKE_FWD2_REF( R ) r, P p, F f, sake::int_tag<1>)
 {
     static std::size_t const n = sake::range_static_size<
         typename boost_ext::remove_qualifiers<R>::type >::value;
@@ -125,9 +125,9 @@ dispatch(SAKE_FWD2_REF( R ) r, F f, sake::int_tag<1>)
         f(*i);
 }
 
-template< class R, class F >
+template< class R, class P, class F >
 inline void
-dispatch(SAKE_FWD2_REF( R ) r, F f, sake::int_tag<0>)
+dispatch(SAKE_FWD2_REF( R ) r, P p, F f, sake::int_tag<0>)
 {
     typedef sake::range_forward_traits< SAKE_FWD2_PARAM( R ) > traits_;
     typedef typename traits_::template iterator_with<
@@ -140,14 +140,14 @@ dispatch(SAKE_FWD2_REF( R ) r, F f, sake::int_tag<0>)
         f(*i);
 }
 
-template< class R, class F >
+template< class R, class P, class F >
 inline void
-impl(SAKE_FWD2_REF( R ) r, F const & f)
+impl(SAKE_FWD2_REF( R ) r, P const & p, F const & f)
 {
     typedef typename sake::range_forward_iterator<
         SAKE_FWD2_PARAM( R ) >::type iterator;
     typedef typename boost_ext::mpl::
-         if_< ::sake_range_algorithm_for_each_private::is_callable<
+         if_< ::sake_range_algorithm_while_each_private::is_callable<
                   void ( SAKE_FWD2_REF( R ), F ) >,
               sake::int_tag<4> >::type::template
     else_if < sake::range_forward_multidim_enable< SAKE_FWD2_PARAM( R ) >,
@@ -158,10 +158,10 @@ impl(SAKE_FWD2_REF( R ) r, F const & f)
                   typename boost_ext::remove_qualifiers<R>::type >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    for_each_private::dispatch(sake::forward<R>(r), f, int_tag_());
+    while_each_private::dispatch(sake::forward<R>(r), f, int_tag_());
 }
 
-} // namespace for_each_private
+} // namespace while_each_private
 
 } // namespace algorithm
 
@@ -169,4 +169,4 @@ impl(SAKE_FWD2_REF( R ) r, F const & f)
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_RANGE_ALGORITHM_PRIVATE_FOR_EACH_HPP
+#endif // #ifndef SAKE_CORE_RANGE_ALGORITHM_PRIVATE_WHILE_EACH_HPP
