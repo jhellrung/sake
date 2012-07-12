@@ -74,7 +74,7 @@ void transform_test(sake::test::environment& env)
     int a[] = { 0, 1, 2 };
     adaptors::helper(
         env,
-        a | sake::range::adapt::transform(adaptors::add<42>())
+        a | sake::range::adapt::transform(adaptors::add< 42 >())
     );
 }
 
