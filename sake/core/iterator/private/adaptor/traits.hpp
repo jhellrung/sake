@@ -28,6 +28,7 @@
 
 #include <sake/core/introspection/has_operator_less.hpp>
 #include <sake/core/introspection/has_operator_minus.hpp>
+#include <sake/core/iterator/concepts/fwd.hpp>
 #include <sake/core/iterator/concepts/Iterator.hpp>
 #include <sake/core/iterator/facade.hpp>
 #include <sake/core/iterator/is_const_iterator.hpp>

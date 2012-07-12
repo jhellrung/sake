@@ -9,6 +9,7 @@
 #ifndef SAKE_CORE_ITERATOR_CONCEPTS_ITERATOR_HPP
 #define SAKE_CORE_ITERATOR_CONCEPTS_ITERATOR_HPP
 
+#include <sake/core/iterator/concepts/fwd.hpp>
 #include <sake/core/iterator/concepts/private/IntroterminalBase.hpp>
 #include <sake/core/iterator/concepts/private/TraversalBase.hpp>
 

@@ -31,6 +31,7 @@
 #include <sake/core/iterator/adaptors/fwd.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
+#include <sake/core/iterator/concepts/fwd.hpp>
 #include <sake/core/iterator/concepts/Iterator.hpp>
 #include <sake/core/iterator/keyword.hpp>
 #include <sake/core/iterator/traits.hpp>
