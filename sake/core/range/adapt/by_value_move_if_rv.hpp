@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * #define SAKE_RANGE_ADAPT_BY_VALUE_IF_RV( r )
+ * #define SAKE_RANGE_ADAPT_BY_VALUE_MOVE_IF_RV( r )
  ******************************************************************************/
 
 #ifndef SAKE_CORE_RANGE_ADAPT_BY_VALUE_MOVE_IF_RV_HPP
@@ -29,7 +29,7 @@
 #include <sake/core/range/adaptors/move.hpp>
 #include <sake/core/range/traits.hpp>
 
-#define SAKE_RANGE_ADAPT_BY_VALUE_IF_RV( r ) \
+#define SAKE_RANGE_ADAPT_BY_VALUE_MOVE_IF_RV( r ) \
     ::sake::range::adapt::by_value_move_if_rv(r)
 
 namespace sake
@@ -117,7 +117,7 @@ by_value_move_if_rv(R&& r)
 #include <sake/core/range/is_adapt_by_value.hpp>
 #include <sake/core/utility/type_tag.hpp>
 
-#define SAKE_RANGE_ADAPT_BY_VALUE_IF_RV( r ) \
+#define SAKE_RANGE_ADAPT_BY_VALUE_MOVE_IF_RV( r ) \
     ::sake::range::adapt::by_value_move_if_rv_private:: \
         dispatch_(SAKE_EXPR_TYPE_TAG_OF( r ))(r)
 
