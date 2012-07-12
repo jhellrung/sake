@@ -104,7 +104,7 @@ struct switch_on_declared< SAKE_SIZEOF_FALSE_TAG >
 };
 
 template< class T >
-void operator>(int, const declared<T>&)
+void operator>(int, declared<T> const &)
 { }
 
 } // namespace declare_once_private
