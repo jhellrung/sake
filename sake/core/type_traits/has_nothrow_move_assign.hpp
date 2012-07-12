@@ -17,16 +17,19 @@
 
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/quote.hpp>
-#include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/has_nothrow_assign.hpp>
+#include <boost/type_traits/has_trivial_assign.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
-#include <sake/boost_ext/type_traits/remove_reference.hpp>
+#include <sake/boost_ext/mpl/or.hpp>
+#include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/introspection/has_operator_assign.hpp>
 #include <sake/core/introspection/has_type.hpp>
+#include <sake/core/type_traits/fwd.hpp>
 #include <sake/core/type_traits/has_nothrow_copy_assign.hpp>
-#include <sake/core/type_traits/has_nothrow_move_assign_fwd.hpp>
 
 namespace sake
 {
@@ -44,10 +47,14 @@ namespace has_nothrow_move_assign_private
 {
 
 template< class T >
-struct impl
+struct helper
     : boost_ext::mpl::and2<
-          sake::has_operator_assign< T&, void ( typename boost::remove_cv<T>::type ) >,
-          sake::extension::has_nothrow_move_assign<T>
+          sake::has_operator_assign< T&, void ( T ) >,
+          boost_ext::mpl::or3<
+              boost::has_trivial_assign<T>,
+              boost::has_nothrow_assign<T>,
+              sake::extension::has_nothrow_move_assign<T>
+          >
       >
 { };
 
@@ -55,8 +62,15 @@ struct impl
 
 template< class T >
 struct has_nothrow_move_assign
-    : has_nothrow_move_assign_private::impl<
-          typename boost_ext::remove_reference<T>::type >
+    : boost_ext::mpl::and2<
+          boost::mpl::not_< boost_ext::is_reference<T> >,
+          has_nothrow_move_assign_private::helper<T>
+      >
+{ };
+
+template< class T >
+struct has_nothrow_move_assign< T const >
+    : sake::has_nothrow_copy_assign< T const >
 { };
 
 /*******************************************************************************
@@ -82,11 +96,11 @@ namespace default_impl
 
 template< class T >
 struct has_nothrow_move_assign
-    : boost::mpl::if_<
-          sake::has_type_has_nothrow_move_assign_tag<T>,
-          sake::has_type_has_nothrow_move_assign_tag<T,
-              boost::mpl::quote1< boost::mpl::identity > >,
-          sake::has_nothrow_copy_assign<T>
+    : boost::mpl::if_c<
+          sake::has_type_has_nothrow_move_assign_tag<T>::value,
+          sake::has_type_has_nothrow_move_assign_tag<
+              T, boost::mpl::quote1< boost::mpl::identity > >,
+          sake::extension::has_nothrow_copy_assign<T>
       >::type
 { };
 

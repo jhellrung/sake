@@ -24,7 +24,7 @@
 #include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/core/introspection/has_type.hpp>
-#include <sake/core/type_traits/has_private_operator_assign_fwd.hpp>
+#include <sake/core/type_traits/fwd.hpp>
 
 namespace sake
 {
