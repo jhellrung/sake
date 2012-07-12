@@ -57,12 +57,8 @@ public:
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
         introterminal, sake::null_introterminal_tag >::value));
 
-    template< class Introterminal >
-    struct relax
-    { typedef typename traits_::template relax< Introterminal >::type type; };
-
-    BOOST_STATIC_ASSERT((
-        boost::is_same< I, typename relax< introterminal >::type >::value));
+    BOOST_STATIC_ASSERT((boost::is_same<
+        I, typename traits_::template relax< introterminal >::type >::value));
 };
 
 } // namespace private_
