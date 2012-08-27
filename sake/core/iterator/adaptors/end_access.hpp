@@ -71,6 +71,8 @@ class end_access
 public:
     SAKE_USING_TYPEDEF( typename facade_, reference );
 
+    using facade_::derived;
+
     typedef I base_type;
 
     SAKE_MEMBERWISE_MEM_FUN(
@@ -82,7 +84,7 @@ public:
     SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( sake::optional<I> )( m_base )) )
 
     explicit end_access(I const & i)
-        : m_base(i, i != sake::_end)
+        : m_base(i)
     { }
 
     explicit end_access(sake::end_tag)
@@ -107,25 +109,34 @@ private:
     reference derived_dereference() const
     { return *m_base.get(); }
     void derived_increment()
-    {
-        if(++m_base.get() == sake::_end)
-            m_base.destruct();
-    }
+    { ++m_base.get(); }
 
     template< class Other >
     bool derived_equal(Other const & other) const
-    { return m_base == other.m_base; }
+    {
+        return derived() == sake::_end ?
+               other == sake::_end :
+               other.base() && other.base().get() == m_base.get();
+    }
     bool derived_equal(sake::begin_tag) const
     { return m_base && m_base.get() == sake::_begin; }
     bool derived_equal(sake::end_tag) const
-    { return !m_base; }
+    { return !m_base || m_base.get() == sake::_end; }
 
     template< class Other >
     bool derived_less(Other const & other) const
-    { return m_base < other.m_base; }
+    {
+        return derived() != sake::_end
+            && (other == sake::_end
+             || m_base.get() < other.base().get());
+    }
     template< class Other >
     bool derived_less_equal(Other const & other) const
-    { return m_base <= other.m_base; }
+    {
+        return other == sake::_end
+            || (derived() != sake::_end
+             && m_base.get() <= other.base().get());
+    }
 
     template< class Introterminal >
     class derived_relax
@@ -143,7 +154,10 @@ private:
     };
 
     void derived_at_ip(sake::end_tag)
-    { m_base.reset(); }
+    {
+        if(m_base)
+            sake::iterator::end_ip(m_base.get());
+    }
 
     template< class Introterminal >
     typename facade_::template relax< Introterminal >::type
