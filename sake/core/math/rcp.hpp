@@ -1,30 +1,30 @@
 /*******************************************************************************
- * sake/core/math/inv.hpp
+ * sake/core/math/rcp.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * inv(T&& x) -> result_of::inv<T>::type
- * struct functional::inv
+ * rcp(T&& x) -> result_of::rcp<T>::type
+ * struct functional::rcp
  *
- * struct result_of::inv<T>
- * struct result_of::extension::inv< T, Enable = void >
- * struct result_of::default_impl::inv<T>
+ * struct result_of::rcp<T>
+ * struct result_of::extension::rcp< T, Enable = void >
+ * struct result_of::default_impl::rcp<T>
  *
- * Returns the (multiplicative) inverse value of its argument.
+ * Returns the reciprocal (multiplicative inverse) of its argument.
  *
- * sake::inv(T) is implemented in terms of
- * - T::inv(), if available; else
- * - inv(T) (unqualified, hence subject to ADL), if available; else
- * - T::inv_ip(), if available and the argument is an rvalue; else
- * - inv_ip(T) (unqualified, hence subject to ADL), if available and the
+ * sake::rcp(T) is implemented in terms of
+ * - T::rcp(), if available; else
+ * - rcp(T) (unqualified, hence subject to ADL), if available; else
+ * - T::rcp_ip(), if available and the argument is an rvalue; else
+ * - rcp_ip(T) (unqualified, hence subject to ADL), if available and the
  *   argument is an rvalue; else
  * - returning a proxy.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_MATH_INV_HPP
-#define SAKE_CORE_MATH_INV_HPP
+#ifndef SAKE_CORE_MATH_RCP_HPP
+#define SAKE_CORE_MATH_RCP_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -49,10 +49,10 @@
 #include <sake/core/introspection/has_operator_divide.hpp>
 #include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/introspection/is_callable_member_function.hpp>
-#include <sake/core/math/inv_fwd.hpp>
-#include <sake/core/math/inverse.hpp>
-#include <sake/core/math/inverse_fwd.hpp>
-#include <sake/core/math/private/inv_common.hpp>
+#include <sake/core/math/private/rcp_common.hpp>
+#include <sake/core/math/rcp_fwd.hpp>
+#include <sake/core/math/reciprocal.hpp>
+#include <sake/core/math/reciprocal_fwd.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/has_move_emulation.hpp>
 #include <sake/core/move/move.hpp>
@@ -63,7 +63,7 @@
 namespace sake
 {
 
-namespace inv_private
+namespace rcp_private
 {
 
 template< class T >
@@ -71,51 +71,50 @@ struct dispatch_index;
 
 template<
     class T,
-    class Result = typename sake::result_of::inv<T>::type,
+    class Result = typename sake::result_of::rcp<T>::type,
     int = dispatch_index<T>::value
 >
 struct dispatch;
 
-} // namespace inv_private
+} // namespace rcp_private
 
 namespace result_of
 {
 
 /*******************************************************************************
- * struct result_of::inv<T>
+ * struct result_of::rcp<T>
  ******************************************************************************/
 
 template< class T >
-struct inv
+struct rcp
 {
-    typedef typename sake::result_of::extension::inv<
-        typename boost_ext::remove_rvalue_reference<T>::type
-    >::type type;
+    typedef typename sake::result_of::extension::rcp<
+        typename boost_ext::remove_rvalue_reference<T>::type >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 };
 
 /*******************************************************************************
- * struct result_of::extension::inv< T, Enable = void >
+ * struct result_of::extension::rcp< T, Enable = void >
  ******************************************************************************/
 
 namespace extension
 {
 
 template< class T, class Enable /*= void*/ >
-struct inv
-    : sake::result_of::default_impl::inv<T>
+struct rcp
+    : sake::result_of::default_impl::rcp<T>
 { };
 
 } // namespace extension
 
 /*******************************************************************************
- * struct result_of::default_impl::inv<T>
+ * struct result_of::default_impl::rcp<T>
  ******************************************************************************/
 
 namespace default_impl
 {
 
-namespace inv_private
+namespace rcp_private
 {
 
 template< class T, bool = sake::has_operator_divide<T>::value >
@@ -140,16 +139,16 @@ struct result_types_dispatch< T, true >
     > type;
 };
 
-} // namespace inv_private
+} // namespace rcp_private
 
 template< class T >
-struct inv_result_types
-    : sake::result_of::default_impl::inv_private::result_types_dispatch<T>
+struct rcp_result_types
+    : sake::result_of::default_impl::rcp_private::result_types_dispatch<T>
 { };
 
 template< class T >
-struct inv
-    : sake::inv_private::dispatch< T, void >
+struct rcp
+    : sake::rcp_private::dispatch< T, void >
 { };
 
 } // namespace default_impl
@@ -157,39 +156,38 @@ struct inv
 } // namespace result_of
 
 /*******************************************************************************
- * inv(T const & x) -> result_of::inv<T>::type
- * struct functional::inv
+ * rcp(T const & x) -> result_of::rcp<T>::type
+ * struct functional::rcp
  ******************************************************************************/
 
 namespace functional
 {
 
-struct inv
+struct rcp
 {
-    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::inv, 1 )
+    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::rcp, 1 )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename sake::result_of::inv<T>::type
+    typename sake::result_of::rcp<T>::type
     operator()(T&& x) const
-    { return sake::inv_private::dispatch<T>::apply(sake::forward<T>(x)); }
+    { return sake::rcp_private::dispatch<T>::apply(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class T >
-    typename sake::result_of::inv< T& >::type
+    typename sake::result_of::rcp< T& >::type
     operator()(T& x) const
     {
-        return sake::inv_private::dispatch<
-            typename boost_ext::remove_rvalue_reference< T& >::type
-        >::apply(x);
+        return sake::rcp_private::dispatch<
+            typename boost_ext::remove_rvalue_reference< T& >::type >::apply(x);
     }
 
     template< class T >
-    typename sake::result_of::inv< T const & >::type
+    typename sake::result_of::rcp< T const & >::type
     operator()(T const & x) const
-    { return sake::inv_private::dispatch< T const & >::apply(x); }
+    { return sake::rcp_private::dispatch< T const & >::apply(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
@@ -198,20 +196,20 @@ struct inv
 } // namespace functional
 
 #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-namespace inv_adl_barrier
-{ sake::functional::inv const inv = { }; }
-using namespace inv_adl_barrier;
+namespace rcp_adl_barrier
+{ sake::functional::rcp const rcp = { }; }
+using namespace rcp_adl_barrier;
 #else // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
-sake::functional::inv const inv = { };
+sake::functional::rcp const rcp = { };
 #endif // #ifdef SAKE_WORKAROUND_ADL_FINDS_NON_FUNCTIONS
 
 } // namespace sake
 
-namespace sake_inv_private
+namespace sake_rcp_private
 {
 
 #define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
-#define SAKE_INTROSPECTION_FUNCTION_NAME inv
+#define SAKE_INTROSPECTION_FUNCTION_NAME rcp
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 1 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
@@ -220,15 +218,15 @@ struct adl
 {
     typedef typename ::sake::boost_ext::add_rvalue_reference<T>::type fwd_type;
     static Result apply(fwd_type x)
-    { return inv(static_cast< fwd_type >(x)); }
+    { return rcp(static_cast< fwd_type >(x)); }
 };
 
 template< class T >
 struct adl_impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
-        typename inv(::sake::declval<T>()),
-        typename ::sake::result_of::default_impl::inv_result_types<T>::type,
+        typename rcp(::sake::declval<T>()),
+        typename ::sake::result_of::default_impl::rcp_result_types<T>::type,
         type
     );
 };
@@ -249,21 +247,21 @@ private:
 public:
     typedef typename ::boost::mpl::eval_if_c<
         ::boost::is_void< maybe_type >::value,
-        ::sake::result_of::inv< typename boost::remove_cv<T>::type >,
+        ::sake::result_of::rcp< typename boost::remove_cv<T>::type >,
         ::boost::mpl::identity< maybe_type >
     >::type type;
 };
 
-} // namespace sake_inv_private
+} // namespace sake_rcp_private
 
 namespace sake
 {
 
-namespace inv_private
+namespace rcp_private
 {
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun
-#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME inv
+#define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME rcp
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_ARITY_LIMITS ( 0, 0 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_MEMBER_FUNCTION()
 
@@ -277,9 +275,9 @@ public:
     static int const value = boost_ext::mpl::
          if_< boost::is_floating_point< noqual_type >,
               sake::int_tag<5> >::type::template
-    else_if < inv_private::is_callable_mem_fun< T, void ( ) >,
+    else_if < rcp_private::is_callable_mem_fun< T, void ( ) >,
               sake::int_tag<4> >::type::template
-    else_if < ::sake_inv_private::is_callable< void ( T ) >,
+    else_if < ::sake_rcp_private::is_callable< void ( T ) >,
               sake::int_tag<3> >::type::template
 #ifndef BOOST_NO_RVALUE_REFERENCES
     else_if < boost_ext::is_reference<T>,
@@ -288,9 +286,9 @@ public:
     else_if_not< sake::has_move_emulation<T>,
               sake::int_tag<0> >::type::template
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
-    else_if < inv_ip_private::is_callable_mem_fun< ref_type, void ( ) >,
+    else_if < rcp_ip_private::is_callable_mem_fun< ref_type, void ( ) >,
               sake::int_tag<2> >::type::template
-    else_if < ::sake_inv_ip_private::is_callable< void ( ref_type ) >,
+    else_if < ::sake_rcp_ip_private::is_callable< void ( ref_type ) >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type::value;
 };
@@ -307,8 +305,8 @@ template< class T >
 struct dispatch4_impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
-        typename sake::declval<T>().inv(),
-        typename sake::result_of::default_impl::inv_result_types<T>::type,
+        typename sake::declval<T>().rcp(),
+        typename sake::result_of::default_impl::rcp_result_types<T>::type,
         type
     );
 };
@@ -329,7 +327,7 @@ private:
 public:
     typedef typename boost::mpl::eval_if_c<
         boost::is_void< maybe_type >::value,
-        result_of::inv< typename boost::remove_cv<T>::type >,
+        result_of::rcp< typename boost::remove_cv<T>::type >,
         boost::mpl::identity< maybe_type >
     >::type type;
 };
@@ -339,12 +337,12 @@ struct dispatch< T, Result, 4 >
 {
     typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
     static Result apply(fwd_type x)
-    { return static_cast< fwd_type >(x).inv(); }
+    { return static_cast< fwd_type >(x).rcp(); }
 };
 
 template< class T, class Result >
 struct dispatch< T, Result, 3 >
-    : ::sake_inv_private::adl< T, Result >
+    : ::sake_rcp_private::adl< T, Result >
 { };
 
 template< class T, class Result >
@@ -354,7 +352,7 @@ struct dispatch< T, Result, 2 >
     typedef T type;
     static type apply(fwd_type x)
     {
-        SAKE_AS_LVALUE( x ).inv_ip();
+        SAKE_AS_LVALUE( x ).rcp_ip();
         return sake::move(x);
     }
 };
@@ -366,7 +364,7 @@ struct dispatch< T, Result, 1 >
     typedef T type;
     static type apply(fwd_type x)
     {
-        ::sake_inv_ip_private::adl(SAKE_AS_LVALUE( x ));
+        ::sake_rcp_ip_private::adl(SAKE_AS_LVALUE( x ));
         return sake::move(x);
     }
 };
@@ -376,7 +374,7 @@ struct dispatch< T, Result, 0 >
 {
     typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
     typedef typename boost_ext::remove_qualifiers<T>::type noqual_type;
-    typedef sake::inverse< noqual_type > type;
+    typedef sake::reciprocal< noqual_type > type;
     static type apply(fwd_type x)
     { return type(static_cast< fwd_type >(x)); }
 };
@@ -385,4 +383,4 @@ struct dispatch< T, Result, 0 >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_MATH_INV_HPP
+#endif // #ifndef SAKE_CORE_MATH_RCP_HPP

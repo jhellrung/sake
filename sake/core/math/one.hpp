@@ -15,7 +15,7 @@
  * operator<<=([builtin arithmetic type]& x, one_t) -> [builtin arithmetic type]&
  * operator>>=([builtin arithmetic type]& x, one_t) -> [builtin arithmetic type]&
  *
- * operator/(one_t, T const & x) -> result_of::invert<T>::type
+ * operator/(one_t, T const & x) -> result_of::rcp<T>::type
  *
  * operator&([builtin integral type] x, one_t) -> bool
  *
@@ -43,8 +43,8 @@
 
 #include <sake/core/functional/operators/bit_and.hpp>
 #include <sake/core/functional/operators/divide.hpp>
-#include <sake/core/math/inv.hpp>
 #include <sake/core/math/one_fwd.hpp>
+#include <sake/core/math/rcp.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/utility/int_tag.hpp>
 
@@ -82,7 +82,7 @@ struct divide< One, T,
             sake::one_t
         >::value
     >::type >
-    : sake::result_of::inv<T>
+    : sake::result_of::rcp<T>
 { };
 
 template< class T >
@@ -121,24 +121,24 @@ operator>>=(T& x, sake::one_t)
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T >
-inline typename sake::result_of::inv<T>::type
+inline typename sake::result_of::rcp<T>::type
 operator/(sake::one_t, T&& x)
-//{ return sake::inv(sake::forward<T>(x)); }
-{ return sake::functional::inv()(sake::forward<T>(x)); }
+//{ return sake::rcp(sake::forward<T>(x)); }
+{ return sake::functional::rcp()(sake::forward<T>(x)); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
 template< class T >
-inline typename sake::result_of::inv< T& >::type
+inline typename sake::result_of::rcp< T& >::type
 operator/(sake::one_t, T& x)
-//{ return sake::inv(x); }
-{ return sake::functional::inv()(x); }
+//{ return sake::rcp(x); }
+{ return sake::functional::rcp()(x); }
 
 template< class T >
-inline typename sake::result_of::inv< T const & >::type
+inline typename sake::result_of::rcp< T const & >::type
 operator/(sake::one_t, T const & x)
-//{ return sake::inv(x); }
-{ return sake::functional::inv()(x); }
+//{ return sake::rcp(x); }
+{ return sake::functional::rcp()(x); }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 

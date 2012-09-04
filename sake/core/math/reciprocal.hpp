@@ -1,14 +1,14 @@
 /*******************************************************************************
- * sake/core/math/inverse.hpp
+ * sake/core/math/reciprocal.hpp
  *
  * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct inverse<T>
+ * struct reciprocal<T>
  *
- * Defines a simple wrapper class representing the (multiplicative) inverse of
- * a number.
+ * Defines a simple wrapper class representing the reciprocal (multiplicative
+ * inverse) of a number.
  ******************************************************************************/
 
 #ifndef SAKE_CORE_MATH_INVERSE_HPP
@@ -26,10 +26,10 @@
 #include <sake/core/emplacer/constructible.hpp>
 #include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/functional/construct.hpp>
-#include <sake/core/math/inv_fwd.hpp>
-#include <sake/core/math/inverse_fwd.hpp>
 #include <sake/core/math/one.hpp>
 #include <sake/core/math/one_fwd.hpp>
+#include <sake/core/math/rcp_fwd.hpp>
+#include <sake/core/math/reciprocal_fwd.hpp>
 #include <sake/core/memberwise/swap.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/movable.hpp>
@@ -39,15 +39,15 @@
 namespace sake
 {
 
-namespace inverse_adl
+namespace reciprocal_adl
 {
 
 /*******************************************************************************
- * struct inverse<T>
+ * struct reciprocal<T>
  ******************************************************************************/
 
 template< class T >
-struct inverse
+struct reciprocal
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
@@ -55,12 +55,12 @@ struct inverse
     typedef T value_type;
 
     SAKE_OPTIMAL_MOVABLE_COPYABLE_MEMBERWISE(
-        typename inverse,
+        typename reciprocal,
         (( T )( m_value ))
     )
 
     SAKE_MEMBERWISE_SWAP(
-        typename inverse,
+        typename reciprocal,
         (( T )( m_value ))
     )
 
@@ -78,7 +78,7 @@ public:
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class U >
-    explicit inverse(U&& x,
+    explicit reciprocal(U&& x,
         typename explicit_contructor_enabler<U>::type* = 0)
         : m_value(sake::forward<U>(x))
     { }
@@ -95,23 +95,23 @@ private:
 public:
     // lvalues + movable explicit rvalues
     template< class U >
-    explicit inverse(U& x,
+    explicit reciprocal(U& x,
         typename explicit_constructor_rv_sink_traits::template
             ref_enabler<U>::type* = 0)
         : m_value(x)
     { }
     // T rvalues
-    explicit inverse(
+    explicit reciprocal(
         typename explicit_constructor_rv_sink_traits::primary_type x)
         : m_value(sake::move(x.value))
     { }
     // movable implicit rvalues
-    explicit inverse(explicit_constructor_rv_sink_default_type x)
+    explicit reciprocal(explicit_constructor_rv_sink_default_type x)
         : m_value(x())
     { }
     // const lvalues + non-movable rvalues
     template< class U >
-    explicit inverse(U const & x,
+    explicit reciprocal(U const & x,
         typename explicit_constructor_rv_sink_traits::template
             cref_enabler<U>::type* = 0)
         : m_value(x)
@@ -120,7 +120,7 @@ public:
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template< class Signature >
-    explicit inverse(sake::emplacer< Signature > e)
+    explicit reciprocal(sake::emplacer< Signature > e)
         : m_value(sake::emplacer_constructible<T>(e))
     { }
 
@@ -132,27 +132,27 @@ public:
     { return sake::one.as<U>() / static_cast<U>(m_value); }
 
     inline friend T
-    inv(inverse const & this_)
+    rcp(reciprocal const & this_)
     { return this_.m_value; }
     inline friend T
-    inv(this_rvalue_param_type this_)
+    rcp(this_rvalue_param_type this_)
     { return sake::move(this_.m_value); }
 
 private:
     T m_value;
 };
 
-} // namespace inverse_adl
+} // namespace reciprocal_adl
 
 /*******************************************************************************
- * struct result_of::extension::inv< inverse<T> >
+ * struct result_of::extension::rcp< reciprocal<T> >
  ******************************************************************************/
 
 namespace result_of {
 namespace extension {
 
 template< class T >
-struct inv< sake::inverse<T>, void >
+struct rcp< sake::reciprocal<T>, void >
 { typedef T type; };
 
 } // namespace extension

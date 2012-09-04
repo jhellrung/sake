@@ -26,9 +26,9 @@
 
 #include <sake/core/functional/operators/multiply.hpp>
 #include <sake/core/introspection/has_isc_value.hpp>
-#include <sake/core/math/inv.hpp>
 #include <sake/core/math/neg_ip.hpp>
 #include <sake/core/math/one.hpp>
+#include <sake/core/math/rcp.hpp>
 #include <sake/core/math/sqr.hpp>
 #include <sake/core/math/sqr_ip.hpp>
 #include <sake/core/math/zero.hpp>
@@ -208,11 +208,11 @@ struct dispatch<B,P,1>
     template< class I >
     static type apply(B& b, P& p, I& i)
     {
-        bool const inv_ = p < sake::zero;
-        if(inv_)
+        bool const rcp_ = p < sake::zero;
+        if(rcp_)
             sake::neg_ip(p);
         b = dispatch<B,P,0>::apply(b,p,i);
-        return inv_ ? sake::inv(sake::move(b)) : sake::move(b);
+        return rcp_ ? sake::rcp(sake::move(b)) : sake::move(b);
     }
 };
 
@@ -283,12 +283,12 @@ struct dispatch_c< B, P, false, true >
 template< int P, class B, bool _ >
 struct dispatch_c< B, P, true, _ >
 {
-    typedef typename sake::result_of::inv< typename dispatch_c<B,-P>::type >::type type;
+    typedef typename sake::result_of::rcp< typename dispatch_c<B,-P>::type >::type type;
     static type apply(B& b)
-    { return sake::inv(SAKE_RV_CAST((dispatch_c<B,-P>::apply(b)))); }
+    { return sake::rcp(SAKE_RV_CAST((dispatch_c<B,-P>::apply(b)))); }
     template< class I >
     static type apply(B& b, I& i)
-    { return sake::inv(SAKE_RV_CAST((dispatch_c<B,-P>::apply(b,i)))); }
+    { return sake::rcp(SAKE_RV_CAST((dispatch_c<B,-P>::apply(b,i)))); }
 };
 
 template< class B >
