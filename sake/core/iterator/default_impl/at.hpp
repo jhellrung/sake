@@ -114,7 +114,10 @@ dispatch(I const & i, T const & x, Introterminal, sake::int_tag<1>)
 template< class I, class T, class Introterminal >
 inline typename sake::iterator_relax< I, Introterminal >::type
 dispatch(I i, T const & x, Introterminal, sake::int_tag<0>)
-{ return sake::iterator_traits<I>::at_ip(i,x); }
+{
+    sake::iterator_traits<I>::at_ip(i,x);
+    return i;
+}
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun_begin
 #define SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME begin
@@ -144,7 +147,10 @@ dispatch_begin(I const & i, Introterminal, sake::int_tag<1>)
 template< class I, class Introterminal >
 inline typename sake::iterator_relax< I, Introterminal >::type
 dispatch_begin(I i, Introterminal, sake::int_tag<0>)
-{ return sake::iterator_traits<I>::at_ip(i, sake::_begin); }
+{
+    sake::iterator_traits<I>::at_ip(i, sake::_begin);
+    return i;
+}
 
 template< class I, class Introterminal >
 inline typename sake::iterator_relax< I, Introterminal >::type
@@ -196,7 +202,10 @@ dispatch_end(I const & i, Introterminal, sake::int_tag<1>)
 template< class I, class Introterminal >
 inline typename sake::iterator_relax< I, Introterminal >::type
 dispatch_end(I i, Introterminal, sake::int_tag<0>)
-{ return sake::iterator_traits<I>::at_ip(i, sake::_end); }
+{
+    sake::iterator_traits<I>::at_ip(i, sake::_end);
+    return i;
+}
 
 template< class I, class Introterminal >
 inline typename sake::iterator_relax< I, Introterminal >::type

@@ -72,10 +72,7 @@ struct iterator_multidim_traits<
     template< class Inner >
     static void
     at_ip(this_type& i, outer_iterator const & j, Inner const & k)
-    {
-        base_traits::at_ip(i.protected_base(), j.base(), k.base());
-        return i;
-    }
+    { base_traits::at_ip(i.protected_base(), j.base(), k.base()); }
 
     template< class Inner, class Introterminal >
     static typename this_type::template relax< Introterminal >::type

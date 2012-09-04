@@ -27,7 +27,6 @@
 #include <sake/core/functional/operators/multiply.hpp>
 #include <sake/core/introspection/has_isc_value.hpp>
 #include <sake/core/math/inv.hpp>
-#include <sake/core/math/inv_ip.hpp>
 #include <sake/core/math/neg_ip.hpp>
 #include <sake/core/math/one.hpp>
 #include <sake/core/math/sqr.hpp>

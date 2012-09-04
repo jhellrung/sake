@@ -35,10 +35,10 @@ namespace sake_inv_ip_private
 #define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 1, 1 )
 #include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
 
-template< class Result, class T >
-inline Result
+template< class T >
+inline void
 adl(T& x)
-{ return static_cast< Result >(inv_ip(x)); }
+{ inv_ip(x); }
 
 } // namespace sake_inv_ip_private
 

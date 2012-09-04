@@ -158,7 +158,7 @@ template< class D0, class P0, class D1, class P1 > \
     template< class Derived, class T >
     static void
     at_ip(Derived& this_, T const & x)
-    { return this_.derived_at_ip(x); }
+    { this_.derived_at_ip(x); }
     template< class Derived, class T, class Introterminal >
     static typename Derived::template relax< Introterminal >::type
     at(Derived const & this_, T const & x, Introterminal)

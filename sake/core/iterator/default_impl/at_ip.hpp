@@ -113,7 +113,7 @@ dispatch(I& i, sake::begin_tag, sake::int_tag<0>)
     else_if < ::sake_iterator_at_ip_private::is_callable_begin< void ( I& ) >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    return dispatch_begin(i, int_tag_());
+    dispatch_begin(i, int_tag_());
 }
 
 #define SAKE_INTROSPECTION_TRAIT_NAME           is_callable_mem_fun_end
@@ -146,7 +146,7 @@ dispatch(I& i, sake::end_tag, sake::int_tag<0>)
     else_if < ::sake_iterator_at_ip_private::is_callable_end< void ( I& ) >,
               sake::int_tag<1> >::type::template
     else_   < sake::int_tag<0> >::type int_tag_;
-    return dispatch_end(i, int_tag_());
+    dispatch_end(i, int_tag_());
 }
 
 } // namespace at_ip_private

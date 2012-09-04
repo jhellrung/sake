@@ -17,13 +17,13 @@ namespace sake_unit_test
 void clamp_ip_test(sake::test::environment& env)
 {
     int i = 0;
-    SAKE_TEST_CHECK_RELATION( env, &sake::clamp_ip(-1,i,+1), ==, &i );
+    sake::clamp_ip(-1,i,+1);
     SAKE_TEST_CHECK_RELATION( env, i, ==, 0 );
     i = +2;
-    SAKE_TEST_CHECK_RELATION( env, &sake::clamp_ip(-1,i,+1), ==, &i );
+    sake::clamp_ip(-1,i,+1);
     SAKE_TEST_CHECK_RELATION( env, i, ==, +1 );
     i = -2;
-    SAKE_TEST_CHECK_RELATION( env, &sake::clamp_ip(-1,i,+1), ==, &i );
+    sake::clamp_ip(-1,i,+1);
     SAKE_TEST_CHECK_RELATION( env, i, ==, -1 );
 }
 

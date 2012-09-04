@@ -55,6 +55,7 @@
 #include <sake/core/math/private/inv_common.hpp>
 #include <sake/core/move/forward.hpp>
 #include <sake/core/move/has_move_emulation.hpp>
+#include <sake/core/move/move.hpp>
 #include <sake/core/utility/declval.hpp>
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -275,11 +276,11 @@ private:
 public:
     static int const value = boost_ext::mpl::
          if_< boost::is_floating_point< noqual_type >,
-              sake::int_tag<7> >::type::template
-    else_if < inv_private::is_callable_mem_fun< T, void ( ) >,
-              sake::int_tag<6> >::type::template
-    else_if < ::sake_inv_private::is_callable< void ( T ) >,
               sake::int_tag<5> >::type::template
+    else_if < inv_private::is_callable_mem_fun< T, void ( ) >,
+              sake::int_tag<4> >::type::template
+    else_if < ::sake_inv_private::is_callable< void ( T ) >,
+              sake::int_tag<3> >::type::template
 #ifndef BOOST_NO_RVALUE_REFERENCES
     else_if < boost_ext::is_reference<T>,
               sake::int_tag<0> >::type::template
@@ -287,11 +288,7 @@ public:
     else_if_not< sake::has_move_emulation<T>,
               sake::int_tag<0> >::type::template
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
-    else_if < inv_ip_private::is_callable_mem_fun< ref_type, ref_type ( ) >,
-              sake::int_tag<4> >::type::template
     else_if < inv_ip_private::is_callable_mem_fun< ref_type, void ( ) >,
-              sake::int_tag<3> >::type::template
-    else_if < ::sake_inv_ip_private::is_callable< ref_type ( ref_type ) >,
               sake::int_tag<2> >::type::template
     else_if < ::sake_inv_ip_private::is_callable< void ( ref_type ) >,
               sake::int_tag<1> >::type::template
@@ -299,7 +296,7 @@ public:
 };
 
 template< class T, class Result >
-struct dispatch< T, Result, 7 >
+struct dispatch< T, Result, 5 >
 {
     typedef typename boost_ext::remove_qualifiers<T>::type type;
     static type apply(type const x)
@@ -307,7 +304,7 @@ struct dispatch< T, Result, 7 >
 };
 
 template< class T >
-struct dispatch6_impl
+struct dispatch4_impl
 {
     SAKE_EXPR_TYPEOF_TYPEDEF(
         typename sake::declval<T>().inv(),
@@ -317,18 +314,18 @@ struct dispatch6_impl
 };
 
 template< class T >
-struct dispatch< T, void, 6 >
+struct dispatch< T, void, 4 >
 {
     BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
     BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
-    typedef typename dispatch6_impl<T>::type type;
+    typedef typename dispatch4_impl<T>::type type;
 };
 
 template< class T >
-struct dispatch< T&, void, 6 >
+struct dispatch< T&, void, 4 >
 {
 private:
-    typedef typename dispatch6_impl< T& >::type maybe_type;
+    typedef typename dispatch4_impl< T& >::type maybe_type;
 public:
     typedef typename boost::mpl::eval_if_c<
         boost::is_void< maybe_type >::value,
@@ -338,7 +335,7 @@ public:
 };
 
 template< class T, class Result >
-struct dispatch< T, Result, 6 >
+struct dispatch< T, Result, 4 >
 {
     typedef typename boost_ext::add_rvalue_reference<T>::type fwd_type;
     static Result apply(fwd_type x)
@@ -346,45 +343,31 @@ struct dispatch< T, Result, 6 >
 };
 
 template< class T, class Result >
-struct dispatch< T, Result, 5 >
+struct dispatch< T, Result, 3 >
     : ::sake_inv_private::adl< T, Result >
 { };
 
 template< class T, class Result >
-struct dispatch< T, Result, 4 >
-{
-    typedef SAKE_RV_REF( T ) type;
-    static type apply(type x)
-    { return static_cast< type >(SAKE_AS_LVALUE( x ).inv_ip()); }
-};
-
-template< class T, class Result >
-struct dispatch< T, Result, 3 >
-{
-    typedef SAKE_RV_REF( T ) type;
-    static type apply(type x)
-    {
-        SAKE_AS_LVALUE( x ).inv_ip();
-        return static_cast< type >(x);
-    }
-};
-
-template< class T, class Result >
 struct dispatch< T, Result, 2 >
 {
-    typedef SAKE_RV_REF( T ) type;
-    static type apply(type x)
-    { return ::sake_inv_ip_private::adl< type >(SAKE_AS_LVALUE( x )); }
+    typedef SAKE_RV_REF( T ) fwd_type;
+    typedef T type;
+    static type apply(fwd_type x)
+    {
+        SAKE_AS_LVALUE( x ).inv_ip();
+        return sake::move(x);
+    }
 };
 
 template< class T, class Result >
 struct dispatch< T, Result, 1 >
 {
-    typedef SAKE_RV_REF( T ) type;
-    static type apply(type x)
+    typedef SAKE_RV_REF( T ) fwd_type;
+    typedef T type;
+    static type apply(fwd_type x)
     {
-        ::sake_inv_ip_private::adl< void >(SAKE_AS_LVALUE( x ));
-        return static_cast< type >(x);
+        ::sake_inv_ip_private::adl(SAKE_AS_LVALUE( x ));
+        return sake::move(x);
     }
 };
 

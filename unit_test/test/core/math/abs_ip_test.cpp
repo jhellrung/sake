@@ -17,9 +17,9 @@ namespace sake_unit_test
 void abs_ip_test(sake::test::environment& env)
 {
     int x = -10;
-    SAKE_TEST_CHECK_RELATION( env, &sake::abs_ip(x), ==, &x );
+    sake::abs_ip(x);
     SAKE_TEST_CHECK_RELATION( env, x, ==, +10 );
-    SAKE_TEST_CHECK_RELATION( env, &sake::abs_ip(x), ==, &x );
+    sake::abs_ip(x);
     SAKE_TEST_CHECK_RELATION( env, x, ==, +10 );
 }
 

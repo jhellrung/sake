@@ -56,9 +56,9 @@ struct end_introterminal_base<
     : sake::archetypes::iterator_private::end_introterminal_base<
           Derived, sake::end_detect_introterminal_tag, false >
 {
-    Derived&
+    void
     end_ip()
-    { return static_cast< Derived& >(*this); }
+    { }
 
     template< class Introterminal >
     typename sake::archetypes::iterator_private::
