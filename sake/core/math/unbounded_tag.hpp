@@ -12,9 +12,7 @@
 namespace sake
 {
 
-struct unbounded_tag
-{ };
-
+struct unbounded_tag { };
 unbounded_tag const _unbounded = { };
 
 } // namespace sake
