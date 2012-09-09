@@ -14,7 +14,6 @@
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 
-#include <sake/core/introspection/is_callable_function.hpp>
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
 #include <sake/core/iterator/multidim_traits.hpp>
@@ -35,21 +34,6 @@
 #include <sake/core/utility/int_tag.hpp>
 #include <sake/core/utility/using_typedef.hpp>
 
-namespace sake_range_algorithm_for_each_private
-{
-
-#define SAKE_INTROSPECTION_TRAIT_NAME    is_callable
-#define SAKE_INTROSPECTION_FUNCTION_NAME range_for_each
-#define SAKE_INTROSPECTION_FUNCTION_ARITY_LIMITS ( 2, 2 )
-#include SAKE_INTROSPECTION_DEFINE_IS_CALLABLE_FUNCTION()
-
-template< class R, class F >
-inline void
-adl(SAKE_FWD2_REF( R ) r, F const & f)
-{ range_for_each(sake::forward<R>(r), f); }
-
-} // namespace sake_range_algorithm_for_each_private
-
 namespace sake
 {
 
@@ -61,11 +45,6 @@ namespace algorithm
 
 namespace for_each_private
 {
-
-template< class R, class F >
-inline void
-dispatch(SAKE_FWD2_REF( R ) r, F const & f, sake::int_tag<4>)
-{ ::sake_range_algorithm_for_each_private::adl(sake::forward<R>(r), f); }
 
 template< class R, class F >
 inline void
@@ -113,31 +92,44 @@ dispatch(SAKE_FWD2_REF( R ) r, F const & f, sake::int_tag<2>)
         inner_traits_::sub(*bi, sake::_begin, iterator_traits_::inner(e)), f);
 }
 
-template< class R, class F >
+template< std::size_t N, class I, class F >
 inline void
-dispatch(SAKE_FWD2_REF( R ) r, F f, sake::int_tag<1>)
+dispatch1_impl(I i, F f)
 {
-    static std::size_t const n = sake::range_static_size<
-        typename boost_ext::remove_qualifiers<R>::type >::value;
-    typedef sake::range_forward_traits< SAKE_FWD2_PARAM( R ) > traits_;
-    typename traits_::iterator i = traits_::begin(sake::forward<R>(r));
-    for(std::size_t j = 0; j != n; ++j, ++i)
+    for(std::size_t j = 0; j != N; ++j, ++i)
         f(*i);
 }
 
 template< class R, class F >
 inline void
-dispatch(SAKE_FWD2_REF( R ) r, F f, sake::int_tag<0>)
+dispatch(SAKE_FWD2_REF( R ) r, F const & f, sake::int_tag<1>)
 {
+    static std::size_t const n = sake::range_static_size<
+        typename boost_ext::remove_qualifiers<R>::type >::value;
     typedef sake::range_forward_traits< SAKE_FWD2_PARAM( R ) > traits_;
-    typedef typename traits_::template iterator_with<
-        sake::end_detect_introterminal_tag >::type iterator;
-    iterator i = traits_::begin(
-        sake::forward<R>(r),
-        sake::end_detect_introterminal_tag()
-    );
+    for_each_private::dispatch1_impl<n>(traits_::begin(sake::forward<R>(r)), f);
+}
+
+template< class I, class F >
+inline void
+dispatch0_impl(I i, F f)
+{
     for(; i != sake::_end; ++i)
         f(*i);
+}
+
+template< class R, class F >
+inline void
+dispatch(SAKE_FWD2_REF( R ) r, F const & f, sake::int_tag<0>)
+{
+    typedef sake::range_forward_traits< SAKE_FWD2_PARAM( R ) > traits_;
+    for_each_private::dispatch0_impl(
+        traits_::begin(
+            sake::forward<R>(r),
+            sake::end_detect_introterminal_tag()
+        ),
+        f
+    );
 }
 
 template< class R, class F >
@@ -147,10 +139,7 @@ impl(SAKE_FWD2_REF( R ) r, F const & f)
     typedef typename sake::range_forward_iterator<
         SAKE_FWD2_PARAM( R ) >::type iterator;
     typedef typename boost_ext::mpl::
-         if_< ::sake_range_algorithm_for_each_private::is_callable<
-                  void ( SAKE_FWD2_REF( R ), F ) >,
-              sake::int_tag<4> >::type::template
-    else_if < sake::range_forward_multidim_enable< SAKE_FWD2_PARAM( R ) >,
+         if_< sake::range_forward_multidim_enable< SAKE_FWD2_PARAM( R ) >,
               sake::int_tag<3> >::type::template
     else_if < sake::iterator_multidim_enable< iterator >,
               sake::int_tag<2> >::type::template
