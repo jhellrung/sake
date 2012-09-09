@@ -176,21 +176,13 @@ inline T
 as_impl()
 {
     typedef typename boost_ext::mpl::
-         if_<
-        boost_ext::is_convertible< sake::one_t, T >,
-        sake::int_tag<3>
-    >::type::template
-    else_if <
-        boost_ext::is_convertible< boost_ext::mpl::uint<1>, T >,
-        sake::int_tag<2>
-    >::type::template
-    else_if <
-        boost_ext::is_convertible< boost::mpl::int_<1>, T >,
-        sake::int_tag<1>
-    >::type::template
-    else_   <
-        sake::int_tag<0>
-    >::type int_tag_;
+         if_< boost_ext::is_convertible< sake::one_t, T >,
+              sake::int_tag<3> >::type::template
+    else_if < boost_ext::is_convertible< boost_ext::mpl::uint<1>, T >,
+              sake::int_tag<2> >::type::template
+    else_if < boost_ext::is_convertible< boost::mpl::int_<1>, T >,
+              sake::int_tag<1> >::type::template
+    else_   < sake::int_tag<0> >::type int_tag_;
     return one_private::as_dispatch<T>(int_tag_());
 }
 
