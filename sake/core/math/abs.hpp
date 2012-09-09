@@ -101,8 +101,7 @@ template< class T >
 struct abs
 {
     typedef typename sake::result_of::extension::abs<
-        typename boost_ext::remove_rvalue_reference<T>::type
-    >::type type;
+        typename boost_ext::remove_rvalue_reference<T>::type >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 };
 
@@ -178,36 +177,22 @@ struct abs
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::abs, 1 )
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-
     template< class T >
-    typename sake::result_of::abs<T>::type
-    operator()(T&& x) const
-    { return sake::abs_private::dispatch<T>::apply(sake::forward<T>(x)); }
-
-#else // #ifndef BOOST_NO_RVALUE_REFERENCES
-
-    template< class T >
-    typename sake::result_of::abs< T& >::type
-    operator()(T& x) const
+    typename sake::result_of::abs< SAKE_FWD_PARAM( T ) >::type
+    operator()(SAKE_FWD_REF( T ) x) const
     {
-        return sake::abs_private::dispatch<
-            typename boost_ext::remove_rvalue_reference< T& >::type >::apply(x);
+        return sake::abs_private::dispatch< SAKE_FWD_PARAM( T ) >::
+            apply(sake::forward<T>(x));
     }
-
-    template< class T >
-    typename sake::result_of::abs< T const & >::type
-    operator()(T const & x) const
-    { return sake::abs_private::dispatch< T const & >::apply(x); }
-
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 
     float
     operator()(float const x) const
     { return std::fabs(x); }
+
     double
     operator()(double const x) const
     { return std::fabs(x); }
+
     long double
     operator()(long double const x) const
     { return std::fabs(x); }

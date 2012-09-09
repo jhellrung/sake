@@ -94,8 +94,7 @@ template< class T >
 struct sqr
 {
     typedef typename sake::result_of::extension::sqr<
-        typename boost_ext::remove_rvalue_reference<T>::type
-    >::type type;
+        typename boost_ext::remove_rvalue_reference<T>::type >::type type;
     BOOST_STATIC_ASSERT((!boost::is_void< type >::value));
 };
 
@@ -173,30 +172,13 @@ struct sqr
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::sqr, 1 )
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-
     template< class T >
-    typename sake::result_of::sqr<T>::type
-    operator()(T&& x) const
-    { return sake::sqr_private::dispatch<T>::apply(sake::forward<T>(x)); }
-
-#else // #ifndef BOOST_NO_RVALUE_REFERENCES
-
-    template< class T >
-    typename sake::result_of::sqr< T& >::type
-    operator()(T& x) const
+    typename sake::result_of::sqr< SAKE_FWD_PARAM( T ) >::type
+    operator()(SAKE_FWD_REF( T ) x) const
     {
-        return sake::sqr_private::dispatch<
-            typename boost_ext::remove_rvalue_reference< T& >::type
-        >::apply(x);
+        return sake::sqr_private::dispatch< SAKE_FWD_PARAM( T ) >::
+            apply(sake::forward<T>(x));
     }
-
-    template< class T >
-    typename sake::result_of::sqr< T const & >::type
-    operator()(T const & x) const
-    { return sake::sqr_private::dispatch< T const & >::apply(x); }
-
-#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 };
 
 } // namespace functional
