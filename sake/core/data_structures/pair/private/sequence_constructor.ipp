@@ -17,11 +17,14 @@
 
 #include <sake/core/data_structures/tuple/private/sequence_constructor_enable.hpp>
 #include <sake/core/move/forward.hpp>
+#include <sake/core/move/rv_cast.hpp>
 #include <sake/core/move/rv_sink.hpp>
 
 #endif // #ifdef SAKE_PAIR_INCLUDE_HEADERS
 
 #ifdef SAKE_PAIR_DEFINE_MEMBERS
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
 
 private:
     template< class Sequence >
@@ -29,14 +32,10 @@ private:
         : sake::tuple_private::sequence_constructor_enabler< pair, Sequence >
     { };
 public:
-
-#ifndef BOOST_NO_RVALUE_REFERENCES
-
     template< class Sequence >
     pair(Sequence&& s,
         typename sequence_constructor_enabler< Sequence >::type* = 0)
-        : first(boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s))),
-          second(boost_ext::fusion::at_c<1>(sake::forward< Sequence >(s)))
+        : base_(sake::forward< Sequence >(s))
     { }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -59,21 +58,21 @@ public:
     pair(Sequence& s,
         typename sequence_constructor_rv_sink_traits::template
             ref_enabler< Sequence >::type* = 0)
-        : first (boost_ext::fusion::at_c<0>(s)),
-          second(boost_ext::fusion::at_c<1>(s))
+        : base_(boost_ext::fusion::at_c<0>(s),
+                boost_ext::fusion::at_c<1>(s))
     { }
     // implicit movable rvalues
     pair(sequence_constructor_rv_sink_default_type s)
-        : first (s[boost::integral_constant< std::size_t, 0 >()]),
-          second(s[boost::integral_constant< std::size_t, 1 >()])
+        : base_(SAKE_RV_CAST((s[boost::integral_constant< std::size_t, 0 >()])),
+                SAKE_RV_CAST((s[boost::integral_constant< std::size_t, 1 >()])))
     { }
     // const lvalues + non-movable rvalues
     template< class Sequence >
     pair(Sequence const & s,
         typename sequence_constructor_rv_sink_traits::template
             cref_enabler< Sequence >::type* = 0)
-        : first(boost_ext::fusion::at_c<0>(s)),
-          second(boost_ext::fusion::at_c<1>(s))
+        : base_(boost_ext::fusion::at_c<0>(s),
+                boost_ext::fusion::at_c<1>(s))
     { }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES

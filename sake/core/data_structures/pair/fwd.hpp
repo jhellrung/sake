@@ -16,7 +16,7 @@ namespace pair_adl
 {
 
 template< class T0, class T1 >
-struct pair;
+class pair;
 
 } // namespace pair_adl
 

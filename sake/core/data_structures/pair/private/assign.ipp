@@ -12,6 +12,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
+#include <sake/boost_ext/mpl/curry_quote.hpp>
 
 #include <sake/core/data_structures/private/assign_enable.hpp>
 #include <sake/core/move/forward.hpp>
@@ -27,7 +28,7 @@ private:
     template< class U0, class U1 >
     void assign_impl(SAKE_FWD2_REF( U0 ) x0, SAKE_FWD2_REF( U1 ) x1)
     {
-        first = sake::forward< U0 >(x0);
+        first  = sake::forward< U0 >(x0);
         second = sake::forward< U1 >(x1);
     }
 public:
@@ -48,8 +49,8 @@ private:
     class assign0_rv_sink_visitor
     {
         pair& m_this;
-        assign0_rv_sink_visitor(pair& this_) : m_this(this_) { }
-        friend struct pair;
+        explicit assign0_rv_sink_visitor(pair& this_) : m_this(this_) { }
+        friend class pair;
     public:
         typedef void result_type;
         template< class U >
@@ -59,8 +60,7 @@ private:
     typedef sake::rv_sink_traits1<
         T0,
         typename boost_ext::mpl::curry_quote2<
-            sake::data_structures_private::assign_enable
-        >::apply< T0 >::type
+            sake::data_structures_private::assign_enable >::apply< T0 >::type
     > assign0_rv_sink_traits;
     typedef typename assign0_rv_sink_traits::template
         default_< assign0_rv_sink_visitor > assign0_rv_sink_default_type;
@@ -68,8 +68,8 @@ private:
     class assign1_rv_sink_visitor
     {
         pair& m_this;
-        assign1_rv_sink_visitor(pair& this_) : m_this(this_) { }
-        friend struct pair;
+        explicit assign1_rv_sink_visitor(pair& this_) : m_this(this_) { }
+        friend class pair;
     public:
         typedef void result_type;
         template< class U >
@@ -79,8 +79,7 @@ private:
     typedef sake::rv_sink_traits1<
         T1,
         typename boost_ext::mpl::curry_quote2<
-            sake::data_structures_private::assign_enable
-        >::apply< T1 >::type
+            sake::data_structures_private::assign_enable >::apply< T1 >::type
     > assign1_rv_sink_traits;
     typedef typename assign1_rv_sink_traits::template
         default_< assign1_rv_sink_visitor > assign1_rv_sink_default_type;
