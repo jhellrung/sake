@@ -45,7 +45,7 @@ namespace sake
 #define N BOOST_PP_ITERATION()
 
 #define class_T0N BOOST_PP_ENUM_PARAMS( N, class T )
-#define T0N BOOST_PP_ENUM_PARAMS( N, T )
+#define T0N       BOOST_PP_ENUM_PARAMS( N, T )
 
 namespace is_template_base_of_private
 {
