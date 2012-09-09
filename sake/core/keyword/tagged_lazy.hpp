@@ -11,7 +11,8 @@
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_object.hpp>
-#include <boost/utility/result_of.hpp>
+
+#include <sake/boost_ext/utility/result_of.hpp>
 
 namespace sake
 {
@@ -25,7 +26,7 @@ struct tagged_lazy
     BOOST_STATIC_ASSERT((boost::is_object<T>::value));
 
     typedef Tag tag;
-    typedef typename boost::result_of< T const ( ) >::type value_type;
+    typedef typename boost_ext::result_of< T const ( ) >::type value_type;
 
     explicit tagged_lazy(T const & value_) : m_value(value_) { }
 

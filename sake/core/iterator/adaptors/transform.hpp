@@ -20,7 +20,6 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/utility/result_of.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/mpl/at.hpp>
@@ -31,6 +30,7 @@
 #include <sake/boost_ext/type_traits/is_base_of_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
+#include <sake/boost_ext/utility/result_of.hpp>
 
 #include <sake/core/concepts/Function.hpp>
 #include <sake/core/iterator/adaptor.hpp>
@@ -234,7 +234,7 @@ struct traits
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Params >::value));
     typedef typename boost_ext::mpl::lazy_at<
         Params, sake::iterator::keyword::tag::reference,
-        boost::result_of<
+        boost_ext::result_of<
             typename boost_ext::remove_reference<F>::type ( base_reference ) >
     >::type reference;
     typedef typename boost_ext::mpl::lazy_at<

@@ -24,11 +24,11 @@
 #include <boost/fusion/support/is_sequence.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/utility/result_of.hpp>
 
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/utility/result_of.hpp>
 
 #include <sake/core/config.hpp>
 #include <sake/core/functional/operators/not_equal.hpp>
@@ -71,7 +71,7 @@ iterate(I0 const & i0, I1 const & i1, NotEqual const & not_equal_)
 template< class I0, class I1, class NotEqual >
 struct dispatch0< I0, I1, NotEqual, false, false >
 {
-    typedef typename boost::result_of< NotEqual ( I0, I1 ) >::type type;
+    typedef typename boost_ext::result_of< NotEqual ( I0, I1 ) >::type type;
     static type apply(I0 const & i0, I1 const & i1, NotEqual not_equal_)
     { return not_equal_(i0, i1); }
 };
@@ -126,7 +126,7 @@ struct iterate_dispatch< 0, I0, I1, NotEqual >
 template< class I0, class I1, class NotEqual >
 struct iterate_dispatch< 1, I0, I1, NotEqual >
 {
-    typedef typename boost::result_of< NotEqual (
+    typedef typename boost_ext::result_of< NotEqual (
         typename boost::fusion::result_of::deref< I0 >::type,
         typename boost::fusion::result_of::deref< I1 >::type
     ) >::type type;
@@ -137,7 +137,7 @@ struct iterate_dispatch< 1, I0, I1, NotEqual >
 template< int N, class I0, class I1, class NotEqual >
 struct iterate_dispatch
 {
-    typedef typename boost::result_of< NotEqual (
+    typedef typename boost_ext::result_of< NotEqual (
         typename boost::fusion::result_of::deref< I0 >::type,
         typename boost::fusion::result_of::deref< I1 >::type
     ) >::type curr_type;

@@ -13,12 +13,15 @@
  * This provides the keyword parameters for forwarding_base.
  *
  * result< Value >  [ optional ]
- *     Type to typedef result_type to.  Must be included if either
- *     nullary_callable or nullary_const_callable are specified.
- * nullary_callable  [ optional ]
- *     Flag specifying to include an "operator()()" overload.
- * nullary_const_callable  [ optional ]
- *     Flag specifying to include an "operator()() const" overload.
+ *     Type to typedef result_type to.
+ * nullary_callable< Value = default_tag >  [ optional ]
+ *     Specifies to provide an "operator()()" overload and, optionally, the
+ *     result type of this overload. If the result type is not specified with
+ *     this keyword, it must be specified with the result keyword.
+ * nullary_const_callable< Value = default_tag >  [ optional ]
+ *     Specifies to provide an "operator()() const" overload and, optionally,
+ *     the result type of this overload. If the result type is not specified
+ *     with this keyword, it must be specified with the result keyword.
  * chained_base< Value >  [ optional ]
  *     Chained base class to inherit from.  Defaults to void_t.
  ******************************************************************************/
@@ -40,8 +43,8 @@ namespace keyword
 {
 
 SAKE_TEMPLATE_KEYWORD_VALUE( result )
-SAKE_TEMPLATE_KEYWORD( nullary_callable )
-SAKE_TEMPLATE_KEYWORD( nullary_const_callable )
+SAKE_TEMPLATE_KEYWORD_VALUE_DEFAULT( nullary_callable, void ( ) )
+SAKE_TEMPLATE_KEYWORD_VALUE_DEFAULT( nullary_const_callable, void ( ) )
 SAKE_TEMPLATE_KEYWORD_VALUE( chained_base )
 
 typedef boost::mpl::map0<> default_params;

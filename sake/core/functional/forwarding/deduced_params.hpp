@@ -11,18 +11,15 @@
 #ifndef SAKE_CORE_FUNCTIONAL_FORWARDING_DEDUCED_PARAMS_HPP
 #define SAKE_CORE_FUNCTIONAL_FORWARDING_DEDUCED_PARAMS_HPP
 
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/map/map10.hpp>
 #include <boost/type_traits/add_const.hpp>
-#include <boost/utility/result_of.hpp>
 
-#include <sake/boost_ext/mpl/insert_if.hpp>
-#include <sake/boost_ext/mpl/or.hpp>
 #include <sake/boost_ext/mpl/result_type.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
+#include <sake/boost_ext/type_traits/add_reference_add_const.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
+#include <sake/boost_ext/utility/result_of.hpp>
 
 #include <sake/core/functional/forwarding/keyword.hpp>
 #include <sake/core/introspection/has_type_result_type.hpp>
@@ -56,36 +53,27 @@ class deduced_params< T, void >
         void ( )
     > is_nullary_const_callable;
 
-    typedef typename boost_ext::remove_reference<
-        typename boost::mpl::if_c<
-            is_nullary_const_callable::value,
-            typename boost::add_const<T>::type,
-            T
-        >::type
-    >::type nullary_result_test_type;
-
     typedef sake::has_type_result_type<
         typename boost_ext::remove_reference<T>::type
     > has_type_result_type_;
 
 public:
     typedef typename sake::lazy_insert_keyword_value_if_c<
-        boost_ext::mpl::or2< has_type_result_type_, is_nullary_callable >::value,
-        typename boost_ext::mpl::insert_if_c<
+        has_type_result_type_::value,
+        typename sake::lazy_insert_keyword_value_if_c<
             is_nullary_const_callable::value,
-            typename boost_ext::mpl::insert_if_c<
+            typename sake::lazy_insert_keyword_value_if_c<
                 is_nullary_callable::value,
                 sake::forwarding::keyword::default_params,
-                sake::forwarding::keyword::nullary_callable
+                sake::forwarding::keyword::nullary_callable,
+                boost_ext::result_of< T ( ) >
             >::type,
-            sake::forwarding::keyword::nullary_const_callable
+            sake::forwarding::keyword::nullary_const_callable,
+            boost_ext::result_of< typename boost::add_const<T>::type ( ) >
         >::type,
         sake::forwarding::keyword::result,
-        boost::mpl::eval_if_c<
-            has_type_result_type_::value,
-            boost_ext::mpl::result_type< typename boost_ext::remove_reference<T>::type >,
-            boost::result_of< nullary_result_test_type ( ) >
-        >
+        boost_ext::mpl::result_type<
+            typename boost_ext::remove_reference<T>::type >
     >::type type;
 };
 

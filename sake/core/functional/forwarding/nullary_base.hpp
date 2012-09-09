@@ -102,49 +102,95 @@ template< class > struct dummy_param;
 
 #define n 0
 #define specialized_declarations() \
-    template< class T > void operator()(nullary_base_private::dummy_param<T>);
-#define nullary_result_type void
+    public: template< class T > void operator()(nullary_base_private::dummy_param<T>); \
+    protected: typedef void protected_nullary_result_type; \
+    protected: typedef void protected_nullary_const_result_type;
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
 
 #define n 1
 #define specialized_declarations() \
-    typedef typename boost::mpl::at< \
-        Params, sake::forwarding::keyword::tag::result >::type result_type; \
-    template< class T > void operator()(nullary_base_private::dummy_param<T>);
-#define nullary_result_type result_type
+    public: typedef typename boost::mpl::at< \
+            Params, sake::forwarding::keyword::tag::result \
+            >::type result_type; \
+    public: template< class T > void operator()(nullary_base_private::dummy_param<T>); \
+    protected: typedef void protected_nullary_result_type; \
+    protected: typedef void protected_nullary_const_result_type;
+#define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
+#include BOOST_PP_INCLUDE_SELF()
+
+#define n 2
+#define specialized_declarations() \
+    protected: typedef typename boost::mpl::at< \
+               Params, sake::forwarding::keyword::tag::nullary_callable \
+               >::type protected_nullary_result_type; \
+    protected: typedef void protected_nullary_const_result_type; \
+    public: protected_nullary_result_type operator()() \
+            { return sake::forward::core_access::apply(derived()); }
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
 
 #define n 3
 #define specialized_declarations() \
-    typedef typename boost::mpl::at< \
-        Params, sake::forwarding::keyword::tag::result >::type result_type; \
-    result_type operator()() \
-    { return sake::forwarding::core_access::apply(derived()); }
-#define nullary_result_type result_type
+    public: typedef typename boost::mpl::at< \
+            Params, sake::forwarding::keyword::tag::result \
+            >::type result_type; \
+    public: result_type operator()() \
+            { return sake::forwarding::core_access::apply(derived()); } \
+    protected: typedef result_type protected_nullary_result_type; \
+    protected: typedef void protected_nullary_const_result_type;
+#define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
+#include BOOST_PP_INCLUDE_SELF()
+
+#define n 4
+#define specialized_declarations() \
+    protected: typedef typename boost::mpl::at< \
+               Params, sake::forwarding::keyword::tag::nullary_const_callable \
+               >::type protected_nullary_const_result_type; \
+    protected: typedef void protected_nullary_result_type; \
+    public: protected_nullary_const_result_type operator()() const \
+            { return sake::forward::core_access::apply(derived()); }
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
 
 #define n 5
 #define specialized_declarations() \
-    typedef typename boost::mpl::at< \
-        Params, sake::forwarding::keyword::tag::result >::type result_type; \
-    result_type operator()() const \
-    { return sake::forwarding::core_access::apply(derived()); }
-#define nullary_result_type result_type
+    public: typedef typename boost::mpl::at< \
+            Params, sake::forwarding::keyword::tag::result \
+            >::type result_type; \
+    public: result_type operator()() const \
+            { return sake::forwarding::core_access::apply(derived()); } \
+    protected: typedef void protected_nullary_result_type; \
+    protected: typedef result_type protected_nullary_const_result_type;
+#define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
+#include BOOST_PP_INCLUDE_SELF()
+
+#define n 6
+#define specialized_declarations() \
+    protected: typedef typename boost::mpl::at< \
+               Params, sake::forwarding::keyword::tag::nullary_callable \
+               >::type protected_nullary_result_type; \
+    protected: typedef typename boost::mpl::at< \
+               Params, sake::forwarding::keyword::tag::nullary_const_callable \
+               >::type protected_nullary_const_result_type; \
+    public: protected_nullary_result_type operator()() \
+            { return sake::forward::core_access::apply(derived()); } \
+    public: protected_nullary_const_result_type operator()() const \
+            { return sake::forward::core_access::apply(derived()); }
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
 
 #define n 7
 #define specialized_declarations() \
-    typedef typename boost::mpl::at< \
-        Params, sake::forwarding::keyword::tag::result >::type result_type; \
-    result_type operator()() \
-    { return sake::forwarding::core_access::apply(derived()); } \
-    result_type operator()() const \
-    { return sake::forwarding::core_access::apply(derived()); }
-#define nullary_result_type result_type
+    public: typedef typename boost::mpl::at< \
+            Params, sake::forwarding::keyword::tag::result \
+            >::type result_type; \
+    public: result_type operator()() \
+            { return sake::forwarding::core_access::apply(derived()); } \
+    public: result_type operator()() const \
+            { return sake::forwarding::core_access::apply(derived()); } \
+    protected: typedef result_type protected_nullary_result_type; \
+    protected: typedef result_type protected_nullary_const_result_type;
 #define BOOST_PP_INDIRECT_SELF <sake/core/functional/forwarding/nullary_base.hpp>
 #include BOOST_PP_INCLUDE_SELF()
 
@@ -202,13 +248,9 @@ protected:
     { }
 
     friend class sake::forwarding::core_access;
-
-    typedef nullary_result_type protected_nullary_result_type;
-    //protected_nullary_result_type derived_apply() const;
 };
 
 #undef n
 #undef specialized_declarations
-#undef nullary_result_type
 
 #endif // #ifndef BOOST_PP_IS_SELFISH

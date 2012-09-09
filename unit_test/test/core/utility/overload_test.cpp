@@ -14,10 +14,10 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/utility/result_of.hpp>
 
 #include <sake/boost_ext/mpl/all.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
+#include <sake/boost_ext/utility/result_of.hpp>
 
 #include <sake/core/utility/overload.hpp>
 
@@ -74,9 +74,9 @@ template< class T >
 int
 test_same(T const &);
 
-BOOST_MPL_ASSERT((boost::is_same< boost::result_of< X ( int ) >::type, R<1> >));
-BOOST_MPL_ASSERT((boost::is_same< boost::result_of< X ( int, int ) >::type, R<2> >));
-BOOST_MPL_ASSERT((boost::is_same< boost::result_of< X ( int, int, int ) >::type, R<3> >));
+BOOST_MPL_ASSERT((boost::is_same< sake::boost_ext::result_of< X ( int ) >::type, R<1> >));
+BOOST_MPL_ASSERT((boost::is_same< sake::boost_ext::result_of< X ( int, int ) >::type, R<2> >));
+BOOST_MPL_ASSERT((boost::is_same< sake::boost_ext::result_of< X ( int, int, int ) >::type, R<3> >));
 
 } // namespace
 

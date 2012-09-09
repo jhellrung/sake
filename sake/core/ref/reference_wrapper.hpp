@@ -152,10 +152,9 @@ private:
     template< class Signature > struct derived_enable;
     template< class Signature > struct derived_result;
 
-    SAKE_USING_TYPEDEF(
-        typename forwarding_base_, protected_nullary_result_type );
-
-    protected_nullary_result_type derived_apply() const;
+    SAKE_USING_TYPEDEF( typename forwarding_base_,
+        protected_nullary_const_result_type );
+    protected_nullary_const_result_type derived_apply() const;
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
@@ -392,7 +391,8 @@ derived_result
 { };
 
 template< class T, class Tags >
-inline typename reference_wrapper< T, Tags >::protected_nullary_result_type
+inline typename reference_wrapper< T, Tags >::
+    protected_nullary_const_result_type
 reference_wrapper< T, Tags >::
 derived_apply() const
 { return (*m_p)(); }

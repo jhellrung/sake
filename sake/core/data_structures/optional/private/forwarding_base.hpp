@@ -89,8 +89,10 @@ protected:
         >::type type;
     };
 
-    SAKE_USING_TYPEDEF(
-        typename forwarding_base_, protected_nullary_result_type );
+    SAKE_USING_TYPEDEF( typename forwarding_base_,
+        protected_nullary_result_type );
+    SAKE_USING_TYPEDEF( typename forwarding_base_,
+        protected_nullary_const_result_type );
 
     protected_nullary_result_type derived_apply()
     {
@@ -98,11 +100,11 @@ protected:
                derived().get()() :
                sake::default_construct< protected_nullary_result_type >();
     }
-    protected_nullary_result_type derived_apply() const
+    protected_nullary_const_result_type derived_apply() const
     {
         return derived().initialized() ?
                derived().get()() :
-               sake::default_construct< protected_nullary_result_type >();
+               sake::default_construct< protected_nullary_const_result_type >();
     }
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES

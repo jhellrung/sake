@@ -22,10 +22,10 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/utility/result_of.hpp>
 
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+#include <sake/boost_ext/utility/result_of.hpp>
 
 #include <sake/core/config.hpp>
 #include <sake/core/math/cmp.hpp>
@@ -65,7 +65,7 @@ iterate(I0 const & i0, I1 const & i1, Cmp const & cmp_)
 template< class I0, class I1, class Cmp >
 struct dispatch< I0, I1, Cmp, false, false >
 {
-    typedef typename boost::result_of< Cmp ( I0, I1 ) >::type type;
+    typedef typename boost_ext::result_of< Cmp ( I0, I1 ) >::type type;
     static type apply(I0 const & i0, I1 const & i1, Cmp cmp_)
     { return cmp_(i0, i1); }
 };
@@ -110,7 +110,7 @@ struct iterate_dispatch< 0, S, I0, I1, Cmp >
 template< int S, class I0, class I1, class Cmp >
 struct iterate_dispatch< 1, S, I0, I1, Cmp >
 {
-    typedef typename boost::result_of< Cmp (
+    typedef typename boost_ext::result_of< Cmp (
         typename boost::fusion::result_of::deref< I0 >::type,
         typename boost::fusion::result_of::deref< I1 >::type
     ) >::type type;
@@ -124,7 +124,7 @@ struct iterate_dispatch< 1, S, I0, I1, Cmp >
 template< int N, int S, class I0, class I1, class Cmp >
 struct iterate_dispatch
 {
-    typedef typename boost::result_of< Cmp (
+    typedef typename boost_ext::result_of< Cmp (
         typename boost::fusion::result_of::deref< I0 >::type,
         typename boost::fusion::result_of::deref< I1 >::type
     ) >::type curr_type;

@@ -12,11 +12,11 @@
 #define SAKE_CORE_FUNCTIONAL_FORWARDING_DEDUCED_RESULT_HPP
 
 #include <boost/function_types/result_type.hpp>
-#include <boost/utility/result_of.hpp>
 
 #include <sake/boost_ext/function_types/replace_result_type.hpp>
 #include <sake/boost_ext/type_traits/propagate_cv.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
+#include <sake/boost_ext/utility/result_of.hpp>
 
 namespace sake
 {
@@ -26,12 +26,13 @@ namespace forwarding
 
 template< class Signature, class T >
 struct deduced_result
-    : boost::result_of<
+    : boost_ext::result_of<
           typename boost_ext::function_types::replace_result_type<
               Signature,
               typename boost_ext::remove_reference<
                   typename boost_ext::propagate_cv<
-                      typename boost::function_types::result_type< Signature >::type,
+                      typename boost::function_types::result_type<
+                          Signature >::type,
                       T
                   >::type
               >::type
