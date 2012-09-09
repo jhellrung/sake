@@ -9,6 +9,10 @@
 #ifndef SAKE_CORE_DATA_STRUCTURES_PAIR_PRIVATE_BASE_HPP
 #define SAKE_CORE_DATA_STRUCTURES_PAIR_PRIVATE_BASE_HPP
 
+#include <cstddef>
+
+#include <boost/config.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
 #include <sake/core/emplacer/constructible.hpp>
@@ -26,7 +30,7 @@ namespace pair_adl
 namespace private_
 {
 
-struct sequence_constructor_tag { };
+struct sequence_rv_sink_default_tag { };
 
 template< class T0, class T1 >
 struct base
@@ -70,6 +74,14 @@ protected:
         : first(sake::emplacer_constructible< nocv0_type >(sake::forward< U0 >(x0))),
           second(sake::emplacer_constructible< nocv1_type >(sake::forward< U1 >(x1)))
     { }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template< class SequenceRVSinkDefault >
+    base(private_::sequence_rv_sink_default_tag, SequenceRVSinkDefault & s)
+        : first (s[boost::integral_constant< std::size_t, 0 >()]),
+          second(s[boost::integral_constant< std::size_t, 1 >()])
+    { }
+#endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 };
 
 } // namespace private_

@@ -28,6 +28,7 @@
 #include <sake/core/data_structures/pair/private/base.hpp>
 #include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/move/movable.hpp>
+#include <sake/core/utility/using_typedef.hpp>
 #include <sake/core/utility/value_constructor.hpp>
 
 #define SAKE_PAIR_INCLUDE_HEADERS

@@ -32,7 +32,7 @@ template< class... T >
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 template< BOOST_PP_ENUM_BINARY_PARAMS( SAKE_TUPLE_MAX_SIZE, class T, = void BOOST_PP_INTERCEPT ) >
 #endif // #ifndef BOOST_NO_VARIADIC_TEMPLATES
-struct tuple;
+class tuple;
 
 } // namespace tuple_adl
 

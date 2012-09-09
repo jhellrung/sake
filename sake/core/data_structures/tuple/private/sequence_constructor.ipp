@@ -8,9 +8,12 @@
 
 #ifdef SAKE_TUPLE_INCLUDE_HEADERS
 
+#include <cstddef>
+
 #include <boost/config.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/fusion/sequence/default_rv_sink.hpp>
 
@@ -38,7 +41,11 @@ public:
     template< class Sequence >
     tuple(Sequence&& s,
         typename sequence_constructor_enabler< Sequence >::type* = 0)
-        : BOOST_PP_ENUM( N, _n_at_c_n_data, sake::forward< Sequence >(s) )
+#if N == 1
+        : _0(boost_ext::fusion::at_c<0>(sake::forward< Sequence >(s)))
+#else // #if N == 1
+        : base_( BOOST_PP_ENUM( N, at_c_n_data, sake::forward< Sequence >(s) ) )
+#endif // #if N == 1
     { }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -61,18 +68,30 @@ public:
     tuple(Sequence& s,
         typename sequence_constructor_rv_sink_traits::template
             ref_enabler< Sequence >::type* = 0)
-        : BOOST_PP_ENUM( N, _n_at_c_n_data, s )
+#if N == 1
+        : _0(boost_ext::fusion::at_c<0>(s))
+#else // #if N == 1
+        : base_( BOOST_PP_ENUM( N, at_c_n_data, s ) )
+#endif // #if N == 1
     { }
     // implicit movable rvalues
     tuple(sequence_constructor_rv_sink_default_type s)
-        : BOOST_PP_ENUM( N, _n_data_at_n, s )
+#if N == 1
+        : _0(s[boost::integral_constant< std::size_t, 0 >()])
+#else // #if N == 1
+        : base_(private_::sequence_rv_sink_default_tag(), s)
+#endif // #if N == 1
     { }
     // const lvalues + non-movable rvalues
     template< class Sequence >
     tuple(Sequence const & s,
         typename sequence_constructor_rv_sink_traits::template
             cref_enabler< Sequence >::type* = 0)
-        : BOOST_PP_ENUM( N, _n_at_c_n_data, s )
+#if N == 1
+        : _0(boost_ext::fusion::at_c<0>(s))
+#else // #if N == 1
+        : base_( BOOST_PP_ENUM( N, at_c_n_data, s ) )
+#endif // #if N == 1
     { }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES

@@ -10,7 +10,6 @@
 
 #include <boost/config.hpp>
 #include <boost/mpl/quote.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/fusion/sequence/default_rv_sink.hpp>
 #include <sake/boost_ext/fusion/sequence/intrinsic/at.hpp>
@@ -63,8 +62,7 @@ public:
     { }
     // implicit movable rvalues
     pair(sequence_constructor_rv_sink_default_type s)
-        : base_(SAKE_RV_CAST((s[boost::integral_constant< std::size_t, 0 >()])),
-                SAKE_RV_CAST((s[boost::integral_constant< std::size_t, 1 >()])))
+        : base_(private_::sequence_rv_sink_default_tag(), s)
     { }
     // const lvalues + non-movable rvalues
     template< class Sequence >

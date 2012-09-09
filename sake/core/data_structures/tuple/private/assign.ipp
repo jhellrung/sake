@@ -72,7 +72,7 @@ private:
     {
         tuple& m_this;
         assign0_rv_sink_visitor(tuple& this_) : m_this(this_) { }
-        friend struct tuple;
+        friend class tuple;
     public:
         typedef void result_type;
         template< class U >
@@ -118,7 +118,7 @@ private:
     {
         tuple& m_this;
         assign1_rv_sink_visitor(tuple& this_) : m_this(this_) { }
-        friend struct tuple;
+        friend class tuple;
     public:
         typedef void result_type;
         template< class U >
