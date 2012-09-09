@@ -11,8 +11,8 @@
  * inverse) of a number.
  ******************************************************************************/
 
-#ifndef SAKE_CORE_MATH_INVERSE_HPP
-#define SAKE_CORE_MATH_INVERSE_HPP
+#ifndef SAKE_CORE_MATH_RECIPROCAL_HPP
+#define SAKE_CORE_MATH_RECIPROCAL_HPP
 
 #include <boost/config.hpp>
 #include <boost/mpl/quote.hpp>
@@ -160,4 +160,4 @@ struct rcp< sake::reciprocal<T>, void >
 
 } // namespace sake
 
-#endif // #ifndef SAKE_CORE_MATH_INVERSE_HPP
+#endif // #ifndef SAKE_CORE_MATH_RECIPROCAL_HPP
