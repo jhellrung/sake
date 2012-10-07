@@ -45,8 +45,7 @@ struct expand_array_op
     template< class Size_ >
     expand_array_op(expand_array_op< Size_ > const & other,
         typename boost::enable_if_c<
-            boost_ext::is_convertible< Size_, Size >::value
-        >::type* = 0)
+            boost_ext::is_convertible< Size_, Size >::value >::type* = 0)
         : tag(other.tag),
           limit_count(other.limit_count),
           preferred_count(other.preferred_count)

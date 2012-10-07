@@ -26,6 +26,7 @@
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 
 #include <sake/core/data_structures/tuple/tuple.hpp>
+#include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/introspection/has_type_difference_type.hpp>
 #include <sake/core/introspection/has_type_size_type.hpp>
 #include <sake/core/memory/alloc/check_align.hpp>
@@ -86,8 +87,7 @@ struct traits
     SAKE_USING_TYPEDEF( typename value_traits< void >, pointer );
     SAKE_USING_TYPEDEF( typename value_traits< void >, const_pointer );
     BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        void_pointer, const_void_pointer
-    >::value));
+        void_pointer, const_void_pointer >::value));
 
     typedef typename boost::mpl::eval_if_c<
         sake::has_type_size_type<A>::value,
@@ -118,20 +118,36 @@ struct traits
     allocate_object(A& a,
         std::size_t const obj_size, std::size_t const obj_align,
         const_void_pointer const p_hint)
-    { return sake::alloc::default_impl::allocate_object(a, obj_size, obj_align, p_hint); }
+    {
+        return sake::alloc::default_impl::allocate_object(a,
+            obj_size, obj_align,
+            p_hint
+        );
+    }
 
     static void
     deallocate_object(A& a,
         std::size_t const obj_size, std::size_t const obj_align,
         void_pointer const p_obj)
-    { sake::alloc::default_impl::deallocate_object(a, obj_size, obj_align, p_obj); }
+    {
+        sake::alloc::default_impl::deallocate_object(a,
+            obj_size, obj_align,
+            p_obj
+        );
+    }
 
     static sake::tuple< void_pointer, size_type >
     allocate_array(A& a,
         std::size_t const obj_size, std::size_t const obj_align,
         size_type const limit_count, size_type const preferred_count,
         const_void_pointer const p_hint)
-    { return sake::alloc::default_impl::allocate_array(a, obj_size, obj_align, limit_count, preferred_count, p_hint); }
+    {
+        return sake::alloc::default_impl::allocate_array(a,
+            obj_size, obj_align,
+            limit_count, preferred_count,
+            p_hint
+        );
+    }
 
     static sake::tuple< void_pointer, size_type >
     expand_array(A& a,
@@ -139,7 +155,13 @@ struct traits
         void_pointer const p_array, size_type const count,
         alloc::expand_array_tag::type const tag,
         size_type const limit_count, size_type const preferred_count)
-    { sake::alloc::default_impl::expand_array(a, obj_size, obj_align, p_array, count, tag, limit_count, preferred_count); }
+    {
+        sake::alloc::default_impl::expand_array(a,
+            obj_size, obj_align,
+            p_array, count, tag,
+            limit_count, preferred_count
+        );
+    }
 
     template< class TaggedCounts >
     static sake::tuple< void_pointer, size_type, bool >
@@ -147,19 +169,30 @@ struct traits
         std::size_t const obj_size, std::size_t const obj_align,
         void_pointer const p_array, size_type const count,
         TaggedCounts const & tagged_counts)
-    { sake::alloc::default_impl::expand_array(a, obj_size, obj_align, p_array, count, tagged_counts); }
+    {
+        sake::alloc::default_impl::expand_array(a,
+            obj_size, obj_align,
+            p_array, count,
+            tagged_counts
+        );
+    }
 
     static void
     deallocate_array(A& a,
         std::size_t const obj_size, std::size_t const obj_align,
         void_pointer const p_array, size_type const count)
-    { sake::alloc::default_impl::deallocate_array(a, obj_size, obj_align, p_array, count); }
+    {
+        sake::alloc::default_impl::deallocate_array(a,
+            obj_size, obj_align,
+            p_array, count
+        );
+    }
 
-    template< class Emplacer >
+    template< class Signature >
     static void
     construct(A& a,
         void_pointer const p_obj,
-        Emplacer const & e)
+        sake::emplacer< Signature > e)
     { sake::alloc::default_impl::construct(a, p_obj, e); }
 
     template< class P >
