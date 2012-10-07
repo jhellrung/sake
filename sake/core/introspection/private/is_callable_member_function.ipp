@@ -373,10 +373,10 @@ struct dispatch< T, Result ( U0, U... ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
     : ::sake::boost_ext::mpl::and2<
-#else // #if defined( __GNUC__ ) ## defined( ... )
+#else // #if defined( __GNUC__ ) && defined( ... )
     : ::sake::boost_ext::mpl::and3<
           trait_name_private::dispatch<T>,
-#endif // #if defined( __GNUC__ ) ## defined( ... )
+#endif // #if defined( __GNUC__ ) && defined( ... )
           trait_name_private::has_non_void_result<
               T, void ( U0, U... ) >,
           trait_name_private::check_non_void_result<
@@ -389,10 +389,10 @@ struct dispatch< T, void ( U0, U... ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
     : ::sake::boost_ext::mpl::and1<
-#else // #if defined( __GNUC__ ) ## defined( ... )
+#else // #if defined( __GNUC__ ) && defined( ... )
     : ::sake::boost_ext::mpl::and2<
           trait_name_private::dispatch<T>,
-#endif // #if defined( __GNUC__ ) ## defined( ... )
+#endif // #if defined( __GNUC__ ) && defined( ... )
           ::boost::mpl::eval_if<
               trait_name_private::has_non_void_result<
                   T, void ( U0, U... ) >,
@@ -484,10 +484,10 @@ struct dispatch< T, Result ( U0N ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
     : ::sake::boost_ext::mpl::and2<
-#else // #if defined( __GNUC__ ) ## defined( ... )
+#else // #if defined( __GNUC__ ) && defined( ... )
     : ::sake::boost_ext::mpl::and3<
           trait_name_private::dispatch<T>,
-#endif // #if defined( __GNUC__ ) ## defined( ... )
+#endif // #if defined( __GNUC__ ) && defined( ... )
           trait_name_private::has_non_void_result<
               T, void ( U0N ) >,
           trait_name_private::check_non_void_result<
@@ -500,10 +500,10 @@ struct dispatch< T, void ( U0N ), ResultPred, false >
 #if defined( __GNUC__ ) \
  && defined( SAKE_INTROSPECTION_MEMBER_FUNCTION_NAME_IS_OPERATOR_ASSIGN )
     : ::sake::boost_ext::mpl::and1<
-#else // #if defined( __GNUC__ ) ## defined( ... )
+#else // #if defined( __GNUC__ ) && defined( ... )
     : ::sake::boost_ext::mpl::and2<
           trait_name_private::dispatch<T>,
-#endif // #if defined( __GNUC__ ) ## defined( ... )
+#endif // #if defined( __GNUC__ ) && defined( ... )
           ::boost::mpl::eval_if<
               trait_name_private::has_non_void_result<
                   T, void ( U0N ) >,
