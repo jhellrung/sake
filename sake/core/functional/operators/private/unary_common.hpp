@@ -14,8 +14,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_promotion.hpp>
 
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 
 #include <sake/core/math/indeterminate_fwd.hpp>
 
@@ -34,8 +33,7 @@ namespace default_impl
 template< class T >
 struct unary_result_types
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<T>::value));
     typedef boost::mpl::vector6<
         T,
         T&, // op++, op--

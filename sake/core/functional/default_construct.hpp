@@ -14,8 +14,7 @@
 
 #include <boost/static_assert.hpp>
 
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 
 namespace sake
 {
@@ -26,8 +25,7 @@ namespace functional
 template< class T >
 struct default_construct
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<T>::value));
 
     typedef T result_type;
 

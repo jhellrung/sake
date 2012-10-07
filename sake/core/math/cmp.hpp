@@ -41,9 +41,8 @@
 
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/add_rvalue_reference.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
@@ -245,10 +244,8 @@ public:
 template< class T0, class T1 >
 struct adl< T0, T1, void >
 {
-    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_reference< T0 >::value));
-    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_reference< T1 >::value));
-    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_cv_or< T0 >::value));
-    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_cv_or< T1 >::value));
+    BOOST_STATIC_ASSERT((!::sake::boost_ext::has_qualifier< T0 >::value));
+    BOOST_STATIC_ASSERT((!::sake::boost_ext::has_qualifier< T1 >::value));
     typedef typename adl_impl< T0, T1 >::type type;
 };
 
@@ -325,10 +322,8 @@ public:
 template< class T0, class T1 >
 struct dispatch< T0, T1, void, 3 >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T0 >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T1 >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T0 >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T1 >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier< T0 >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier< T1 >::value));
     typedef typename dispatch3_impl< T0, T1 >::type type;
 };
 

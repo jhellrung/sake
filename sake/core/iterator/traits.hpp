@@ -80,9 +80,8 @@
 #include <boost/type_traits/is_void.hpp>
 
 #include <sake/boost_ext/mpl/or.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/iterator/begin_end_tag.hpp>
 #include <sake/core/iterator/categories.hpp>
@@ -109,8 +108,7 @@ public:
     SAKE_USING_TYPEDEF( typename extension_traits_, difference_type );
     SAKE_USING_TYPEDEF( typename extension_traits_, introterminal );
 
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< value_type >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< value_type >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier< value_type >::value));
     BOOST_STATIC_ASSERT((boost_ext::mpl::or2<
         boost::is_void< difference_type >,
         boost::is_signed< difference_type >

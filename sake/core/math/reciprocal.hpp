@@ -19,9 +19,8 @@
 #include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/emplacer/constructible.hpp>
 #include <sake/core/emplacer/emplacer.hpp>
@@ -49,8 +48,7 @@ namespace reciprocal_adl
 template< class T >
 struct reciprocal
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<T>::value));
 
     typedef T value_type;
 

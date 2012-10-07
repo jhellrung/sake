@@ -43,7 +43,7 @@
 
 #include <sake/boost_ext/mpl/if.hpp>
 #include <sake/boost_ext/type_traits/add_reference.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
@@ -172,13 +172,30 @@ struct sqr
 {
     SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::sqr, 1 )
 
+#ifndef BOOST_NO_RVALUE_REFERENCES
+
     template< class T >
-    typename sake::result_of::sqr< SAKE_FWD_PARAM( T ) >::type
-    operator()(SAKE_FWD_REF( T ) x) const
+    typename sake::result_of::sqr<T>::type
+    operator()(T&& x) const
+    { return sake::sqr_private::dispatch<T>::apply(sake::forward<T>(x)); }
+
+#else // #ifndef BOOST_NO_RVALUE_REFERENCES
+
+    template< class T >
+    typename sake::result_of::sqr< T& >::type
+    operator()(T& x) const
     {
-        return sake::sqr_private::dispatch< SAKE_FWD_PARAM( T ) >::
-            apply(sake::forward<T>(x));
+        return sake::sqr_private::dispatch<
+            typename boost_ext::remove_rvalue_reference< T& >::type >::apply(x);
     }
+
+    template< class T >
+    typename sake::result_of::sqr< T const & >::type
+    operator()(T const & x) const
+    { return sake::sqr_private::dispatch< T const & >::apply(x); }
+
+#endif // #ifndef BOOST_NO_RVALUE_REFERENCES
+
 };
 
 } // namespace functional
@@ -222,8 +239,7 @@ struct adl_impl
 template< class T >
 struct adl< T, void >
 {
-    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!::sake::boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!::sake::boost_ext::has_qualifier<T>::value));
     typedef typename adl_impl<T>::type type;
 };
 
@@ -313,8 +329,7 @@ struct dispatch4_impl
 template< class T >
 struct dispatch< T, void, 4 >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<T>::value));
     typedef typename dispatch4_impl<T>::type type;
 };
 

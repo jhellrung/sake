@@ -16,9 +16,8 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/type_traits/add_const_if.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/iterator/archetypes/access_tag.hpp>
 #include <sake/core/iterator/archetypes/private/introterminal_base.hpp>
@@ -48,8 +47,7 @@ struct iterator
       sake::archetypes::iterator_private::subscript_base<
           T, Traversal, Access >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<T>::value));
     typedef T value_type;
 
     typedef typename boost_ext::is_convertible<

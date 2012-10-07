@@ -22,8 +22,7 @@
 #include <sake/boost_ext/mpl/at.hpp>
 #include <sake/boost_ext/mpl/lazy_at.hpp>
 #include <sake/boost_ext/type_traits/add_const_if.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/remove_reference.hpp>
 
 #include <sake/core/introspection/has_operator_less.hpp>
@@ -49,8 +48,7 @@ namespace adaptor_private
 template< class Derived, class I, class Params >
 struct traits
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<I>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<I>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<I>::value));
     BOOST_CONCEPT_ASSERT((sake::concepts::Iterator<I>));
     BOOST_STATIC_ASSERT((boost::mpl::is_sequence< Params >::value));
 

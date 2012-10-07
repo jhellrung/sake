@@ -17,9 +17,8 @@
 
 #include <sake/boost_ext/mpl/curry.hpp>
 #include <sake/boost_ext/mpl/curry_quote.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/is_builtin_object.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_rv.hpp>
 #include <sake/boost_ext/type_traits/is_same_sans_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -152,8 +151,7 @@ struct impl
 template< class T >
 struct SAKE_OPERATORS_NAME
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<T>::value));
     typedef typename BOOST_PP_CAT( SAKE_OPERATORS_NAME, _private )::
         impl<T>::type type;
 };

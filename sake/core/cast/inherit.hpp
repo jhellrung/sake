@@ -25,7 +25,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/or.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 #include <sake/boost_ext/type_traits/propagate_cv.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
@@ -135,8 +135,7 @@ class dispatch;
 template< class U, class T, class U_ >
 class dispatch< U, T, U_* >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<T>::value));
     BOOST_STATIC_ASSERT((!boost::is_pointer<T>::value));
     BOOST_STATIC_ASSERT((
         boost::is_base_of<T,U_>::value || boost::is_base_of<U_,T>::value));
@@ -147,8 +146,7 @@ public:
 template< class U, class T, class U_ >
 class dispatch< U&, T, U_ >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<T>::value));
     BOOST_STATIC_ASSERT((!boost::is_pointer<T>::value));
     BOOST_STATIC_ASSERT((
         boost::is_base_of<T,U>::value || boost::is_base_of<U,T>::value));

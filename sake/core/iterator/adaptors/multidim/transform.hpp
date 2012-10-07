@@ -14,7 +14,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <sake/boost_ext/mpl/or.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/is_reference.hpp>
 
 #include <sake/core/emplacer/construct.hpp>
@@ -62,8 +62,7 @@ struct iterator_multidim_traits<
     typedef typename sake::iterator_reference<
         outer_iterator
     >::type inner_range;
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< inner_range >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< inner_range >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier< inner_range >::value));
 
     template< class Introterminal >
     struct inner_iterator_with

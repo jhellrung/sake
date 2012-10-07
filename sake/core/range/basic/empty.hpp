@@ -13,8 +13,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 
 #include <sake/core/iterator/basic/empty.hpp>
 #include <sake/core/range/basic/fwd.hpp>
@@ -102,8 +101,7 @@ namespace empty_private
 template< class T >
 struct traits
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference<T>::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or<T>::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier<T>::value));
     typedef sake::range::facade<
         sake::range::basic::empty<T>,
         boost::mpl::map1<

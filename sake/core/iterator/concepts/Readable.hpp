@@ -15,8 +15,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_void.hpp>
 
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 
 #include <sake/core/config.hpp>
 #include <sake/core/iterator/concepts/private/Base.hpp>
@@ -36,8 +35,7 @@ struct Readable
     : sake::iterator::concepts::private_::Base<I>
 {
     typedef typename sake::iterator_value<I>::type value_type;
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< value_type >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< value_type >::value));
+    BOOST_STATIC_ASSERT((!boost_ext::has_qualifier< value_type >::value));
     BOOST_STATIC_ASSERT((!boost::is_void< value_type >::value));
 
     BOOST_CONCEPT_USAGE( Readable )
