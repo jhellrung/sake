@@ -32,7 +32,7 @@ namespace result_of
 
 template< class T0, class T1, class Less = void >
 struct max
-    : boost_ext::common_result_type< T0, T1 >
+  : boost_ext::common_result_type< T0, T1 >
 { };
 
 } // namespace result_of
@@ -42,61 +42,61 @@ namespace functional
 
 struct max
 {
-    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::max, (2,3) )
+  SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::max, (2,3) )
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
-    template< class T0, class T1 >
-    typename sake::result_of::max< T0, T1 >::type
-    operator()(T0&& x0, T1&& x1) const
-    { return x1 < x0 ? sake::forward< T0 >(x0) : sake::forward< T1 >(x1); }
+  template< class T0, class T1 >
+  typename sake::result_of::max< T0, T1 >::type
+  operator()(T0&& x0, T1&& x1) const
+  { return x1 < x0 ? sake::forward< T0 >(x0) : sake::forward< T1 >(x1); }
 
-    template< class T0, class T1, class Less >
-    typename sake::result_of::max< T0, T1 >::type
-    operator()(T0&& x0, T1&& x1, Less less) const
-    { return less(x1, x0) ? sake::forward< T0 >(x0) : sake::forward< T1 >(x1); }
+  template< class T0, class T1, class Less >
+  typename sake::result_of::max< T0, T1 >::type
+  operator()(T0&& x0, T1&& x1, Less less) const
+  { return less(x1, x0) ? sake::forward< T0 >(x0) : sake::forward< T1 >(x1); }
 
 #else // #ifndef BOOST_NO_RVALUE_REFERENCES
 
-    template< class T0, class T1 >
-    typename sake::result_of::max< T0&, T1& >::type
-    operator()(T0& x0, T1& x1) const
-    { return x1 < x0 ? x0 : x1; }
+  template< class T0, class T1 >
+  typename sake::result_of::max< T0&, T1& >::type
+  operator()(T0& x0, T1& x1) const
+  { return x1 < x0 ? x0 : x1; }
 
-    template< class T0, class T1, class Less >
-    typename sake::result_of::max< T0&, T1& >::type
-    operator()(T0& x0, T1& x1, Less less) const
-    { return less(x1, x0) ? x0 : x1; }
+  template< class T0, class T1, class Less >
+  typename sake::result_of::max< T0&, T1& >::type
+  operator()(T0& x0, T1& x1, Less less) const
+  { return less(x1, x0) ? x0 : x1; }
 
-    template< class T0, class T1 >
-    typename sake::result_of::max< T0&, T1 const & >::type
-    operator()(T0& x0, T1 const & x1) const
-    { return x1 < x0 ? x0 : x1; }
+  template< class T0, class T1 >
+  typename sake::result_of::max< T0&, T1 const & >::type
+  operator()(T0& x0, T1 const & x1) const
+  { return x1 < x0 ? x0 : x1; }
 
-    template< class T0, class T1, class Less >
-    typename sake::result_of::max< T0&, T1 const & >::type
-    operator()(T0& x0, T1 const & x1, Less less) const
-    { return less(x1, x0) ? x0 : x1; }
+  template< class T0, class T1, class Less >
+  typename sake::result_of::max< T0&, T1 const & >::type
+  operator()(T0& x0, T1 const & x1, Less less) const
+  { return less(x1, x0) ? x0 : x1; }
 
-    template< class T0, class T1 >
-    typename sake::result_of::max< T0 const &, T1& >::type
-    operator()(T0 const & x0, T1& x1) const
-    { return x1 < x0 ? x0 : x1; }
+  template< class T0, class T1 >
+  typename sake::result_of::max< T0 const &, T1& >::type
+  operator()(T0 const & x0, T1& x1) const
+  { return x1 < x0 ? x0 : x1; }
 
-    template< class T0, class T1, class Less >
-    typename sake::result_of::max< T0 const &, T1& >::type
-    operator()(T0 const & x0, T1& x1, Less less) const
-    { return less(x1, x0) ? x0 : x1; }
+  template< class T0, class T1, class Less >
+  typename sake::result_of::max< T0 const &, T1& >::type
+  operator()(T0 const & x0, T1& x1, Less less) const
+  { return less(x1, x0) ? x0 : x1; }
 
-    template< class T0, class T1 >
-    typename sake::result_of::max< T0 const &, T1 const & >::type
-    operator()(T0 const & x0, T1 const & x1) const
-    { return x1 < x0 ? x0 : x1; }
+  template< class T0, class T1 >
+  typename sake::result_of::max< T0 const &, T1 const & >::type
+  operator()(T0 const & x0, T1 const & x1) const
+  { return x1 < x0 ? x0 : x1; }
 
-    template< class T0, class T1, class Less >
-    typename sake::result_of::max< T0 const &, T1 const & >::type
-    operator()(T0 const & x0, T1 const & x1, Less less) const
-    { return less(x1, x0) ? x0 : x1; }
+  template< class T0, class T1, class Less >
+  typename sake::result_of::max< T0 const &, T1 const & >::type
+  operator()(T0 const & x0, T1 const & x1, Less less) const
+  { return less(x1, x0) ? x0 : x1; }
 
 #endif // #ifndef BOOST_NO_RVALUE_REFERENCES
 

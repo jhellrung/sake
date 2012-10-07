@@ -28,10 +28,10 @@ namespace result_of
 
 template< class T0, class T1 >
 struct lcm
-    : boost_ext::common_result_type<
-          typename boost_ext::remove_qualifiers< T0 >::type,
-          typename boost_ext::remove_qualifiers< T1 >::type
-      >
+  : boost_ext::common_result_type<
+      typename boost_ext::remove_qualifiers< T0 >::type,
+      typename boost_ext::remove_qualifiers< T1 >::type
+    >
 { };
 
 } // namespace result_of
@@ -41,18 +41,18 @@ namespace functional
 
 struct lcm
 {
-    SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::lcm, 2 )
+  SAKE_RESULT_FROM_METAFUNCTION( sake::result_of::lcm, 2 )
 
-    template< class T0, class T1 >
-    typename sake::result_of::lcm< T0, T1 >::type
-    operator()(T0 x0, T1 x1) const
-    {
-        sake::abs_ip(x0);
-        sake::abs_ip(x1);
-        return x1 < x0 ?
-               sake::move(x0) * (sake::move(x1) / sake::gcd(x1, x0)) :
-               (sake::move(x0) / sake::gcd(x0, x1)) * sake::move(x1);
-    }
+  template< class T0, class T1 >
+  typename sake::result_of::lcm< T0, T1 >::type
+  operator()(T0 x0, T1 x1) const
+  {
+    sake::abs_ip(x0);
+    sake::abs_ip(x1);
+    return x1 < x0 ?
+         sake::move(x0) * (sake::move(x1) / sake::gcd(x1, x0)) :
+         (sake::move(x0) / sake::gcd(x0, x1)) * sake::move(x1);
+  }
 };
 
 } // namespace functional

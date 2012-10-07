@@ -1,16 +1,19 @@
 /*******************************************************************************
  * sake/boost_ext/fusion/algorithm/query/equal.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * boost_ext::fusion::equal(Sequence0 const & s0, Sequence1 const & s1)
- *     -> boost_ext::fusion::result_of::equal< Sequence0, Sequence1 >::type
- * boost_ext::fusion::equal(Sequence0 const & s0, Sequence1 const & s1, Equal equal_)
- *     -> boost_ext::fusion::result_of::equal< Sequence0, Sequence1, Equal >::type
- * boost_ext::fusion::equal(I0 const & i0, I1 const & i1)
- *     -> boost_ext::fusion::result_of::equal< I0, I1 >::type
+ * boost_ext::fusion::equal(
+ *   Sequence0 const & s0, Sequence1 const & s1)
+ *   -> boost_ext::fusion::result_of::equal< Sequence0, Sequence1 >::type
+ * boost_ext::fusion::equal(
+ *   Sequence0 const & s0, Sequence1 const & s1, Equal equal_)
+ *   -> boost_ext::fusion::result_of::equal< Sequence0, Sequence1, Equal >::type
+ * boost_ext::fusion::equal(
+ *   I0 const & i0, I1 const & i1)
+ *   -> boost_ext::fusion::result_of::equal< I0, I1 >::type
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_FUSION_ALGORITHM_QUERY_EQUAL_HPP
@@ -46,16 +49,16 @@ namespace equal_private
 {
 
 template<
-    class T0, class T1, class Equal,
-    bool = boost::fusion::traits::is_sequence< T0 >::value,
-    bool = boost::fusion::traits::is_sequence< T1 >::value
+  class T0, class T1, class Equal,
+  bool = boost::fusion::traits::is_sequence< T0 >::value,
+  bool = boost::fusion::traits::is_sequence< T1 >::value
 >
 struct dispatch0;
 
 template<
-    class Sequence0, class Sequence1, class Equal,
-    int N0 = boost::fusion::result_of::size< Sequence0 >::value,
-    int N1 = boost::fusion::result_of::size< Sequence1 >::value
+  class Sequence0, class Sequence1, class Equal,
+  int N0 = boost::fusion::result_of::size< Sequence0 >::value,
+  int N1 = boost::fusion::result_of::size< Sequence1 >::value
 >
 struct dispatch1;
 
@@ -70,94 +73,104 @@ iterate(I0 const & i0, I1 const & i1, Equal const & equal_)
 template< class I0, class I1, class Equal >
 struct dispatch0< I0, I1, Equal, false, false >
 {
-    typedef typename boost_ext::result_of< Equal ( I0, I1 ) >::type type;
-    static type apply(I0 const & i0, I1 const & i1, Equal equal_)
-    { return equal_(i0, i1); }
+  typedef typename boost_ext::result_of< Equal ( I0, I1 ) >::type type;
+  static type apply(I0 const & i0, I1 const & i1,
+    Equal equal_)
+  { return equal_(i0, i1); }
 };
 
 template< class I0, class I1 >
 struct dispatch0< I0, I1, sake::operators::functional::equal, false, false >
 {
-    typedef boost::mpl::bool_<
-        boost::fusion::result_of::equal_to< I0, I1 >::type::value
-    > type;
-    static type apply(I0 const & /*i0*/, I1 const & /*i1*/, sake::operators::functional::equal)
-    { return type(); }
+  typedef boost::mpl::bool_<
+    boost::fusion::result_of::equal_to< I0, I1 >::type::value
+  > type;
+  static type apply(I0 const & /*i0*/, I1 const & /*i1*/,
+    sake::operators::functional::equal)
+  { return type(); }
 };
 
 template< class Sequence0, class Sequence1, class Equal >
 struct dispatch0< Sequence0, Sequence1, Equal, true, true >
-    : dispatch1< Sequence0, Sequence1, Equal >
+  : dispatch1< Sequence0, Sequence1, Equal >
 { };
 
 template< class Sequence0, class Sequence1, class Equal, int N0, int N1 >
 struct dispatch1
 {
-    typedef boost::mpl::false_ type;
-    static type apply(Sequence0 const & /*s0*/, Sequence1 const & /*s1*/, Equal const & /*equal_*/)
-    {
-        BOOST_STATIC_ASSERT((N0 != N1));
-        return type();
-    }
+  typedef boost::mpl::false_ type;
+  static type apply(Sequence0 const & /*s0*/, Sequence1 const & /*s1*/,
+    Equal const & /*equal_*/)
+  {
+    BOOST_STATIC_ASSERT((N0 != N1));
+    return type();
+  }
 };
 
 template< class Sequence0, class Sequence1, class Equal, int N >
 struct dispatch1< Sequence0, Sequence1, Equal, N, N >
 {
-    typedef typename iterate_dispatch<
-        N,
-        typename boost::fusion::result_of::begin< Sequence0 const >::type,
-        typename boost::fusion::result_of::begin< Sequence1 const >::type,
-        Equal
-    >::type type;
-    static type apply(Sequence0 const & s0, Sequence1 const & s1, Equal const & equal_)
-    { return equal_private::iterate<N>(boost::fusion::begin(s0), boost::fusion::begin(s1), equal_); }
+  typedef typename iterate_dispatch<
+    N,
+    typename boost::fusion::result_of::begin< Sequence0 const >::type,
+    typename boost::fusion::result_of::begin< Sequence1 const >::type,
+    Equal
+  >::type type;
+  static type apply(Sequence0 const & s0, Sequence1 const & s1,
+    Equal const & equal_)
+  {
+    return equal_private::iterate<N>(
+      boost::fusion::begin(s0), boost::fusion::begin(s1), equal_);
+  }
 };
 
 template< class I0, class I1, class Equal >
 struct iterate_dispatch< 0, I0, I1, Equal >
 {
-    typedef boost::mpl::true_ type;
-    static type apply(I0 const & /*i0*/, I1 const & /*i1*/, Equal const & /*equal_*/)
-    { return type(); }
+  typedef boost::mpl::true_ type;
+  static type apply(I0 const & /*i0*/, I1 const & /*i1*/,
+    Equal const & /*equal_*/)
+  { return type(); }
 };
 
 template< class I0, class I1, class Equal >
 struct iterate_dispatch< 1, I0, I1, Equal >
 {
-    typedef typename boost_ext::result_of< Equal (
-        typename boost::fusion::result_of::deref< I0 >::type,
-        typename boost::fusion::result_of::deref< I1 >::type
-    ) >::type type;
-    static type apply(I0 const & i0, I1 const & i1, Equal equal_)
-    { return equal_(*i0, *i1); }
+  typedef typename boost_ext::result_of< Equal (
+    typename boost::fusion::result_of::deref< I0 >::type,
+    typename boost::fusion::result_of::deref< I1 >::type
+  ) >::type type;
+  static type apply(I0 const & i0, I1 const & i1,
+    Equal equal_)
+  { return equal_(*i0, *i1); }
 };
 
 template< int N, class I0, class I1, class Equal >
 struct iterate_dispatch
 {
-    typedef typename boost_ext::result_of< Equal (
-        typename boost::fusion::result_of::deref< I0 >::type,
-        typename boost::fusion::result_of::deref< I1 >::type
-    ) >::type curr_type;
-    typedef typename iterate_dispatch<
-        N-1,
-        typename boost::fusion::result_of::next< I0 >::type,
-        typename boost::fusion::result_of::next< I1 >::type,
-        Equal
-    >::type next_type;
-    typedef typename boost_ext::common_result_type< curr_type, next_type >::type type;
-    static type apply(I0 const & i0, I1 const & i1, Equal equal_)
-    {
-        curr_type const curr_result = equal_(*i0, *i1);
-        return !curr_result ?
-               curr_result :
-               equal_private::iterate< N-1 >(
-                   boost::fusion::next(i0),
-                   boost::fusion::next(i1),
-                   equal_
-               );
-    }
+  typedef typename boost_ext::result_of< Equal (
+    typename boost::fusion::result_of::deref< I0 >::type,
+    typename boost::fusion::result_of::deref< I1 >::type
+  ) >::type curr_type;
+  typedef typename iterate_dispatch<
+    N-1,
+    typename boost::fusion::result_of::next< I0 >::type,
+    typename boost::fusion::result_of::next< I1 >::type,
+    Equal
+  >::type next_type;
+  typedef typename boost_ext::
+    common_result_type< curr_type, next_type >::type type;
+  static type apply(I0 const & i0, I1 const & i1, Equal equal_)
+  {
+    curr_type const curr_result = equal_(*i0, *i1);
+    return !curr_result ?
+           curr_result :
+           equal_private::iterate< N-1 >(
+             boost::fusion::next(i0),
+             boost::fusion::next(i1),
+             equal_
+           );
+  }
 };
 
 } // namespace equal_private
@@ -166,15 +179,15 @@ namespace result_of
 {
 
 template<
-    class T0, class T1,
-    class Equal = sake::operators::functional::equal
+  class T0, class T1,
+  class Equal = sake::operators::functional::equal
 >
 struct equal
-    : equal_private::dispatch0<
-          typename boost_ext::remove_qualifiers< T0 >::type,
-          typename boost_ext::remove_qualifiers< T1 >::type,
-          typename boost_ext::remove_qualifiers< Equal >::type
-      >
+  : equal_private::dispatch0<
+      typename boost_ext::remove_qualifiers< T0 >::type,
+      typename boost_ext::remove_qualifiers< T1 >::type,
+      typename boost_ext::remove_qualifiers< Equal >::type
+    >
 { };
 
 } // namespace result_of
@@ -184,17 +197,17 @@ namespace functional
 
 struct equal
 {
-    SAKE_RESULT_FROM_METAFUNCTION( boost_ext::fusion::result_of::equal, (2,3) )
+  SAKE_RESULT_FROM_METAFUNCTION( boost_ext::fusion::result_of::equal, (2,3) )
 
-    template< class T0, class T1 >
-    typename boost_ext::fusion::result_of::equal< T0, T1 >::type
-    operator()(T0 const & x0, T1 const & x1) const
-    { return operator()(x0, x1, sake::operators::equal); }
+  template< class T0, class T1 >
+  typename boost_ext::fusion::result_of::equal< T0, T1 >::type
+  operator()(T0 const & x0, T1 const & x1) const
+  { return operator()(x0, x1, sake::operators::equal); }
 
-    template< class T0, class T1, class Equal >
-    typename boost_ext::fusion::result_of::equal< T0, T1, Equal >::type
-    operator()(T0 const & x0, T1 const & x1, Equal const & equal_) const
-    { return equal_private::dispatch0< T0, T1, Equal >::apply(x0, x1, equal_); }
+  template< class T0, class T1, class Equal >
+  typename boost_ext::fusion::result_of::equal< T0, T1, Equal >::type
+  operator()(T0 const & x0, T1 const & x1, Equal const & equal_) const
+  { return equal_private::dispatch0< T0, T1, Equal >::apply(x0, x1, equal_); }
 };
 
 } // namespace functional

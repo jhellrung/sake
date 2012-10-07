@@ -22,10 +22,10 @@ namespace private_
 
 template< class I0, class I1 >
 struct common_difference_type
-    : boost_ext::common_type<
-          typename I0::difference_type,
-          typename I1::difference_type
-      >
+  : boost_ext::common_type<
+      typename I0::difference_type,
+      typename I1::difference_type
+    >
 { };
 
 } // namespace private_
