@@ -6,15 +6,15 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * range::basic::construct::subrange(I i,J j)
- *     -> range::basic::construct::result_of::subrange<I,J>::type
+ *   -> range::basic::construct::result_of::subrange<I,J>::type
  * range::basic::construct::subrange(begin_tag, I i)
- *     -> range::basic::construct::result_of::subrange< begin_tag, I >::type
+ *   -> range::basic::construct::result_of::subrange< begin_tag, I >::type
  * range::basic::construct::subrange(I i, end_tag)
- *     -> range::basic::construct::result_of::subrange< I, end_tag >::type
+ *   -> range::basic::construct::result_of::subrange< I, end_tag >::type
  * range::basic::construct::subrange(I i, N)
- *     -> range::basic::construct::result_of::subrange<I,N>::type
+ *   -> range::basic::construct::result_of::subrange<I,N>::type
  * range::basic::construct::subrange_c<N>(I i)
- *     -> range::basic::construct::result_of::subrange_c<I,N>::type
+ *   -> range::basic::construct::result_of::subrange_c<I,N>::type
  ******************************************************************************/
 
 #ifndef SAKE_CORE_RANGE_CONSTRUCT_SUBRANGE_HPP
@@ -65,13 +65,13 @@ namespace functional
 
 struct subrange
 {
-    SAKE_RESULT_FROM_METAFUNCTION(
-        sake::range::basic::construct::result_of::subrange, 2 )
+  SAKE_RESULT_FROM_METAFUNCTION(
+    sake::range::basic::construct::result_of::subrange, 2 )
 
-    template< class T, class U >
-    typename result< subrange ( T, U ) >::type
-    operator()(T const & x, U const & y) const
-    { return typename result< subrange ( T, U ) >::type(x,y); }
+  template< class T, class U >
+  typename result< subrange ( T, U ) >::type
+  operator()(T const & x, U const & y) const
+  { return typename result< subrange ( T, U ) >::type(x,y); }
 };
 
 } // namespace functional
@@ -86,11 +86,11 @@ sake::range::basic::construct::functional::subrange const subrange = { };
 
 template< std::size_t N, class I >
 inline typename sake::range::basic::construct::
-    result_of::subrange_c<I,N>::type
+  result_of::subrange_c<I,N>::type
 subrange_c(I const & i)
 {
-    return typename sake::range::basic::construct::
-        result_of::subrange_c<I,N>::type(i);
+  return typename sake::range::basic::construct::
+    result_of::subrange_c<I,N>::type(i);
 }
 
 namespace result_of
@@ -104,76 +104,76 @@ struct dispatch1;
 
 template< class T, class U >
 struct dispatch0
-    : subrange_private::dispatch1<T,U>
+  : subrange_private::dispatch1<T,U>
 { };
 
 template< class I >
 struct dispatch0< sake::begin_tag, I >
 {
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        typename sake::iterator_introterminal<I>::type,
-        sake::begin_access_introterminal_tag
-    >::value));
-    typedef sake::range::basic::subrange<
-        typename sake::iterator::adapt_introterminal<
-            I,
-            sake::begin_access_introterminal_tag,
-            sake::begin_access_introterminal_tag
-        >::type
-    > type;
+  BOOST_STATIC_ASSERT((boost_ext::is_convertible<
+    typename sake::iterator_introterminal<I>::type,
+    sake::begin_access_introterminal_tag
+  >::value));
+  typedef sake::range::basic::subrange<
+    typename sake::iterator::adapt_introterminal<
+      I,
+      sake::begin_access_introterminal_tag,
+      sake::begin_access_introterminal_tag
+    >::type
+  > type;
 };
 
 template< class I >
 struct dispatch0< I, sake::end_tag >
 {
-    BOOST_STATIC_ASSERT((boost_ext::is_convertible<
-        typename sake::iterator_introterminal<I>::type,
-        sake::end_access_introterminal_tag
-    >::value));
-    typedef sake::range::basic::subrange<
-        typename sake::iterator::adapt_introterminal<
-            I,
-            sake::end_access_introterminal_tag,
-            sake::end_access_introterminal_tag
-        >::type
-    > type;
+  BOOST_STATIC_ASSERT((boost_ext::is_convertible<
+    typename sake::iterator_introterminal<I>::type,
+    sake::end_access_introterminal_tag
+  >::value));
+  typedef sake::range::basic::subrange<
+    typename sake::iterator::adapt_introterminal<
+      I,
+      sake::end_access_introterminal_tag,
+      sake::end_access_introterminal_tag
+    >::type
+  > type;
 };
 
 template< class I, class J >
 struct dispatch1< I, J, false >
 {
-    typedef sake::range::basic::subrange<
-        typename sake::iterator::adapt_introterminal<
-            typename boost_ext::common_type<I,J>::type,
-            sake::null_introterminal_tag
-        >::type
-    > type;
+  typedef sake::range::basic::subrange<
+    typename sake::iterator::adapt_introterminal<
+      typename boost_ext::common_type<I,J>::type,
+      sake::null_introterminal_tag
+    >::type
+  > type;
 };
 
 template< class I, class N >
 struct dispatch0< I, N, true >
 {
-    typedef sake::range::basic::subrange<
-        typename sake::iterator::adapt_introterminal<
-            I, sake::null_introterminal_tag >::type,
-        boost::integral_constant< std::size_t, N::value >
-    > type;
+  typedef sake::range::basic::subrange<
+    typename sake::iterator::adapt_introterminal<
+      I, sake::null_introterminal_tag >::type,
+    boost::integral_constant< std::size_t, N::value >
+  > type;
 };
 
 } // namespace subrange_private
 
 template< class T, class U >
 struct subrange
-    : subrange_private::dispatch0<
-          typename boost_ext::remove_qualifiers<T>::type,
-          typename boost_ext::remove_qualifiers<U>::type
-      >
+  : subrange_private::dispatch0<
+      typename boost_ext::remove_qualifiers<T>::type,
+      typename boost_ext::remove_qualifiers<U>::type
+    >
 { };
 
 template< class I, std::size_t N >
 struct subrange_c
-    : sake::range::basic::construct::result_of::subrange<
-          I, boost::integral_constant< std::size_t, N > >
+  : sake::range::basic::construct::result_of::subrange<
+      I, boost::integral_constant< std::size_t, N > >
 { };
 
 } // namespace result_of

@@ -32,6 +32,7 @@
 #include <sake/core/memberwise/destructor_tags.hpp>
 #include <sake/core/memberwise/swap.hpp>
 #include <sake/core/range/core_access.hpp>
+#include <sake/core/range/basic/private/subrange/tags.hpp>
 #include <sake/core/range/basic/private/subrange/traits.hpp>
 #include <sake/core/range/traits.hpp>
 #include <sake/core/range/traits_fwd.hpp>
@@ -48,9 +49,6 @@ namespace basic
 
 namespace subrange_private
 {
-
-struct iterator_tag { };
-struct range_tag { };
 
 template< class I >
 struct impl_base_index
@@ -87,6 +85,7 @@ public:
 
     SAKE_MEMBERWISE_SWAP(
         typename impl_base,
+        (( facade_ ))
         (( I )( m_begin )) (( I )( m_end ))
     )
 
@@ -111,10 +110,17 @@ public:
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename impl_base,
+        (( facade_ ))
         (( I )( m_begin )) (( I )( m_end ))
     )
-    SAKE_MEMBERWISE_COPY_TAGS( (( I )( m_begin )) (( I )( m_end )) )
-    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( I )( m_begin )) (( I )( m_end )) )
+    SAKE_MEMBERWISE_COPY_TAGS(
+        (( facade_ ))
+        (( I )( m_begin )) (( I )( m_end ))
+    )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS(
+        (( facade_ ))
+        (( I )( m_begin )) (( I )( m_end ))
+    )
 
     template< class Begin, class End >
     impl_base(Begin const & b, End const & e,
@@ -186,7 +192,11 @@ public:
     SAKE_USING_TYPEDEF( typename facade_, difference_type );
     SAKE_USING_TYPEDEF( typename facade_, size_type );
 
-    SAKE_MEMBERWISE_SWAP( typename impl_base, (( I )( m_end )) )
+    SAKE_MEMBERWISE_SWAP(
+        typename impl_base,
+        (( facade_ ))
+        (( I )( m_end ))
+    )
 
     void increment(sake::end_tag)
     { ++m_end; }
@@ -200,10 +210,17 @@ public:
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename impl_base,
+        (( facade_ ))
         (( I )( m_end ))
     )
-    SAKE_MEMBERWISE_COPY_TAGS( (( I )( m_end )) )
-    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( I )( m_end )) )
+    SAKE_MEMBERWISE_COPY_TAGS(
+        (( facade_ ))
+        (( I )( m_end ))
+    )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS(
+        (( facade_ ))
+        (( I )( m_end ))
+    )
 
     template< class J >
     explicit impl_base(subrange_private::iterator_tag, J const & j)
@@ -287,7 +304,11 @@ public:
     SAKE_USING_TYPEDEF( typename facade_, difference_type );
     SAKE_USING_TYPEDEF( typename facade_, size_type );
 
-    SAKE_MEMBERWISE_SWAP( typename impl_base, (( I )( m_begin )) )
+    SAKE_MEMBERWISE_SWAP(
+        typename impl_base,
+        (( facade_ ))
+        (( I )( m_begin ))
+    )
 
     void increment(sake::begin_tag)
     { ++m_begin; }
@@ -301,10 +322,17 @@ public:
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename impl_base,
+        (( facade_ ))
         (( I )( m_begin ))
     )
-    SAKE_MEMBERWISE_COPY_TAGS( (( I )( m_begin )) )
-    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( I )( m_begin )) )
+    SAKE_MEMBERWISE_COPY_TAGS(
+        (( facade_ ))
+        (( I )( m_begin ))
+    )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS(
+        (( facade_ ))
+        (( I )( m_begin ))
+    )
 
     template< class J >
     explicit impl_base(subrange_private::iterator_tag, J const & j)
@@ -392,15 +420,26 @@ public:
     SAKE_USING_TYPEDEF( typename facade_, difference_type );
     SAKE_USING_TYPEDEF( typename facade_, size_type );
 
-    SAKE_MEMBERWISE_SWAP( typename impl_base, (( I )( m_i )) )
+    SAKE_MEMBERWISE_SWAP(
+        typename impl_base,
+        (( facade_ ))
+        (( I )( m_i ))
+    )
 
 protected:
     SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
         typename impl_base,
+        (( facade_ ))
         (( I )( m_i ))
     )
-    SAKE_MEMBERWISE_COPY_TAGS( (( I )( m_i )) )
-    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( I )( m_i )) )
+    SAKE_MEMBERWISE_COPY_TAGS(
+        (( facade_ ))
+        (( I )( m_i ))
+    )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS(
+        (( facade_ ))
+        (( I )( m_i ))
+    )
 
     template< class J >
     explicit impl_base(subrange_private::iterator_tag, J const & j)

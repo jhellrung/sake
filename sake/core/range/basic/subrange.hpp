@@ -45,7 +45,9 @@
 #include <sake/core/memberwise/mem_fun.hpp>
 #include <sake/core/range/basic/fwd.hpp>
 #include <sake/core/range/basic/private/subrange/impl_base.hpp>
+#include <sake/core/range/basic/private/subrange/impl_base_c.hpp>
 #include <sake/core/range/basic/private/subrange/range_constructor_enable.hpp>
+#include <sake/core/range/basic/private/subrange/tags.hpp>
 #include <sake/core/range/core_access.hpp>
 #include <sake/core/range/private/introterminal_of_begin_end.hpp>
 #include <sake/core/utility/result_from_metafunction.hpp>
@@ -198,14 +200,10 @@ private:
 
 template< class I, class N >
 class subrange
-    : public subrange_private::traits<I,N>::facade_
+    : public subrange_private::impl_base_c<I,N>
 {
-    typedef subrange_private::traits<I,N> traits_;
-    SAKE_USING_TYPEDEF( typename traits_, facade_ );
-    BOOST_STATIC_ASSERT((boost::is_same<
-        typename sake::iterator_introterminal<I>::type,
-        sake::null_introterminal_tag
-    >::value));
+    typedef subrange_private::impl_base_c<I,N> impl_base_c_;
+    SAKE_USING_TYPEDEF( typename impl_base_c_, facade_ );
     BOOST_STATIC_ASSERT((N::value >= 0));
 public:
     SAKE_USING_TYPEDEF( typename facade_, reference );
@@ -219,10 +217,10 @@ public:
     SAKE_MEMBERWISE_MEM_FUN(
         typename subrange,
         ( default_constructor )( swap ),
-        (( facade_ )) (( I )( m_begin ))
+        (( impl_base_c_ ))
     )
-    SAKE_MEMBERWISE_COPY_TAGS( (( facade_ )) (( I )( m_begin )) )
-    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( facade_ )) (( I )( m_begin )) )
+    SAKE_MEMBERWISE_COPY_TAGS( (( impl_base_c_ )) )
+    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( impl_base_c_ )) )
 
     template< class J >
     explicit subrange(J const & j,
@@ -230,24 +228,12 @@ public:
             boost_ext::not_is_base_of_sans_qualifiers< subrange, J >,
             boost_ext::is_convertible<J,I>
         >::value >::type* = 0)
-        : m_begin(j)
+        : impl_base_c_(subrange_private::iterator_tag(), j)
     { }
-
-    template< class J, class M >
-    subrange(J const & j, M,
-        typename boost::enable_if_c< boost_ext::mpl::and2<
-            boost_ext::is_convertible<J,I>,
-            sake::has_isc_value< M,
-                typename boost_ext::mpl::curry_quote2<
-                    boost::mpl::equal_to >::apply<N>::type >
-        >::value >::type* = 0)
-        : m_begin(j)
-    { }
-
-    void advance(difference_type const n)
-    { sake::advance(m_begin, n); }
 
 private:
+    using impl_base_c_::m_begin;
+
     friend class sake::range::core_access;
 
     template< class This, class Introterminal >
@@ -256,23 +242,23 @@ private:
     { };
 
     template< class T, class Introterminal >
-    static typename facade_::template iterator_with< Introterminal >::type
+    static typename impl_base_c_::template iterator_with< Introterminal >::type
     derived_iter_at(subrange const & this_, T const & x, Introterminal)
-    { return this_.derived_iter_at(x, Introterminal()); }
+    { return this_.derived_iter_at_(x, Introterminal()); }
 
-    I derived_iter_at(sake::begin_tag, sake::null_introterminal_tag) const
+    using impl_base_c_::derived_iter_at_;
+
+    I derived_iter_at_(sake::begin_tag, sake::null_introterminal_tag) const
     { return m_begin; }
-    I derived_iter_at(sake::end_tag, sake::null_introterminal_tag) const
-    { return sake::next_c< N::value >(m_begin); }
     template< class T >
-    I derived_iter_at(T const & x, sake::null_introterminal_tag) const
+    I derived_iter_at_(T const & x, sake::null_introterminal_tag) const
     { return x; }
 
     template< class T, class Introterminal >
-    typename facade_::template iterator_with< Introterminal >::type
-    derived_iter_at(T const & x, Introterminal) const
+    typename impl_base_c_::template iterator_with< Introterminal >::type
+    derived_iter_at_(T const & x, Introterminal) const
     {
-        return typename facade_::template
+        return typename impl_base_c_::template
             iterator_with< Introterminal >::type(*this, x);
     }
 
@@ -285,15 +271,13 @@ private:
     derived_sub(subrange const & this_, Begin const & b, End const & e)
     { return sake::range::basic::subrange<I>(this_, b, e); }
 
+    using impl_base_c_::derived_at;
+
     static reference derived_at(subrange const & this_, sake::begin_tag)
     { return *this_.m_begin; }
-    static reference derived_at(subrange const & this_, sake::end_tag)
-    { return *sake::next_c< N::value - 1 >(this_.m_begin); }
     template< class T >
     static reference derived_at(subrange const & this_, T const i)
     { return this_.m_begin[static_cast< difference_type >(i)]; }
-
-    I m_begin;
 };
 
 } // namespace basic
