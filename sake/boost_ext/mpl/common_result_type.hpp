@@ -1,24 +1,25 @@
 /*******************************************************************************
  * sake/boost_ext/mpl/common_result_type.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * struct boost_ext::mpl::has_common_result_type< Sequence >
  * struct boost_ext::mpl::common_result_type< Sequence >
+ * struct boost_ext::mpl::has_common_result_type< Sequence >
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_MPL_COMMON_RESULT_TYPE_HPP
 #define SAKE_BOOST_EXT_MPL_COMMON_RESULT_TYPE_HPP
 
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/quote.hpp>
-#include <boost/type_traits/is_void.hpp>
+#include <boost/mpl/begin.hpp>
+#include <boost/mpl/deref.hpp>
+#include <boost/mpl/end.hpp>
+#include <boost/mpl/next.hpp>
 
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 
-#include <sake/core/utility/convertible_to_any.hpp>
+#include <sake/core/introspection/has_type_type.hpp>
 
 namespace sake
 {
@@ -30,19 +31,70 @@ namespace mpl
 {
 
 template< class Sequence >
-struct common_result_type
-    : boost::mpl::fold<
-          Sequence,
-          sake::convertible_to_any,
-          boost::mpl::quote2< boost_ext::common_result_type >
-      >
-{ };
+struct common_result_type;
 
 template< class Sequence >
 struct has_common_result_type
-    : boost::is_void<
-          typename boost_ext::mpl::common_result_type< Sequence >::type
-      >
+  : sake::has_type_type< boost_ext::mpl::common_result_type< Sequence > >
+{ };
+
+namespace common_result_type_private
+{
+
+template< class I, class E >
+struct dispatch;
+
+template< class I, class E, class T >
+struct iterate;
+
+template<
+  class I, class E, class Common,
+  bool = sake::has_type_type< Common >::value
+>
+struct iterate_helper;
+
+template< class I, class E >
+struct dispatch
+  : common_result_type_private::iterate<
+      typename boost::mpl::next<I>::type, E,
+      typename boost::mpl::deref<I>::type
+    >
+{ };
+
+template< class E >
+struct dispatch<E,E>
+{ };
+
+template< class I, class E, class T >
+struct iterate
+  : iterate_helper<
+      I, E,
+      boost_ext::common_result_type< T, typename boost::mpl::deref<I>::type >
+    >
+{ };
+
+template< class E, class T >
+struct iterate<E,E,T>
+{ typedef T type; };
+
+template< class I, class E, class Common >
+struct iterate_helper< I, E, Common, false >
+{ };
+
+template< class I, class E, class Common >
+struct iterate_helper< I, E, Common, true >
+  : common_result_type_private::iterate<
+      typename boost::mpl::next<I>::type, E, typename Common::type >
+{ };
+
+} // namespace common_result_type_private
+
+template< class Sequence >
+struct common_result_type
+  : common_result_type_private::dispatch<
+      typename boost::mpl::begin< Sequence >::type,
+      typename boost::mpl::end< Sequence >::type
+    >
 { };
 
 } // namespace mpl

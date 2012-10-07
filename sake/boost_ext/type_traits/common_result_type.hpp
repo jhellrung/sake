@@ -16,13 +16,13 @@
 #define SAKE_BOOST_EXT_TYPE_TRAITS_COMMON_RETURN_TYPE_HPP
 
 #include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/common_type.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
 #include <sake/boost_ext/type_traits/remove_rvalue_reference.hpp>
 
+#include <sake/core/introspection/has_type_type.hpp>
 #include <sake/core/utility/is_convertible_wnrbt.hpp>
 
 namespace sake
@@ -32,25 +32,46 @@ namespace boost_ext
 {
 
 template< class T0, class T1 >
-class common_result_type
+struct common_result_type;
+
+namespace common_result_type_private
 {
-    typedef typename boost_ext::common_type< T0, T1 >::type nominal_type;
-public:
-    typedef typename boost::mpl::eval_if_c<
-        boost_ext::mpl::and2<
-            sake::is_convertible_wnrbt<
-                typename boost_ext::remove_rvalue_reference< T0 >::type,
-                nominal_type
-            >,
-            sake::is_convertible_wnrbt<
-                typename boost_ext::remove_rvalue_reference< T1 >::type,
-                nominal_type
-            >
-        >::value,
-        boost::mpl::identity< nominal_type >,
-        boost_ext::remove_qualifiers< nominal_type >
-    >::type type;
-};
+
+template<
+  class T0, class T1,
+  class Common = boost_ext::common_type< T0, T1 >,
+  bool = sake::has_type_type< Common >::value
+>
+struct dispatch;
+
+template< class T0, class T1, class Common >
+struct dispatch< T0, T1, Common, false >
+{ };
+
+template< class T0, class T1, class Common >
+struct dispatch< T0, T1, Common, true >
+  : boost::mpl::eval_if_c<
+      boost_ext::mpl::and2<
+        sake::is_convertible_wnrbt<
+          typename boost_ext::remove_rvalue_reference< T0 >::type,
+          typename Common::type
+        >,
+        sake::is_convertible_wnrbt<
+          typename boost_ext::remove_rvalue_reference< T1 >::type,
+          typename Common::type
+        >
+      >::value,
+      Common,
+      boost_ext::remove_qualifiers< typename Common::type >
+    >
+{ };
+
+} // namespace common_result_type_private
+
+template< class T0, class T1 >
+struct common_result_type
+  : common_result_type_private::dispatch< T0, T1 >
+{ };
 
 } // namespace boost_ext
 

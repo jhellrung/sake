@@ -26,7 +26,7 @@ struct builtin_has_operator_modulus_impl
     : boost_ext::mpl::and3<
           boost_ext::is_integral_or_enum<T>,
           boost_ext::is_integral_or_enum<U>,
-          builtin_has_operator_arithmetic_impl< T, U, Result, ResultPred >
+          builtin_has_operator_arithmetic_dispatch< T, U, Result, ResultPred >
       >
 { };
 

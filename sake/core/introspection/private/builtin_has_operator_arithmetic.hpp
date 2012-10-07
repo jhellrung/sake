@@ -10,12 +10,15 @@
 #define SAKE_CORE_INTROSPECTION_PRIVATE_BUILTIN_HAS_OPERATOR_ARITHMETIC_HPP
 
 #include <boost/mpl/apply.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
 #include <sake/boost_ext/type_traits/is_arithmetic_or_enum.hpp>
 #include <sake/boost_ext/type_traits/is_convertible.hpp>
 #include <sake/boost_ext/type_traits/remove_qualifiers.hpp>
+
+#include <sake/core/introspection/has_type_type.hpp>
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -29,19 +32,33 @@ namespace sake
 namespace introspection_private
 {
 
-template< class T, class U, class Result, class ResultPred >
-struct builtin_has_operator_arithmetic_impl
-    : boost_ext::mpl::and4<
-          boost_ext::is_arithmetic_or_enum<T>,
-          boost_ext::is_arithmetic_or_enum<U>,
-          boost_ext::is_convertible< typename boost_ext::common_result_type<T,U>::type, Result >,
-          boost::mpl::apply1< ResultPred, typename boost_ext::common_result_type<T,U>::type >
-      >
+template<
+  class T, class U, class Result, class ResultPred,
+  class Common = typename boost_ext::common_result_type<T,U>::type,
+  bool = sake::has_type_type< Common >::value
+>
+struct builtin_has_operator_arithmetic_dispatch;
+
+template< class T, class U, class Result, class ResultPred, class Common >
+struct builtin_has_operator_arithmetic_dispatch<
+  T, U, Result, ResultPred, Common, false >
+  : boost::false_type
+{ };
+
+template< class T, class U, class Result, class ResultPred, class Common >
+struct builtin_has_operator_arithmetic_dispatch<
+  T, U, Result, ResultPred, Common, true >
+  : boost_ext::mpl::and4<
+      boost_ext::is_integral_or_enum<T>,
+      boost_ext::is_integral_or_enum<U>,
+      boost_ext::is_convertible< typename Common::type, Result >,
+      boost::mpl::apply1< ResultPred, typename Common::type >
+    >
 { };
 
 template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_arithmetic
-    : builtin_has_operator_arithmetic_impl<
+    : builtin_has_operator_arithmetic_dispatch<
           typename boost_ext::remove_qualifiers<T>::type,
           typename boost_ext::remove_qualifiers<U>::type,
           Result,

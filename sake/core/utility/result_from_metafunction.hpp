@@ -72,6 +72,7 @@
 #define SAKE_RESULT_FROM_METAFUNCTION_result( z, n, data ) \
     template< class This BOOST_PP_ENUM_TRAILING_PARAMS_Z( z, n, class T ) > \
     struct result< This ( BOOST_PP_ENUM_PARAMS_Z( z, n, T ) ) > \
-    { typedef typename data< BOOST_PP_ENUM_PARAMS_Z( z, n, T ) >::type type; };
+      : data< BOOST_PP_ENUM_PARAMS_Z( z, n, T ) > \
+    { };
 
 #endif // #ifndef SAKE_CORE_UTILITY_RESULT_FROM_METAFUNCTION_HPP

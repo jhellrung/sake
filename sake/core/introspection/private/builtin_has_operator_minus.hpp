@@ -38,7 +38,7 @@ namespace introspection_private
 
 template< class T, class U, class Result, class ResultPred >
 struct builtin_has_operator_minus_dispatch
-    : builtin_has_operator_arithmetic_impl< T, U, Result, ResultPred >
+    : builtin_has_operator_arithmetic_dispatch< T, U, Result, ResultPred >
 { };
 
 template< class T, class U, class Result, class ResultPred >

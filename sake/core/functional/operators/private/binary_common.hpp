@@ -17,11 +17,11 @@
 #include <boost/type_traits/integral_promotion.hpp>
 
 #include <sake/boost_ext/type_traits/common_result_type.hpp>
-#include <sake/boost_ext/type_traits/is_cv_or.hpp>
-#include <sake/boost_ext/type_traits/is_reference.hpp>
+#include <sake/boost_ext/type_traits/has_qualifier.hpp>
 #include <sake/boost_ext/type_traits/make_signed.hpp>
 #include <sake/boost_ext/type_traits/make_unsigned.hpp>
 
+#include <sake/core/introspection/has_type_type.hpp>
 #include <sake/core/math/indeterminate_fwd.hpp>
 
 namespace sake
@@ -36,27 +36,46 @@ namespace result_of
 namespace default_impl
 {
 
-template< class T0, class T1 >
-class binary_result_types
+template<
+  class T0, class T1,
+  class Common = boost_ext::common_result_type< T0, T1 >,
+  bool = sake::has_type_type< Common >::value
+>
+struct binary_result_types;
+
+template< class T0, class T1, class Common >
+struct binary_result_types< T0, T1, Common, false >
 {
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T0 >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_reference< T1 >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T0 >::value));
-    BOOST_STATIC_ASSERT((!boost_ext::is_cv_or< T1 >::value));
-    typedef typename boost_ext::common_result_type< T0, T1 >::type common_type_;
-public:
-    typedef boost::mpl::vector11<
-        common_type_,
-        T0&, // op=, op?=; op<<, op>> (for std::ios)
-        T0, T1, // op-, op+ (for pointers)
-        std::ptrdiff_t, // op- (for pointers)
-        bool, // logical
-        boost::logic::tribool, // logical
-        sake::functional::indeterminate, // logical
-        typename boost::integral_promotion< T0 >::type, // shift
-        typename boost_ext::make_signed< common_type_ >::type,
-        typename boost_ext::make_unsigned< common_type_ >::type
-    > type;
+  BOOST_STATIC_ASSERT((!boost_ext::has_qualifier< T0 >::value));
+  BOOST_STATIC_ASSERT((!boost_ext::has_qualifier< T1 >::value));
+  typedef boost::mpl::vector8<
+    T0&, // op=, op?=; op<<, op>> (for std::ios)
+    T0, T1, // op-, op+ (for pointers)
+    std::ptrdiff_t, // op- (for pointers)
+    bool, // logical
+    boost::logic::tribool, // logical
+    sake::functional::indeterminate, // logical
+    typename boost::integral_promotion< T0 >::type // shift
+  > type;
+};
+
+template< class T0, class T1, class Common >
+struct binary_result_types< T0, T1, Common, true >
+{
+  BOOST_STATIC_ASSERT((!boost_ext::has_qualifier< T0 >::value));
+  BOOST_STATIC_ASSERT((!boost_ext::has_qualifier< T1 >::value));
+  typedef boost::mpl::vector11<
+    typename Common::type,
+    T0&, // op=, op?=; op<<, op>> (for std::ios)
+    T0, T1, // op-, op+ (for pointers)
+    std::ptrdiff_t, // op- (for pointers)
+    bool, // logical
+    boost::logic::tribool, // logical
+    sake::functional::indeterminate, // logical
+    typename boost::integral_promotion< T0 >::type, // shift
+    typename boost_ext::make_signed< typename Common::type >::type,
+    typename boost_ext::make_unsigned< typename Common::type >::type
+  > type;
 };
 
 } // namespace default_impl
