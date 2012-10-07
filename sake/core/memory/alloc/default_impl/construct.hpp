@@ -7,7 +7,7 @@
  *
  * alloc::default_impl::construct(A& a,
  *     alloc::traits<A>::void_pointer const p_obj,
- *     Emplacer const & e)
+ *     sake::emplacer< Signature > e)
  *     -> void
  ******************************************************************************/
 
@@ -24,6 +24,7 @@
 #include <sake/boost_ext/mpl/and.hpp>
 #include <sake/boost_ext/type_traits/is_void.hpp>
 
+#include <sake/core/emplacer/emplacer.hpp>
 #include <sake/core/emplacer/traits.hpp>
 #include <sake/core/memory/alloc/is_callable_mem_fun_construct.hpp>
 #include <sake/core/memory/alloc/rebind.hpp>
@@ -44,47 +45,48 @@ namespace default_impl
 namespace construct_private
 {
 
-template< class A, class Emplacer >
+template< class A, class Signature >
 inline void
 impl(A& a,
     typename sake::alloc::traits<A>::void_pointer const p_obj,
-    Emplacer const & e);
+    sake::emplacer< Signature > e);
 
 } // namespace construct_private
 
-template< class A, class Emplacer >
+template< class A, class Signature >
 inline void
 construct(A& a,
     typename sake::alloc::traits<A>::void_pointer const p_obj,
-    Emplacer const & e)
+    sake::emplacer< Signature > e)
 {
     BOOST_STATIC_ASSERT((sake::is_emplacer<
-        Emplacer, boost::mpl::quote1< boost_ext::not_is_void >
+        sake::emplacer< Signature >,
+        boost::mpl::quote1< boost_ext::not_is_void >
     >::value));
     SAKE_ASSERT((p_obj));
     // a.construct(p_obj, e);
     // a.construct(p_obj, e.construct());
     // rebind<A,T>::type(a).construct(p_obj, e.construct());
     // e.construct(p_obj);
-    construct_private::impl< A, Emplacer >::apply(a, p_obj, e);
+    construct_private::impl(a, p_obj, e);
 }
 
 namespace construct_private
 {
 
-template< class A, class Emplacer >
+template< class A, class Signature >
 inline void
 dispatch(A& a,
     typename sake::alloc::traits<A>::void_pointer const p_obj,
-    Emplacer const & e,
+    sake::emplacer< Signature > e,
     sake::int_tag<3>)
 { a.construct(p_obj, e); }
 
-template< class A, class Emplacer >
+template< class A, class Signature >
 inline void
 dispatch(A& a,
     typename sake::alloc::traits<A>::void_pointer const p_obj,
-    Emplacer const & e,
+    sake::emplacer< Signature > e,
     sake::int_tag<2>)
 {
     typedef sake::alloc::traits<A> traits_;
@@ -93,11 +95,11 @@ dispatch(A& a,
     a.construct(static_cast< pointer >(p_obj), e.construct());
 }
 
-template< class A, class Emplacer >
+template< class A, class Signature >
 inline void
 dispatch(A& a,
     typename sake::alloc::traits<A>::void_pointer const p_obj,
-    Emplacer const & e,
+    sake::emplacer< Signature > e,
     sake::int_tag<1>)
 {
     typedef sake::alloc::traits<A> traits_;
@@ -112,32 +114,33 @@ dispatch(A& a,
     a_.construct(static_cast< pointer >(p_obj), e.construct());
 }
 
-template< class A, class Emplacer >
+template< class A, class Signature >
 inline void
 dispatch(A& /*a*/,
     typename sake::alloc::traits<A>::void_pointer const p_obj,
-    Emplacer const & e,
+    sake::emplacer< Signature > e,
     sake::int_tag<0>)
 { e.construct(static_cast< void* >(p_obj)); }
 
-template< class A, class Emplacer >
+template< class A, class Signature >
 inline void
 impl(A& a,
     typename sake::alloc::traits<A>::void_pointer const p_obj,
-    Emplacer const & e)
+    sake::emplacer< Signature > e)
 {
     typedef sake::alloc::traits<A> traits_;
+    typedef sake::emplacer< Signature > emplacer_;
     SAKE_USING_TYPEDEF( typename traits_, void_pointer );
-    SAKE_USING_TYPEDEF( typename Emplacer, value_type );
+    SAKE_USING_TYPEDEF( typename emplacer_, value_type );
     SAKE_USING_TYPEDEF( typename traits_::template value_traits< value_type >, pointer );
     typedef typename sake::alloc::rebind< A, value_type >::type rebind_type;
     typedef typename boost_ext::mpl::
-         if_<
+    if_<
         sake::alloc::is_callable_mem_fun_construct<
-            A&, void ( void_pointer, Emplacer ) >,
+            A&, void ( void_pointer, emplacer_ ) >,
         sake::int_tag<3>
     >::type::template
-    else_if <
+    else_if<
         boost_ext::mpl::and2<
             boost::is_same< A, rebind_type >,
             sake::alloc::is_callable_mem_fun_construct<
@@ -145,14 +148,14 @@ impl(A& a,
         >,
         sake::int_tag<2>
     >::type::template
-    else_if <
+    else_if<
         sake::alloc::is_callable_mem_fun_construct<
             typename boost_ext::add_reference< rebind_type >::type,
             void ( pointer, value_type )
         >,
         sake::int_tag<1>
     >::type::template
-    else_   <
+    else_<
         sake::int_tag<0>
     >::type int_tag_;
     construct_private::dispatch(
