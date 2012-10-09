@@ -5,7 +5,7 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * range::basic::construct::subrange(I i,J j)
+ * range::basic::construct::subrange(I i, J j)
  *   -> range::basic::construct::result_of::subrange<I,J>::type
  * range::basic::construct::subrange(begin_tag, I i)
  *   -> range::basic::construct::result_of::subrange< begin_tag, I >::type
@@ -151,7 +151,7 @@ struct dispatch1< I, J, false >
 };
 
 template< class I, class N >
-struct dispatch0< I, N, true >
+struct dispatch1< I, N, true >
 {
   typedef sake::range::basic::subrange<
     typename sake::iterator::adapt_introterminal<
