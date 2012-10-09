@@ -72,7 +72,7 @@ template< class Tag, class T >
 struct tagged_value< Tag, T&& >
 {
     typedef Tag tag;
-    typedef T& value_type;
+    typedef T&& value_type;
 
     // Implicit by design.
     // Templated to avoid unintentional implicit conversions.
