@@ -295,6 +295,8 @@ protected:
             (( i, <, this_.size() ))
         );
 #endif // #ifdef SAKE_RANGE_DEBUG
+        // TODO: This has the same issues as iterator::facade::operator[]
+        // concerning returning a reference to a temporary...
         return this_.begin()[static_cast< difference_type >(i)];
     }
 
