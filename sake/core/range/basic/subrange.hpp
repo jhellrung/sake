@@ -7,11 +7,6 @@
  *
  * struct range::basic::subrange<I>
  * struct range::basic::subrange<I,N>
- *
- * range::sub(Begin b, End e) -> range::result_of::sub< Begin, End >::type
- * range::sub_c<N>(I i) -> range::result_of::sub_c<I,N>::type
- *
- * struct range::functional::sub
  ******************************************************************************/
 
 #ifndef SAKE_CORE_RANGE_BASIC_SUBRANGE_HPP
