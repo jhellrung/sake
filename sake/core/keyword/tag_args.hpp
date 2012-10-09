@@ -7,14 +7,15 @@
  *
  * struct keyword::tag_args< Args, ParamSpecs >
  *
- * "Tags" the the Boost.MPL sequence of arguments types given by Args according
- * parameter specification given by ParamSpecs.  ParamSpecs should be a
+ * "Tags" the Boost.MPL sequence of arguments types given by Args according to
+ * the parameter specification given by ParamSpecs. ParamSpecs should be a
  * Boost.MPL sequence of parameter specifictions (see param_spec.hpp).
  *
  * tag_args attempts to generate a Boost.MPL sequence TaggedValues of tagged
  * values (see tagged_value.hpp) corresponding to Args, such that
  * - if Args[i] is already a tagged value, then TaggedValues[i] == Args[i];
- * - otherwise, TaggedValues[i]::value_type == Args[i]&&.
+ * - otherwise, TaggedValues[i]::value_type == Args[i]&&, i.e., the i'th
+ *   argument is tagged.
  *
  * The algorithm used to build TaggedValues goes as follows.
  *
@@ -42,7 +43,7 @@
  *                  that A satisfies D's predicate; if no such D exists, set
  *                  TaggedValues to void and return
  *         TaggedValues := [ TaggedValues, tagged_value< tag(D), A&& > ]
- *         Deduced := Deduced with D removed
+ *         Deduceds := Deduceds - { D }
  *     i := i + 1
  *
  * As can be seen, if the above algorithm fails, TaggedValues will be void.
@@ -50,8 +51,8 @@
  * The general idea is to tag arguments in two stages. The first stage tags
  * arguments purely positionally, and does so until a tagged value is reached in
  * Args or a deduced parameter specification is reached in ParamSpecs. At this
- * point, the argument switches over to the second stage, and only tags untagged
- * values in Args with tags from *deduced* parameter specifications.
+ * point, the algorithm switches over to the second stage, and only tags
+ * *untagged* values in Args with tags from *deduced* parameter specifications.
  *
  * Note that this is precisely the algorithm that Boost.Parameter implements in
  * its "parameters" interface.
@@ -111,14 +112,14 @@ struct tag_args
         ParamSpecs,
         tag_args_private::is_deduced,
         boost::mpl::back_inserter< tag_args_private::empty_mpl_vector_type >
-    >::type deduced_type;
+    >::type deduceds_type;
     typedef typename boost_ext::mpl::as_vector<
         typename tag_args_private::iterate_positional<
             typename boost::mpl::begin< Args >::type,
             typename boost::mpl::end< Args >::type,
             typename boost::mpl::begin< ParamSpecs >::type,
             typename boost::mpl::end< ParamSpecs >::type,
-            deduced_type
+            deduceds_type
         >::type
     >::type type;
 };
