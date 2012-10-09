@@ -45,18 +45,16 @@ namespace sake
 
 template< class From, class To >
 struct is_convertible_wnrbt
-    : boost_ext::is_convertible< From, To >
+  : boost_ext::is_convertible< From, To >
 { };
 
 template< class From, class To >
-struct is_convertible_wnrbt< From, To& >
-    : boost_ext::mpl::and2<
-          boost_ext::is_convertible< From, To& >,
-          sake::extension::is_convertible_wnrbt<
-              typename boost::remove_cv< From >::type,
-              To&
-          >
-      >
+struct is_convertible_wnrbt< From, To & >
+  : boost_ext::mpl::and2<
+      boost_ext::is_convertible< From, To & >,
+      sake::extension::is_convertible_wnrbt<
+        typename boost::remove_cv< From >::type, To & >
+    >
 { };
 
 /*******************************************************************************
@@ -68,7 +66,7 @@ namespace extension
 
 template< class From, class To, class Enable /*= void*/ >
 struct is_convertible_wnrbt
-    : sake::default_impl::is_convertible_wnrbt< From, To >
+  : sake::default_impl::is_convertible_wnrbt< From, To >
 { };
 
 } // namespace extension
@@ -82,7 +80,7 @@ namespace default_impl
 
 template< class From, class To >
 struct is_convertible_wnrbt
-    : boost::false_type
+  : boost::false_type
 { };
 
 namespace is_convertible_wnrbt_private
@@ -90,78 +88,78 @@ namespace is_convertible_wnrbt_private
 
 template< class From, class To >
 struct helper1
-    : sake::has_mem_fun_operator< From, To& >
+  : sake::has_mem_fun_operator< From, To & >
 { };
 
 template< class From, class To >
 struct helper1< From, To const >
-    : boost_ext::mpl::or2<
-          sake::has_mem_fun_operator< From, To& >,
-          sake::has_mem_fun_operator< From, To const & >
-      >
+  : boost_ext::mpl::or2<
+      sake::has_mem_fun_operator< From, To & >,
+      sake::has_mem_fun_operator< From, To const & >
+    >
 { };
 
 template< class From, class To >
 struct helper1< From, To volatile >
-    : boost_ext::mpl::or2<
-          sake::has_mem_fun_operator< From, To& >,
-          sake::has_mem_fun_operator< From, To volatile & >
-      >
+  : boost_ext::mpl::or2<
+      sake::has_mem_fun_operator< From, To & >,
+      sake::has_mem_fun_operator< From, To volatile & >
+    >
 { };
 
 template< class From, class To >
 struct helper1< From, To const volatile >
-    : boost_ext::mpl::or4<
-          sake::has_mem_fun_operator< From, To& >,
-          sake::has_mem_fun_operator< From, To const & >,
-          sake::has_mem_fun_operator< From, To volatile & >,
-          sake::has_mem_fun_operator< From, To const volatile & >
-      >
+  : boost_ext::mpl::or4<
+      sake::has_mem_fun_operator< From, To & >,
+      sake::has_mem_fun_operator< From, To const & >,
+      sake::has_mem_fun_operator< From, To volatile & >,
+      sake::has_mem_fun_operator< From, To const volatile & >
+    >
 { };
 
 template< class From, class To >
 struct helper0
-    : boost_ext::mpl::or4<
-          helper1< From, To >,
-          helper1< From const, To >,
-          helper1< From volatile, To >,
-          helper1< From const volatile, To >
-      >
+  : boost_ext::mpl::or4<
+      helper1< From, To >,
+      helper1< From const, To >,
+      helper1< From volatile, To >,
+      helper1< From const volatile, To >
+    >
 { };
 
 template< class From, class To >
 struct helper0< From const, To >
-    : boost_ext::mpl::or2<
-          helper1< From const, To >,
-          helper1< From const volatile, To >
-      >
+  : boost_ext::mpl::or2<
+      helper1< From const, To >,
+      helper1< From const volatile, To >
+    >
 { };
 
 template< class From, class To >
 struct helper0< From volatile, To >
-    : boost_ext::mpl::or2<
-          helper1< From volatile, To >,
-          helper1< From const volatile, To >
-      >
+  : boost_ext::mpl::or2<
+      helper1< From volatile, To >,
+      helper1< From const volatile, To >
+    >
 { };
 
 template< class From, class To >
 struct helper0< From const volatile, To >
-    : helper1< From const volatile, To >
+  : helper1< From const volatile, To >
 { };
 
 } // namespace is_convertible_wnrbt_private
 
 template< class From, class To >
-struct is_convertible_wnrbt< From&, To& >
-    : boost_ext::mpl::or3<
-          boost_ext::is_convertible< From*, To* >,
-          is_convertible_wnrbt_private::helper0< From, To >,
-          sake::is_convertible_wnrbt<
-              typename boost::remove_cv< From >::type,
-              To&
-          >
+struct is_convertible_wnrbt< From &, To & >
+  : boost_ext::mpl::or3<
+      boost_ext::is_convertible< From *, To * >,
+      is_convertible_wnrbt_private::helper0< From, To >,
+      sake::is_convertible_wnrbt<
+        typename boost::remove_cv< From >::type,
+        To &
       >
+    >
 { };
 
 } // namespace default_impl
