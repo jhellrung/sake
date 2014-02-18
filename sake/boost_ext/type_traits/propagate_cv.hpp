@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/boost_ext/type_traits/propagate_cv.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -26,10 +26,24 @@ namespace sake
 namespace boost_ext
 {
 
-template< class From, class To > struct propagate_cv { typedef To type; };
-template< class From, class To > struct propagate_cv< From const, To > : boost::add_const< To > { };
-template< class From, class To > struct propagate_cv< From volatile, To > : boost::add_volatile< To > { };
-template< class From, class To > struct propagate_cv< From const volatile, To > : boost::add_cv< To > { };
+template< class From, class To >
+struct propagate_cv
+{ typedef To type; };
+
+template< class From, class To >
+struct propagate_cv< From const, To >
+  : boost::add_const< To >
+{ };
+
+template< class From, class To >
+struct propagate_cv< From volatile, To >
+  : boost::add_volatile< To >
+{ };
+
+template< class From, class To >
+struct propagate_cv< From const volatile, To >
+  : boost::add_cv< To >
+{ };
 
 } // namespace boost_ext
 

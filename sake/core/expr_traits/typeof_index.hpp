@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/expr_traits/typeof_index.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -27,8 +27,8 @@
 #include <sake/core/utility/type_tag.hpp>
 
 #define SAKE_EXPR_TYPEOF_INDEX( expression, candidate_types ) \
-    (sizeof( ::sake::expr_typeof_index_private::helper< candidate_types \
-        >::apply( SAKE_EXPR_TYPE_TAG_OF( expression ) ) ) - 1)
+  (sizeof( ::sake::expr_typeof_index_private::helper< candidate_types \
+    >::apply( SAKE_EXPR_TYPE_TAG_OF( expression ) ) ) - 1)
 
 namespace sake
 {
@@ -39,17 +39,17 @@ namespace expr_typeof_index_private
 template< class Sequence >
 struct helper
 {
-    template< class T >
-    struct result
-    {
-        static std::size_t const value =
-            boost_ext::mpl::find_index< Sequence, T >::value;
-        typedef sake::sizeof_t< 1 + value > type;
-    };
+  template< class T >
+  struct result
+  {
+    static std::size_t const value =
+      boost_ext::mpl::find_index< Sequence, T >::value;
+    typedef sake::sizeof_t< 1 + value > type;
+  };
 
-    template< class T >
-    static typename result<T>::type
-    apply(sake::type_tag<T>);
+  template< class T >
+  static typename result<T>::type
+  apply(sake::type_tag<T>);
 };
 
 } // namespace expr_typeof_index_private

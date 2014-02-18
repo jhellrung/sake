@@ -35,84 +35,84 @@ namespace private_
 
 template< class Derived, class I, class E, class ChainedBase >
 class iterate
-    : public private_::iterate<
-          Derived, typename boost::mpl::next<I>::type, E, ChainedBase >
+  : public private_::iterate<
+      Derived, typename boost::mpl::next<I>::type, E, ChainedBase >
 {
-    typedef private_::iterate<
-        Derived, typename boost::mpl::next<I>::type, E, ChainedBase > iterate_;
+  typedef private_::iterate<
+    Derived, typename boost::mpl::next<I>::type, E, ChainedBase > iterate_;
 protected:
-    using iterate_::derived;
+  using iterate_::derived;
 public:
-    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
-        typename iterate,
-        (( iterate_ ))
-    )
-    SAKE_MEMBERWISE_SWAP(
-        typename iterate,
-        (( iterate_ ))
-    )
+  SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+    typename iterate,
+    (( iterate_ ))
+  )
+  SAKE_MEMBERWISE_SWAP(
+    typename iterate,
+    (( iterate_ ))
+  )
 
 private:
-    typedef typename boost::mpl::deref<I>::type conversion_type;
+  typedef typename boost::mpl::deref<I>::type conversion_type;
 public:
-    operator conversion_type()
-    {
-        return sake::conversion_operators::core_access::convert(
-            derived(), sake::type_tag< conversion_type >());
-    }
-    operator conversion_type() const
-    {
-        return sake::conversion_operators::core_access::convert(
-            derived(), sake::type_tag< conversion_type >());
-    }
+  operator conversion_type()
+  {
+    return sake::conversion_operators::core_access::convert(
+      derived(), sake::type_tag< conversion_type >());
+  }
+  operator conversion_type() const
+  {
+    return sake::conversion_operators::core_access::convert(
+      derived(), sake::type_tag< conversion_type >());
+  }
 
 protected:
-    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
-        typename iterate,
-        (( iterate_ ))
-    )
+  SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
+    typename iterate,
+    (( iterate_ ))
+  )
 
-    template< class T >
-    explicit iterate(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            iterate, T >::value >::type* = 0)
-        : iterate_(sake::forward<T>(x))
-    { }
+  template< class T >
+  explicit iterate(SAKE_FWD2_REF( T ) x,
+    typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+      iterate, T >::value >::type * = 0)
+    : iterate_(sake::forward<T>(x))
+  { }
 };
 
 template< class Derived, class E, class ChainedBase >
 class iterate< Derived, E, E, ChainedBase >
-    : public ChainedBase
+  : public ChainedBase
 {
 protected:
-    typedef ChainedBase chained_base_type;
+  typedef ChainedBase chained_base_type;
 public:
-    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
-        typename iterate,
-        (( chained_base_type ))
-    )
-    SAKE_MEMBERWISE_SWAP(
-        typename iterate,
-        (( chained_base_type ))
-    )
+  SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+    typename iterate,
+    (( chained_base_type ))
+  )
+  SAKE_MEMBERWISE_SWAP(
+    typename iterate,
+    (( chained_base_type ))
+  )
 protected:
-    Derived& derived()
-    { return *static_cast< Derived* >(this); }
-    Derived const & derived() const
-    { return *static_cast< Derived const * >(this); }
+  Derived       & derived()
+  { return *static_cast< Derived       * >(this); }
+  Derived const & derived() const
+  { return *static_cast< Derived const * >(this); }
 
-    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
-        typename iterate,
-        (( chained_base_type ))
-    )
+  SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
+    typename iterate,
+    (( chained_base_type ))
+  )
 
-    template< class T >
-    explicit iterate(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            iterate, T >::value >::type* = 0)
-        : chained_base_type(sake::emplacer_constructible<
-              chained_base_type >(sake::forward<T>(x)))
-    { }
+  template< class T >
+  explicit iterate(SAKE_FWD2_REF( T ) x,
+    typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+      iterate, T >::value >::type * = 0)
+    : chained_base_type(sake::emplacer_constructible<
+        chained_base_type >(sake::forward<T>(x)))
+  { }
 };
 
 } // namespace private_

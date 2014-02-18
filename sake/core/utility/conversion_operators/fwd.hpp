@@ -18,14 +18,14 @@ namespace conversion_operators
 namespace private_
 {
 
-struct dummy_base { };
+struct empty { };
 
 } // namespace private_
 
 template<
-    class Derived,
-    class ConversionTypes,
-    class ChainedBase = private_::dummy_base
+  class Derived,
+  class ConversionTypes,
+  class ChainedBase = private_::empty
 >
 class base;
 

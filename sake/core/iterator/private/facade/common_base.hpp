@@ -43,49 +43,49 @@ template< class > struct dummy_param;
 
 template< class Derived, class Params >
 struct common_base
-    : boost_ext::mpl::at<
-          Params, sake::iterator::keyword::tag::chained_base,
-          private_::dummy_base
-      >::type
+  : boost_ext::mpl::at<
+      Params, sake::iterator::keyword::tag::chained_base,
+      private_::dummy_base
+    >::type
 {
 protected:
-    typedef typename boost_ext::mpl::at<
-        Params, sake::iterator::keyword::tag::chained_base,
-        private_::dummy_base
-    >::type chained_base_type;
+  typedef typename boost_ext::mpl::at<
+    Params, sake::iterator::keyword::tag::chained_base,
+    private_::dummy_base
+  >::type chained_base_type;
 public:
-    SAKE_MEMBERWISE_SWAP( typename common_base, (( chained_base_type )) )
+  SAKE_MEMBERWISE_SWAP( typename common_base, (( chained_base_type )) )
 
-    template< class Introterminal = sake::null_introterminal_tag >
-    struct relax
-    { typedef typename sake::iterator::core_access::
-        relax< Derived, Introterminal >::type type; };
+  template< class Introterminal = sake::null_introterminal_tag >
+  struct relax
+  { typedef typename sake::iterator::core_access::
+    relax< Derived, Introterminal >::type type; };
 
 protected:
-    Derived& derived()
-    { return *static_cast< Derived* >(this); }
-    Derived const & derived() const
-    { return *static_cast< Derived const * >(this); }
+  Derived       & derived()
+  { return *static_cast< Derived       * >(this); }
+  Derived const & derived() const
+  { return *static_cast< Derived const * >(this); }
 
-    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
-        typename common_base,
-        (( chained_base_type ))
-    )
-    SAKE_MEMBERWISE_COPY_TAGS( (( chained_base_type )) )
-    SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( chained_base_type )) )
+  SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
+    typename common_base,
+    (( chained_base_type ))
+  )
+  SAKE_MEMBERWISE_COPY_TAGS( (( chained_base_type )) )
+  SAKE_MEMBERWISE_DESTRUCTOR_TAGS( (( chained_base_type )) )
 
-    template< class T >
-    explicit common_base(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            common_base, T >::value >::type* = 0)
-        : chained_base_type(sake::emplacer_constructible<
-              chained_base_type >(sake::forward<T>(x)))
-    { }
+  template< class T >
+  explicit common_base(SAKE_FWD2_REF( T ) x,
+    typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+      common_base, T >::value >::type * = 0)
+    : chained_base_type(sake::emplacer_constructible<
+        chained_base_type >(sake::forward<T>(x)))
+  { }
 
-    template< class T >
-    void derived_equal(private_::dummy_param<T>);
-    template< class T >
-    void derived_difference(private_::dummy_param<T>);
+  template< class T >
+  void derived_equal(private_::dummy_param<T>);
+  template< class T >
+  void derived_difference(private_::dummy_param<T>);
 };
 
 } // namespace private_

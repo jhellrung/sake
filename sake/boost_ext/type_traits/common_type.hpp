@@ -13,7 +13,7 @@
  *
  * common_type< T0, T1 >::type is the type of the expression
  *   declval< bool >() ? declval< T0 >() : declval< T1 >()
- * Note that this evaluates to void if one or both of T0 and T1 is void.
+ * based on ISO/IEC 14882:2003(E) 5.16:
  ******************************************************************************/
 
 #ifndef SAKE_BOOST_EXT_TYPE_TRAITS_COMMON_TYPE_HPP
@@ -21,6 +21,7 @@
 
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_void.hpp>
@@ -63,6 +64,66 @@ namespace common_type_private
 template< class T0, class T1 >
 struct dispatch_on_void;
 
+#if 0
+
+template< class From, class To >
+class convert_helper
+{
+  typedef typename boost_ext::
+    remove_reference< From >::type noref_from_type;
+  typedef typename boost_ext::
+    remove_reference< To >::type noref_to_type;
+  typedef typename boost_ext::
+    remove_cv< noref_from_type >::type noqual_from_type;
+  typedef typename boost_ext::
+    remove_cv< noref_to_type >::type noqual_to_type;
+  typedef typename boost_ext::mpl::
+  eval_if<
+    boost_ext::mpl::and3<
+      boost::is_class< noqual_from_type >,
+      boost::is_class< noqual_to_type >,
+      boost_ext::mpl::or2<
+        boost::is_base_of< noqual_from_type, noqual_to_type >,
+        boost::is_base_of< noqual_to_type, noqual_from_type >
+      >
+    >,
+    boost::mpl::if_<
+      boost_ext::mpl::and2<
+        boost::is_base_of< noqual_to_type, noqual_from_type >,
+        boost_ext::has_cv_qual_ge< noqual_to_type, noqual_from_type >
+      >,
+      boost::mpl::pair< boost::true_type, noref_to_type >,
+      boost::mpl::pair< boost::false_type, void >
+    >
+  >::type::template
+  else_if<
+    boost_ext::is_convertible< From, noqual_to_type >,
+    boost::mpl::pair< boost::true_type, noqual_to_type >
+  >::type::template
+  else_<
+    boost::mpl::pair< boost::false_type, void >
+  >::type type;
+public:
+  static bool const value = type::first_type::value;
+  typedef typename type::second_type result_type;
+};
+
+template< class From, class To >
+struct convert< From, To & >
+{
+  typedef typename boost_ext::remove_qualifiers< From >::type noqual_from_type;
+  typedef typename boost_ext::remove_cv< To >::type noqual_to_type;
+  typedef typename boost::mpl::eval_if_c<
+    sake::is_convertible_wnrbt< From, To & >::value,
+    boost::mpl::identity< boost::mpl::pair< boost::true_type, To & > >,
+    convert_helper< From, To & >
+  >::type type;
+  static bool const value = type::first_type::value;
+  typedef typename type::second_type result_type;
+};
+
+#endif
+
 template<
   class T0, class T1,
   bool = SAKE_EXPR_IS_RVALUE(
@@ -88,9 +149,19 @@ struct dispatch_on_void
   : dispatch_on_rvalue_result< T0, T1 >
 { };
 
-template< class T > struct dispatch_on_void< T, void > { };
-template< class T > struct dispatch_on_void< void, T > { };
-template<> struct dispatch_on_void< void, void > { typedef void type; };
+template< class T >
+struct dispatch_on_void< T, void >
+  : boost::decay< typename boost_ext::remove_qualifiers<T>::type >
+{ };
+
+template< class T >
+struct dispatch_on_void< void, T >
+  : boost::decay< typename boost_ext::remove_qualifiers<T>::type >
+{ };
+
+template<>
+struct dispatch_on_void< void, void >
+{ typedef void type; };
 
 template<
   class T0, class T1,

@@ -29,50 +29,50 @@ namespace conversion_operators
 {
 
 template<
-    class Derived,
-    class ConversionTypes,
-    class ChainedBase /*= private_::dummy_base*/
+  class Derived,
+  class ConversionTypes,
+  class ChainedBase /*= private_::empty*/
 >
 class base
-    : public private_::iterate<
-          Derived,
-          typename boost::mpl::begin< ConversionTypes >::type,
-          typename boost::mpl::end< ConversionTypes >::type,
-          ChainedBase
-      >
+  : public private_::iterate<
+      Derived,
+      typename boost::mpl::begin< ConversionTypes >::type,
+      typename boost::mpl::end< ConversionTypes >::type,
+      ChainedBase
+    >
 {
-    typedef private_::iterate<
-        Derived,
-        typename boost::mpl::begin< ConversionTypes >::type,
-        typename boost::mpl::end< ConversionTypes >::type,
-        ChainedBase
-    > iterate_;
+  typedef private_::iterate<
+    Derived,
+    typename boost::mpl::begin< ConversionTypes >::type,
+    typename boost::mpl::end< ConversionTypes >::type,
+    ChainedBase
+  > iterate_;
 public:
-    SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
-        typename base,
-        (( iterate_ ))
-    )
-    SAKE_MEMBERWISE_SWAP(
-        typename base,
-        (( iterate_ ))
-    )
+  SAKE_BASIC_MOVABLE_COPYABLE_MEMBERWISE(
+    typename base,
+    (( iterate_ ))
+  )
+  SAKE_MEMBERWISE_SWAP(
+    typename base,
+    (( iterate_ ))
+  )
 
 protected:
-    SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
-        typename base,
-        (( iterate_ ))
-    )
+  SAKE_MEMBERWISE_DEFAULT_CONSTRUCTOR(
+    typename base,
+    (( iterate_ ))
+  )
 
-    template< class T >
-    explicit base(SAKE_FWD2_REF( T ) x,
-        typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
-            base, T >::value >::type* = 0)
-        : iterate_(sake::forward<T>(x))
-    { }
+  template< class T >
+  explicit base(SAKE_FWD2_REF( T ) x,
+    typename boost::disable_if_c< boost_ext::is_base_of_sans_qualifiers<
+      base, T >::value >::type* = 0)
+    : iterate_(sake::forward<T>(x))
+  { }
 
-    template< class V >
-    explicit base(sake::emplacer< V ( ) >)
-    { }
+  template< class V >
+  explicit base(sake::emplacer< V ( ) >)
+  { }
 };
 
 } // namespace conversion_operators

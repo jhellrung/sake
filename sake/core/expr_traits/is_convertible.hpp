@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/expr_traits/is_convertible.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -31,7 +31,9 @@
 #include <sake/core/utility/true_false_tag.hpp>
 
 #define SAKE_EXPR_IS_CONVERTIBLE( from_expression, to_type ) \
-    (SAKE_SIZEOF_TRUE_TAG == sizeof( ::sake::expr_is_convertible_private::helper< to_type >::apply( from_expression ) ))
+  (SAKE_SIZEOF_TRUE_TAG == sizeof( \
+    ::sake::expr_is_convertible_private::helper< to_type >:: \
+      apply( from_expression ) ))
 
 namespace sake
 {
@@ -40,19 +42,19 @@ namespace expr_is_convertible_private
 {
 
 template<
-    class T,
-    bool = boost_ext::mpl::or2<
-               boost_ext::is_reference<T>,
-               boost::is_object<T>
-           >::value
+  class T,
+  bool = boost_ext::mpl::or2<
+           boost_ext::is_reference<T>,
+           boost::is_object<T>
+         >::value
 >
 struct helper;
 
 template< class T >
 struct helper< T, true >
 {
-    static sake::true_tag  apply(T);
-    static sake::false_tag apply(...);
+  static sake::true_tag  apply(T);
+  static sake::false_tag apply(...);
 };
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -60,13 +62,13 @@ struct helper< T, true >
 template< class T >
 struct helper< SAKE_RV_REF( T ), true >
 {
-    static sake::true_tag  apply(SAKE_RV_REF( T ));
-    static sake::false_tag apply(...);
-    template< class U >
-    static typename boost::enable_if_c<
-        boost::is_base_of<T,U>::value,
-        sake::false_tag
-    >::type apply(U&);
+  static sake::true_tag  apply(SAKE_RV_REF( T ));
+  static sake::false_tag apply(...);
+  template< class U >
+  static typename boost::enable_if_c<
+    boost::is_base_of<T,U>::value,
+    sake::false_tag
+  >::type apply(U&);
 };
 #endif // #ifdef BOOST_NO_RVALUE_REFERENCES
 
@@ -94,20 +96,16 @@ namespace
 {
 
 #define test( from, to ) \
-    BOOST_STATIC_ASSERT( SAKE_EXPR_IS_CONVERTIBLE( \
-        (sake::declval< from >()), \
-        to \
-    ) );
+  BOOST_STATIC_ASSERT( SAKE_EXPR_IS_CONVERTIBLE( \
+    (sake::declval< from >()), to ) );
 test( int, int )
 test( int, void )
 test( int, long )
 test( int*, void* )
 #undef test
 #define test( from, to ) \
-    BOOST_STATIC_ASSERT( !SAKE_EXPR_IS_CONVERTIBLE( \
-        (sake::declval< from >()), \
-        to \
-    ) );
+  BOOST_STATIC_ASSERT( !SAKE_EXPR_IS_CONVERTIBLE( \
+    (sake::declval< from >()), to ) );
 test( int, void * )
 test( void*, int )
 test( void*, int* )

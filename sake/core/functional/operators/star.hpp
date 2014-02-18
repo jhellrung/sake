@@ -5,8 +5,8 @@
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
- * operators::star(T&& x)
- *     -> operators::result_of::star<T>::type
+ * operators::star(T && x)
+ *   -> operators::result_of::star<T>::type
  * struct operators::functional::star
  *
  * struct operators::result_of::star<T>
@@ -45,19 +45,19 @@ namespace star_private {
 template< class T >
 struct dispatch_index
 {
-    static int const value = boost::mpl::if_c<
-        sake::is_iterator<T>::value,
-        sake::int_tag<3>, sake::int_tag<0>
-    >::type::value;
+  static int const value = boost::mpl::if_c<
+    sake::is_iterator<T>::value,
+    sake::int_tag<3>, sake::int_tag<1>
+  >::type::value;
 };
 
 template< class T >
-struct dispatch_index< T* >
+struct dispatch_index< T * >
 {
-    static int const value = boost::mpl::if_c<
-        boost::is_function<T>::value,
-        sake::int_tag<1>, sake::int_tag<2>
-    >::type::value;
+  static int const value = boost::mpl::if_c<
+    boost::is_function<T>::value,
+    sake::int_tag<0>, sake::int_tag<2>
+  >::type::value;
 };
 
 template< class T, int = dispatch_index<T>::value >
@@ -65,39 +65,39 @@ struct dispatch;
 
 template< class T >
 struct dispatch<T,3>
-    : sake::iterator_reference<T>
+  : sake::iterator_reference<T>
 { };
 
 template< class T >
-struct dispatch< T*, 2 >
+struct dispatch< T *, 2 >
 {
-    BOOST_STATIC_ASSERT((boost::is_object<T>::value));
-    typedef T& type;
+  BOOST_STATIC_ASSERT((boost::is_object<T>::value));
+  typedef T & type;
 };
 
 template< class T >
 struct dispatch<T,1>
 {
 private:
-    typedef typename sake::pointee<T>::type pointee_;
-    BOOST_STATIC_ASSERT((boost::is_object< pointee_ >::value));
+  typedef typename sake::pointee<T>::type pointee_;
+  BOOST_STATIC_ASSERT((boost::is_object< pointee_ >::value));
 public:
-    typedef pointee_ & type;
+  typedef pointee_ & type;
 };
 
 template< class T >
-struct dispatch< T*, 0 >
+struct dispatch< T *, 0 >
 {
 #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
-    typedef T* type;
+  typedef T * type;
 #else // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
-    typedef T& type;
+  typedef T & type;
 #endif // #if SAKE_MSC_VERSION && SAKE_MSC_VERSION <= 1500
 };
 
 template< class T >
 struct impl
-    : dispatch< typename boost_ext::remove_qualifiers<T>::type >
+  : dispatch< typename boost_ext::remove_qualifiers<T>::type >
 { };
 
 } // namespace star_private

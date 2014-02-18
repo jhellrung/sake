@@ -33,7 +33,7 @@
 #ifndef BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
 
 #define SAKE_EXPLICIT_OPERATOR_BOOL() \
-explicit operator bool()
+explicit operator bool ()
 
 #else // #ifndef BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
 
@@ -46,14 +46,14 @@ explicit operator bool()
 #define SAKE_EXPLICIT_OPERATOR_BOOL() \
 struct _sake_explicit_operator_bool_struct { int padding; int member; }; \
 typedef int (_sake_explicit_operator_bool_struct::*_sake_explicit_operator_bool_result_type); \
-operator _sake_explicit_operator_bool_result_type() const \
+operator _sake_explicit_operator_bool_result_type () const \
 { return _sake_explicit_operator_bool_impl() ? &_sake_explicit_operator_bool_struct::member : 0; } \
 bool _sake_explicit_operator_bool_impl()
 
 #else // #ifndef SAKE_NO_EXPLICIT_OPERATOR_BOOL
 
 #define SAKE_EXPLICIT_OPERATOR_BOOL() \
-operator bool()
+operator bool ()
 
 #endif // #ifndef SAKE_NO_EXPLICIT_OPERATOR_BOOL
 

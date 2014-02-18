@@ -57,26 +57,30 @@
  *
  * SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF
  * --------
- * MSVC does not require (and, indeed, errors if included) the "template"
- * keyword in the return type of member function definitions when the standard
- * otherwise requires it.  To maintain portability, use this macro in place of
- * this "template" keyword.  For example:
+ * In rare cases, MSVC errors if one includes the "template" keyword in the
+ * return type of a member function definition when the standard would otherwise
+ * require the keyword. To maintain portability, use this macro in place of this
+ * "template" keyword. For example:
  *
  * template< class T >
  * struct X
  * {
- *     template< class U >
- *     struct Y { typedef void type; };
- *     template< class U >
- *     Y<U>::type f(U);
+ *   template< class V >
+ *   struct Y
+ *   { typedef void type; };
+ *   template< class U, class V >
+ *   typename Y<V>::type
+ *   f(U,V);
  * };
  *
  * template< class T >
- * template< class U >
- * typename X<T>:: SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF Y<U>::type
+ * template< class U, class V >
+ * inline typename X<T>::
+ * SAKE_WORKAROUND_NESTED_TEMPLATE_IN_MEM_FUN_DEF
+ * Y<V>::type
  * X<T>::
- * f(U)
- * { [...] }
+ * f(U,V)
+ * { }
  ******************************************************************************/
 
 #ifndef SAKE_CORE_CONFIG_HPP
@@ -84,15 +88,15 @@
 
 #ifdef _MSC_VER
 #define SAKE_MSC_VERSION \
-    _MSC_VER
+  _MSC_VER
 #endif // #ifdef _MSC_VER
 
 #define SAKE_GNUC_VERSION_OF( major, minor, patch ) \
-    ( 10000 * major + 100 * minor + patch )
+  ( 10000 * major + 100 * minor + patch )
 
 #ifdef __GNUC__
 #define SAKE_GNUC_VERSION \
-    SAKE_GNUC_VERSION_OF( __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ )
+  SAKE_GNUC_VERSION_OF( __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ )
 #endif // #ifdef __GNUC__
 
 
@@ -114,7 +118,7 @@
 
 #if SAKE_GNUC_VERSION
 #define SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( T ) \
-    private: T();
+  private: T();
 #else // #if SAKE_GNUC_VERSION
 #define SAKE_SUPPRESS_WARNING_UNINIITIALIZED_IN_CONCEPT_CHECKING_CLASS( T )
 #endif // #if SAKE_GNUC_VERSION

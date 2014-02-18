@@ -62,14 +62,14 @@ struct sfinae
 template< class F_ >
 struct dispatch_index
 {
-    static const int value = boost_ext::mpl::
-         if_< boost::function_types::is_function< F_ >,
-              sake::int_tag<2> >::type::template
-    else_if < boost::function_types::is_function_pointer< F_ >,
-              sake::int_tag<2> >::type::template
-    else_if < sake::has_type_result_type< F_ >,
-              sake::int_tag<1> >::type::template
-    else_   < sake::int_tag<0> >::type::value;
+  static const int value = boost_ext::mpl::
+       if_< boost::function_types::is_function< F_ >,
+            sake::int_tag<2> >::type::template
+  else_if < boost::function_types::is_function_pointer< F_ >,
+            sake::int_tag<2> >::type::template
+  else_if < sake::has_type_result_type< F_ >,
+            sake::int_tag<1> >::type::template
+  else_   < sake::int_tag<0> >::type::value;
 };
 
 template< class F_, int = dispatch_index< F_ >::value >
@@ -78,56 +78,60 @@ struct dispatch;
 template< class F_ >
 struct dispatch< F_, 2 >
 {
-    template< class Signature >
-    struct apply
-    { typedef typename boost::function_types::result_type< F_ >::type type; };
+  template< class Signature >
+  struct apply
+  { typedef typename boost::function_types::result_type< F_ >::type type; };
 };
 
 template< class F_ >
 struct dispatch< F_, 1 >
 {
-    template< class Signature >
-    struct apply
-    { typedef typename F_::result_type type; };
+  template< class Signature >
+  struct apply
+  { typedef typename F_::result_type type; };
 };
 
 template< class F_ >
 struct dispatch< F_, 0 >
 {
-    template< class Signature >
-    struct apply
-        : F_::template result< Signature >
-    { };
+  template< class Signature >
+  struct apply
+    : F_::template result< Signature >
+  { };
 };
 
 #endif // #ifdef BOOST_NO_DECLTYPE_N3276
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
-#ifndef BOOST_NO_DECLTYPE_N3276
+#if !defined( BOOST_NO_DECLTYPE_N3276 ) && !defined( BOOST_NO_SFINAE_EXPR )
 
 template< class F, class... T >
 struct sfinae<
-    F ( T... ),
-    typename result_of_private::always_void<
-        decltype( sake::declval<F>() ( sake::declval<T>()... ) ) >::type
+  F ( T... ),
+  typename result_of_private::always_void<
+    decltype( sake::declval<F>() ( sake::declval<T>()... ) ) >::type
 >
 { typedef decltype( sake::declval<F>() ( sake::declval<T>()... ) ) type; };
 
-#else // #ifndef BOOST_NO_DECLTYPE_N3276
+#else // #if !defined( BOOST_NO_DECLTYPE_N3276 ) && !defined( BOOST_NO_SFINAE_EXPR )
 
 template< class F, class... T >
 struct sfinae<
-    F ( T... ),
-    typename boost::enable_if_c<
-        sake::is_callable< F, void ( T... ) >::value >::type
+  F ( T... ),
+  typename boost::enable_if_c<
+    sake::is_callable< F, void ( T... ) >::value >::type
 >
-    : result_of_private::dispatch<
-          typename boost_ext::remove_qualifiers<F>::type >::template
-      apply< F ( T... ) >
+#ifndef BOOST_NO_DECLTYPE_N3276
+{ typedef decltype( sake::declval<F>() ( sake::declval<T>()... ) ) type; };
+#else // #ifndef BOOST_NO_DECLTYPE_N3276
+  : result_of_private::dispatch<
+      typename boost_ext::remove_qualifiers<F>::type >::template
+    apply< F ( T... ) >
 { };
-
 #endif // #ifndef BOOST_NO_DECLTYPE_N3276
+
+#endif // #if !defined( BOOST_NO_DECLTYPE_N3276 ) && !defined( BOOST_NO_SFINAE_EXPR )
 
 #else // #ifndef BOOST_NO_VARIADIC_TEMPLATES
 
@@ -141,7 +145,7 @@ struct sfinae<
 
 template< class Signature >
 struct result_of
-    : result_of_private::sfinae< Signature >
+  : result_of_private::sfinae< Signature >
 { };
 
 } // namespace boost_ext
@@ -157,32 +161,36 @@ struct result_of
 #define comma_class_T0N BOOST_PP_ENUM_TRAILING_PARAMS( N, class T )
 #define T0N BOOST_PP_ENUM_PARAMS( N, T )
 #define declval_T0N \
-    BOOST_PP_ENUM_BINARY_PARAMS( N, sake::declval< T, >() BOOST_PP_INTERCEPT )
+  BOOST_PP_ENUM_BINARY_PARAMS( N, sake::declval< T, >() BOOST_PP_INTERCEPT )
 
-#ifndef BOOST_NO_DECLTYPE_N3276
+#if !defined( BOOST_NO_DECLTYPE_N3276 ) && !defined( BOOST_NO_SFINAE_EXPR )
 
 template< class F comma_class_T0N >
 struct sfinae<
-    F ( T0N ),
-    typename result_of_private::always_void<
-        decltype( sake::declval<F>() ( declval_T0N ) ) >::type
+  F ( T0N ),
+  typename result_of_private::always_void<
+    decltype( sake::declval<F>() ( declval_T0N ) ) >::type
 >
 { typedef decltype( sake::declval<F>() ( declval_T0N ) ) type; };
 
-#else // #ifndef BOOST_NO_DECLTYPE_N3276
+#else // #if !defined( BOOST_NO_DECLTYPE_N3276 ) && !defined( BOOST_NO_SFINAE_EXPR )
 
 template< class F comma_class_T0N >
 struct sfinae<
-    F ( T0N ),
-    typename boost::enable_if_c<
-        sake::is_callable< F, void ( T0N ) >::value >::type
+  F ( T0N ),
+  typename boost::enable_if_c<
+    sake::is_callable< F, void ( T0N ) >::value >::type
 >
-    : result_of_private::dispatch<
-          typename boost_ext::remove_qualifiers<F>::type >::template
-      apply< F ( T0N ) >
+#ifndef BOOST_NO_DECLTYPE_N3276
+{ typedef decltype( sake::declval<F>() ( declval_T0N ) ) type; };
+#else // #ifndef BOOST_NO_DECLTYPE_N3276
+  : result_of_private::dispatch<
+      typename boost_ext::remove_qualifiers<F>::type >::template
+    apply< F ( T0N ) >
 { };
-
 #endif // #ifndef BOOST_NO_DECLTYPE_N3276
+
+#endif // #if !defined( BOOST_NO_DECLTYPE_N3276 ) && !defined( BOOST_NO_SFINAE_EXPR )
 
 #undef class_T0N
 #undef T0N

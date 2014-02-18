@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/core/utility/pointee.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -37,11 +37,11 @@ namespace sake
 
 template< class P >
 struct pointee
-    : extension::pointee<P>
+  : extension::pointee<P>
 { };
 
 template< class T >
-struct pointee< T* >
+struct pointee< T * >
 { typedef T type; };
 
 /*******************************************************************************
@@ -53,7 +53,7 @@ namespace extension
 
 template< class P, class Enable /*= void*/ >
 struct pointee
-    : default_impl::pointee<P>
+  : default_impl::pointee<P>
 { };
 
 } // namespace extension
@@ -71,30 +71,30 @@ namespace pointee_private
 template< class P >
 struct dispatch_index
 {
-    static int const value = boost_ext::mpl::
-              // iterators
-         if_< sake::is_incrementable<P>, sake::int_tag<4> >::type::template
-              // Boost-style smart pointers
-    else_if < sake::has_type_element_type<P>, sake::int_tag<3> >::type::template
-              // best guess for everything else
-    else_if < sake::has_type_value_type<P>, sake::int_tag<2> >::type::template
-              // last ditch effort
-    else_if < sake::has_type_type<P>, sake::int_tag<1> >::type::template
-    else_   < sake::int_tag<0> >::type::value;
+  static int const value = boost_ext::mpl::
+       if_< sake::is_incrementable<P>,      // iterators
+            sake::int_tag<4> >::type::template
+  else_if < sake::has_type_element_type<P>, // Boost-style smart pointers
+            sake::int_tag<3> >::type::template
+  else_if < sake::has_type_value_type<P>,   // best guess for everything else
+            sake::int_tag<2> >::type::template
+  else_if < sake::has_type_type<P>,         // last ditch effort
+            sake::int_tag<1> >::type::template
+  else_   < sake::int_tag<0> >::type::value;
 };
 
 template<
-    class P,
-    int = dispatch_index<P>::value
+  class P,
+  int = dispatch_index<P>::value
 >
 struct dispatch;
 
 template< class I >
 struct dispatch<I,4>
-    : boost_ext::add_const_if_c<
-          sake::is_const_iterator<I>::value,
-          typename sake::iterator_value<I>::type
-      >
+  : boost_ext::add_const_if_c<
+      sake::is_const_iterator<I>::value,
+      typename sake::iterator_value<I>::type
+    >
 { };
 
 template< class P >
@@ -111,13 +111,13 @@ struct dispatch<P,1>
 
 template< class P >
 struct dispatch<P,0>
-{ typedef void type; };
+{ };
 
 } // namespace pointee_private
 
 template< class P >
 struct pointee
-    : pointee_private::dispatch<P>
+  : pointee_private::dispatch<P>
 { };
 
 } // namespace default_impl

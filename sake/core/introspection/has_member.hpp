@@ -31,7 +31,6 @@
 #include <boost/type_traits/is_class.hpp>
 
 #include <sake/core/utility/true_false_tag.hpp>
-#include <sake/core/utility/void.hpp>
 
 #define SAKE_INTROSPECTION_DEFINE_HAS_MEMBER( trait, name ) \
 template< class T > \
@@ -42,7 +41,7 @@ class trait \
     typedef typename ::boost::mpl::if_c< \
         ::boost::is_class<T>::value, \
         T, \
-        ::sake::void_ \
+        ::sake::has_member_private::empty \
     >::type base_type; \
     struct detector : base_type, detector_base { }; \
     template< class T_ > static ::sake::false_tag test(sfinae< &T_::name >*); \
@@ -51,5 +50,17 @@ public: \
     static bool const value = SAKE_SIZEOF_TRUE_TAG == sizeof( test< detector >(0) ); \
     typedef trait type; \
 };
+
+namespace sake
+{
+
+namespace has_member_private
+{
+
+struct empty { };
+
+} // namespace has_member_private
+
+} // namespace sake
 
 #endif // #ifndef SAKE_CORE_INTROSPECTION_HAS_MEMBER_HPP

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * sake/boost_ext/type_traits/is_convertible.hpp
  *
- * Copyright 2011, Jeffrey Hellrung.
+ * Copyright 2012, Jeffrey Hellrung.
  * Distributed under the Boost Software License, Version 1.0.  (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
@@ -42,8 +42,9 @@ namespace boost_ext
 template< class From, class To >
 struct is_convertible
 {
-    static bool const value = SAKE_EXPR_IS_CONVERTIBLE( sake::declval< From >(), To );
-    typedef is_convertible type;
+  static bool const value =
+    SAKE_EXPR_IS_CONVERTIBLE( sake::declval< From >(), To );
+  typedef is_convertible type;
 };
 
 #ifdef _MSC_VER

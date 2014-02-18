@@ -1,1 +1,12 @@
-
+- boost_ext::common_type !!!
+- interface to specify different results from range algorithms
+- restructure unit tests ???
+- get scons to auto-generate vcproj files ???
+- add a boost_ext::contiguous_traversal_tag : boost::random_access_traversal_tag
+- put some structs in a sake::types namespace
+- replace BOOST_NO_XXX macros with BOOST_NO_CXX11_XXX macros
+- fall back to some form of decltype in boost_ext::result_of
+- s/m_/my_/
+- check operator<<(std::ostream&, ...) overloads and replace them with
+  std::basic_ostream, if possible.
+- use _MSC_FULL_VER rather than _MSC_VER

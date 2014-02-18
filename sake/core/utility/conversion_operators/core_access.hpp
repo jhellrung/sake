@@ -20,12 +20,12 @@ namespace conversion_operators
 
 class core_access
 {
-    template< class, class, class, class >
-    friend class sake::conversion_operators::private_::iterate;
+  template< class, class, class, class >
+  friend class sake::conversion_operators::private_::iterate;
 
-    template< class Derived, class T >
-    static T convert(Derived& this_, sake::type_tag<T>)
-    { return this_.derived_convert(sake::type_tag<T>()); }
+  template< class Derived, class T >
+  static T convert(Derived& this_, sake::type_tag<T>)
+  { return this_.derived_convert(sake::type_tag<T>()); }
 };
 
 } // namespace conversion_operators
